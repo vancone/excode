@@ -9,7 +9,7 @@
             "config": [
                 {
                     "key": "url",
-                    "value": "gakiton.cn:3306/ttmek_autocrud"
+                    "value": "gakiton.cn:3306/ttmek_mall"
                 },
                 {
                     "key": "username",
@@ -46,7 +46,7 @@
             "columns": [
                 {
                     "name": "goods_id",
-                    "type": "varchar(50)",
+                    "type": "int",
                     "primaryKey": true
                 },
                 {
@@ -63,9 +63,13 @@
             "name": "cart",
             "columns": [
                 {
-                    "name": "goods_id",
-                    "type": "varchar(50)",
+                    "name": "cart_id",
+                    "type": "int",
                     "primaryKey": true
+                },
+                {
+                    "name": "goods_id",
+                    "type": "varchar(50)"
                 },
                 {
                     "name": "user_id",

@@ -2,11 +2,120 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="ttmek-autocrud:jar" />
+      <artifact name="autocrud-core:jar" />
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="620bf482-9323-4186-9b1c-172272715509" name="Default Changelist" comment="" />
+    <list default="true" id="aa7c59d6-3d71-4c66-822d-0822b7444fb8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../autocrud-core-old/ttmek-autocrud.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/autocrud_core_jar.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/autocrud-core.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/AutoCRUD.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/FileManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/Logger.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/ProjectBuilder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ApplicationEntryGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ApplicationPropertiesGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ControllerGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/backend/MapperGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ModelGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/backend/PomGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ServiceGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ServiceImplGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/backend/SqlQueryGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/generators/frontend/ApiDocumentGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/enums/AccessModifier.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/enums/BasicDataType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/enums/DatabaseDataType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/java/Variable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/java/expressions/Expression.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/java/expressions/ReturnExpression.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/java/methods/Getter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/java/methods/Method.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/java/methods/Setter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/project/Column.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/project/Module.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/project/Project.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/project/Property.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/project/Table.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/model/project/Value.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../example/mall.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../example/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../autocrud-backend/src/main/java/com/ttmek/autocrud/controller/ProjectsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../autocrud-backend/src/main/java/com/ttmek/autocrud/controller/ProjectsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/ttmek_autocrud_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/google-java-format-1.7-all-deps.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/gson-2.8.6.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/ttmek_autocrud_jar/ttmek-autocrud.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/AutoCRUD.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/META-INF/ttmek-autocrud.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/FileManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/Logger.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/ProjectBuilder$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/ProjectBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/generators/ApplicationEntryGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/generators/ApplicationPropertiesGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/generators/ControllerGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/generators/MapperGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/generators/ModelGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/generators/PomGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/controller/generators/SqlQueryGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/enums/AccessModifier.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/enums/BasicDataType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/enums/DatabaseDataType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/lang/Bean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/lang/Method.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/lang/SourceCodeFile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/lang/Variable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/lang/annotations/Annotation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/lang/annotations/KeyValueAnnotation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/lang/annotations/ParentAnnotation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/lang/annotations/SingleValueAnnotation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/project/Column.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/project/Module.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/project/Project.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/project/Property.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/project/Table.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ttmek-autocrud/model/project/Value.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AutoCRUD.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/FileManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/Logger.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/ProjectBuilder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/generators/ApplicationEntryGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/generators/ApplicationPropertiesGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/generators/ControllerGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/generators/MapperGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/generators/ModelGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/generators/PomGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/generators/SqlQueryGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/enums/AccessModifier.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/enums/BasicDataType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/enums/DatabaseDataType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/lang/Bean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/java/Bean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/lang/Method.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/lang/SourceCodeFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/java/SourceCodeFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/lang/Variable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/lang/annotations/Annotation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/java/annotations/Annotation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/lang/annotations/KeyValueAnnotation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/java/annotations/KeyValueAnnotation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/lang/annotations/ParentAnnotation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/java/annotations/ParentAnnotation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/lang/annotations/SingleValueAnnotation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/java/annotations/SingleValueAnnotation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/project/Column.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/project/Module.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/project/Project.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/project/Property.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/project/Table.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/project/Value.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ttmek-autocrud.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../example/autocrud-project.json" beforeDir="false" afterPath="$PROJECT_DIR$/../example/autocrud-project.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,39 +124,53 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
   </component>
-  <component name="ProjectId" id="1WjTgUlj4mS9ndzphpxzKl7MBzV" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1XYzmrlpg8FwdVj5IVmYRIWkS1B" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/google-java-format-1.7-all-deps.jar!/" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RecentsManager">
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="controller.generators" />
-      <recent name="model.lang.annotations" />
-      <recent name="model.enums.annotations" />
-    </key>
-  </component>
   <component name="RunManager">
-    <configuration name="AutoCRUD" type="Application" factoryName="Application">
+    <configuration name="AutoCRUD" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="AutoCRUD" />
-      <module name="ttmek-autocrud" />
-      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/../example" />
+      <module name="autocrud-core" />
+      <option name="PROGRAM_PARAMETERS" value="D:\Projects\autocrud\example" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/out/artifacts/autocrud_core_jar" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="AutoCRUD" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -70,107 +193,71 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="620bf482-9323-4186-9b1c-172272715509" name="Default Changelist" comment="" />
-      <created>1579662116033</created>
+      <changelist id="aa7c59d6-3d71-4c66-822d-0822b7444fb8" name="Default Changelist" comment="" />
+      <created>1581237979110</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1579662116033</updated>
-      <workItem from="1579662120423" duration="2352000" />
-      <workItem from="1579670486137" duration="53693000" />
-      <workItem from="1579779471943" duration="55440000" />
-      <workItem from="1580048718202" duration="6005000" />
-      <workItem from="1580653093195" duration="1999000" />
-      <workItem from="1580982416011" duration="28958000" />
+      <updated>1581237979110</updated>
+      <workItem from="1581237983156" duration="3786000" />
+      <workItem from="1581241885777" duration="2137000" />
+      <workItem from="1581244033296" duration="202000" />
+      <workItem from="1581244241624" duration="350000" />
+      <workItem from="1581244596059" duration="1039000" />
+      <workItem from="1581245640338" duration="78000" />
+      <workItem from="1581245806705" duration="21499000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
   <component name="WindowStateProjectService">
-    <state x="361" y="70" key="#Project_Structure" timestamp="1579760296092">
+    <state x="361" y="70" key="#Project_Structure" timestamp="1581238035038">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="70" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1579760296092" />
-    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581015580924">
+    <state x="361" y="70" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1581238035038" />
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581247593309">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1581015580924" />
-    <state x="574" y="96" key="#com.intellij.ide.util.MemberChooser" timestamp="1579887623097">
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1581247593309" />
+    <state x="498" y="196" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1581247410635">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="574" y="96" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1579887623097" />
-    <state x="498" y="196" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1580982680671">
+    <state x="498" y="196" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1536.824@0.0.1536.824" timestamp="1581247410635" />
+    <state x="548" y="167" key="FileChooserDialogImpl" timestamp="1581247420527">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="498" y="196" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1536.824@0.0.1536.824" timestamp="1580982680671" />
-    <state x="599" y="123" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1579677554242">
+    <state x="548" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1581247420527" />
+    <state width="746" height="265" key="GridCell.Tab.0.bottom" timestamp="1581267988555">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="599" y="123" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog/0.0.1536.824@0.0.1536.824" timestamp="1579677554242" />
-    <state x="566" y="297" width="403" height="239" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1580988124338">
+    <state width="746" height="265" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1581267988555" />
+    <state width="746" height="265" key="GridCell.Tab.0.center" timestamp="1581267988555">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="566" y="297" width="403" height="239" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1536.824@0.0.1536.824" timestamp="1580988124338" />
-    <state x="503" y="174" key="EnvironmentVariablesDialog" timestamp="1580983315654">
+    <state width="746" height="265" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1581267988555" />
+    <state width="746" height="265" key="GridCell.Tab.0.left" timestamp="1581267988555">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="503" y="174" key="EnvironmentVariablesDialog/0.0.1536.824@0.0.1536.824" timestamp="1580983315654" />
-    <state x="1009" y="145" key="FileChooserDialogImpl" timestamp="1581017590446">
+    <state width="746" height="265" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1581267988555" />
+    <state width="746" height="265" key="GridCell.Tab.0.right" timestamp="1581267988555">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="1009" y="145" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1581017590446" />
-    <state width="1493" height="240" key="GridCell.Tab.0.bottom" timestamp="1581018333390">
+    <state width="746" height="265" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1581267988555" />
+    <state x="554" y="134" key="Maven.ArtifactSearchDialog" timestamp="1581239890843">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="240" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1581018333390" />
-    <state width="1493" height="240" key="GridCell.Tab.0.center" timestamp="1581018333389">
+    <state x="554" y="134" key="Maven.ArtifactSearchDialog/0.0.1536.824@0.0.1536.824" timestamp="1581239890843" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1581247536708">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="240" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1581018333389" />
-    <state width="1493" height="240" key="GridCell.Tab.0.left" timestamp="1581018333389">
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1581247536708" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1581267417518">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="240" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1581018333389" />
-    <state width="1493" height="240" key="GridCell.Tab.0.right" timestamp="1581018333390">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1493" height="240" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1581018333390" />
-    <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1579663115042">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1579663115042" />
-    <state width="1493" height="261" key="GridCell.Tab.1.center" timestamp="1579663115042">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1579663115041" />
-    <state width="1493" height="261" key="GridCell.Tab.1.left" timestamp="1579663115041">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1579663115041" />
-    <state width="1493" height="261" key="GridCell.Tab.1.right" timestamp="1579663115042">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state width="1493" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1579663115042" />
-    <state x="383" y="76" width="1038" height="735" key="SettingsEditor" timestamp="1581017593879">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="383" y="76" width="1038" height="735" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1581017593879" />
-    <state x="413" y="41" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1579673723191">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="413" y="41" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1536.824@0.0.1536.824" timestamp="1579673723191" />
-    <state x="209" y="32" key="new project wizard" timestamp="1579677357778">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="209" y="32" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1579677357778" />
-    <state x="425" y="187" width="672" height="677" key="run.anything.popup" timestamp="1581000821811">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1581000821811" />
-    <state x="426" y="66" width="672" height="676" key="search.everywhere.popup" timestamp="1581002533595">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="426" y="66" width="672" height="676" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1581002533595" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1581267417518" />
   </component>
 </project>

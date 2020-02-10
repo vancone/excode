@@ -1,0 +1,77 @@
+html, body {
+    height: calc(100% - 20px);
+    width: 100%;
+    margin: 0;
+    background: #eee;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-top: 20px;
+}
+
+.header {
+    background: #10a9f5;
+    height: 50px;
+    width: 100%;
+    text-align: left;
+    position: fixed;
+    left: 0;
+    top: 0;
+    /* padding-top: 10px; */
+}
+
+.header h1 {
+    color: white;
+    font-size: 20px;
+    margin-top: 0;
+    line-height: 50px;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.module {
+    background: white;
+    padding: 30px;
+    border-radius: 5px;
+    text-align: left;
+    width: 800px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.module span {
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.GetSpan {
+    background: green;
+    color: white;
+}
+
+.PostSpan {
+    background: #10a9f5;
+    color: white;
+}
+
+.PutSpan {
+    background: purple;
+    color: white;
+}
+
+.DeleteSpan {
+    background: orangered;
+    color: white;
+}
+.module h3 {
+    display: inline-block;
+    margin-left: 10px;
+}
+.description {
+    color: #888;
+    display: inline-block;
+    margin-left: 30px;
+}
+.module textarea {
+    width: inherit;
+    height: 200px;
+}

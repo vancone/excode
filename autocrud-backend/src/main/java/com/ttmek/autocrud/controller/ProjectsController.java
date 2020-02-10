@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ttmek.autocrud.model.RestResponse;
 import com.ttmek.autocrud.model.Project;
-import com.ttmek.autocrud.mapper.ProjectsMapper;
 
 
 @RestController
