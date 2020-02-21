@@ -154,6 +154,17 @@ public class Method {
         return method;
     }
 
+    public static Method publicMethod(Annotation annotation, String type, String name, Expression[] expressions) {
+        Method method = new Method();
+        method.setAccessModifier(AccessModifier.PUBLIC);
+        method.setReturnType(type);
+        method.setName(name);
+        method.setHasBody(true);
+        method.addAnnotation(annotation);
+        method.expressions = new ArrayList<>(Arrays.asList(expressions));
+        return method;
+    }
+
     public static Method publicMethod(Annotation annotation, String type, String name, Variable[] params, Expression[] expressions) {
         Method method = Method.publicMethod(type, name, params, expressions);
         method.addAnnotation(annotation);

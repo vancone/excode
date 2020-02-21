@@ -1,12 +1,9 @@
 package controller.generators.frontend;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import controller.FileManager;
 import controller.Logger;
 import controller.ProjectBuilder;
-import j2html.attributes.Attr;
-import j2html.tags.DomContent;
 import model.project.Column;
 import model.project.Project;
 import model.project.Table;

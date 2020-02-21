@@ -6,17 +6,18 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import controller.generators.backend.*;
-import controller.generators.frontend.ApiDocumentGenerator;
+import controller.generators.frontend.admin.*;
 import model.project.*;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Date;
 
 public class ProjectBuilder {
     public Project project;
     private String projectUrl;
-    private String frontendSourceBaseUrl;
     private String backendSourceBaseUrl;
+    private String frontendSourceBaseUrl;
 
     public ProjectBuilder(String url) {
         this.projectUrl = url;
@@ -63,22 +64,11 @@ public class ProjectBuilder {
             }
         }
 
-        // Create directories
-
-        // Backend
         this.backendSourceBaseUrl = url + "/" + project.getArtifactId().getData() + "-backend" +
                 "/src/main/java/" + (this.project.getGroupId() +
                 '.' + this.project.getArtifactId().getData()).replace('.', '/');
-        FileManager.checkDirectory(backendSourceBaseUrl + "/model");
-        FileManager.checkDirectory(backendSourceBaseUrl + "/mapper");
-        FileManager.checkDirectory(backendSourceBaseUrl + "/controller");
-        FileManager.checkDirectory(backendSourceBaseUrl + "/config");
-        FileManager.checkDirectory(backendSourceBaseUrl + "/service/impl");
-        FileManager.checkDirectory(url + "/" + project.getArtifactId().getData() + "-backend" + "/src/main/resources");
 
-        //Frontend
         this.frontendSourceBaseUrl = url + "/" + project.getArtifactId().getData() + "-frontend";
-        FileManager.checkDirectory(frontendSourceBaseUrl);
     }
 
 
@@ -94,18 +84,65 @@ public class ProjectBuilder {
     }
 
 
-    public void build() {
-        new ApiDocumentGenerator(this.project, frontendSourceBaseUrl);
-        System.exit(0);
+    public void buildSpringBootProject() {
+        FileManager.checkDirectory(backendSourceBaseUrl + "/model");
+        FileManager.checkDirectory(backendSourceBaseUrl + "/mapper");
+        FileManager.checkDirectory(backendSourceBaseUrl + "/controller");
+        FileManager.checkDirectory(backendSourceBaseUrl + "/config");
+        FileManager.checkDirectory(backendSourceBaseUrl + "/service/impl");
+        FileManager.checkDirectory(projectUrl + "/" + project.getArtifactId().getData() + "-backend" + "/src/main/resources");
+
         new ModelGenerator(this.project, backendSourceBaseUrl + "/model");
         new MapperGenerator(this.project, backendSourceBaseUrl + "/mapper");
-        new SqlQueryGenerator(this.project, this.projectUrl);
+        new SqlQueryGenerator(this.project, this.projectUrl + "/" + project.getArtifactId().getData() + "-backend");
         new ControllerGenerator(this.project, backendSourceBaseUrl + "/controller");
-        new PomGenerator(this.project, this.projectUrl);
+        new PomGenerator(this.project, this.projectUrl + "/" + project.getArtifactId().getData() + "-backend");
         new ApplicationEntryGenerator(this.project, backendSourceBaseUrl);
         new ApplicationPropertiesGenerator(this.project, this.projectUrl + "/" + project.getArtifactId().getData() + "-backend" + "/src/main/resources");
         new ServiceGenerator(this.project, backendSourceBaseUrl + "/service");
         new ServiceImplGenerator(this.project, backendSourceBaseUrl + "/service/impl");
+    }
 
+    public void buildVueAdminProject() {
+        FileManager.checkDirectory(frontendSourceBaseUrl + "/admin/static");
+
+        // Copy template files
+        String[] templateDirectories = {
+                "/",
+                "/build/",
+                "/config/",
+                "/src/",
+                "/src/components/",
+                "/src/router/"
+        };
+
+        for (String directory: templateDirectories) {
+            File file = new File(System.getProperty("user.dir") + "/templates/vue" + directory);
+            File[] files = file.listFiles();
+            for (File f: files) {
+                if (!f.getName().equals("package.json")) {
+                    File outputFile = new File(frontendSourceBaseUrl + "/admin/" + directory + f.getName());
+                    try {
+                        if (!outputFile.exists()) {
+                            Files.copy(f.toPath(), outputFile.toPath());
+                        }
+                    } catch (IOException e) {
+                        Logger.error(e.getMessage());
+                    }
+                }
+            }
+        }
+
+        // Generate index.html
+        TemplateProccesor templateProccesor = new TemplateProccesor(System.getProperty("user.dir") + "/templates/vue/index.html");
+        templateProccesor.insert("title", this.project.getArtifactId().capitalizedCamelStyle() + " Admin");
+        FileManager.write(frontendSourceBaseUrl + "/admin/index.html", templateProccesor.toString());
+
+        //new ApiDocumentGenerator(this.project, frontendSourceBaseUrl);
+        new PackageJSONGenerator(this.project, frontendSourceBaseUrl + "/admin");
+        new RouterJSGennerator(this.project, frontendSourceBaseUrl + "/admin/src/router");
+        new AppVueGenrator(this.project, frontendSourceBaseUrl + "/admin/src/App.vue");
+        new PanelVueGenerator(this.project, frontendSourceBaseUrl + "/admin/src/components/Panel.vue");
+        new DataTablesVueGenerator(this.project, frontendSourceBaseUrl + "/admin/src/components");
     }
 }

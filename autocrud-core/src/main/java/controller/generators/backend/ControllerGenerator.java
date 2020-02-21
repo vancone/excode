@@ -105,13 +105,6 @@ public class ControllerGenerator {
                     new Annotation("GetMapping"),
                     "RestResponse",
                     "retrieveAll",
-                    new Variable[] {
-                            new Variable(
-                                    new Annotation("RequestBody"),
-                                    table.getName().capitalizedCamelStyle(),
-                                    table.getName().camelStyle()
-                            )
-                    },
                     new Expression[] {
                             new Expression("List<" + table.getName().capitalizedCamelStyle() + "> " + table.getName().camelStyle() + "List = " + table.getName().camelStyle() + "Service.retrieveAll();"),
                             new Expression("if (" + table.getName().camelStyle() + "List == null) {"),

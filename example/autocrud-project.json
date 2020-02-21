@@ -1,7 +1,7 @@
 {
     "groupId": "com.ttmek",
     "artifactId": "mall",
-    "version": "0.01",
+    "version": "0.0.1",
     "description": "TTmek Mall Project",
     "modules": [
         {

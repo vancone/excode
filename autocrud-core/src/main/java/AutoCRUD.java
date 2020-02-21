@@ -8,6 +8,7 @@ public class AutoCRUD {
         }
         final String projectUrl = args[0];
         ProjectBuilder projectBuilder = new ProjectBuilder(projectUrl);
-        projectBuilder.build();
+        projectBuilder.buildSpringBootProject();
+        projectBuilder.buildVueAdminProject();
     }
 }
