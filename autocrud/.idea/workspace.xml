@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="autocrud-core:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="aa7c59d6-3d71-4c66-822d-0822b7444fb8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/config/CustomApplicationContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/gui/Context.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/gui/MainWindowController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/gui/util/DrawUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainWindow.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/fxml/MessageBox.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/close.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/close.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/column.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/column.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/console.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/console.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/folder.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/folder.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/key.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/key.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/max.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/max.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/min.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/min.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/table.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/icons/table.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/stylesheets/MainWindow.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/stylesheets/MessageBox.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/AutoCRUD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/AutoCRUD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/FileManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/Logger.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/ProjectBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/controller/ProjectLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/TemplateProccesor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ApplicationEntryGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ApplicationPropertiesGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ControllerGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/backend/MapperGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ModelGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/backend/PomGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ServiceGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/backend/ServiceImplGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/backend/SqlQueryGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/frontend/ApiDocumentGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/frontend/JqueryAjaxGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/frontend/admin/AppVueGenrator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/frontend/admin/DataTablesVueGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/frontend/admin/PackageJSONGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/frontend/admin/PanelVueGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/generators/frontend/admin/RouterJSGennerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/enums/AccessModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/enums/AccessModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/enums/BasicDataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/enums/BasicDataType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/enums/DatabaseDataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/enums/DatabaseDataType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/Bean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/Bean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/SourceCodeFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/SourceCodeFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/annotations/Annotation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/annotations/Annotation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/annotations/KeyValueAnnotation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/annotations/KeyValueAnnotation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/annotations/ParentAnnotation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/annotations/ParentAnnotation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/annotations/SingleValueAnnotation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/annotations/SingleValueAnnotation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/expressions/Expression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/expressions/Expression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/expressions/ReturnExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/expressions/ReturnExpression.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/methods/Getter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/methods/Getter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/methods/Method.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/methods/Method.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/java/methods/Setter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/java/methods/Setter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/javascript/RouterJS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/javascript/RouterJS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/json/PackageJSON.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/json/PackageJSON.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/json/RouteJSON.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/json/RouteJSON.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/project/Column.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/project/Column.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/project/Module.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/project/Module.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/project/Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/project/Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/project/Property.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/project/Property.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/project/Table.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/project/Table.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/project/Value.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/mekcone/autocrud/core/model/project/Value.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/AutoCRUD.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/AutoCRUD.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/FileManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/Logger.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/ProjectBuilder$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/ProjectBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/TemplateProccesor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/backend/ApplicationEntryGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/backend/ApplicationPropertiesGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/backend/ControllerGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/backend/MapperGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/backend/ModelGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/backend/PomGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/backend/ServiceGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/backend/ServiceImplGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/backend/SqlQueryGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/frontend/ApiDocumentGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/frontend/JqueryAjaxGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/frontend/admin/AppVueGenrator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/frontend/admin/DataTablesVueGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/frontend/admin/PackageJSONGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/frontend/admin/PanelVueGenerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controller/generators/frontend/admin/RouterJSGennerator.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/enums/AccessModifier.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/enums/BasicDataType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/enums/DatabaseDataType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/Bean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/SourceCodeFile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/Variable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/annotations/Annotation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/annotations/KeyValueAnnotation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/annotations/ParentAnnotation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/annotations/SingleValueAnnotation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/expressions/Expression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/expressions/ReturnExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/methods/Getter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/methods/Method.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/java/methods/Setter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/javascript/RouterJS.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/json/PackageJSON.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/json/RouteJSON.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/project/Column.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/project/Module.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/project/Project.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/project/Property.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/project/Table.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/model/project/Value.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../example/autocrud-project.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="autocrud-core" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="spring-beans.schema" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1XYzmrlpg8FwdVj5IVmYRIWkS1B" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/stylesheets" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\autocrud\autocrud-core\src\main\resources" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.mekcone.autocrud.core.controller" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Projects\autocrud\autocrud-core\src\main\resources\stylesheets" />
+      <recent name="D:\Projects\autocrud\autocrud-core\src\main\resources\fxml" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="AutoCRUD" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="AutoCRUD" />
+      <module name="autocrud-core" />
+      <option name="PROGRAM_PARAMETERS" value="D:\Projects\autocrud\example\mall.json" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/out/artifacts/autocrud_core_jar" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="AutoCRUD" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aa7c59d6-3d71-4c66-822d-0822b7444fb8" name="Default Changelist" comment="" />
+      <created>1581237979110</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1581237979110</updated>
+      <workItem from="1581237983156" duration="3786000" />
+      <workItem from="1581241885777" duration="2137000" />
+      <workItem from="1581244033296" duration="202000" />
+      <workItem from="1581244241624" duration="350000" />
+      <workItem from="1581244596059" duration="1039000" />
+      <workItem from="1581245640338" duration="78000" />
+      <workItem from="1581245806705" duration="58827000" />
+      <workItem from="1581446300842" duration="596000" />
+      <workItem from="1581450023441" duration="9589000" />
+      <workItem from="1581762334902" duration="3739000" />
+      <workItem from="1582034634048" duration="604000" />
+      <workItem from="1582091489560" duration="17760000" />
+      <workItem from="1582285759116" duration="25916000" />
+      <workItem from="1582356494387" duration="98253000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="361" y="70" key="#Project_Structure" timestamp="1581238035038">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="361" y="70" key="#Project_Structure/0.0.1536.824@0.0.1536.824" timestamp="1581238035038" />
+    <state x="-11" y="46" width="1089" height="701" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1582444997594">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="-11" y="46" width="1089" height="701" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1582444997594" />
+    <state x="276" y="218" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1582289227260">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="276" y="218" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1582289227260" />
+    <state x="574" y="96" key="#com.intellij.ide.util.MemberChooser" timestamp="1582286563660">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="574" y="96" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1582286563660" />
+    <state x="498" y="196" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1581247410635">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="498" y="196" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1536.824@0.0.1536.824" timestamp="1581247410635" />
+    <state x="256" y="314" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1582395604430">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="256" y="314" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1582395604430" />
+    <state x="23" y="25" width="1018" height="774" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1582534004658">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="23" y="25" width="1018" height="774" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1582534004658" />
+    <state x="589" y="268" key="FileChooserDialogImpl" timestamp="1582298209111">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="589" y="268" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1582298209111" />
+    <state width="1405" height="208" key="GridCell.Tab.0.bottom" timestamp="1582565674126">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1405" height="208" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1582565674126" />
+    <state width="1405" height="208" key="GridCell.Tab.0.center" timestamp="1582565674125">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1405" height="208" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1582565674125" />
+    <state width="1405" height="208" key="GridCell.Tab.0.left" timestamp="1582565674125">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1405" height="208" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1582565674125" />
+    <state width="1405" height="208" key="GridCell.Tab.0.right" timestamp="1582565674125">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1405" height="208" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1582565674125" />
+    <state width="1405" height="208" key="GridCell.Tab.1.bottom" timestamp="1582565674126">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1405" height="208" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1582565674126" />
+    <state width="1405" height="208" key="GridCell.Tab.1.center" timestamp="1582565674126">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1405" height="208" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1582565674126" />
+    <state width="1405" height="208" key="GridCell.Tab.1.left" timestamp="1582565674126">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1405" height="208" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1582565674126" />
+    <state width="1405" height="208" key="GridCell.Tab.1.right" timestamp="1582565674126">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1405" height="208" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1582565674126" />
+    <state x="554" y="134" key="Maven.ArtifactSearchDialog" timestamp="1581239890843">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="554" y="134" key="Maven.ArtifactSearchDialog/0.0.1536.824@0.0.1536.824" timestamp="1581239890843" />
+    <state x="186" y="117" width="983" height="707" key="SettingsEditor" timestamp="1582376550568">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="186" y="117" width="983" height="707" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1582376550568" />
+    <state x="402" y="222" key="new project wizard" timestamp="1581581260765">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="402" y="222" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1581581260765" />
+    <state x="406" y="212" key="run.anything.popup" timestamp="1582527274551">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="406" y="212" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1582527274551" />
+    <state x="430" y="146" width="672" height="678" key="search.everywhere.popup" timestamp="1582536780836">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="430" y="146" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1582536780836" />
+  </component>
+</project>

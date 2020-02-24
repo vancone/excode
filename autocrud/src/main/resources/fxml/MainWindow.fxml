@@ -1,0 +1,176 @@
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+
+<?import org.fxmisc.richtext.CodeArea?>
+<?import org.fxmisc.flowless.VirtualizedScrollPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.control.TreeItem?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:id="wrapper" styleClass="wrapper"
+            fx:controller="com.mekcone.autocrud.gui.MainWindowController" stylesheets="@/stylesheets/MainWindow.css">
+    <top>
+        <BorderPane>
+            <center>
+
+                <HBox fx:id="topBarWrapper" prefHeight="40" onMousePressed="#press" onMouseDragged="#drag">
+                    <Label styleClass="title" text="AutoCRUD"/>
+                <MenuBar fx:id="menuBar">
+                    <Menu fx:id="menuFile" text="_File" styleClass="menu">
+                        <MenuItem styleClass="menuItem" fx:id="menuItemFileNew" text="New" accelerator="Ctrl+N"></MenuItem>
+                        <MenuItem styleClass="menuItem" text="Open" accelerator="Ctrl+O" onAction="#handleOpenFile"></MenuItem>
+                        <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
+                        <MenuItem styleClass="menuItem" text="Save" accelerator="Ctrl+S"></MenuItem>
+                        <MenuItem styleClass="menuItem" text="Save As..."></MenuItem>
+                        <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
+                        <MenuItem styleClass="menuItem" text="Exit" onAction="#handleExit" accelerator="Ctrl+Q"></MenuItem>
+                    </Menu>
+                    <Menu text="_Edit">
+                        <MenuItem styleClass="menuItem" text="Undo"></MenuItem>
+                        <MenuItem styleClass="menuItem" text="Redo"></MenuItem>
+                    </Menu>
+                    <Menu text="_Help">
+                        <MenuItem styleClass="menuItem" text="About"></MenuItem>
+                    </Menu>
+                </MenuBar>
+                </HBox>
+            </center>
+
+            <right>
+                <HBox fx:id="windowControlArea">
+                    <Button fx:id="buttonMinimizeWindow"  onAction="#handleMinimizeWindow"></Button>
+                    <Button fx:id="buttonMaximizeWindow" onAction="#handleMaximizeWindow"></Button>
+                    <Button fx:id="buttonCloseWindow" onAction="#handleExit"></Button>
+                </HBox>
+            </right>
+
+            <bottom>
+                <HBox fx:id="toolBar"></HBox>
+            </bottom>
+        </BorderPane>
+        <!--<VBox>
+            <HBox fx:id="topBarWrapper" prefHeight="40" onMousePressed="#press" onMouseDragged="#drag">
+                <Label styleClass="title" text="AutoCRUD"/>
+                <MenuBar fx:id="menuBar">
+                    <Menu fx:id="menuFile" text="_File" styleClass="menu">
+                        <MenuItem styleClass="menuItem" fx:id="menuItemFileNew" text="New" accelerator="Ctrl+N"></MenuItem>
+                        <MenuItem styleClass="menuItem" text="Open" accelerator="Ctrl+O" onAction="#handleOpenFile"></MenuItem>
+                        <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
+                        <MenuItem styleClass="menuItem" text="Save" accelerator="Ctrl+S"></MenuItem>
+                        <MenuItem styleClass="menuItem" text="Save As..."></MenuItem>
+                        <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
+                        <MenuItem styleClass="menuItem" text="Exit" onAction="#handleExit" accelerator="Ctrl+Q"></MenuItem>
+                    </Menu>
+                    <Menu text="_Edit">
+                        <MenuItem styleClass="menuItem" text="Undo"></MenuItem>
+                        <MenuItem styleClass="menuItem" text="Redo"></MenuItem>
+                    </Menu>
+                    <Menu text="_Help">
+                        <MenuItem styleClass="menuItem" text="About"></MenuItem>
+                    </Menu>
+                </MenuBar>
+            </HBox>
+            <HBox fx:id="toolBar">
+
+            </HBox>
+        </VBox>-->
+
+    </top>
+
+    <left>
+            <VBox fx:id="leftBar">
+
+            </VBox>
+
+    </left>
+
+    <center>
+        <BorderPane>
+            <left>
+                <VBox fx:id="tablePaneWrapper">
+                    <HBox fx:id="tablePaneBar">
+                        <ImageView style="-fx-translate-x: 10; -fx-translate-y: 8;">
+                            <image>
+                                <Image url="/icons/console.png" />
+                            </image>
+                        </ImageView>
+                        <Label fx:id="tableBarLabel" text="Data Tables" style="-fx-translate-x: 12;">
+
+                        </Label>
+                    </HBox>
+                    <TreeView fx:id="treeViewProject">
+                        <TreeItem fx:id="rootTreeItem" expanded="true"></TreeItem>
+                    </TreeView>
+                </VBox>
+            </left>
+
+            <center>
+                <VirtualizedScrollPane>
+                    <content>
+                        <CodeArea fx:id="codeArea" wrapText="true"></CodeArea>
+                    </content>
+                </VirtualizedScrollPane>
+            </center>
+
+            <bottom>
+                <VBox fx:id="bottomWorkAreaWrapper">
+                    <HBox fx:id="terminalBar">
+                        <ImageView style="-fx-translate-x: 10; -fx-translate-y: 8;">
+                            <image>
+                                <Image url="/icons/console.png" />
+                            </image>
+                        </ImageView>
+                        <Label fx:id="terminalBarLabel" text="Console" style="-fx-translate-x: 12;">
+
+                        </Label>
+                    </HBox>
+                    <HBox fx:id="terminalWrapper">
+                        <TextArea fx:id="terminal"></TextArea>
+                    </HBox>
+                </VBox>
+            </bottom>
+        </BorderPane>
+
+
+
+    </center>
+
+    <right>
+        <VBox fx:id="rightTabBar">
+            <Group><Label fx:id="tabMaven" text="Maven"></Label></Group>
+            <Group><Label fx:id="tabDatabase" text="Database"></Label></Group>
+            <Group><Label fx:id="tabRedis" text="Redis"></Label></Group>
+            <Group><Label fx:id="tabSpringCloud"  text="Spring Cloud"></Label></Group>
+        </VBox>
+    </right>
+
+    <bottom>
+        <VBox>
+
+            <HBox fx:id="bottomTabBar">
+
+            </HBox>
+            <HBox fx:id="bottomBar">
+                <Label fx:id="buttonShowRaw" text="RAW"></Label>
+                <Label styleClass="info" text="Information will be displayed here"/>
+            </HBox>
+        </VBox>
+
+    </bottom>
+</BorderPane>

@@ -1,0 +1,81 @@
+{
+    "groupId": "com.mekcone.autocrud.example",
+    "artifactId": "mall",
+    "version": "0.0.1",
+    "description": "MekCone Mall Project",
+    "modules": [
+        {
+            "id": "mysql",
+            "config": [
+                {
+                    "key": "url",
+                    "value": "gakiton.cn:3306/ttmek_mall"
+                },
+                {
+                    "key": "username",
+                    "value": "root"
+                },
+                {
+                    "key": "password",
+                    "value": "sonnakotowanai!"
+                }
+            ]
+        },
+
+        {
+            "id": "redis",
+            "config": [
+                {
+                    "key": "host",
+                    "value": "gakiton.cn"
+                },
+                {
+                    "key": "port",
+                    "value": "6379"
+                },
+                {
+                    "key": "password",
+                    "value": "11223344"
+                }
+            ]
+        }
+    ],
+    "tables": [
+        {
+            "name": "goods",
+            "columns": [
+                {
+                    "name": "goods_id",
+                    "type": "int",
+                    "primaryKey": true
+                },
+                {
+                    "name": "name",
+                    "type": "varchar(50)"
+                },
+                {
+                    "name": "description",
+                    "type": "varchar(50)"
+                }
+            ]
+        },
+        {
+            "name": "cart",
+            "columns": [
+                {
+                    "name": "cart_id",
+                    "type": "int",
+                    "primaryKey": true
+                },
+                {
+                    "name": "goods_id",
+                    "type": "varchar(50)"
+                },
+                {
+                    "name": "user_id",
+                    "type": "varchar(50)"
+                }
+            ]
+        }
+    ]
+}
