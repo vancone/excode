@@ -46,8 +46,6 @@
             <version>1.7</version>
         </dependency>
 
-        <!-- GUI Module Dependencies -->
-
         <dependency>
             <groupId>org.fxmisc.richtext</groupId>
             <artifactId>richtextfx</artifactId>
@@ -79,6 +77,18 @@
             <version>2.1.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>262</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+            <version>2.2.5.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -105,6 +115,15 @@
                 <configuration>
                     <mainClass>com.mekcone.incrud.InCRUD</mainClass>
                     <vendor>MekCone</vendor>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>maven</groupId>
+                <artifactId>maven-nsis-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <projectFile>/path/to/nsis/project/file</projectFile>
                 </configuration>
             </plugin>
         </plugins>

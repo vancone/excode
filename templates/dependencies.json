@@ -1,0 +1,58 @@
+{
+    "dependencies": [
+        {
+            "label": "mysql",
+            "groupId": "mysql",
+            "artifactId": "mysql-connector-java",
+            "scope": "runtime",
+            "properties": [
+                {
+                    "key": "spring.datasource.driver-class-name",
+                    "default": "com.mysql.cj.jdbc.Driver"
+                },
+                {
+                    "key": "spring.datasource.url",
+                    "prefix": "jdbc:mysql://"
+                },
+                {
+                    "key": "spring.datasource.username"
+                },
+                {
+                    "key": "spring.datasource.password"
+                }
+            ]
+        },
+        {
+            "label": "redis",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-redis"
+        },
+        {
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-web"
+        },
+        {
+            "groupId": "org.mybatis.spring.boot",
+            "artifactId": "mybatis-spring-boot-starter",
+            "version": "2.1.1"
+        },
+        {
+            "groupId": "",
+            "artifactId": "",
+            "version": "",
+            "scope": ""
+        },
+        {
+            "groupId": "",
+            "artifactId": "",
+            "version": "",
+            "scope": ""
+        },
+        {
+            "groupId": "",
+            "artifactId": "",
+            "version": "",
+            "scope": ""
+        }
+    ]
+}

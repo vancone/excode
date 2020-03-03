@@ -5,46 +5,39 @@
     "description": "MekCone Mall Project",
     "dependencies": [
         {
+            "label": "mysql",
             "groupId": "mysql",
             "artifactId": "mysql-connector-java",
-            "version": "8.0.0"
-        }
-    ],
-    "modules": [
-        {
-            "id": "mysql",
-            "config": [
+            "version": "8.0.19",
+            "properties": [
                 {
-                    "key": "url",
-                    "value": "gakiton.cn:3306/ttmek_mall"
+                    "key": "spring.datasource.url",
+                    "value": "jdbc:mysql://gakiton.cn:3306/mall"
                 },
                 {
-                    "key": "username",
+                    "key": "spring.datasource.username",
                     "value": "root"
                 },
                 {
-                    "key": "password",
-                    "value": "sonnakotowanai!"
+                    "key": "spring.datasource.password",
+                    "value": "xxxxxx"
+                },
+                {
+                    "key": "spring.datasource.driver-class-name",
+                    "value": "com.mysql.cj.jdbc.Driver"
                 }
             ]
         },
-
         {
-            "id": "redis",
-            "config": [
-                {
-                    "key": "host",
-                    "value": "gakiton.cn"
-                },
-                {
-                    "key": "port",
-                    "value": "6379"
-                },
-                {
-                    "key": "password",
-                    "value": "11223344"
-                }
-            ]
+            "label": "spring-boot-web",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-web"
+        },
+        {
+            "label": "mybatis",
+            "groupId": "org.mybatis.spring.boot",
+            "artifactId": "mybatis-spring-boot-starter",
+            "version": "2.1.1"
         }
     ],
     "tables": [

@@ -27,12 +27,12 @@
 <?import javafx.scene.control.Tab?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:id="wrapper" styleClass="wrapper"
-            fx:controller="com.mekcone.incrud.gui.controller.MainWindowController" stylesheets="@/stylesheets/MainWindow.css">
+            fx:controller="com.mekcone.incrud.controller.MainWindowController" stylesheets="@/css/MainWindow.css">
     <top>
         <BorderPane>
             <center>
 
-                <HBox fx:id="topBarWrapper" prefHeight="40" onMousePressed="#press" onMouseDragged="#drag">
+                <HBox fx:id="topBarWrapper" prefHeight="40">
 <!--                    <Label styleClass="title" text="AutoCRUD"/>-->
                 <MenuBar fx:id="menuBar">
                     <Menu fx:id="menuFile" text="_File" styleClass="menu">
@@ -54,6 +54,9 @@
                     <Menu text="_Tables">
                         <MenuItem styleClass="menuItem" text="Auto Scan"></MenuItem>
                     </Menu>
+                    <Menu text="_Build">
+                        <MenuItem styleClass="menuItem" text="Build All"></MenuItem>
+                    </Menu>
                     <Menu text="_Help">
                         <MenuItem styleClass="menuItem" text="About"></MenuItem>
                     </Menu>
@@ -70,7 +73,31 @@
             </right>
 
             <bottom>
-                <HBox fx:id="toolBar"></HBox>
+                <BorderPane styleClass="tool-bar">
+                    <right>
+                        <HBox>
+                            <Button onAction="#generate">
+                                <graphic>
+                                    <ImageView>
+                                        <image>
+                                            <Image url="/icons/generate.png"></Image>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+                            <Button onAction="#buildProject">
+                                <graphic>
+                                    <ImageView>
+                                        <image>
+                                            <Image url="/icons/build.png"></Image>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+                        </HBox>
+
+                    </right>
+                </BorderPane>
             </bottom>
         </BorderPane>
 
@@ -105,11 +132,7 @@
             </left>
 
             <center>
-                <VirtualizedScrollPane>
-                    <content>
-                        <CodeArea fx:id="codeArea" wrapText="true"></CodeArea>
-                    </content>
-                </VirtualizedScrollPane>
+                <TabPane fx:id="editorTabPane"></TabPane>
             </center>
 
             <right>
@@ -136,7 +159,13 @@
                                                 <Label text="Maven" style="-fx-translate-x: 12;"/>
                                             </HBox>
                                             <TreeView fx:id="mavenTreeView">
-                                                <TreeItem fx:id="mavenRootTreeItem" expanded="true"></TreeItem>
+                                                <TreeItem fx:id="mavenRootTreeItem" expanded="true" value="project">
+                                                    <children>
+                                                        <TreeItem fx:id="mavenGroupIdTreeItem" value="groupId"></TreeItem>
+                                                        <TreeItem fx:id="mavenArtifactIdTreeItem" value="artifactId"></TreeItem>
+                                                        <TreeItem fx:id="mavenDependencyTreeItem" value="dependencies"></TreeItem>
+                                                    </children>
+                                                </TreeItem>
                                             </TreeView>
                                         </VBox>
                                     </Group>
@@ -189,7 +218,7 @@
                         </Label>
                     </HBox>
                     <HBox fx:id="terminalWrapper">
-                        <TextArea fx:id="terminal"></TextArea>
+                        <CodeArea fx:id="terminal"></CodeArea>
                     </HBox>
                 </VBox>
             </bottom>
@@ -222,8 +251,8 @@
 
             </HBox>
             <HBox fx:id="bottomBar">
-                <Label fx:id="buttonShowRaw" text="RAW"></Label>
-                <Label styleClass="info" text="Information will be displayed here"/>
+                <Label fx:id="buttonShowRaw" text="RAW" onMouseClicked="#showRawProjectModel"></Label>
+                <Label fx:id="infoLabel" styleClass="info" text="Information will be displayed here"/>
             </HBox>
         </VBox>
 
