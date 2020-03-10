@@ -1,0 +1,375 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import org.fxmisc.richtext.CodeArea?>
+<?import org.fxmisc.flowless.VirtualizedScrollPane?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:id="mainBorderPane" styleClass="wrapper"
+            fx:controller="com.mekcone.excrud.controller.MainWindowController" stylesheets="@/css/MainWindow.css">
+    <top>
+        <BorderPane>
+            <center>
+                <HBox fx:id="topBarWrapper" prefHeight="40">
+                    <MenuBar>
+                        <Menu fx:id="menuFile" text="_File" styleClass="menu">
+                            <MenuItem styleClass="menuItem" fx:id="menuItemFileNew" text="New"
+                                      accelerator="Ctrl+N"></MenuItem>
+                            <MenuItem styleClass="menuItem" text="Open" accelerator="Ctrl+O"
+                                      onAction="#handleOpenFile"></MenuItem>
+                            <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
+                            <MenuItem styleClass="menuItem" text="Save" accelerator="Ctrl+S"></MenuItem>
+                            <MenuItem styleClass="menuItem" text="Save As..."></MenuItem>
+                            <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
+                            <MenuItem styleClass="menuItem" text="Settings"></MenuItem>
+                            <MenuItem styleClass="menuItem" text="Project Structure"
+                                      onAction="#handleProjectStructure"></MenuItem>
+                            <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
+                            <MenuItem styleClass="menuItem" text="Exit" onAction="#handleExit"
+                                      accelerator="Ctrl+Q"></MenuItem>
+                        </Menu>
+                        <Menu text="_Edit">
+                            <MenuItem styleClass="menuItem" text="Undo"></MenuItem>
+                            <MenuItem styleClass="menuItem" text="Redo"></MenuItem>
+                        </Menu>
+                        <Menu text="_Tables">
+                            <MenuItem styleClass="menuItem" text="Auto Scan"></MenuItem>
+                        </Menu>
+                        <Menu text="_Build">
+                            <MenuItem styleClass="menuItem" text="Build All"></MenuItem>
+                        </Menu>
+                        <Menu text="_Help">
+                            <MenuItem styleClass="menuItem" text="About"></MenuItem>
+                        </Menu>
+                    </MenuBar>
+                </HBox>
+            </center>
+
+            <bottom>
+                <BorderPane styleClass="tool-bar">
+                    <right>
+                        <HBox>
+                            <Button onAction="#generate">
+                                <tooltip>
+                                    <Tooltip text="Generate"/>
+                                </tooltip>
+                                <graphic>
+                                    <ImageView>
+                                        <image>
+                                            <Image url="/icons/generate.png"></Image>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+                            <Button onAction="#buildProject">
+                                <tooltip>
+                                    <Tooltip text="Build"/>
+                                </tooltip>
+                                <graphic>
+                                    <ImageView>
+                                        <image>
+                                            <Image url="/icons/build.png"></Image>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+
+                            <Button onAction="#runProject">
+                                <tooltip>
+                                    <Tooltip text="Run"/>
+                                </tooltip>
+                                <graphic>
+                                    <ImageView>
+                                        <image>
+                                            <Image url="/icons/run.png"></Image>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+
+                            <Button>
+                                <tooltip>
+                                    <Tooltip text="Stop"/>
+                                </tooltip>
+                                <graphic>
+                                    <ImageView>
+                                        <image>
+                                            <Image url="/icons/stop.png"></Image>
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Button>
+                        </HBox>
+
+                    </right>
+                </BorderPane>
+            </bottom>
+        </BorderPane>
+    </top>
+
+    <left>
+        <Group>
+            <TabPane fx:id="leftTabPane" style="-fx-rotate: -90;-fx-text-fill: #bbb">
+                <tabs>
+                    <Tab closable="false" text="Project" styleClass="tab"
+                         style="-fx-fill: #bbb;-fx-text-fill: #bbb;-fx-border:none;-fx-rotate: 180">
+                        <graphic>
+                            <ImageView style="-fx-rotate: 90">
+                                <image>
+                                    <Image url="/icons/folder.png"></Image>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                        <content>
+                            <Group>
+                                <VBox fx:id="projectTreeViewParent" style="-fx-rotate: 90" prefWidth="300">
+                                    <HBox styleClass="pane-bar">
+                                        <ImageView style="-fx-translate-x: 10; -fx-translate-y: 8;">
+                                            <image>
+                                                <Image url="/icons/maven.png"/>
+                                            </image>
+                                        </ImageView>
+                                        <Label text="Project" style="-fx-translate-x: 12;"/>
+                                    </HBox>
+                                    <TreeView fx:id="projectTreeView">
+                                        <TreeItem fx:id="projectRootTreeItem" expanded="true" value="Project">
+                                            <children>
+                                                <TreeItem fx:id="springBootProjectTreeItem" expanded="true" value="Spring Boot Project">
+                                                    <graphic>
+                                                        <ImageView>
+                                                            <image>
+                                                                <Image url="/icons/spring-boot.png"></Image>
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+                                                    <children>
+                                                        <TreeItem value="cross-config">
+                                                            <graphic>
+                                                                <ImageView>
+                                                                    <image>
+                                                                        <Image url="/icons/plugin.png"></Image>
+                                                                    </image>
+                                                                </ImageView>
+                                                            </graphic>
+                                                        </TreeItem>
+                                                        <TreeItem value="swagger2">
+                                                            <graphic>
+                                                                <ImageView>
+                                                                    <image>
+                                                                        <Image url="/icons/plugin.png"></Image>
+                                                                    </image>
+                                                                </ImageView>
+                                                            </graphic>
+                                                        </TreeItem>
+                                                    </children>
+                                                </TreeItem>
+                                            </children>
+                                        </TreeItem>
+                                    </TreeView>
+                                </VBox>
+                            </Group>
+                        </content>
+                    </Tab>
+                </tabs>
+            </TabPane>
+        </Group>
+    </left>
+
+    <center>
+        <TabPane fx:id="workplaceTabPane">
+            <tabs>
+                <Tab text="Spring Boot Project">
+                    <graphic>
+                        <ImageView>
+                            <image>
+                                <Image url="/icons/spring-boot.png"></Image>
+                            </image>
+                        </ImageView>
+                    </graphic>
+                    <content>
+                        <GridPane fx:id="springBootProjectPane" hgap="15" vgap="15">
+                            <Label text="General" style="-fx-font-size: 24" GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
+                            <Label text="Group ID" GridPane.rowIndex="1" GridPane.columnIndex="0"></Label>
+                            <TextField fx:id="groupIdTextField" GridPane.rowIndex="1" GridPane.columnIndex="1"></TextField>
+                            <Label text="Artifact ID" GridPane.rowIndex="2" GridPane.columnIndex="0"></Label>
+                            <TextField fx:id="artifactIdTextField" GridPane.rowIndex="2" GridPane.columnIndex="1"></TextField>
+                            <Label text="Version" GridPane.rowIndex="3" GridPane.columnIndex="0"></Label>
+                            <TextField fx:id="versionTextField" GridPane.rowIndex="3" GridPane.columnIndex="1"></TextField>
+                            <Label text="Plugins" style="-fx-font-size: 24" GridPane.columnIndex="0" GridPane.rowIndex="5"></Label>
+                            <TitledPane text="Cross Origin" styleClass="titled-pane" GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                                <content>
+                                    <GridPane styleClass="plugin-grid-pane" hgap="15" vgap="15">
+                                        <Label text="Allowed Origins" GridPane.rowIndex="0" GridPane.columnIndex="0"></Label>
+                                        <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"></TextField>
+                                    </GridPane>
+                                </content>
+                            </TitledPane>
+                        </GridPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+
+    <right>
+        <Group>
+            <TabPane style="-fx-rotate: 90;-fx-text-fill: #bbb">
+                <tabs>
+                    <Tab closable="false" text="POM" styleClass="tab"
+                         style="-fx-fill: #bbb;-fx-text-fill: #bbb;-fx-border:none">
+                        <graphic>
+                            <ImageView style="-fx-rotate: -90">
+                                <image>
+                                    <Image url="/icons/maven.png"></Image>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                        <content>
+                            <Group>
+                                <VBox fx:id="mavenPane" style="-fx-rotate: -90" prefWidth="300">
+                                    <HBox fx:id="mavenPaneBar" styleClass="pane-bar">
+                                        <ImageView style="-fx-translate-x: 10; -fx-translate-y: 8;">
+                                            <image>
+                                                <Image url="/icons/maven.png"/>
+                                            </image>
+                                        </ImageView>
+                                        <Label text="Maven" style="-fx-translate-x: 12;"/>
+                                    </HBox>
+                                    <TreeView fx:id="mavenTreeView">
+                                        <TreeItem fx:id="mavenRootTreeItem" expanded="true" value="project">
+                                            <children>
+                                                <TreeItem fx:id="mavenGroupIdTreeItem" value="groupId"></TreeItem>
+                                                <TreeItem fx:id="mavenArtifactIdTreeItem" value="artifactId"></TreeItem>
+                                                <TreeItem fx:id="mavenDependencyTreeItem"
+                                                          value="dependencies"></TreeItem>
+                                            </children>
+                                        </TreeItem>
+                                    </TreeView>
+                                </VBox>
+                            </Group>
+                        </content>
+                    </Tab>
+                    <Tab closable="false" text="Properties" style="-fx-text-fill: #bbb;-fx-border:none">
+                        <graphic>
+                            <ImageView style="-fx-rotate: -90">
+                                <image>
+                                    <Image url="/icons/database.png"></Image>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                        <content>
+                            <VBox style="-fx-rotate: -90;">
+                                <Label text="Maven @)###"/>
+                            </VBox>
+                        </content>
+                    </Tab>
+                    <Tab closable="false" text="Spring Boot" styleClass="tab"
+                         style="-fx-fill: #bbb;-fx-text-fill: #bbb;-fx-border:none;-fx-rotate: 180">
+                        <graphic>
+                            <ImageView style="-fx-rotate: 90">
+                                <image>
+                                    <Image url="/icons/folder.png"></Image>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                        <content>
+                            <Group>
+                                <VBox style="-fx-rotate: 90" prefWidth="300">
+                                    <HBox styleClass="pane-bar">
+                                        <ImageView style="-fx-translate-x: 10; -fx-translate-y: 8;">
+                                            <image>
+                                                <Image url="/icons/maven.png"/>
+                                            </image>
+                                        </ImageView>
+                                        <Label text="Spring Boot" style="-fx-translate-x: 12;"/>
+                                    </HBox>
+                                    <TreeView fx:id="treeViewProject">
+                                        <TreeItem fx:id="rootTreeItem" expanded="true"></TreeItem>
+                                    </TreeView>
+                                </VBox>
+                            </Group>
+                        </content>
+                    </Tab>
+                    <Tab closable="false" text="Tables">
+                        <graphic>
+                            <ImageView style="-fx-rotate: -90">
+                                <image>
+                                    <Image url="/icons/redis.png"></Image>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                        <content>
+                            <VBox style="-fx-rotate: -90;">
+                                <Label text="Maven @)###"/>
+                            </VBox>
+                        </content>
+                    </Tab>
+
+                    <Tab closable="false" text="Config">
+                        <graphic>
+                            <ImageView style="-fx-rotate: -90">
+                                <image>
+                                    <Image url="/icons/redis.png"></Image>
+                                </image>
+                            </ImageView>
+                        </graphic>
+                        <content>
+                            <VBox style="-fx-rotate: -90;">
+                                <Label text="Maven @)###"/>
+                            </VBox>
+                        </content>
+                    </Tab>
+                </tabs>
+            </TabPane>
+        </Group>
+    </right>
+
+    <bottom>
+        <VBox fx:id="bottomAreaVBox">
+            <Group>
+                <TabPane fx:id="bottomTabPane" style="-fx-rotate: -180; -fx-text-fill: #bbb;">
+                    <tabs>
+                        <Tab closable="false" text="Console" styleClass="tab"
+                             style="-fx-fill: #bbb;-fx-text-fill: #bbb;-fx-border:none;">
+                            <graphic>
+                                <ImageView style="-fx-rotate: 0">
+                                    <image>
+                                        <Image url="/icons/console.png"></Image>
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <content>
+                                <Group>
+                                    <VBox style="-fx-rotate: 180">
+                                        <HBox styleClass="pane-bar">
+                                            <ImageView style="-fx-translate-x: 10; -fx-translate-y: 8;">
+                                                <image>
+                                                    <Image url="/icons/console.png"/>
+                                                </image>
+                                            </ImageView>
+                                            <Label fx:id="terminalBarLabel" text="Console" style="-fx-translate-x: 12;"></Label>
+                                        </HBox>
+                                        <HBox fx:id="terminalWrapper">
+                                            <VirtualizedScrollPane>
+                                                <content>
+                                                    <CodeArea fx:id="terminal"></CodeArea>
+                                                </content>
+                                            </VirtualizedScrollPane>
+                                        </HBox>
+                                    </VBox>
+                                </Group>
+                            </content>
+                        </Tab>
+                        <Tab text="SSH" closable="false">
+
+                        </Tab>
+                    </tabs>
+                </TabPane>
+            </Group>
+
+            <HBox fx:id="bottomBar">
+                <Label fx:id="buttonShowRaw" text="RAW" onMouseClicked="#showRawProjectModel"></Label>
+                <Label fx:id="infoLabel" styleClass="info" text="Information will be displayed here"/>
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>

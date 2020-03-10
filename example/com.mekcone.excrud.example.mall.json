@@ -1,0 +1,105 @@
+{
+    "groupId": "com.mekcone.excrud.example",
+    "artifactId": "mall",
+    "version": "0.0.1",
+    "name": "MekCone Mall Example",
+    "description": "MekCone Mall Project",
+    "rsaPublicKey": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcaMe+5ZUOB51SznnzEMOvb30O1zlb1jrB3xo81vdVo+Yg3gAWSj4v4MSwFjF9rqf6Jxb9yp+oYqPx7ZcE1PkmDeH26HbHRNsiBS9IopS6AcLhFb4uwttuXA27fEmO1NM7VL32M1TmDwTebTQkIAZTwYWcbqyfYi+DNPcQhAFLVwIDAQAB",
+    "databases": [
+        {
+            "type": "mysql",
+            "host": "localhost:3306/mall",
+            "username": "root",
+            "password": "RSA(aqG5arROHlAoeBJ+N6a2anbgTJCrF53J6Drq1j00TDba3TyOXHjxLORPhgXLoFN4GhRUQ7KzVB8Aq8KTn+YtABtDr27DT9Mzd6n8oWD3m2YCtgeCNn8qjYMxaP769ki9UuGicO0FVsCTLMgGUs5SpHXdl8Jg4MLPdN60GSH4k5Q=)",
+            "tables": [
+                {
+                    "name": "goods",
+                    "description": "商品对象",
+                    "primaryKey": "goods_id",
+                    "columns": [
+                        {
+                            "name": "goods_id",
+                            "type": "int",
+                            "primaryKey": true
+                        },
+                        {
+                            "name": "name",
+                            "type": "varchar(50)",
+                            "primaryKey": false
+                        },
+                        {
+                            "name": "description",
+                            "type": "varchar(50)",
+                            "primaryKey": false
+                        }
+                    ]
+                },
+                {
+                    "name": "cart",
+                    "description": "购物车条目",
+                    "primaryKey": "cart_id",
+                    "columns": [
+                        {
+                            "name": "cart_id",
+                            "type": "int",
+                            "primaryKey": true
+                        },
+                        {
+                            "name": "goods_id",
+                            "type": "varchar(50)",
+                            "primaryKey": false
+                        },
+                        {
+                            "name": "user_id",
+                            "type": "varchar(50)",
+                            "primaryKey": false
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "apiDocument": {
+        "title": "甜筒商城",
+        "description": "甜筒商城后台接口文档",
+        "createKeyword": "创建",
+        "retrieveKeyword": "获取",
+        "retrieveListKeyword": "获取所有",
+        "updateKeyword": "更新",
+        "deleteKeyword": "删除"
+    },
+    "exports": [
+        {
+            "type": "spring-boot-project",
+            "plugins": [
+                {
+                    "name": "spring-boot",
+                    "enable": false,
+                    "configs": null
+                },
+                {
+                    "name": "mybatis",
+                    "enable": false,
+                    "configs": null
+                },
+                {
+                    "name": "swagger2",
+                    "enable": true,
+                    "configs": null
+                },
+                {
+                    "name": "cross-origin",
+                    "enable": true,
+                    "configs": [
+                        {
+                            "key": "allowedOrigins",
+                            "values": [
+                                "*"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

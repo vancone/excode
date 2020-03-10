@@ -1,0 +1,14 @@
+{
+    "dependencies": [
+        {
+            "groupId": "io.springfox",
+            "artifactId": "springfox-swagger-ui",
+            "version": "2.9.2"
+        },
+        {
+            "groupId": "io.springfox",
+            "artifactId": "springfox-swagger2",
+            "version": "2.9.2"
+        }
+    ]
+}
