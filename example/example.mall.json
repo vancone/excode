@@ -1,0 +1,114 @@
+{
+  "groupId": "example",
+  "artifactId": "mall",
+  "version": "0.0.1",
+  "name": "MekCone Mall Example",
+  "description": "MekCone Mall Project",
+  "rsaPublicKey": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcaMe+5ZUOB51SznnzEMOvb30O1zlb1jrB3xo81vdVo+Yg3gAWSj4v4MSwFjF9rqf6Jxb9yp+oYqPx7ZcE1PkmDeH26HbHRNsiBS9IopS6AcLhFb4uwttuXA27fEmO1NM7VL32M1TmDwTebTQkIAZTwYWcbqyfYi+DNPcQhAFLVwIDAQAB",
+  "databases": [
+    {
+      "type": "mysql",
+      "host": "localhost:3306/mekcone_mall",
+      "username": "root",
+      "password": "123456",
+      "tables": [
+        {
+          "name": "goods",
+          "description": "商品对象",
+          "primaryKey": "goods_id",
+          "columns": [
+            {
+              "name": "goods_id",
+              "type": "int",
+              "primaryKey": true
+            },
+            {
+              "name": "goods_name",
+              "type": "varchar(50)",
+              "primaryKey": false
+            },
+            {
+              "name": "goods_description",
+              "type": "varchar(50)",
+              "primaryKey": false
+            }
+          ]
+        },
+        {
+          "name": "cart",
+          "description": "购物车条目",
+          "primaryKey": "cart_id",
+          "columns": [
+            {
+              "name": "item_id",
+              "type": "int",
+              "primaryKey": true
+            },
+            {
+              "name": "goods_id",
+              "type": "varchar(50)",
+              "primaryKey": false
+            },
+            {
+              "name": "user_id",
+              "type": "varchar(50)",
+              "primaryKey": false
+            },
+            {
+              "name": "amount",
+              "type": "varchar(50)",
+              "primaryKey": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "apiDocument": {
+    "title": "甜筒商城",
+    "description": "甜筒商城后台接口文档",
+    "createKeyword": "创建",
+    "retrieveKeyword": "获取",
+    "retrieveListKeyword": "获取所有",
+    "updateKeyword": "更新",
+    "deleteKeyword": "删除"
+  },
+  "exports": [
+    {
+      "type": "spring-boot-project",
+      "plugins": [
+        {
+          "name": "spring-boot",
+          "enable": false,
+          "configs": null
+        },
+        {
+          "name": "mybatis",
+          "enable": false,
+          "configs": null
+        },
+        {
+          "name": "swagger2",
+          "enable": true,
+          "configs": null
+        },
+        {
+          "name": "cross-origin",
+          "enable": true,
+          "configs": [
+            {
+              "key": "allowedOrigins",
+              "values": [
+                "*"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "lombok",
+          "enable": false
+        }
+      ]
+    }
+  ]
+}

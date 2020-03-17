@@ -1,19 +1,13 @@
 package com.mekcone.excrud.model.project.components;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class Export {
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public List<Plugin> getPlugins() {
-        return plugins;
-    }
+    private String type;
+    private List<Plugin> plugins;
 
     public Plugin getPlugin(String name) {
         for (Plugin plugin: plugins) {
@@ -23,11 +17,4 @@ public class Export {
         }
         return null;
     }
-
-    public void setPlugins(List<Plugin> plugins) {
-        this.plugins = plugins;
-    }
-
-    private String type;
-    private List<Plugin> plugins;
 }

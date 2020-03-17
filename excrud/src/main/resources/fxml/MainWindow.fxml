@@ -15,16 +15,15 @@
                             <MenuItem styleClass="menuItem" fx:id="menuItemFileNew" text="New"
                                       accelerator="Ctrl+N"></MenuItem>
                             <MenuItem styleClass="menuItem" text="Open" accelerator="Ctrl+O"
-                                      onAction="#handleOpenFile"></MenuItem>
+                                      onAction="#showOpenFileDialog"></MenuItem>
                             <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
                             <MenuItem styleClass="menuItem" text="Save" accelerator="Ctrl+S"></MenuItem>
                             <MenuItem styleClass="menuItem" text="Save As..."></MenuItem>
                             <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
                             <MenuItem styleClass="menuItem" text="Settings"></MenuItem>
-                            <MenuItem styleClass="menuItem" text="Project Structure"
-                                      onAction="#handleProjectStructure"></MenuItem>
+                            <MenuItem styleClass="menuItem" text="Project Structure"></MenuItem>
                             <SeparatorMenuItem style="-fx-border-color: #f00"></SeparatorMenuItem>
-                            <MenuItem styleClass="menuItem" text="Exit" onAction="#handleExit"
+                            <MenuItem styleClass="menuItem" text="Exit" onAction="#exit"
                                       accelerator="Ctrl+Q"></MenuItem>
                         </Menu>
                         <Menu text="_Edit">
@@ -48,7 +47,7 @@
                 <BorderPane styleClass="tool-bar">
                     <right>
                         <HBox>
-                            <Button onAction="#generate">
+                            <Button onAction="#generateProject">
                                 <tooltip>
                                     <Tooltip text="Generate"/>
                                 </tooltip>
@@ -348,10 +347,10 @@
                                             </ImageView>
                                             <Label fx:id="terminalBarLabel" text="Console" style="-fx-translate-x: 12;"></Label>
                                         </HBox>
-                                        <HBox fx:id="terminalWrapper">
+                                        <HBox fx:id="consoleWrapper" prefHeight="300">
                                             <VirtualizedScrollPane>
                                                 <content>
-                                                    <CodeArea fx:id="terminal"></CodeArea>
+                                                    <CodeArea fx:id="console"></CodeArea>
                                                 </content>
                                             </VirtualizedScrollPane>
                                         </HBox>

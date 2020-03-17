@@ -6,7 +6,7 @@ import javafx.beans.property.StringProperty;
 public class LogUtil {
     private static StringProperty logConsoleText = new SimpleStringProperty();
 
-    public static StringProperty getLogConsoleTextProperty() {
+    public static StringProperty logConsoleTextProperty() {
         return logConsoleText;
     }
 

@@ -1,18 +1,19 @@
 package com.mekcone.excrud.model.file.javalang.components;
 
-import com.mekcone.excrud.model.enums.AccessModifier;
-import com.mekcone.excrud.model.enums.BasicDataType;
+import com.mekcone.excrud.constant.JavaWords;
+import com.mekcone.excrud.model.file.javalang.components.annotations.Annotation;
 import com.mekcone.excrud.util.StringUtil;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class Variable {
-    private AccessModifier accessModifier;
+    private String accessModifier;
     private String type;
     private String name;
     private List<Annotation> annotations = new ArrayList<>();
-    private boolean isCustomizedObject;
 
     public Variable() {}
 
@@ -25,38 +26,8 @@ public class Variable {
         this.annotations.add(annotation);
     }
 
-    public AccessModifier getAccessModifier() {
-        return accessModifier;
-    }
-
-    public void setAccessModifier(AccessModifier accessModifier) {
-        this.accessModifier = accessModifier;
-    }
-
-    public String getType() {
-        return this.type.toString();
-    }
-
-    public void setType(String type) {
-        this.type = type;
-        this.isCustomizedObject = true;
-    }
-
-    public void setType(BasicDataType dataType) {
-        this.type = dataType.toString();
-        this.isCustomizedObject = false;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public String getCapitalizedCamelName() {
         return StringUtil.capitalizedCamel(name);
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -68,7 +39,7 @@ public class Variable {
             }
         }
         if (this.accessModifier != null) {
-            code += this.accessModifier.toString() + " ";
+            code += this.accessModifier + " ";
         }
 
         code += type + " " + name;
@@ -78,7 +49,7 @@ public class Variable {
 
     public static Variable privateVariable(String type, String name) {
         Variable variable = new Variable();
-        variable.accessModifier = AccessModifier.PRIVATE;
+        variable.accessModifier = JavaWords.PRIVATE;
         variable.type = type;
         variable.name = name;
         return variable;

@@ -1,6 +1,6 @@
 package ## groupId ##.## artifactId ##.mapper;
 
-import ## groupId ##.## artifactId ##.model.## Table ##;
+import ## groupId ##.## artifactId ##.entity.## Table ##;
 import java.util.List;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Service;

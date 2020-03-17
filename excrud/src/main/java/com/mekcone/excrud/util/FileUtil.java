@@ -1,6 +1,8 @@
 package com.mekcone.excrud.util;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtil {
     public static String read(String path){
@@ -34,5 +36,25 @@ public class FileUtil {
         if ((!directory.exists()) || (!directory.isDirectory())) {
             directory.mkdirs();
         }
+    }
+
+    public static List<String> readLine(String path) {
+        List<String> arrayList = new ArrayList<>();
+        try {
+            File file = new File(path);
+            InputStreamReader inputReader = new InputStreamReader(new FileInputStream(file));
+            BufferedReader bf = new BufferedReader(inputReader);
+
+            String str;
+            while ((str = bf.readLine()) != null) {
+                arrayList.add(str);
+            }
+            bf.close();
+            inputReader.close();
+        } catch (IOException e) {
+            return null;
+        }
+
+        return arrayList;
     }
 }

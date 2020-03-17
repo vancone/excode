@@ -1,0 +1,10 @@
+{
+    "dependencies": [
+        {
+            "groupId": "org.projectlombok",
+            "artifactId": "lombok",
+            "version": "1.18.12",
+            "scope": "provided"
+        }
+    ]
+}

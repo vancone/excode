@@ -1,9 +1,9 @@
 package com.mekcone.excrud.service;
 
-import com.mekcone.excrud.model.SettingModel;
+import com.mekcone.excrud.model.Settings;
 
 public interface SettingService {
-     SettingModel getSettingModel();
+     Settings getSettings();
      boolean initialize();
      boolean load();
      boolean save();

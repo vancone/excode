@@ -3,41 +3,42 @@ package com.mekcone.excrud.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.googlejavaformat.java.Formatter;
-import com.google.googlejavaformat.java.FormatterException;
+import com.mekcone.excrud.constant.JavaWords;
+import com.mekcone.excrud.constant.SpringBootProject;
 import com.mekcone.excrud.model.Template;
-import com.mekcone.excrud.model.enums.AccessModifier;
-import com.mekcone.excrud.model.enums.BasicDataType;
-import com.mekcone.excrud.model.file.javalang.JavaSourceFileModel;
+import com.mekcone.excrud.model.file.File;
+import com.mekcone.excrud.model.file.javalang.JavaSourceFile;
 import com.mekcone.excrud.model.file.javalang.components.*;
-import com.mekcone.excrud.model.file.sql.SqlFileModel;
-import com.mekcone.excrud.model.file.xml.PomXmlFileModel;
+import com.mekcone.excrud.model.file.javalang.components.annotations.Annotation;
+import com.mekcone.excrud.model.file.sql.SqlFile;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.model.project.components.*;
-import com.mekcone.excrud.service.ProjectModelService;
 import com.mekcone.excrud.service.ProjectService;
-import com.mekcone.excrud.util.FileUtil;
-import com.mekcone.excrud.util.LogUtil;
-import com.mekcone.excrud.util.PathUtil;
-import com.mekcone.excrud.util.StringUtil;
+import com.mekcone.excrud.service.SpringBootProjectService;
+import com.mekcone.excrud.util.*;
 import javafx.application.Platform;
-import javafx.util.Pair;
+import org.jdom2.Comment;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SpringBootProjectServiceImpl implements ProjectService {
+public class SpringBootProjectServiceImpl implements SpringBootProjectService {
 
     private final String EXPORT_TYPE = "spring-boot-project";
 
     @Autowired
-    private ProjectModelService projectModelService;
+    private ProjectService projectService;
 
     private String springBootProjectPath;
 
@@ -46,7 +47,7 @@ public class SpringBootProjectServiceImpl implements ProjectService {
     private Runnable buildRunnable = new Runnable() {
         @Override
         public void run() {
-            File file = new File(springBootProjectPath);
+            java.io.File file = new java.io.File(springBootProjectPath);
 
             // Compiling
             try {
@@ -84,11 +85,11 @@ public class SpringBootProjectServiceImpl implements ProjectService {
     private Runnable runRunnable = new Runnable() {
         @Override
         public void run() {
-            File file = new File(springBootProjectPath + "target/");
+            java.io.File file = new java.io.File(springBootProjectPath + "target/");
 
             // Running
             try {
-                Process child = Runtime.getRuntime().exec("java -jar " + projectModelService.getProject().getArtifactId() + "-" + projectModelService.getProject().getVersion() + ".jar", null, file);
+                Process child = Runtime.getRuntime().exec("java -jar " + projectService.getProject().getArtifactId() + "-" + projectService.getProject().getVersion() + ".jar", null, file);
 
                 InputStream child_in = child.getInputStream();
                 int c;
@@ -111,73 +112,96 @@ public class SpringBootProjectServiceImpl implements ProjectService {
         return true;
     }
 
-    private String formatJavaSourceCode(String code) {
-        try {
-            String formattedCode = new Formatter().formatSource(code);
-            return  formattedCode;
-        } catch (FormatterException e) {
-            LogUtil.warn("Format Java source code failed.");
-            return code;
+    private void createDirectories() {
+        List<String> paths = FileUtil.readLine("exports/spring-boot-project/directories.txt");
+        springBootProjectPath = PathUtil.getPath("EXPORT_PATH") + "/" + projectService.getProject().getArtifactId() + "-backend/";
+        String sourcePath = springBootProjectPath + "src/main/java/" + (projectService.getProject().getGroupId() + "." +
+                projectService.getProject().getArtifactId()).replace('.', '/');
+        for (String path : paths) {
+            path = path.replace("SRC_PATH", sourcePath);
+            FileUtil.checkDirectory(path);
         }
     }
 
+    private void preprocessTemplate(Template template, Table table) {
+        Project project = projectService.getProject();
+        String templateText = template.toString();
+        if (templateText.indexOf("## " + SpringBootProject.GROUP_ID + " ##") > -1) {
+            template.insert(SpringBootProject.GROUP_ID, project.getGroupId());
+        }
+        if (templateText.indexOf("## " + SpringBootProject.ARTIFACT_ID + " ##") > -1) {
+            template.insert(SpringBootProject.ARTIFACT_ID, project.getArtifactId());
+        }
+
+        if (table == null) return;
+
+        if (templateText.indexOf("## Table ##") > -1) {
+            template.insert("Table", table.getCapitalizedCamelName());
+        }
+
+        if (templateText.indexOf("## table ##") > -1) {
+            template.insert("table", table.getCamelName());
+        }
+
+        if (templateText.indexOf("## primaryKey ##") > -1) {
+            template.insert("primaryKey", table.getCamelPrimaryKey());
+        }
+
+        if (templateText.indexOf("## primary_key ##") > -1) {
+            template.insert("primary_key", table.getPrimaryKey());
+        }
+    }
+
+    private void preprocessTemplate(Template template) {
+        preprocessTemplate(template, null);
+    }
+
     @Override
-    public boolean generate() {
-        springBootProjectPath = PathUtil.getPath("EXPORT_PATH") + "/" + projectModelService.getProject().getArtifactId() + "-backend/";
+    public void generate() {
+        createDirectories();
+        springBootProjectPath = PathUtil.getPath("EXPORT_PATH") + "/" + projectService.getProject().getArtifactId() + "-backend/";
         String resourcesPath = springBootProjectPath + "src/main/resources/";
-        String sourcePath = springBootProjectPath + "src/main/java/" + (projectModelService.getProject().getGroupId() + "." + projectModelService.getProject().getArtifactId()).replace('.', '/') + "/";
+        String sourcePath = springBootProjectPath + "src/main/java/" + (projectService.getProject().getGroupId() + "." + projectService.getProject().getArtifactId()).replace('.', '/') + "/";
 
         FileUtil.checkDirectory(resourcesPath);
-        FileUtil.checkDirectory(sourcePath);
 
         FileUtil.write(springBootProjectPath + "pom.xml", stringifyPomXml());
         FileUtil.write(resourcesPath + "application.properties", stringifyApplicationProperties());
-        FileUtil.write(sourcePath + StringUtil.capitalizedCamel(projectModelService.getProject().getArtifactId()) + "Application.java", stringifyApplicationEntry());
-        FileUtil.write(springBootProjectPath + projectModelService.getProject().getArtifactId() + ".sql", stringifySql());
+        FileUtil.write(sourcePath + StringUtil.capitalizedCamel(projectService.getProject().getArtifactId()) + "Application.java", stringifyApplicationEntry());
+        FileUtil.write(springBootProjectPath + projectService.getProject().getArtifactId() + ".sql", stringifySql());
 
         String controllerPath = sourcePath + "controller/";
+        String entityPath = sourcePath + "entity/";
         String mybatisMapperPath = sourcePath + "mapper/";
-
-        FileUtil.checkDirectory(controllerPath);
-        FileUtil.checkDirectory(mybatisMapperPath);
-
-        for (Table table : projectModelService.getProject().getDatabases().get(0).getTables()) {
-            FileUtil.write(controllerPath + table.getCapitalizedCamelName() + "Controller.java", stringifyController(table));
-            FileUtil.write(mybatisMapperPath + table.getCapitalizedCamelName() + "Mapper.java", stringifyMybatisMapper(table));
-        }
-
-        // Models
-        String modelPath = sourcePath + "model/";
-        FileUtil.checkDirectory(modelPath);
-        for (Pair<String, String> modelPair : stringifyModels()) {
-            FileUtil.write(modelPath + modelPair.getKey() + ".java", modelPair.getValue());
-        }
-
-        // Services
         String servicePath = sourcePath + "service/";
-        FileUtil.checkDirectory(servicePath);
-        for (Pair<String, String> servicePair : stringifyServices()) {
-            FileUtil.write(servicePath + servicePair.getKey() + "Service.java", servicePair.getValue());
-        }
-
-        // ServiceImpl
         String serviceImplPath = sourcePath + "service/impl/";
-        FileUtil.checkDirectory(serviceImplPath);
-        for (Pair<String, String> serviceImplPair : stringifyServiceImpls()) {
-            FileUtil.write(serviceImplPath + serviceImplPair.getKey() + "ServiceImpl.java", serviceImplPair.getValue());
+
+        for (Table table : projectService.getProject().getDatabases().get(0).getTables()) {
+            FileUtil.write(controllerPath + table.getCapitalizedCamelName() + "Controller.java", stringifyController(table));
+            FileUtil.write(entityPath + table.getCapitalizedCamelName() + ".java", stringifyEntity(table));
+            FileUtil.write(mybatisMapperPath + table.getCapitalizedCamelName() + "Mapper.java", stringifyMybatisMapper(table));
+            FileUtil.write(servicePath + table.getCapitalizedCamelName() + "Service.java", stringifyService(table));
+            FileUtil.write(serviceImplPath + table.getCapitalizedCamelName() + "ServiceImpl.java", stringifyServiceImpl(table));
         }
 
         // Config
         String configPath = sourcePath + "config/";
-        FileUtil.checkDirectory(configPath);
-        for (Plugin plugin: export.getPlugins()) {
+        for (Plugin plugin : export.getPlugins()) {
             String configText = stringifyConfig(plugin);
             if (configText != null) {
-                FileUtil.write(configPath + StringUtil.capitalizedCamel(plugin.getName()) +  "Config.java", configText);
+                FileUtil.write(configPath + StringUtil.capitalizedCamel(plugin.getName()) + "Config.java", configText);
             }
         }
 
-        return true;
+        // Utils
+        String utilPath = sourcePath + "util/";
+        FileUtil.write(utilPath + "ResultVOUtil.java", stringifyUtil("ResultVOUtil"));
+
+        // VOs
+        String VOPath = sourcePath + "VO/";
+        FileUtil.write(VOPath + "ResultVO.java", stringifyVO("ResultVO"));
+
+        // throw new ExportException(ExportExceptionEnums.GENERATE_PROJECT_FAILED);
     }
 
     @Override
@@ -187,22 +211,23 @@ public class SpringBootProjectServiceImpl implements ProjectService {
         return true;
     }
 
+    @Override
     public String stringifyApplicationEntry() {
-        Project project = projectModelService.getProject();
+        Project project = projectService.getProject();
         Template template = new Template(EXPORT_TYPE, "Application.java");
-        template.insert("groupId", project.getGroupId());
-        template.insert("artifactId", project.getArtifactId());
+        preprocessTemplate(template);
         template.insert("ArtifactId", StringUtil.capitalize(project.getArtifactId()));
         return template.toString();
     }
 
+    @Override
     public String stringifyApplicationProperties() {
         String applicationPropertiesText = "";
 
         // Database properties
         applicationPropertiesText += "# database\n";
         if (export.getPlugin("mybatis") != null) {
-            Database database = projectModelService.getProject().getDatabases().get(0);
+            Database database = projectService.getProject().getDatabases().get(0);
             applicationPropertiesText += "spring.datasource.url = jdbc:" + database.getType() + "://" + database.getHost() + "\n";
             applicationPropertiesText += "spring.datasource.username = " + database.getUsername() + "\n";
             applicationPropertiesText += "spring.datasource.password = " + database.getPassword() + "\n\n";
@@ -215,17 +240,17 @@ public class SpringBootProjectServiceImpl implements ProjectService {
         return applicationPropertiesText;
     }
 
+    @Override
     public String stringifyConfig(Plugin plugin) {
-        Project project = projectModelService.getProject();
+        Project project = projectService.getProject();
         if (plugin.getName().equals("cross-origin")) {
             Template template = new Template(EXPORT_TYPE, "config/CrossOriginConfig.java");
-            template.insert("groupId", project.getGroupId());
-            template.insert("artifactId", project.getArtifactId());
+            preprocessTemplate(template);
 
             Config config = plugin.getConfig("allowedOrigins");
             if (config != null) {
                 String allowedOriginsText = "";
-                for (int i = 0; i < config.getValues().size(); i ++) {
+                for (int i = 0; i < config.getValues().size(); i++) {
                     allowedOriginsText += "\"" + config.getValues().get(i) + "\"";
                     if (i + 1 != config.getValues().size()) {
                         allowedOriginsText += ",";
@@ -239,7 +264,7 @@ public class SpringBootProjectServiceImpl implements ProjectService {
             config = plugin.getConfig("allowedHeaders");
             if (config != null) {
                 String allowedHeadersText = "";
-                for (int i = 0; i < config.getValues().size(); i ++) {
+                for (int i = 0; i < config.getValues().size(); i++) {
                     allowedHeadersText += "\"" + config.getValues().get(i) + "\"";
                     if (i + 1 != config.getValues().size()) {
                         allowedHeadersText += ",";
@@ -253,7 +278,7 @@ public class SpringBootProjectServiceImpl implements ProjectService {
             config = plugin.getConfig("allowedMethods");
             if (config != null) {
                 String allowedMethodsText = "";
-                for (int i = 0; i < config.getValues().size(); i ++) {
+                for (int i = 0; i < config.getValues().size(); i++) {
                     allowedMethodsText += "\"" + config.getValues().get(i) + "\"";
                     if (i + 1 != config.getValues().size()) {
                         allowedMethodsText += ",";
@@ -265,12 +290,9 @@ public class SpringBootProjectServiceImpl implements ProjectService {
             }
 
             return template.toString();
-        }
-
-        else if (plugin.getName().equals("swagger2") && plugin.isEnable()) {
+        } else if (plugin.getName().equals(SpringBootProject.PLUGIN_SWAGGER2) && plugin.isEnable()) {
             Template template = new Template(EXPORT_TYPE, "config/Swagger2Config.java");
-            template.insert("groupId", project.getGroupId());
-            template.insert("artifactId", project.getArtifactId());
+            preprocessTemplate(template);
 
             String title = project.getApiDocument().getTitle();
             if (title != null) {
@@ -292,7 +314,7 @@ public class SpringBootProjectServiceImpl implements ProjectService {
 
             String swaggerTags = "";
             List<Table> tables = project.getDatabases().get(0).getTables();
-            for (int i = 0; i < tables.size(); i ++) {
+            for (int i = 0; i < tables.size(); i++) {
                 swaggerTags += "new Tag(\"" + tables.get(i).getCapitalizedCamelName() + "\", " + "\"" + tables.get(i).getDescription() + "\")";
                 if (i + 1 == tables.size()) {
                     swaggerTags += "\n";
@@ -307,21 +329,14 @@ public class SpringBootProjectServiceImpl implements ProjectService {
         return null;
     }
 
+    @Override
     public String stringifyController(Table table) {
-        Project project = projectModelService.getProject();
-        String groupId = project.getGroupId();
-        String artifactId = project.getArtifactId();
-
         Template template = new Template(EXPORT_TYPE, "controller/Controller.java");
-        template.insert("groupId", groupId);
-        template.insert("artifactId", artifactId);
-        template.insert("Table", table.getCapitalizedCamelName());
-        template.insert("table", table.getCamelName());
-        template.insert("primaryKey", table.getCamelPrimaryKey());
+        preprocessTemplate(template, table);
 
-        Plugin swagger2Plugin = export.getPlugin("swagger2");
+        Plugin swagger2Plugin = export.getPlugin(SpringBootProject.PLUGIN_SWAGGER2);
         if (swagger2Plugin != null && swagger2Plugin.isEnable()) {
-            ApiDocument apiDocument = project.getApiDocument();
+            ApiDocument apiDocument = projectService.getProject().getApiDocument();
             template.insert("swagger2Tag", "@Api(tags={\"" + table.getCapitalizedCamelName() + "\"})");
             template.insertOnce("swagger2ApiOperation", "@ApiOperation(value = \"" + apiDocument.getCreateKeyword() + table.getDescription() + "\")");
             template.insertOnce("swagger2ApiOperation", "@ApiOperation(value = \"" + apiDocument.getRetrieveKeyword() + table.getDescription() + "\")");
@@ -336,64 +351,63 @@ public class SpringBootProjectServiceImpl implements ProjectService {
         return template.toString();
     }
 
-    public List<Pair<String, String>> stringifyModels() {
-        Project project = projectModelService.getProject();
+    @Override
+    public String stringifyEntity(Table table) {
+        Project project = projectService.getProject();
         String groupId = project.getGroupId();
         String artifactId = project.getArtifactId();
-        List<Pair<String, String>> modelPairs = new ArrayList<>();
-        for (Table table : project.getDatabases().get(0).getTables()) {
-            JavaSourceFileModel modelFileModel = new JavaSourceFileModel();
 
-            Bean bean = new Bean(AccessModifier.PUBLIC, table.getCapitalizedCamelName());
-            for (Column column : table.getColumns()) {
-                String type = column.getType();
-                if (!type.equals("int")) {
-                    type = "String";
-                }
+        boolean lombokEnabled = false;
+        Plugin plugin = export.getPlugin(SpringBootProject.PLUGIN_LOMBOK);
+        if (plugin != null) {
+            if (plugin.isEnable()) {
+                lombokEnabled = true;
+            }
+        }
 
-                Variable variable = Variable.privateVariable(type, column.getCamelName());
-                bean.addVariable(variable);
+        JavaSourceFile entityJavaSourceFile = new JavaSourceFile();
+
+        Bean bean = new Bean(JavaWords.PUBLIC, table.getCapitalizedCamelName());
+        if (lombokEnabled) {
+            bean.addAnnotation(Annotation.simpleAnnotation("Data"));
+            entityJavaSourceFile.addImportedItem("lombok.Data");
+        }
+        for (Column column : table.getColumns()) {
+            String type = column.getType();
+            if (!type.equals(JavaWords.INT)) {
+                type = JavaWords.STRING;
+            }
+
+            Variable variable = Variable.privateVariable(type, column.getCamelName());
+            bean.addVariable(variable);
+            if (!lombokEnabled) {
                 bean.addMethod(Method.getter(variable));
                 bean.addMethod(Method.setter(variable));
             }
-
-            modelFileModel.setPackageName(groupId + "." + artifactId + ".model");
-            modelFileModel.setBean(bean);
-
-            modelPairs.add(new Pair<>(StringUtil.capitalizedCamel(table.getName()), modelFileModel.toString()));
         }
 
-        // Copy template RestResponse.java
-        Template template = new Template("spring-boot-project", "model/RestResponse.java");
-        template.insert("groupId", groupId);
-        template.insert("artifactId", artifactId);
-        modelPairs.add(new Pair<>("RestResponse", template.toString()));
-        return modelPairs;
+        entityJavaSourceFile.setPackageName(groupId + "." + artifactId + ".entity");
+        entityJavaSourceFile.setBean(bean);
+
+        return entityJavaSourceFile.toString();
     }
 
+    @Override
     public String stringifyMybatisMapper(Table table) {
-        Project project = projectModelService.getProject();
-        String groupId = project.getGroupId();
-        String artifactId = project.getArtifactId();
-
         if (table.isPrimaryKeyBlank()) {
             LogUtil.warn("Mapper interface cannot be generated from a table without a primary key");
         }
 
         Template template = new Template(EXPORT_TYPE, "mapper/Mapper.java");
-        template.insert("groupId", groupId);
-        template.insert("artifactId", artifactId);
-        template.insert("Table", table.getCapitalizedCamelName());
-        template.insert("table", table.getCamelName());
-        template.insert("primaryKey", table.getCamelPrimaryKey());
-        template.insert("primary_key", table.getPrimaryKey());
+        preprocessTemplate(template);
+        preprocessTemplate(template, table);
 
         String columnKeys = "";
         String columnTags = "";
         String resultAnnotations = "";
         String columnKeyTagExpressions = "";
 
-        for (int i = 0; i < table.getColumns().size(); i ++) {
+        for (int i = 0; i < table.getColumns().size(); i++) {
             Column column = table.getColumns().get(i);
             if (!column.isPrimaryKey()) {
                 columnKeys += column.getName();
@@ -417,20 +431,51 @@ public class SpringBootProjectServiceImpl implements ProjectService {
         template.insert("resultAnnotations", resultAnnotations);
         template.insert("columnKeyTagExpressions", columnKeyTagExpressions);
 
-        return formatJavaSourceCode(template.toString());
+        return JavaFormatUtil.format(template.toString());
     }
 
+    @Override
     public String stringifyPomXml() {
         if (export == null) {
-            export = projectModelService.getProject().getSpringBootProjectExport();
+            export = projectService.getProject().getSpringBootProjectExport();
         }
 
-        PomXmlFileModel pomXmlFileModel = new PomXmlFileModel();
-        Project project = projectModelService.getProject();
-        pomXmlFileModel.setGroupId(project.getGroupId());
-        pomXmlFileModel.setArtifactId(project.getArtifactId());
-        pomXmlFileModel.setVersion(project.getVersion());
+        Project project = projectService.getProject();
 
+        // Root
+        Element rootElement = new Element("project");
+        Document document = new Document(rootElement);
+        rootElement.addContent(new Comment(File.getDescription()));
+        Namespace xmlns = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
+        rootElement.setNamespace(xmlns);
+        Namespace xsi = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        rootElement.addNamespaceDeclaration(xsi);
+        rootElement.setAttribute("schemaLocation", "http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd", xsi);
+        rootElement.addContent(new Element("modelVersion", xmlns).setText("4.0.0"));
+
+        // Parent
+        Element parentElement = new Element("parent", xmlns);
+        rootElement.addContent(parentElement);
+        parentElement.addContent(new Element(SpringBootProject.GROUP_ID, xmlns).setText("org.springframework.boot"));
+        parentElement.addContent(new Element(SpringBootProject.ARTIFACT_ID, xmlns).setText("spring-boot-starter-parent"));
+        parentElement.addContent(new Element(SpringBootProject.VERSION, xmlns).setText("2.2.1.RELEASE"));
+        parentElement.addContent(new Element("relativePath", xmlns));
+
+        rootElement.addContent(new Element(SpringBootProject.GROUP_ID, xmlns).setText(project.getGroupId()));
+        rootElement.addContent(new Element(SpringBootProject.ARTIFACT_ID, xmlns).setText(project.getArtifactId()));
+        rootElement.addContent(new Element(SpringBootProject.VERSION, xmlns).setText(project.getVersion()));
+        rootElement.addContent(new Element("name", xmlns).setText(project.getArtifactId()));
+        rootElement.addContent(new Element("description", xmlns).setText(
+                StringUtil.capitalize(project.getArtifactId()) +
+                        " Project auto-generated by com.mekcone.autocrud.AutoCRUD"
+        ));
+
+        // Properties
+        Element propertiesElement = new Element("properties", xmlns);
+        rootElement.addContent(propertiesElement);
+        propertiesElement.addContent(new Element("java.version", xmlns).setText("1.8"));
+
+        // Dependencies
         List<Dependency> dependencies = new ArrayList<>();
 
         for (Plugin plugin : export.getPlugins()) {
@@ -441,15 +486,18 @@ public class SpringBootProjectServiceImpl implements ProjectService {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode rootNode = objectMapper.readTree(pluginText);
-                JsonNode dependenciesJsonNode = rootNode.path("dependencies");
+                JsonNode dependenciesJsonNode = rootNode.path(SpringBootProject.DEPENDENCIES);
                 if (dependenciesJsonNode != null) {
                     if (dependenciesJsonNode.isArray()) {
                         for (JsonNode dependencyJsonNode : dependenciesJsonNode) {
                             Dependency dependency = new Dependency();
-                            dependency.setGroupId(dependencyJsonNode.path("groupId").asText());
-                            dependency.setArtifactId(dependencyJsonNode.path("artifactId").asText());
-                            if (!dependencyJsonNode.path("version").asText().isEmpty()) {
-                                dependency.setVersion(dependencyJsonNode.path("version").asText());
+                            dependency.setGroupId(dependencyJsonNode.path(SpringBootProject.GROUP_ID).asText());
+                            dependency.setArtifactId(dependencyJsonNode.path(SpringBootProject.ARTIFACT_ID).asText());
+                            if (!dependencyJsonNode.path(SpringBootProject.VERSION).asText().isEmpty()) {
+                                dependency.setVersion(dependencyJsonNode.path(SpringBootProject.VERSION).asText());
+                            }
+                            if (!dependencyJsonNode.path(SpringBootProject.SCOPE).asText().isEmpty()) {
+                                dependency.setVersion(dependencyJsonNode.path(SpringBootProject.SCOPE).asText());
                             }
                             dependencies.add(dependency);
                         }
@@ -459,169 +507,91 @@ public class SpringBootProjectServiceImpl implements ProjectService {
                 LogUtil.warn(e.getMessage());
             }
         }
-        pomXmlFileModel.setDependencies(dependencies);
-        return pomXmlFileModel.toString();
+
+        Element dependenciesElement = new Element("dependencies", xmlns);
+        rootElement.addContent(dependenciesElement);
+
+        for (Dependency dependency: dependencies) {
+            Element dependencyElement = new Element("dependency", xmlns);
+            dependencyElement.addContent(new Element(SpringBootProject.GROUP_ID, xmlns).setText(dependency.getGroupId()));
+            dependencyElement.addContent(new Element(SpringBootProject.ARTIFACT_ID, xmlns).setText(dependency.getArtifactId()));
+            if (dependency.getVersion() != null) {
+                dependencyElement.addContent(new Element(SpringBootProject.VERSION, xmlns).setText(dependency.getVersion()));
+            }
+            if (dependency.getScope() != null) {
+                dependencyElement.addContent(new Element(SpringBootProject.SCOPE, xmlns).setText(dependency.getScope()));
+            }
+            dependenciesElement.addContent(dependencyElement);
+        }
+
+        // Spring Boot Starter Test
+        Element testDependencyElement = new Element("dependency", xmlns);
+        testDependencyElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
+        testDependencyElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-starter-test"));
+        testDependencyElement.addContent(new Element("scope", xmlns).setText("test"));
+        Element exclusionsElement = new Element("exclusions", xmlns);
+        testDependencyElement.addContent(exclusionsElement);
+        Element exclusionElement = new Element("exclusion", xmlns);
+        exclusionsElement.addContent(exclusionElement);
+        exclusionElement.addContent(new Element("groupId", xmlns).setText("org.junit.vintage"));
+        exclusionElement.addContent(new Element("artifactId", xmlns).setText("junit-vintage-engine"));
+        dependenciesElement.addContent(testDependencyElement);
+
+        // <build></build>
+        Element buildElement = new Element("build", xmlns);
+        rootElement.addContent(buildElement);
+        Element pluginsElement = new Element("plugins", xmlns);
+        buildElement.addContent(pluginsElement);
+        Element pluginElement = new Element("plugin", xmlns);
+        pluginsElement.addContent(pluginElement);
+        pluginElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
+        pluginElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-maven-plugin"));
+
+        // Generate string
+        Format format = Format.getPrettyFormat();
+        format.setEncoding("UTF-8");
+        XMLOutputter xmlOutputter = new XMLOutputter(format);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        try {
+            xmlOutputter.output(document, byteArrayOutputStream);
+        } catch (IOException e) {
+            LogUtil.warn(e.getMessage());
+        }
+        return byteArrayOutputStream.toString();
     }
 
-    public List<Pair<String, String>> stringifyServices() {
-        Project project = projectModelService.getProject();
-        String groupId = project.getGroupId();
-        String artifactId = project.getArtifactId();
-        List<Pair<String, String>> servicePairs = new ArrayList<>();
-        for (Table table : project.getDatabases().get(0).getTables()) {
-            JavaSourceFileModel serviceFileModel = new JavaSourceFileModel();
-
-            serviceFileModel.setPackageName(groupId + "." + artifactId + ".service");
-            serviceFileModel.addImportedItem("java.util.List");
-            serviceFileModel.addImportedItem(groupId + "." + artifactId + ".model." + table.getCapitalizedCamelName());
-
-            Bean serviceInterface = new Bean();
-            serviceInterface.setName(table.getCapitalizedCamelName() + "Service");
-            serviceInterface.setInterface(true);
-            serviceInterface.setAccessModifier(AccessModifier.PUBLIC);
-
-            // CREATE
-            Method method = new Method();
-            method.setName("create");
-            method.setReturnType(BasicDataType.BOOLEAN.toString());
-            method.addParam(Variable.simpleVariable(table.getCapitalizedCamelName(), table.getCamelName()));
-            method.setHasBody(false);
-            serviceInterface.addMethod(method);
-
-            // RETRIEVE
-            method = new Method();
-            method.setName("retrieve");
-            method.setReturnType("List<" + table.getCapitalizedCamelName() + ">");
-            method.addParam(Variable.simpleVariable(BasicDataType.STRING.toString(), table.getCamelPrimaryKey()));
-            method.setHasBody(false);
-            serviceInterface.addMethod(method);
-
-            // RETRIEVE-ALL
-            method = new Method();
-            method.setName("retrieveAll");
-            method.setReturnType("List<" + table.getCapitalizedCamelName() + ">");
-            method.setHasBody(false);
-            serviceInterface.addMethod(method);
-
-            // UPDATE
-            method = new Method();
-            method.setName("update");
-            method.setReturnType(BasicDataType.BOOLEAN.toString());
-            method.addParam(Variable.simpleVariable(table.getCapitalizedCamelName(), table.getCamelName()));
-            method.setHasBody(false);
-            serviceInterface.addMethod(method);
-
-            // DELETE
-            method = new Method();
-            method.setName("delete");
-            method.setReturnType(BasicDataType.BOOLEAN.toString());
-            method.addParam(Variable.simpleVariable(BasicDataType.STRING.toString(), table.getCamelPrimaryKey()));
-            method.setHasBody(false);
-            serviceInterface.addMethod(method);
-
-            serviceFileModel.setBean(serviceInterface);
-
-            servicePairs.add(new Pair<>(table.getCapitalizedCamelName(), serviceFileModel.toString()));
-        }
-        return servicePairs;
+    @Override
+    public String stringifyService(Table table) {
+        Template template = new Template(EXPORT_TYPE, "service/Service.java");
+        preprocessTemplate(template, table);
+        return template.toString();
     }
 
-    public List<Pair<String, String>> stringifyServiceImpls() {
-        Project project = projectModelService.getProject();
-        String groupId = project.getGroupId();
-        String artifactId = project.getArtifactId();
-        List<Pair<String, String>> serviceImplPairs = new ArrayList<>();
-        for (Table table : project.getDatabases().get(0).getTables()) {
-            JavaSourceFileModel serviceImplFileModel = new JavaSourceFileModel();
+    @Override
+    public String stringifyServiceImpl(Table table) {
+        Template template = new Template(EXPORT_TYPE, "service/impl/ServiceImpl.java");
+        preprocessTemplate(template, table);
+        return template.toString();
+    }
 
-            serviceImplFileModel.setPackageName(groupId + "." + artifactId + ".service.impl");
-            serviceImplFileModel.addImportedItem("java.util.List");
-            serviceImplFileModel.addImportedItem("org.springframework.beans.factory.annotation.Autowired");
-            serviceImplFileModel.addImportedItem("org.springframework.stereotype.Service");
-            serviceImplFileModel.addImportedItem(groupId + "." + artifactId + ".mapper." + table.getCapitalizedCamelName() + "Mapper");
-            serviceImplFileModel.addImportedItem(groupId + "." + artifactId + ".model." + table.getCapitalizedCamelName());
-            serviceImplFileModel.addImportedItem(groupId + "." + artifactId + ".service." + table.getCapitalizedCamelName() + "Service");
+    @Override
+    public String stringifyUtil(String utilName) {
+        Template template = new Template(EXPORT_TYPE, "util/" + utilName + ".java");
+        preprocessTemplate(template);
+        return template.toString();
+    }
 
-            Annotation annotation = new Annotation("Service");
-
-            Bean serviceImplBean = Bean.publicClass(
-                    table.getCapitalizedCamelName() + "ServiceImpl"
-            );
-            serviceImplBean.setImplement(table.getCapitalizedCamelName() + "Service");
-            serviceImplBean.addAnnotation(annotation);
-
-            Variable variable = Variable.privateVariable(table.getCapitalizedCamelName() + "Mapper", table.getCamelName() + "Mapper");
-            variable.addAnnotation(new Annotation("Autowired"));
-            serviceImplBean.addVariable(variable);
-
-            // CREATE
-            Method method = Method.publicMethod("create");
-            method.addAnnotation(new Annotation("Override"));
-            method.setReturnType(BasicDataType.BOOLEAN.toString());
-            method.addParam(Variable.simpleVariable(table.getCapitalizedCamelName(), table.getCamelName()));
-            method.setHasBody(true);
-            method.addExpression(new Expression(table.getCamelName() + "Mapper.create(" + table.getCamelName() + ");"));
-            method.addExpression(Expression.returnExpression(Expression.simpleExpression("true")));
-            serviceImplBean.addMethod(method);
-
-            // RETRIEVE
-            method = Method.publicMethod("retrieve");
-            method.addAnnotation(new Annotation("Override"));
-            method.setReturnType("List<" + table.getCapitalizedCamelName() + ">");
-            method.addParam(Variable.simpleVariable(BasicDataType.STRING.toString(), table.getCamelPrimaryKey()));
-            method.setHasBody(true);
-            method.addExpression(new Expression("List<" +
-                    table.getCapitalizedCamelName() + "> " +
-                    table.getCamelName() + "List = " +
-                    table.getCamelName() + "Mapper.retrieve(" +
-                    table.getCamelPrimaryKey() + ");"
-            ));
-            method.addExpression(new Expression("return " + table.getCamelName() + "List;"));
-            serviceImplBean.addMethod(method);
-
-            // RETRIEVE-ALL
-            method = Method.publicMethod("retrieveAll");
-            method.addAnnotation(new Annotation("Override"));
-            method.setReturnType("List<" + table.getCapitalizedCamelName() + ">");
-            method.setHasBody(true);
-            method.addExpression(new Expression("List<" +
-                    table.getCapitalizedCamelName() + "> " +
-                    table.getCamelName() + "List = " +
-                    table.getCamelName() + "Mapper.retrieveAll();"
-            ));
-            method.addExpression(Expression.returnExpression(Expression.simpleExpression(table.getCamelName() + "List")));
-            serviceImplBean.addMethod(method);
-
-            // UPDATE
-            method = Method.publicMethod("update");
-            method.addAnnotation(Annotation.simpleAnnotation("Override"));
-            //method.addAnnotation(new SingleValueAnnotation("PutMapping", "/" + table.getCamelName()));
-            method.setReturnType(BasicDataType.BOOLEAN.toString());
-            method.addParam(Variable.simpleVariable(table.getCapitalizedCamelName(), table.getCamelName()));
-            method.setHasBody(true);
-            method.addExpression(new Expression(table.getCamelName() + "Mapper.update(" + table.getCamelName() + ");"));
-            method.addExpression(Expression.returnExpression(Expression.simpleExpression("true")));
-            serviceImplBean.addMethod(method);
-
-            // DELETE
-            method = Method.publicMethod("delete");
-            method.addAnnotation(new Annotation("Override"));
-            method.setReturnType(BasicDataType.BOOLEAN.toString());
-            method.addParam(Variable.simpleVariable(BasicDataType.STRING.toString(), table.getCamelPrimaryKey()));
-            method.setHasBody(true);
-            method.addExpression(new Expression(table.getCamelName() + "Mapper.delete(" + table.getCamelPrimaryKey() + ");"));
-            method.addExpression(Expression.returnExpression(Expression.simpleExpression("true")));
-            serviceImplBean.addMethod(method);
-
-            serviceImplFileModel.setBean(serviceImplBean);
-            serviceImplPairs.add(new Pair<>(table.getCapitalizedCamelName(), serviceImplFileModel.toString()));
-        }
-        return serviceImplPairs;
+    @Override
+    public String stringifyVO(String VOName) {
+        Template template = new Template(EXPORT_TYPE, "VO/" + VOName + ".java");
+        preprocessTemplate(template);
+        return template.toString();
     }
 
     public String stringifySql() {
-        SqlFileModel sqlFileModel = new SqlFileModel();
-        sqlFileModel.setTables(projectModelService.getProject().getDatabases().get(0).getTables());
+        SqlFile sqlFileModel = new SqlFile();
+        sqlFileModel.setTables(projectService.getProject().getDatabases().get(0).getTables());
         return sqlFileModel.toString();
     }
 }

@@ -1,11 +1,10 @@
 package com.mekcone.excrud.model.file.javalang.components;
 
+import lombok.Data;
+
+@Data
 public class Expression {
     private String data;
-
-    public void setData(String data) {
-        this.data = data;
-    }
 
     public Expression() {}
 

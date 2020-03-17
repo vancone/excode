@@ -4,7 +4,7 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.crypto.SecureUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mekcone.excrud.model.SettingModel;
+import com.mekcone.excrud.model.Settings;
 import com.mekcone.excrud.service.SettingService;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
@@ -18,14 +18,14 @@ import java.security.KeyPair;
 public class SettingServiceImpl implements SettingService {
 
     @Autowired
-    private SettingModel settingModel;
+    private Settings settings;
 
-    public SettingModel getSettingModel() {
-        return settingModel;
+    public Settings getSettings() {
+        return settings;
     }
 
-    public void setSettingModel(SettingModel settingModel) {
-        this.settingModel = settingModel;
+    public void setSettings(Settings settings) {
+        this.settings = settings;
     }
 
     private String configJsonPath = PathUtil.getProgramPath() + "config.json";
@@ -35,7 +35,7 @@ public class SettingServiceImpl implements SettingService {
         KeyPair pair = SecureUtil.generateKeyPair("RSA");
         String rsaPublicKey = Base64.encode((pair.getPublic().getEncoded()));
         String rsaPrivateKey = Base64.encode(pair.getPrivate().getEncoded());
-        settingModel.addRsaKeyPair(rsaPublicKey, rsaPrivateKey);
+        settings.addRsaKeyPair(rsaPublicKey, rsaPrivateKey);
         save();
         return false;
     }
@@ -46,7 +46,7 @@ public class SettingServiceImpl implements SettingService {
         if (data != null) {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
-                settingModel = objectMapper.readValue(data, SettingModel.class);
+                settings = objectMapper.readValue(data, Settings.class);
             } catch (Exception ex) {
                 LogUtil.warn(ex.getMessage());
                 return false;
@@ -61,7 +61,7 @@ public class SettingServiceImpl implements SettingService {
     public boolean save() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String settingModelText = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(settingModel);
+            String settingModelText = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(settings);
             return FileUtil.write(configJsonPath, settingModelText);
         } catch (JsonProcessingException e) {
             LogUtil.warn(e.getMessage());

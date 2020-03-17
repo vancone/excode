@@ -8,6 +8,7 @@ import com.mekcone.excrud.model.project.components.Database;
 import com.mekcone.excrud.model.project.components.Export;
 import com.mekcone.excrud.util.LogUtil;
 import javafx.beans.property.*;
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,14 +1,16 @@
 package com.mekcone.excrud.model.file.javalang.components;
 
-import com.mekcone.excrud.model.enums.AccessModifier;
-import com.mekcone.excrud.model.enums.BasicDataType;
+import com.mekcone.excrud.constant.JavaWords;
+import com.mekcone.excrud.model.file.javalang.components.annotations.Annotation;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Data
 public class Method {
-    private AccessModifier accessModifier;
+    private String accessModifier;
     private String returnType;
     private String name;
     private boolean staticMethod;
@@ -16,38 +18,6 @@ public class Method {
     private List<Variable> params = new ArrayList<>();
     private List<Expression> expressions = new ArrayList<>();
     private boolean hasBody = true;
-
-    public AccessModifier getAccessModifier() {
-        return accessModifier;
-    }
-
-    public void setAccessModifier(AccessModifier accessModifier) {
-        this.accessModifier = accessModifier;
-    }
-
-    public String getReturnType() {
-        return returnType;
-    }
-
-    public void setReturnType(String returnType) {
-        this.returnType = returnType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isStaticMethod() {
-        return this.staticMethod;
-    }
-
-    public void setStaticMethod(boolean staticMethod) {
-        this.staticMethod = staticMethod;
-    }
 
     public List<Annotation> getAnnotations() {
         return annotations;
@@ -77,13 +47,6 @@ public class Method {
         this.expressions.clear();
     }
 
-    public boolean isHasBody() {
-        return hasBody;
-    }
-
-    public void setHasBody(boolean hasBody) {
-        this.hasBody = hasBody;
-    }
 
     @Override
     public String toString() {
@@ -131,14 +94,14 @@ public class Method {
 
     public static Method publicMethod(String name) {
         Method method = new Method();
-        method.setAccessModifier(AccessModifier.PUBLIC);
+        method.setAccessModifier(JavaWords.PUBLIC);
         method.setName(name);
         return method;
     }
 
     public static Method publicMethod(String type, String name, Variable[] params, Expression[] expressions) {
         Method method = new Method();
-        method.setAccessModifier(AccessModifier.PUBLIC);
+        method.setAccessModifier(JavaWords.PUBLIC);
         method.setReturnType(type);
         method.setName(name);
         method.setHasBody(true);
@@ -149,7 +112,7 @@ public class Method {
 
     public static Method publicMethod(Annotation annotation, String type, String name, Expression[] expressions) {
         Method method = new Method();
-        method.setAccessModifier(AccessModifier.PUBLIC);
+        method.setAccessModifier(JavaWords.PUBLIC);
         method.setReturnType(type);
         method.setName(name);
         method.setHasBody(true);
@@ -166,7 +129,7 @@ public class Method {
 
     public static Method getter(Variable variable) {
         Method getter = new Method();
-        getter.setAccessModifier(AccessModifier.PUBLIC);
+        getter.setAccessModifier(JavaWords.PUBLIC);
         getter.setName("get" + variable.getCapitalizedCamelName());
         getter.setReturnType(variable.getType());
         getter.addExpression(Expression.returnExpression(Expression.simpleExpression("this." + variable.getName())));
@@ -175,9 +138,9 @@ public class Method {
 
     public static Method setter(Variable variable) {
         Method setter = new Method();
-        setter.setAccessModifier(AccessModifier.PUBLIC);
+        setter.setAccessModifier(JavaWords.PUBLIC);
         setter.setName("set" + variable.getCapitalizedCamelName());
-        setter.setReturnType(BasicDataType.VOID.toString());
+        setter.setReturnType(JavaWords.VOID.toString());
         setter.addParam(Variable.simpleVariable(variable.getType(), variable.getName()));
         setter.addExpression(new Expression("this." + variable.getName() + " = " + variable.getName() + ";"));
         return setter;

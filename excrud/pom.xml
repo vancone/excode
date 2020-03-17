@@ -95,6 +95,13 @@
             <version>5.1.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -119,7 +126,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>8.8.3</version>
                 <configuration>
-                    <mainClass>com.mekcone.excrud.ExCRUD</mainClass>
+                    <mainClass>com.mekcone.excrud.Application</mainClass>
                     <vendor>MekCone</vendor>
                 </configuration>
             </plugin>

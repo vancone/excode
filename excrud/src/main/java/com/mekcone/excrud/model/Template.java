@@ -13,17 +13,17 @@ public class Template {
         this.template = FileUtil.read(this.path);
     }
 
-    public boolean insert(String label, String content) {
-        int index = template.indexOf("## " + label + " ##");
+    public boolean insert(String tag, String content) {
+        int index = template.indexOf("## " + tag + " ##");
         if (index < 0) {
-            LogUtil.warn("label \"" + label  + "\" not found.");
+            LogUtil.warn("Tag \"" + tag  + "\" not found.");
             return false;
         }
 
         while (index > -1) {
             template = template.substring(0, index) + content +
-                    template.substring(index + label.length() + 6);
-            index = template.indexOf("## " + label + " ##");
+                    template.substring(index + tag.length() + 6);
+            index = template.indexOf("## " + tag + " ##");
         }
 
         return true;
