@@ -156,7 +156,7 @@ public class DragUtil {
             double y = event.getSceneY();
             double width = root.getWidth();
             double height = root.getHeight();
-            LogUtil.debug("x: " + x + "; y: " + y + "; width: " + width + ";height: " + height);
+            // LogUtil.debug("x: " + x + "; y: " + y + "; width: " + width + ";height: " + height);
             Cursor cursorType = Cursor.DEFAULT;// 鼠标光标初始为默认类型，若未进入调整窗口状态，保持默认类型
             // 先将所有调整窗口状态重置
             isRight = isBottomRight = isBottom = false;

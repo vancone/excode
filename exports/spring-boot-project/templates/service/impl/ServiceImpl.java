@@ -1,5 +1,6 @@
 package ## groupId ##.## artifactId ##.service.impl;
 
+## importPageHelper ##
 import ## groupId ##.## artifactId ##.entity.## Table ##;
 import ## groupId ##.## artifactId ##.mapper.## Table ##Mapper;
 import ## groupId ##.## artifactId ##.service.## Table ##Service;
@@ -27,6 +28,8 @@ public class ## Table ##ServiceImpl implements ## Table ##Service {
     List<## Table ##> ## table ##List = ## table ##Mapper.retrieveAll();
     return ## table ##List;
   }
+
+  ## retrieveListWithPageHelper ##
 
   @Override
   public void update(## Table ## ## table ##) {

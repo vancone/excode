@@ -3,18 +3,22 @@ package com.mekcone.excrud.model.project;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.mekcone.excrud.model.project.components.ApiDocument;
 import com.mekcone.excrud.model.project.components.Database;
 import com.mekcone.excrud.model.project.components.Export;
 import com.mekcone.excrud.util.LogUtil;
 import javafx.beans.property.*;
-import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
+@JacksonXmlRootElement(localName = "project")
 public class Project {
     private LongProperty modifiedState = new SimpleLongProperty();
     private StringProperty groupId = new SimpleStringProperty();
@@ -23,8 +27,14 @@ public class Project {
     private StringProperty name = new SimpleStringProperty();
     private StringProperty description = new SimpleStringProperty();
     private String rsaPublicKey;
+
+    @JacksonXmlElementWrapper(localName = "databases")
+    @JacksonXmlProperty(localName = "database")
     private ObjectProperty<List<Database>> databases = new SimpleObjectProperty<>();
+
     private ObjectProperty<ApiDocument> apiDocument = new SimpleObjectProperty<>();
+
+    @JacksonXmlElementWrapper(useWrapping = true)
     private ObjectProperty<List<Export>> exports = new SimpleObjectProperty<>();
 
     public ApiDocument getApiDocument() {
@@ -125,9 +135,11 @@ public class Project {
 
     @JsonIgnore
     public Export getSpringBootProjectExport() {
-        for (Export export: exports.getValue()) {
-            if (export.getType().equals("spring-boot-project")) {
-                return export;
+        if (exports != null) {
+            for (Export export: exports.getValue()) {
+                if (export.getType().equals("spring-boot-project")) {
+                    return export;
+                }
             }
         }
         return null;
@@ -137,8 +149,11 @@ public class Project {
     public String toString() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            // return objectMapper.writeValueAsString(this);
-            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+//            // return objectMapper.writeValueAsString(this);
+//            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+            XmlMapper xmlMapper = new XmlMapper();
+            xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            return xmlMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
         } catch (Exception ex) {
             LogUtil.warn(ex.getMessage());
             return null;

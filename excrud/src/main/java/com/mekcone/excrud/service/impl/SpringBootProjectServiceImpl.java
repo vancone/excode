@@ -1,18 +1,22 @@
 package com.mekcone.excrud.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mekcone.excrud.constant.JavaWords;
 import com.mekcone.excrud.constant.SpringBootProject;
 import com.mekcone.excrud.model.Template;
 import com.mekcone.excrud.model.file.File;
 import com.mekcone.excrud.model.file.javalang.JavaSourceFile;
-import com.mekcone.excrud.model.file.javalang.components.*;
+import com.mekcone.excrud.model.file.javalang.components.Bean;
+import com.mekcone.excrud.model.file.javalang.components.Expression;
+import com.mekcone.excrud.model.file.javalang.components.Method;
+import com.mekcone.excrud.model.file.javalang.components.Variable;
 import com.mekcone.excrud.model.file.javalang.components.annotations.Annotation;
+import com.mekcone.excrud.model.file.javalang.components.annotations.KeyValueAnnotation;
 import com.mekcone.excrud.model.file.sql.SqlFile;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.model.project.components.*;
+import com.mekcone.excrud.model.springboot.PluginInfo;
 import com.mekcone.excrud.service.ProjectService;
 import com.mekcone.excrud.service.SpringBootProjectService;
 import com.mekcone.excrud.util.*;
@@ -224,6 +228,31 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
     public String stringifyApplicationProperties() {
         String applicationPropertiesText = "";
 
+        for (Plugin plugin : export.getPlugins()) {
+            String pluginText = FileUtil.read(PathUtil.getProgramPath() + "exports/spring-boot-project/plugins/" + plugin.getName() + ".json");
+            if (pluginText == null) {
+                continue;
+            }
+            try {
+                ObjectMapper objectMapper = new ObjectMapper();
+                PluginInfo pluginInfo = objectMapper.readValue(pluginText, PluginInfo.class);
+                List<Property> properties = pluginInfo.getProperties();
+                if (properties != null) {
+                    applicationPropertiesText += "# " + plugin.getName() + "\n";
+                    for (Property property : properties) {
+                        applicationPropertiesText += property.getKey() + " = ";
+                        if (property.getDefaultValue() != null) {
+                            applicationPropertiesText += property.getDefaultValue();
+                        }
+                        applicationPropertiesText += "\n";
+                    }
+                    applicationPropertiesText += "\n";
+                }
+            } catch (JsonProcessingException e) {
+                LogUtil.warn(e.getMessage());
+            }
+        }
+
         // Database properties
         applicationPropertiesText += "# database\n";
         if (export.getPlugin("mybatis") != null) {
@@ -250,12 +279,15 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
             Config config = plugin.getConfig("allowedOrigins");
             if (config != null) {
                 String allowedOriginsText = "";
-                for (int i = 0; i < config.getValues().size(); i++) {
-                    allowedOriginsText += "\"" + config.getValues().get(i) + "\"";
-                    if (i + 1 != config.getValues().size()) {
+                List<String> configItems = config.getConfigItems();
+
+                for (int i = 0; i < configItems.size(); i++) {
+                    allowedOriginsText += "\"" + configItems.get(i) + "\"";
+                    if (i + 1 != configItems.size()) {
                         allowedOriginsText += ",";
                     }
                 }
+
                 template.insert("allowedOrigins", ".allowedOrigins(" + allowedOriginsText + ")");
             } else {
                 template.remove("allowedOrigins");
@@ -264,9 +296,10 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
             config = plugin.getConfig("allowedHeaders");
             if (config != null) {
                 String allowedHeadersText = "";
-                for (int i = 0; i < config.getValues().size(); i++) {
-                    allowedHeadersText += "\"" + config.getValues().get(i) + "\"";
-                    if (i + 1 != config.getValues().size()) {
+                List<String> configItems = config.getConfigItems();
+                for (int i = 0; i < configItems.size(); i++) {
+                    allowedHeadersText += "\"" + configItems.get(i) + "\"";
+                    if (i + 1 != configItems.size()) {
                         allowedHeadersText += ",";
                     }
                 }
@@ -278,14 +311,18 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
             config = plugin.getConfig("allowedMethods");
             if (config != null) {
                 String allowedMethodsText = "";
-                for (int i = 0; i < config.getValues().size(); i++) {
-                    allowedMethodsText += "\"" + config.getValues().get(i) + "\"";
-                    if (i + 1 != config.getValues().size()) {
+                List<String> configItems = config.getConfigItems();
+                for (int i = 0; i < configItems.size(); i++) {
+                    LogUtil.info(configItems.get(i));
+                    allowedMethodsText += "\"" + configItems.get(i) + "\"";
+                    if (i + 1 != configItems.size()) {
                         allowedMethodsText += ",";
                     }
                 }
+                LogUtil.debug("METHOD FOUND -----------------------------------------------");
                 template.insert("allowedMethods", ".allowedMethods(" + allowedMethodsText + ")");
             } else {
+                LogUtil.debug("METHOD NOT FOUND -----------------------------------------------");
                 template.remove("allowedMethods");
             }
 
@@ -333,7 +370,6 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
     public String stringifyController(Table table) {
         Template template = new Template(EXPORT_TYPE, "controller/Controller.java");
         preprocessTemplate(template, table);
-
         Plugin swagger2Plugin = export.getPlugin(SpringBootProject.PLUGIN_SWAGGER2);
         if (swagger2Plugin != null && swagger2Plugin.isEnable()) {
             ApiDocument apiDocument = projectService.getProject().getApiDocument();
@@ -348,7 +384,45 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
             template.remove("swagger2ApiOperation");
         }
 
-        return template.toString();
+        Plugin pageHelperPlugin = export.getPlugin(SpringBootProject.PLUGIN_PAGE_HELPER);
+        String tableName = table.getCamelName();
+        String TableName = table.getCapitalizedCamelName();
+        Method method = new Method();
+        method.addAnnotation(Annotation.simpleAnnotation("GetMapping"));
+        method.setAccessModifier(JavaWords.PUBLIC);
+        method.setReturnType("ResultVO");
+        method.setName("retrieveList");
+
+        if (pageHelperPlugin != null && pageHelperPlugin.isEnable()) {
+            template.insert("importPageHelper", "import com.github.pagehelper.PageInfo;");
+
+            KeyValueAnnotation pageNoAnnotation = new KeyValueAnnotation("RequestParam");
+            pageNoAnnotation.addKeyValue("value", "pageNo");
+            pageNoAnnotation.addKeyValue("defaultValue", "1");
+            Variable pageNoVariable = Variable.simpleVariable(JavaWords.INT, "pageNo");
+            pageNoVariable.addAnnotation(pageNoAnnotation);
+            method.addParam(pageNoVariable);
+
+            KeyValueAnnotation pageSizeAnnotation = new KeyValueAnnotation("RequestParam");
+            pageSizeAnnotation.addKeyValue("value", "pageSize");
+            pageSizeAnnotation.addKeyValue("defaultValue", "5");
+            Variable pageSizeVariable = Variable.simpleVariable(JavaWords.INT, "pageSize");
+            pageSizeVariable.addAnnotation(pageSizeAnnotation);
+
+            method.addParam(pageSizeVariable);
+            method.addExpression(Expression.simpleExpression("PageInfo<" + TableName + "> " + tableName + "List = " +
+                    tableName + "Service.retrieveList(pageNo, pageSize);"));
+        } else {
+            template.remove("importPageHelper");
+
+            method.addExpression(Expression.simpleExpression("List<" + TableName + "> " + tableName + "List = " +
+                    tableName + "Service.retrieveList();"));
+        }
+        method.addExpression(Expression.returnExpression(
+                Expression.simpleExpression("ResultVOUtil.success(" + tableName + "List)")));
+        template.insert("retrieveListMethod", method.toString());
+
+        return JavaFormatUtil.format(template.toString());
     }
 
     @Override
@@ -467,7 +541,7 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
         rootElement.addContent(new Element("name", xmlns).setText(project.getArtifactId()));
         rootElement.addContent(new Element("description", xmlns).setText(
                 StringUtil.capitalize(project.getArtifactId()) +
-                        " Project auto-generated by com.mekcone.autocrud.AutoCRUD"
+                        " Project auto-generated by MekCone ExCRUD"
         ));
 
         // Properties
@@ -485,23 +559,9 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
             }
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
-                JsonNode rootNode = objectMapper.readTree(pluginText);
-                JsonNode dependenciesJsonNode = rootNode.path(SpringBootProject.DEPENDENCIES);
-                if (dependenciesJsonNode != null) {
-                    if (dependenciesJsonNode.isArray()) {
-                        for (JsonNode dependencyJsonNode : dependenciesJsonNode) {
-                            Dependency dependency = new Dependency();
-                            dependency.setGroupId(dependencyJsonNode.path(SpringBootProject.GROUP_ID).asText());
-                            dependency.setArtifactId(dependencyJsonNode.path(SpringBootProject.ARTIFACT_ID).asText());
-                            if (!dependencyJsonNode.path(SpringBootProject.VERSION).asText().isEmpty()) {
-                                dependency.setVersion(dependencyJsonNode.path(SpringBootProject.VERSION).asText());
-                            }
-                            if (!dependencyJsonNode.path(SpringBootProject.SCOPE).asText().isEmpty()) {
-                                dependency.setVersion(dependencyJsonNode.path(SpringBootProject.SCOPE).asText());
-                            }
-                            dependencies.add(dependency);
-                        }
-                    }
+                PluginInfo pluginInfo = objectMapper.readValue(pluginText, PluginInfo.class);
+                if (pluginInfo.getDependencies() != null) {
+                    dependencies.addAll(pluginInfo.getDependencies());
                 }
             } catch (JsonProcessingException e) {
                 LogUtil.warn(e.getMessage());
@@ -511,7 +571,7 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
         Element dependenciesElement = new Element("dependencies", xmlns);
         rootElement.addContent(dependenciesElement);
 
-        for (Dependency dependency: dependencies) {
+        for (Dependency dependency : dependencies) {
             Element dependencyElement = new Element("dependency", xmlns);
             dependencyElement.addContent(new Element(SpringBootProject.GROUP_ID, xmlns).setText(dependency.getGroupId()));
             dependencyElement.addContent(new Element(SpringBootProject.ARTIFACT_ID, xmlns).setText(dependency.getArtifactId()));
@@ -521,21 +581,16 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
             if (dependency.getScope() != null) {
                 dependencyElement.addContent(new Element(SpringBootProject.SCOPE, xmlns).setText(dependency.getScope()));
             }
+            if (dependency.getExclusions() != null) {
+                Element exclusionsElement = new Element("exclusions", xmlns);
+                dependencyElement.addContent(exclusionsElement);
+                Element exclusionElement = new Element("exclusion", xmlns);
+                exclusionsElement.addContent(exclusionElement);
+                exclusionElement.addContent(new Element("groupId", xmlns).setText("org.junit.vintage"));
+                exclusionElement.addContent(new Element("artifactId", xmlns).setText("junit-vintage-engine"));
+            }
             dependenciesElement.addContent(dependencyElement);
         }
-
-        // Spring Boot Starter Test
-        Element testDependencyElement = new Element("dependency", xmlns);
-        testDependencyElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
-        testDependencyElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-starter-test"));
-        testDependencyElement.addContent(new Element("scope", xmlns).setText("test"));
-        Element exclusionsElement = new Element("exclusions", xmlns);
-        testDependencyElement.addContent(exclusionsElement);
-        Element exclusionElement = new Element("exclusion", xmlns);
-        exclusionsElement.addContent(exclusionElement);
-        exclusionElement.addContent(new Element("groupId", xmlns).setText("org.junit.vintage"));
-        exclusionElement.addContent(new Element("artifactId", xmlns).setText("junit-vintage-engine"));
-        dependenciesElement.addContent(testDependencyElement);
 
         // <build></build>
         Element buildElement = new Element("build", xmlns);
@@ -565,14 +620,49 @@ public class SpringBootProjectServiceImpl implements SpringBootProjectService {
     public String stringifyService(Table table) {
         Template template = new Template(EXPORT_TYPE, "service/Service.java");
         preprocessTemplate(template, table);
-        return template.toString();
+        Plugin pageHelperPlugin = export.getPlugin(SpringBootProject.PLUGIN_PAGE_HELPER);
+        if (pageHelperPlugin != null && pageHelperPlugin.isEnable()) {
+            template.insert("importPageHelper", "import com.github.pagehelper.PageInfo;");
+            Method method = new Method();
+            method.setReturnType("PageInfo<" + table.getCapitalizedCamelName() + ">");
+            method.setName("retrieveList");
+            method.addParam(Variable.simpleVariable(JavaWords.INT, "pageNo"));
+            method.addParam(Variable.simpleVariable(JavaWords.INT, "pageSize"));
+            method.setHasBody(false);
+            template.insert("retrieveListWithPageHelper", method.toString());
+        } else {
+            template.remove("importPageHelper");
+            template.remove("retrieveListWithPageHelper");
+        }
+        return JavaFormatUtil.format(template.toString());
     }
 
     @Override
     public String stringifyServiceImpl(Table table) {
         Template template = new Template(EXPORT_TYPE, "service/impl/ServiceImpl.java");
         preprocessTemplate(template, table);
-        return template.toString();
+
+        Plugin pageHelperPlugin = export.getPlugin(SpringBootProject.PLUGIN_PAGE_HELPER);
+        if (pageHelperPlugin != null && pageHelperPlugin.isEnable()) {
+            template.insert("importPageHelper", "import com.github.pagehelper.PageHelper;\nimport com.github.pagehelper.PageInfo;");
+            Method method = new Method();
+            method.addAnnotation(Annotation.simpleAnnotation("Override"));
+            method.setAccessModifier(JavaWords.PUBLIC);
+            method.setReturnType("PageInfo<" + table.getCapitalizedCamelName() + ">");
+            method.setName("retrieveList");
+            method.addParam(Variable.simpleVariable(JavaWords.INT, "pageNo"));
+            method.addParam(Variable.simpleVariable(JavaWords.INT, "pageSize"));
+            method.addExpression(Expression.simpleExpression("PageHelper.startPage(pageNo, pageSize);"));
+            method.addExpression(Expression.simpleExpression("List<" + table.getCapitalizedCamelName() + "> " + table.getCamelName() + "List = retrieveList();"));
+            method.addExpression(Expression.simpleExpression("PageInfo<" + table.getCapitalizedCamelName() + "> pageInfo = new PageInfo<>(" + table.getCamelName() + "List);"));
+            method.addExpression(Expression.returnExpression(Expression.simpleExpression("pageInfo")));
+            template.insert("retrieveListWithPageHelper", method.toString());
+        } else {
+            template.remove("importPageHelper");
+            template.remove("retrieveListWithPageHelper");
+        }
+
+        return JavaFormatUtil.format(template.toString());
     }
 
     @Override

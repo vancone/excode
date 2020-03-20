@@ -37,7 +37,7 @@
                             <MenuItem styleClass="menuItem" text="Build All"></MenuItem>
                         </Menu>
                         <Menu text="_Help">
-                            <MenuItem styleClass="menuItem" text="About"></MenuItem>
+                            <MenuItem styleClass="menuItem" text="About" onAction="#showAboutWindow"></MenuItem>
                         </Menu>
                     </MenuBar>
                 </HBox>

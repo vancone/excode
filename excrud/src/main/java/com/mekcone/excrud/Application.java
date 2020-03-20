@@ -5,9 +5,14 @@ import com.mekcone.excrud.util.PathUtil;
 import com.mekcone.excrud.view.CustomSplashScreen;
 import com.mekcone.excrud.view.MainWindowView;
 import de.felixroske.jfxsupport.AbstractJavaFxApplicationSupport;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 @SpringBootApplication
 public class Application extends AbstractJavaFxApplicationSupport {
@@ -27,11 +32,18 @@ public class Application extends AbstractJavaFxApplicationSupport {
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setWidth(Screen.getPrimary().getVisualBounds().getWidth());
-        stage.setHeight(Screen.getPrimary().getVisualBounds().getHeight());
+        super.start(stage);
+    }
 
+    @Override
+    public void beforeInitialView(Stage stage, ConfigurableApplicationContext ctx) {
+        // super.beforeInitialView(stage, ctx);
         stage.setMaximized(true);
         stage.setTitle("MekCone InCRUD");
-        super.start(stage);
+    }
+
+    @Override
+    public Collection<Image> loadDefaultIcons() {
+        return Arrays.asList(new Image("/icons/logo.png"));
     }
 }

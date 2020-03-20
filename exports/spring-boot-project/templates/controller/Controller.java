@@ -5,6 +5,7 @@ import ## groupId ##.## artifactId ##.service.## Table ##Service;
 import ## groupId ##.## artifactId ##.util.ResultVOUtil;
 import ## groupId ##.## artifactId ##.VO.ResultVO;
 
+## importPageHelper ##
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -32,11 +33,7 @@ public class ## Table ##Controller {
   }
 
   ## swagger2ApiOperation ##
-  @GetMapping
-  public ResultVO retrieveList() {
-    List<## Table ##> ## table ##List = ## table ##Service.retrieveList();
-    return ResultVOUtil.success(## table ##List);
-  }
+  ## retrieveListMethod ##
 
   ## swagger2ApiOperation ##
   @PutMapping

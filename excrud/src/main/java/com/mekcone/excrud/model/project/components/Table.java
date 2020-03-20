@@ -1,6 +1,9 @@
 package com.mekcone.excrud.model.project.components;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.mekcone.excrud.util.StringUtil;
 import lombok.Data;
 
@@ -9,9 +12,17 @@ import java.util.List;
 
 @Data
 public class Table {
+    @JacksonXmlProperty(isAttribute = true)
     private String name;
+
+    @JacksonXmlProperty(isAttribute = true)
     private String description;
+
+    @JacksonXmlProperty(isAttribute = true)
     private String primaryKey;
+
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "column")
     private List<Column> columns = new ArrayList<>();
 
     @JsonIgnore

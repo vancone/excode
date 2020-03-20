@@ -1,5 +1,6 @@
 package ## groupId ##.## artifactId ##.service;
 
+## importPageHelper ##
 import ## groupId ##.## artifactId ##.entity.## Table ##;
 import java.util.List;
 
@@ -9,6 +10,8 @@ public interface ## Table ##Service {
   List<## Table ##> retrieve(String ## primaryKey ##);
 
   List<## Table ##> retrieveList();
+
+  ## retrieveListWithPageHelper ##
 
   void update(## Table ## ## table ##);
 

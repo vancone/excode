@@ -14,11 +14,16 @@ public class KeyValueAnnotation extends Annotation {
         this.keyValuePairs.add(new Pair<String, String>(key, value));
     }
 
+    public KeyValueAnnotation(String name) {
+        setName(name);
+    }
+
     @Override
     public String toString() {
         String code = "";
         if (this.name == null || this.name.isEmpty()) {
-            LogUtil.error("Annotation name cannot be null");
+            LogUtil.warn("Annotation name cannot be null");
+            return null;
         }
         code += "@" + this.name;
 

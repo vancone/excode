@@ -1,0 +1,96 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:id="mainBorderPane" styleClass="wrapper"
+            fx:controller="com.mekcone.excrud.controller.AboutWindowController" stylesheets="@/css/AboutWindow.css"
+            prefHeight="600" prefWidth="800">
+    <padding>
+        <Insets top="30" right="50" bottom="30" left="50"/>
+    </padding>
+    <top>
+        <VBox>
+            <FlowPane hgap="30">
+                <padding>
+                    <Insets bottom="40"/>
+                </padding>
+                <ImageView fitHeight="80" preserveRatio="true"><image><Image url="/icons/logo.png"></Image></image></ImageView>
+                <Label fx:id="applicationNameLabel" style="-fx-text-fill: white;-fx-font-size: 72;-fx-font-weight: bold"></Label>
+            </FlowPane>
+            <Label fx:id="versionLabel" style="-fx-text-fill: #bbb;-fx-font-size: 18;-fx-font-weight: bold"></Label>
+            <Label fx:id="buildInfoLabel" style="-fx-text-fill: #bbb;-fx-font-size: 18"></Label>
+            <Label></Label>
+            <Label style="-fx-text-fill: #bbb;-fx-font-size: 18" text="Developer  Tenton Lien"></Label>
+            <Label fx:id="copyrightLabel" style="-fx-text-fill: #bbb;-fx-font-size: 18"></Label>
+        </VBox>
+    </top>
+
+    <center>
+        <FlowPane hgap="20" vgap="20">
+            <padding>
+                <Insets top="25" bottom="25"/>
+            </padding>
+            <Label fx:id="openSourceDescriptionLabel" prefWidth="790" textFill="#bbb" style="-fx-font-size: 18"></Label>
+            <ImageView fitHeight="30" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/java.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="30" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/spring.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="30" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/maven.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="40" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/mysql.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="30" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/mybatis.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="30" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/vuejs.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="30" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/electron.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="30" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/cordova.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="30" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/echart.png"/>
+                </image>
+            </ImageView>
+            <ImageView fitHeight="30" preserveRatio="true">
+                <image>
+                    <Image url="/icons/third-party-project-logo/vue-element-admin.png"/>
+                </image>
+            </ImageView>
+        </FlowPane>
+    </center>
+
+    <right>
+
+    </right>
+
+    <bottom>
+
+    </bottom>
+</BorderPane>

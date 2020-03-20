@@ -1,0 +1,14 @@
+{
+    "dependencies": [
+        {
+            "groupId": "org.elasticsearch",
+            "artifactId": "elasticsearch",
+            "version": "7.6.1"
+        },
+        {
+            "groupId": "org.elasticsearch.client",
+            "artifactId": "transport",
+            "version": "7.6.1"
+        }
+    ]
+}

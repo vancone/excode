@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <groupId>example</groupId>
+  <artifactId>mall</artifactId>
+  <name>MekCone Mall Example</name>
+  <version>0.0.1</version>
+  <description>MekCone Mall Project</description>
+
+  <apiDocument>
+    <title>甜筒商城</title>
+    <description>甜筒商城后台接口文档</description>
+    <createKeyword>创建</createKeyword>
+    <retrieveKeyword>获取</retrieveKeyword>
+    <retrieveListKeyword>获取所有</retrieveListKeyword>
+    <updateKeyword>更新</updateKeyword>
+    <deleteKeyword>删除</deleteKeyword>
+  </apiDocument>
+
+  <databases>
+    <database type="mysql" host="localhost:3306/mekcone_mall" username="root" password="123456">
+      <table name="goods" description="商品对象" primaryKey="goods_id">
+        <column name="goods_id" type="int" primaryKey="true"></column>
+        <column name="goods_name" type="varchar(50)"></column>
+        <column name="goods_description" type="varchar(50)"></column>
+      </table>
+      <table name="cart" description="购物车条目" primaryKey="cart_id">
+        <column name="item_id" type="int" primaryKey="true"></column>
+        <column name="goods_id" type="varchar(50)"></column>
+        <column name="user_id" type="varchar(50)"></column>
+        <column name="amount" type="varchar(50)"></column>
+      </table>
+    </database>
+  </databases>
+
+  <exports>
+    <export type="spring-boot-project">
+      <plugins>
+        <plugin name="spring-boot" enable="false"></plugin>
+        <plugin name="mybatis" enable="false"></plugin>
+        <plugin name="swagger2" enable="true"></plugin>
+        <plugin name="cross-origin" enable="true">
+          <config key="allowedOrigins">*</config>
+          <config key="allowedMethods">
+            <value>GET</value>
+            <value>POST</value>
+            <value>PUT</value>
+            <value>DELETE</value>
+          </config>
+        </plugin>
+        <plugin name="lombok" enable="true"></plugin>
+        <plugin name="page-helper" enable="true"></plugin>
+        <plugin name="elasticsearch" enable="true"></plugin>
+      </plugins>
+    </export>
+  </exports>
+</project>

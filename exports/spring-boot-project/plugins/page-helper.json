@@ -5,5 +5,23 @@
             "artifactId": "pagehelper-spring-boot-starter",
             "version": "1.2.13"
         }
+    ],
+    "properties": [
+        {
+            "key": "pagehelper.helperDialect",
+            "defaultValue": "mysql"
+        },
+        {
+            "key": "pagehelper.reasonable",
+            "defaultValue": "true"
+        },
+        {
+            "key": "pagehelper.supportMethodsArguments",
+            "defaultValue": "true"
+        },
+        {
+            "key": "pagehelper.params",
+            "defaultValue": "count=countSql"
+        }
     ]
 }

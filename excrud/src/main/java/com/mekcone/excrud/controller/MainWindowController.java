@@ -4,6 +4,8 @@ import com.mekcone.excrud.Application;
 import com.mekcone.excrud.constant.ResultConstants;
 import com.mekcone.excrud.exception.ExportException;
 import com.mekcone.excrud.model.project.Project;
+import com.mekcone.excrud.model.project.components.Database;
+import com.mekcone.excrud.model.project.components.Table;
 import com.mekcone.excrud.service.WorkplaceService;
 import com.mekcone.excrud.service.ProjectService;
 import com.mekcone.excrud.service.SettingService;
@@ -12,6 +14,7 @@ import com.mekcone.excrud.util.DragUtil;
 import com.mekcone.excrud.util.ExceptionUtil;
 import com.mekcone.excrud.util.LogUtil;
 import com.mekcone.excrud.util.PathUtil;
+import com.mekcone.excrud.view.AboutWindowView;
 import de.felixroske.jfxsupport.FXMLController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -21,11 +24,15 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import org.fxmisc.richtext.CodeArea;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 @FXMLController
@@ -54,6 +61,14 @@ public class MainWindowController implements Initializable {
     @FXML private VBox bottomAreaVBox;
     @FXML private VBox projectTreeViewParent;
 
+    @Value("${organization.name}")
+    private String organizationName;
+
+    @Value("${application.name}")
+    private String applicationName;
+
+    @Value("${application.version}")
+    private String applicationVersion;
 
     @Autowired
     private ProjectService projectService;
@@ -123,10 +138,11 @@ public class MainWindowController implements Initializable {
 
         // Update main window title
         Project project = projectService.getProject();
+        String mainWindowTitle = organizationName + " " + applicationName + " " + applicationVersion;
         if (project != null) {
-            Application.getStage().setTitle(project.getGroupId() + "." + project.getArtifactId() + " - MekCone ExCRUD");
+            Application.getStage().setTitle(project.getGroupId() + "." + project.getArtifactId() + " - " + mainWindowTitle);
             project.modifiedStateProperty().addListener(event -> {
-                Application.getStage().setTitle(project.getGroupId() + "." + project.getArtifactId() + " - MekCone ExCRUD");
+                Application.getStage().setTitle(project.getGroupId() + "." + project.getArtifactId() + " - " + mainWindowTitle);
             });
             groupIdTextField.textProperty().bindBidirectional(project.groupIdProperty());
             artifactIdTextField.textProperty().bindBidirectional(project.artifactIdProperty());
@@ -161,5 +177,9 @@ public class MainWindowController implements Initializable {
 
     public void runProject(ActionEvent actionEvent) {
         springBootProjectService.run();
+    }
+
+    public void showAboutWindow(ActionEvent actionEvent) {
+        Application.showView(AboutWindowView.class, Modality.NONE);
     }
 }
