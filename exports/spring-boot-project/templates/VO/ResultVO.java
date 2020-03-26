@@ -1,4 +1,4 @@
-package ## groupId ##.## artifactId ##.VO;
+package __groupId__.__artifactId__.VO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

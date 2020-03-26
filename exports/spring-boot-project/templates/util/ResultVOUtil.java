@@ -1,6 +1,6 @@
-package ## groupId ##.## artifactId ##.util;
+package __groupId__.__artifactId__.util;
 
-import ## groupId ##.## artifactId ##.VO.ResultVO;
+import __groupId__.__artifactId__.VO.ResultVO;
 
 public class ResultVOUtil {
     public static ResultVO success(Object object){

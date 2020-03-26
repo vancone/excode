@@ -1,18 +1,18 @@
-package com.mekcone.excrud.model;
+package com.mekcone.excrud.model.template;
 
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
-import com.mekcone.excrud.util.PathUtil;
 
-public class Template {
+public class PlainTemplate implements Template {
     private String path;
     private String template;
 
-    public Template(String exportType, String path) {
-        this.path = PathUtil.getProgramPath() + "exports/" + exportType + "/templates/" + path;
+    public PlainTemplate(String exportType, String path) {
+        this.path = System.getenv("EXCRUD_HOME") + "/exports/" + exportType + "/templates/" + path;
         this.template = FileUtil.read(this.path);
     }
 
+    @Override
     public boolean insert(String tag, String content) {
         int index = template.indexOf("## " + tag + " ##");
         if (index < 0) {
@@ -29,19 +29,21 @@ public class Template {
         return true;
     }
 
-    public boolean insertOnce(String label, String content) {
-        int index = template.indexOf("## " + label + " ##");
+    @Override
+    public boolean insertOnce(String tag, String replacement) {
+        int index = template.indexOf("## " + tag + " ##");
         if (index < 0) {
-            LogUtil.warn("label \"" + label  + "\" not found.");
+            LogUtil.warn("label \"" + tag  + "\" not found.");
             return false;
         }
 
-        template = template.substring(0, index) + content +
-                template.substring(index + label.length() + 6);
+        template = template.substring(0, index) + replacement +
+                template.substring(index + tag.length() + 6);
 
         return true;
     }
 
+    @Override
     public boolean remove(String label) {
         return insert(label, "");
     }

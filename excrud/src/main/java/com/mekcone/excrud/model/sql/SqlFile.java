@@ -1,4 +1,4 @@
-package com.mekcone.excrud.model.file.sql;
+package com.mekcone.excrud.model.sql;
 
 import com.mekcone.excrud.model.file.File;
 import com.mekcone.excrud.model.project.components.Table;

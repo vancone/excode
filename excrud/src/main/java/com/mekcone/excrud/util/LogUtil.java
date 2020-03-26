@@ -1,5 +1,6 @@
 package com.mekcone.excrud.util;
 
+import com.mekcone.excrud.enums.BaseEnum;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -22,8 +23,18 @@ public class LogUtil {
         println("WARN", message);
     }
 
-    public static void error(String message) {
+    /*public static void error(String message) {
         println("ERROR", message);
+        System.exit(-1);
+    }*/
+
+    public static void error(BaseEnum baseEnum) {
+        println("ERROR(" + baseEnum.getCode() + "): " + baseEnum.getMessage());
+        System.exit(-1);
+    }
+
+    public static void error(int code , String message) {
+        println("ERROR(" + code + "): " + message);
         System.exit(-1);
     }
 

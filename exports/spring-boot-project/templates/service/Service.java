@@ -1,19 +1,20 @@
-package ## groupId ##.## artifactId ##.service;
+package __groupId__.__artifactId__.service;
 
-## importPageHelper ##
-import ## groupId ##.## artifactId ##.entity.## Table ##;
+import __groupId__.__artifactId__.entity.__Table__;
+
+import com.github.pagehelper.PageInfo;
 import java.util.List;
 
-public interface ## Table ##Service {
-  void create(## Table ## ## table ##);
+public interface __Table__Service {
+  void create(__Table__ __table__);
 
-  List<## Table ##> retrieve(String ## primaryKey ##);
+  List<__Table__> retrieve(String __primaryKey__);
 
-  List<## Table ##> retrieveList();
+  List<__Table__> retrieveList();
 
-  ## retrieveListWithPageHelper ##
+  PageInfo<__Table__> retrieveList(int pageNo, int pageSize);
 
-  void update(## Table ## ## table ##);
+  void update(__Table__ __table__);
 
-  void delete(String ## primaryKey ##);
+  void delete(String __primaryKey__);
 }

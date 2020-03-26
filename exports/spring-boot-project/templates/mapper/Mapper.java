@@ -1,31 +1,29 @@
-package ## groupId ##.## artifactId ##.mapper;
+package __groupId__.__artifactId__.mapper;
 
-import ## groupId ##.## artifactId ##.entity.## Table ##;
+import __groupId__.__artifactId__.entity.__Table__;
 import java.util.List;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface ## Table ##Mapper {
-  @Insert("INSERT INTO ## table ##(## columnKeys ##) VALUES(## columnTags ##)")
-  @Options(useGeneratedKeys = true, keyProperty = "## primaryKey ##", keyColumn = "## primary_key ##")
-  void create(## Table ## ## table ##);
+public interface __Table__Mapper {
+  @Insert("")
+  @Options(useGeneratedKeys = true, keyProperty = "__primaryKey__", keyColumn = "__primary_key__")
+  void create(__Table__ __table__);
 
-  @Select("SELECT * FROM ## table ## WHERE cart_id = #{cartId}")
+  @Select("SELECT * FROM __table__ WHERE __primary_key__ = #{__primaryKey__}")
+  @Results({})
+  List<__Table__> retrieve(String __primaryKey__);
+
+  @Select("SELECT * FROM __table__")
   @Results({
-    ## resultAnnotations ##
+    
   })
-  List<## Table ##> retrieve(String ## primaryKey ##);
+  List<__Table__> retrieveList();
 
-  @Select("SELECT * FROM ## table ##")
-  @Results({
-    ## resultAnnotations ##
-  })
-  List<## Table ##> retrieveAll();
+  @Update("UPDATE __table__ SET __columnKeyTagExpressions__ WHERE __primary_key__ = #{__primaryKey__}")
+  void update(__Table__ __table__);
 
-  @Update("UPDATE ## table ## SET ## columnKeyTagExpressions ## WHERE ## primary_key ## = #{## primaryKey ##}")
-  void update(## Table ## ## table ##);
-
-  @Delete("DELETE FROM ## table ## WHERE ## primary_key ## = #{## primaryKey ##}")
-  void delete(String ## primaryKey ##);
+  @Delete("DELETE FROM __table__ WHERE __primary_key__ = #{__primaryKey__}")
+  void delete(String __primaryKey__);
 }

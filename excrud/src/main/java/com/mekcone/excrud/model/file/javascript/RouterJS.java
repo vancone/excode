@@ -1,7 +1,7 @@
 //package com.mekcone.excrud.model.file.javascript;
 //
 //import com.google.gson.GsonBuilder;
-//import com.mekcone.excrud.model.Template;
+//import com.mekcone.excrud.model.template.Template;
 //import javafx.util.Pair;
 //import com.mekcone.excrud.model.file.json.RouteJSON;
 //

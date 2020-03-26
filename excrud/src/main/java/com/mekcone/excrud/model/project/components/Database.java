@@ -21,7 +21,7 @@ public class Database {
     @JacksonXmlProperty(isAttribute = true)
     private String password;
 
-    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlElementWrapper(localName = "tables")
     @JacksonXmlProperty(localName = "table")
     private List<Table> tables;
 }

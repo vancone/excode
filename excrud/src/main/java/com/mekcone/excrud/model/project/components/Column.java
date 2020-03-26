@@ -16,6 +16,9 @@ public class Column {
     @JacksonXmlProperty(isAttribute = true)
     private boolean primaryKey;
 
+    @JacksonXmlProperty(isAttribute = true)
+    private boolean filter;
+
     @JsonIgnore
     public String getCamelName() {
         return StringUtil.camel(getName());

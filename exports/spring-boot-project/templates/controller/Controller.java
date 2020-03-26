@@ -1,51 +1,64 @@
-package ## groupId ##.## artifactId ##.controller;
+package __groupId__.__artifactId__.controller;
 
-import ## groupId ##.## artifactId ##.entity.## Table ##;
-import ## groupId ##.## artifactId ##.service.## Table ##Service;
-import ## groupId ##.## artifactId ##.util.ResultVOUtil;
-import ## groupId ##.## artifactId ##.VO.ResultVO;
+import __groupId__.__artifactId__.entity.__Table__;
+import __groupId__.__artifactId__.service.__Table__Service;
+import __groupId__.__artifactId__.util.ResultVOUtil;
+import __groupId__.__artifactId__.VO.ResultVO;
 
-## importPageHelper ##
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-## swagger2Tag ##
+@Api(tags = { "__Table__" })
 @RestController
-@RequestMapping("/## table ##")
-public class ## Table ##Controller {
-  @Autowired private ## Table ##Service ## table ##Service;
+@RequestMapping("/__table__")
+public class __Table__Controller {
+  @Autowired private __Table__Service __table__Service;
 
-  ## swagger2ApiOperation ##
+  @ApiOperation(value = "__createApiOperation__")
   @PostMapping
-  public ResultVO create(@RequestBody ## Table ## ## table ##) {
-    ## table ##Service.create(## table ##);
+  public ResultVO create(@RequestBody __Table__ __table__) {
+    __table__Service.create(__table__);
     return ResultVOUtil.success();
   }
 
-  ## swagger2ApiOperation ##
-  @GetMapping("/{## primaryKey ##}")
-  public ResultVO retrieve(@PathVariable String ## primaryKey ##) {
-    List<## Table ##> ## table ##List = ## table ##Service.retrieve(## primaryKey ##);
-    return ResultVOUtil.success(## table ##List);
+  @ApiOperation(value = "__retrieveApiOperation__")
+  @GetMapping("/{__primaryKey__}")
+  public ResultVO retrieve(@PathVariable String __primaryKey__) {
+    List<__Table__> __table__List = __table__Service.retrieve(__primaryKey__);
+    return ResultVOUtil.success(__table__List);
   }
 
-  ## swagger2ApiOperation ##
-  ## retrieveListMethod ##
+  @ApiOperation(value = "__retrieveListApiOperation__")
+  @GetMapping
+  public ResultVO retrieveList() {
+    List<__Table__> __table__List = __table__Service.retrieveList();
+    return ResultVOUtil.success(__table__List);
+  }
 
-  ## swagger2ApiOperation ##
+  @ApiOperation(value = "__retrieveListApiOperation__")
+  @GetMapping
+  public ResultVO retrieveList(
+      @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+      @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+    PageInfo<__Table__> __table__List = __table__Service.retrieveList(pageNo, pageSize);
+    return ResultVOUtil.success(__table__List);
+  }
+
+  @ApiOperation(value = "__updateListApiOperation__")
   @PutMapping
-  public ResultVO update(@RequestBody ## Table ## ## table ##) {
-    ## table ##Service.update(## table ##);
+  public ResultVO update(@RequestBody __Table__ __Table__) {
+    __table__Service.update(__Table__);
     return ResultVOUtil.success();
   }
 
-  ## swagger2ApiOperation ##
-  @DeleteMapping("/{## primaryKey ##}")
-  public ResultVO delete(@PathVariable String ## primaryKey ##) {
-    ## table ##Service.delete(## primaryKey ##);
+  @ApiOperation(value = "__deleteListApiOperation__")
+  @DeleteMapping("/{__primaryKey__}")
+  public ResultVO delete(@PathVariable String __primaryKey__) {
+    __table__Service.delete(__primaryKey__);
     return ResultVOUtil.success();
   }
 }

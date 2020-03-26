@@ -11,6 +11,9 @@ public class Export {
     @JacksonXmlProperty(isAttribute = true)
     private String type;
 
+    @JacksonXmlProperty(isAttribute = true)
+    private boolean enable;
+
     @JacksonXmlElementWrapper(localName = "plugins")
     @JacksonXmlProperty(localName = "plugin")
     private List<Plugin> plugins;

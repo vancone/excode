@@ -7,7 +7,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@JsonInclude(Include.NON_NULL)
 public class Dependency {
     private String groupId;
     private String artifactId;

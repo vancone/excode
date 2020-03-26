@@ -20,7 +20,7 @@ public class Config {
     @JacksonXmlText
     private String singleValue;
 
-    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlElementWrapper(localName = "values")
     @JacksonXmlProperty(localName = "value")
     private List<String> values;
 
