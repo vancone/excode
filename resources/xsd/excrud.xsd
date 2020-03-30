@@ -60,6 +60,7 @@
                                                                         <xs:attribute name="type" type="xs:string" use="required"></xs:attribute>
                                                                         <xs:attribute name="filter" type="xs:boolean" use="optional" default="false"></xs:attribute>
                                                                         <xs:attribute name="primaryKey" type="xs:boolean" use="optional"></xs:attribute>
+                                                                        <xs:attribute name="description" type="xs:string" use="optional"></xs:attribute>
                                                                     </xs:complexType>
                                                                 </xs:element>
                                                             </xs:sequence>
@@ -88,27 +89,20 @@
     <xs:element name="exports">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="export" maxOccurs="unbounded">
+                <xs:element name="export" minOccurs="0" maxOccurs="unbounded">
                     <xs:complexType>
                         <xs:all>
-                            <xs:element name="plugins">
+                            <xs:element name="properties" minOccurs="1" maxOccurs="1">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="plugin" maxOccurs="unbounded">
-                                            <xs:complexType>
-                                                <xs:all>
-                                                    <xs:element name="configs" minOccurs="0" maxOccurs="1">
-                                                        <xs:complexType>
-                                                            <xs:sequence>
-                                                                <xs:element name="config" maxOccurs="unbounded"></xs:element>
-                                                            </xs:sequence>
-                                                        </xs:complexType>
-                                                    </xs:element>
-                                                </xs:all>
-                                                <xs:attribute name="name" use="required"></xs:attribute>
-                                                <xs:attribute name="enable" use="optional" type="xs:boolean" default="true"></xs:attribute>
-                                            </xs:complexType>
-                                        </xs:element>
+                                        <xs:element name="application_name" minOccurs="0" maxOccurs="1" type="xs:string"/>
+                                        <xs:element name="cross_origin_enable" minOccurs="0" maxOccurs="1" default="false" type="xs:boolean"/>
+                                        <xs:element name="cross_origin_allowed_origins" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+                                        <xs:element name="lombok_enable" minOccurs="0" maxOccurs="1" default="true" type="xs:boolean"/>
+                                        <xs:element name="mybatis_enable" minOccurs="0" maxOccurs="1" default="true" type="xs:boolean"/>
+                                        <xs:element name="page_helper_enable" minOccurs="0" maxOccurs="1" default="true" type="xs:boolean"/>
+                                        <xs:element name="server_port" minOccurs="0" maxOccurs="1" default="8080" type="xs:integer"/>
+                                        <xs:element name="swagger2_enable" minOccurs="0" maxOccurs="1" default="true" type="xs:boolean"/>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>

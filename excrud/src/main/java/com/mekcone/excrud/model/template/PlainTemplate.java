@@ -16,7 +16,7 @@ public class PlainTemplate implements Template {
     public boolean insert(String tag, String content) {
         int index = template.indexOf("## " + tag + " ##");
         if (index < 0) {
-            LogUtil.warn("Tag \"" + tag  + "\" not found.");
+            // LogUtil.warn("Tag \"" + tag  + "\" not found.");
             return false;
         }
 
@@ -33,7 +33,7 @@ public class PlainTemplate implements Template {
     public boolean insertOnce(String tag, String replacement) {
         int index = template.indexOf("## " + tag + " ##");
         if (index < 0) {
-            LogUtil.warn("label \"" + tag  + "\" not found.");
+            // LogUtil.warn("Tag \"" + tag  + "\" not found.");
             return false;
         }
 

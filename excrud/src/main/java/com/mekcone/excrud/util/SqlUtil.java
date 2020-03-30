@@ -1,6 +1,6 @@
 package com.mekcone.excrud.util;
 
-import com.mekcone.excrud.model.project.components.Table;
+import com.mekcone.excrud.loader.model.data.Table;
 
 public class SqlUtil {
     public static String insertQuery(Table table, boolean ignorePrimaryKey) {
@@ -22,7 +22,7 @@ public class SqlUtil {
             if (ignorePrimaryKey && table.getColumns().get(i).isPrimaryKey()) {
                 continue;
             }
-            query += "#{" + table.getColumns().get(i).getCamelName() + "}";
+            query += "#{" + table.getColumns().get(i).getCamelName(table.getName()) + "}";
             if (i + 1 != table.getColumns().size()) {
                 query += ", ";
             } else {
@@ -38,7 +38,7 @@ public class SqlUtil {
             if (table.getColumns().get(i).isPrimaryKey()) {
                 continue;
             }
-            query += table.getColumns().get(i).getName() + "=#{" + table.getColumns().get(i).getCamelName() + "}";
+            query += table.getColumns().get(i).getName() + "=#{" + table.getColumns().get(i).getCamelName(table.getName()) + "}";
             if (i + 1 != table.getColumns().size()) {
                 query += ", ";
             }

@@ -16,11 +16,11 @@ public class LogUtil {
     }
 
     public static void info(String message) {
-        println("INFO", message);
+        println("[INFO]", message);
     }
 
     public static void warn(String message) {
-        println("WARN", message);
+        println("[WARN]", message);
     }
 
     /*public static void error(String message) {
@@ -29,17 +29,33 @@ public class LogUtil {
     }*/
 
     public static void error(BaseEnum baseEnum) {
-        println("ERROR(" + baseEnum.getCode() + "): " + baseEnum.getMessage());
+        println("[ERROR(" + baseEnum.getCode() + ")] " + baseEnum.getMessage());
         System.exit(-1);
     }
 
     public static void error(int code , String message) {
-        println("ERROR(" + code + "): " + message);
+        println("[ERROR(" + code + ")] " + message);
         System.exit(-1);
     }
 
+    public static void title(String title) {
+        String output = "[ " + title + " ]";
+        int lineSignAmount = 72 - output.length();
+        for (int i = 0; i < lineSignAmount/2; i ++) {
+            output = "-" + output;
+        }
+        int rightLineSignAmount = lineSignAmount / 2;
+        if (lineSignAmount % 2 == 0) {
+            rightLineSignAmount ++;
+        }
+        for (int i = 0; i < rightLineSignAmount; i ++) {
+            output += "-";
+        }
+        println(output);
+    }
+
     public static void debug(String message) {
-        println("DEBUG", message);
+        println("[DEBUG]", message);
     }
 
     public static void print(String message) {
@@ -61,6 +77,6 @@ public class LogUtil {
     }
 
     private static void println(String type, String message) {
-        println(type + ": " + message);
+        println(type + " " + message);
     }
 }

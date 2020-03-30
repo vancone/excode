@@ -5,8 +5,8 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
 import com.mekcone.excrud.constant.SpringBootProject;
-import com.mekcone.excrud.model.project.Project;
-import com.mekcone.excrud.model.project.components.Table;
+import com.mekcone.excrud.loader.model.Project;
+import com.mekcone.excrud.loader.model.data.Table;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Data;
@@ -26,7 +26,7 @@ public class JavaTemplate implements Template {
         String templateText = compilationUnit.toString();
         int index = templateText.indexOf("__" + tag + "__");
         if (index < 0) {
-            LogUtil.warn("Tag \"" + tag  + "\" not found.");
+            // LogUtil.warn("Tag \"" + tag  + "\" not found.");
             return false;
         }
 
@@ -43,7 +43,7 @@ public class JavaTemplate implements Template {
         String templateText = compilationUnit.toString();
         int index = templateText.indexOf("__" + tag + "__");
         if (index < 0) {
-            LogUtil.warn("Tag \"" + tag  + "\" not found.");
+            // LogUtil.warn("Tag \"" + tag  + "\" not found.");
             return false;
         }
 

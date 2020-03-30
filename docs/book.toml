@@ -1,0 +1,6 @@
+[book]
+authors = ["Tenton Lien"]
+language = "en"
+multilingual = false
+src = "src"
+title = "The ExCRUD CLI Tool"

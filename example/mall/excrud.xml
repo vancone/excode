@@ -3,13 +3,13 @@
     xsi:noNamespaceSchemaLocation="file:///D:/Projects/excrud/resources/xsd/excrud.xsd">
     <groupId>com.mekcone.excrud.example</groupId>
     <artifactId>mall</artifactId>
-    <name>MekCone Mall</name>
+    <name>MekCone 商城</name>
     <version>0.0.1</version>
     <description>MekCone Mall Project</description>
 
     <apiDocument>
-        <title>MekCone 商城</title>
-        <description>MekCone 商城接口文档</description>
+        <title>MekCone 商城{br}API 文档</title>
+        <!-- <description>MekCone 商城接口文档</description> -->
         <keywords>
             <keyword type="create">创建</keyword>
             <keyword type="retrieve">获取</keyword>
@@ -22,27 +22,27 @@
     <databases>
         <database type="mysql" host="localhost:3306" username="root" password="123456">
             <tables>
-                <table name="goods">
+                <table name="goods" description="商品对象">
                     <columns>
-                        <column name="goods_id" type="int" primaryKey="true"/>
-                        <column name="goods_name" type="varchar(50)"/>
-                        <column name="catalogue_id" type="varchar(50)"/>
-                        <column name="goods_price" type="double"/>
-                        <column name="goods_description" type="varchar(50)"/>
+                        <column name="goods_id" type="int" primaryKey="true" description="商品ID"/>
+                        <column name="goods_name" type="varchar(50)" description="商品名称"/>
+                        <column name="catalogue_id" type="varchar(50)" description="商品类别ID"/>
+                        <column name="goods_price" type="double" description="商品价格"/>
+                        <column name="goods_description" type="varchar(50)" description="商品描述"/>
                     </columns>
                 </table>
-                <table name="cart">
+                <table name="cart" description="购物车对象">
                     <columns>
-                        <column name="item_id" type="varchar(50)" primaryKey="true"/>
-                        <column name="goods_id" type="varchar(50)"/>
-                        <column name="user_id" type="varchar(20)"/>
-                        <column name="amount" type="int"/>
+                        <column name="item_id" type="varchar(50)" primaryKey="true" description="购物车条目ID"/>
+                        <column name="goods_id" type="varchar(50)" description="商品ID"/>
+                        <column name="user_id" type="varchar(20)" description="用户ID"/>
+                        <column name="amount" type="int" description="购物车选购数目"/>
                     </columns>
                 </table>
-                <table name="catalogue">
+                <table name="catalogue" description="商品门类">
                     <columns>
-                        <column name="catalogue_id" type="varchar(50)" primaryKey="true"/>
-                        <column name="catalogue_name" type="varchar(50)"/>
+                        <column name="catalogue_id" type="varchar(50)" primaryKey="true" description="商品类别ID"/>
+                        <column name="catalogue_name" type="varchar(50)" description="商品类别名"/>
                     </columns>
                 </table>
             </tables>
@@ -50,27 +50,23 @@
     </databases>
 
     <exports>
-        <export type="spring-boot-project">
-            <plugins>
-                <plugin name="cross-origin">
-                    <configs>
-                        <config key="allowedOrigins">*</config>
-                        <config key="allowedMethods">
-                            <values>
-                                <value>GET</value>
-                                <value>POST</value>
-                                <value>PUT</value>
-                                <value>DELETE</value>
-                            </values>
-                        </config>
-                    </configs>
-                </plugin>
-                <plugin name="lombok" enable="true"></plugin>
-                <plugin name="mybatis" enable="true"></plugin>
-                <plugin name="page-helper" enable="true"></plugin>
-                <plugin name="spring-boot" enable="true"></plugin>
-                <plugin name="swagger2" enable="false"></plugin>
-            </plugins>
+        <export type="spring-boot-backend" enable="false">
+            <properties>
+                <application_name>Mall</application_name>
+                <cross_origin_enable>false</cross_origin_enable>
+                <cross_origin_allowed_origins>*</cross_origin_allowed_origins>
+                <lombok_enable>true</lombok_enable>
+                <mybatis_enable>true</mybatis_enable>
+                <page_helper_enable>true</page_helper_enable>
+                <server_port>9090</server_port>
+                <swagger2_enable>true</swagger2_enable>
+            </properties>
+        </export>
+        <export type="enterprise-official-website" enable="true">
+            <properties>
+                <title>MekCone China</title>
+
+            </properties>
         </export>
     </exports>
 </project>
