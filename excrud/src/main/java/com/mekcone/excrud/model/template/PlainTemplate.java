@@ -4,12 +4,10 @@ import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
 
 public class PlainTemplate implements Template {
-    private String path;
     private String template;
 
-    public PlainTemplate(String exportType, String path) {
-        this.path = System.getenv("EXCRUD_HOME") + "/exports/" + exportType + "/templates/" + path;
-        this.template = FileUtil.read(this.path);
+    public PlainTemplate(String path) {
+        this.template = FileUtil.read(path);
     }
 
     @Override
@@ -49,7 +47,7 @@ public class PlainTemplate implements Template {
     }
 
     public boolean output() {
-        return FileUtil.write(path, template);
+        return false;
     }
 
     public String toString() {

@@ -1,0 +1,49 @@
+package com.mekcone.excrud.constant;
+
+public interface LanguageCode {
+    String AA = "aa";             // Afar
+    String AB = "ab";             // Abkhazian
+    String AF = "af";             // Afrikaans
+    String AM = "am";             // Amharic
+    String AR = "ar";             // Arabic
+    String BA = "ba";             // Bashkir
+    String BR = "br";             // Breton
+    String CA = "ca";             // Catalan
+    String CS = "cs";             // Czech
+    String DA = "da";             // Danish
+    String DE = "de";             // German
+    String EL = "el";             // Greek
+    String EN = "en";             // English
+    String EO = "eo";             // Esperanto
+    String ES = "es";             // Spanish
+    String FI = "fi";             // Finnish
+    String FJ = "fj";             // Fiji
+    String FR = "fr";             // French
+    String FY = "fy";             // Frisian
+    String GA = "ga";             // Irish
+    String GL = "gl";             // Galician
+    String HE = "he";             // Hebrew
+    String HI = "hi";             // Hindi
+    String HU = "hu";             // Hungarian
+    String ID = "id";             // Indonesian
+    String IT = "it";             // Italian
+    String JA = "ja";             // Japanese
+    String KM = "km";             // Cambodian
+    String KO = "ko";             // Korean
+    String MN = "mn";             // Mongolian
+    String MS = "ms";             // Malay
+    String MY = "my";             // Burmese
+    String NL = "nl";             // Dutch
+    String PL = "pl";             // Polish
+    String PT = "pt";             // Portuguese
+    String RO = "ro";             // Romanian
+    String RU = "ru";             // Russian
+    String SR = "sr";             // Serbian
+    String SW = "sw";             // Swahili
+    String TH = "th";             // Thai
+    String TR = "tr";             // Turkish
+    String UR = "ur";             // Urdu
+    String VI = "vi";             // Vietnamese
+    String ZH_CN = "zh-CN";       // Chinese (Simplified)
+    String ZH_TW = "zh-TW";       // Chinese (Traditional)
+}

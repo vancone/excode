@@ -6,9 +6,10 @@
     <name>MekCone 商城</name>
     <version>0.0.1</version>
     <description>MekCone Mall Project</description>
+    <language>zh-CN</language>
 
     <apiDocument>
-        <title>MekCone 商城{br}API 文档</title>
+        <title>MekCone 商城 {br}API 文档</title>
         <!-- <description>MekCone 商城接口文档</description> -->
         <keywords>
             <keyword type="create">创建</keyword>
@@ -20,7 +21,7 @@
     </apiDocument>
 
     <databases>
-        <database type="mysql" host="localhost:3306" username="root" password="123456">
+        <database type="mysql" host="localhost:3306" name="mekcone_mall" username="root" password="123456">
             <tables>
                 <table name="goods" description="商品对象">
                     <columns>
@@ -50,10 +51,10 @@
     </databases>
 
     <exports>
-        <export type="spring-boot-backend" enable="false">
+        <export type="spring-boot-backend" enable="true">
             <properties>
                 <application_name>Mall</application_name>
-                <cross_origin_enable>false</cross_origin_enable>
+                <cross_origin_allowed_methods>GET, POST, PUT, DELETE</cross_origin_allowed_methods>
                 <cross_origin_allowed_origins>*</cross_origin_allowed_origins>
                 <lombok_enable>true</lombok_enable>
                 <mybatis_enable>true</mybatis_enable>
@@ -62,7 +63,7 @@
                 <swagger2_enable>true</swagger2_enable>
             </properties>
         </export>
-        <export type="enterprise-official-website" enable="true">
+        <export type="enterprise-official-website" enable="false">
             <properties>
                 <title>MekCone China</title>
 

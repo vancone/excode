@@ -1,6 +1,6 @@
 package com.mekcone.excrud.util;
 
-import com.mekcone.excrud.loader.model.data.Table;
+import com.mekcone.excrud.model.project.data.Table;
 
 public class SqlUtil {
     public static String insertQuery(Table table, boolean ignorePrimaryKey) {

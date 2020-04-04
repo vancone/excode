@@ -1,4 +1,4 @@
-package com.mekcone.excrud.loader.model.data;
+package com.mekcone.excrud.model.project.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;

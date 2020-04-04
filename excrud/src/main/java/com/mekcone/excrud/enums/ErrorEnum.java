@@ -1,6 +1,6 @@
 package com.mekcone.excrud.enums;
 
-public interface ErrorEnums {
+public interface ErrorEnum {
     // ExCRUD Errors (1 ~ 1000)
     BaseEnum PROJECT_FILE_NOT_FOUND = new BaseEnum(1, "Project file \"excrud.xml\" not found");
     BaseEnum PARSE_XML_FAILED = new BaseEnum(2, "Parse XML failed");

@@ -5,8 +5,8 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
 import com.mekcone.excrud.constant.SpringBootProject;
-import com.mekcone.excrud.loader.model.Project;
-import com.mekcone.excrud.loader.model.data.Table;
+import com.mekcone.excrud.model.project.Project;
+import com.mekcone.excrud.model.project.data.Table;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Data;
@@ -35,7 +35,12 @@ public class JavaTemplate implements Template {
                     templateText.substring(index + tag.length() + 4);
             index = templateText.indexOf("__" + tag + "__");
         }
-        compilationUnit = StaticJavaParser.parse(templateText);
+
+        try {
+            compilationUnit = StaticJavaParser.parse(templateText);
+        } catch(Exception e) {
+            LogUtil.error(-1, "Error parsing: " + templateText + "\n" + e.getMessage());
+        }
         return true;
     }
 

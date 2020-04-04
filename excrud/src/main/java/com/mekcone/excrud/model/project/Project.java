@@ -1,13 +1,14 @@
-package com.mekcone.excrud.loader.model;
+package com.mekcone.excrud.model.project;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.mekcone.excrud.loader.model.components.ApiDocument;
-import com.mekcone.excrud.loader.model.components.Export;
-import com.mekcone.excrud.loader.model.data.Database;
+import com.mekcone.excrud.model.project.components.ApiDocument;
+import com.mekcone.excrud.model.project.components.Export;
+import com.mekcone.excrud.model.project.data.Database;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Data;
 
@@ -22,6 +23,7 @@ public class Project {
     private String name;
     private String description;
     private String rsaPublicKey;
+    private String language;
 
     @JacksonXmlProperty(isAttribute = true)
     private String noNamespaceSchemaLocation;
@@ -36,17 +38,17 @@ public class Project {
     @JacksonXmlProperty(localName = "export")
     private List<Export> exports;
 
-    /*@JsonIgnore
-    public Exports getSpringBootProjectExport() {
+    @JsonIgnore
+    public Export getExport(String exportType) {
         if (exports != null) {
-            for (Exports exports : this.exports) {
-                if (exports.getType().equals("spring-boot-project")) {
-                    return exports;
+            for (Export export : exports) {
+                if (export.getType().equals(exportType)) {
+                    return export;
                 }
             }
         }
         return null;
-    }*/
+    }
 
     @Override
     public String toString() {

@@ -4,10 +4,11 @@ import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.mekcone.excrud.Application;
-import com.mekcone.excrud.loader.model.Project;
-import com.mekcone.excrud.loader.model.components.Keyword;
-import com.mekcone.excrud.loader.model.data.Column;
-import com.mekcone.excrud.loader.model.data.Table;
+import com.mekcone.excrud.model.project.Project;
+import com.mekcone.excrud.model.project.components.Keyword;
+import com.mekcone.excrud.model.project.data.Column;
+import com.mekcone.excrud.model.project.data.Table;
+import com.mekcone.excrud.util.DataTypeConverter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,11 +17,11 @@ import java.util.List;
 public class ApiDocumentGenerator {
     private Project project;
 
-    BaseFont simSunBaseFont;
-    BaseFont SimHeiBaseFont;
+    private BaseFont simSunBaseFont;
+    private BaseFont simHeiBaseFont;
 
-    Font normalChineseFont;
-    Font emphasisChineseFont;
+    private Font normalChineseFont;
+    private Font emphasisChineseFont;
 
     public ApiDocumentGenerator(Project project) {
         this.project = project;
@@ -29,7 +30,7 @@ public class ApiDocumentGenerator {
             simSunBaseFont = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
 
             String fontPath = "C:\\Windows\\Fonts\\msyh.ttc,1";
-            SimHeiBaseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            simHeiBaseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,8 +40,6 @@ public class ApiDocumentGenerator {
 
         emphasisChineseFont = new Font(simSunBaseFont, Font.BOLD);
         emphasisChineseFont.setSize(12);
-
-        generatePdf();
     }
 
     public PdfPCell tableCell(String str) {
@@ -54,16 +53,13 @@ public class ApiDocumentGenerator {
     }
 
     public PdfPCell tableHeaderCell(String str) {
-        PdfPCell pdfPCell = new PdfPCell();
-        pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        pdfPCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-        Font font = new Font(SimHeiBaseFont, Font.BOLD);
-        font.setSize(12);
-        pdfPCell.setPhrase(new Phrase(str, font));
+        PdfPCell pdfPCell = tableCell(str);
+        pdfPCell.setBackgroundColor(new BaseColor(0xffcccccc));
+        pdfPCell.getPhrase().getFont().setStyle(Font.BOLD);
         return pdfPCell;
     }
 
-    private void generatePdf() {
+    public void generatePdf() {
         try {
             Document document = new Document(PageSize.A4, 50, 50, 50, 50);
 
@@ -79,7 +75,7 @@ public class ApiDocumentGenerator {
             document.add(paragraph);
             paragraph = new Paragraph(30);
             paragraph.setAlignment(Element.ALIGN_CENTER);
-            Font font = new Font(SimHeiBaseFont, 24, Font.BOLD);
+            Font font = new Font(simHeiBaseFont, 24, Font.BOLD);
             paragraph.setFont(font);
             String title = project.getApiDocument().getTitle().replace("{br}", "\n");
             chunk = new Chunk(title);
@@ -89,7 +85,7 @@ public class ApiDocumentGenerator {
             // Version
             paragraph = new Paragraph(40);
             paragraph.setAlignment(1);
-            font = new Font(SimHeiBaseFont, Font.BOLD);
+            font = new Font(simHeiBaseFont, Font.BOLD);
             font.setSize(14);
             paragraph.setFont(font);
             chunk = new Chunk("v" + project.getVersion());
@@ -100,7 +96,7 @@ public class ApiDocumentGenerator {
             paragraph = new Paragraph();
             paragraph.setSpacingBefore(100);
             paragraph.setAlignment(1);
-            Image image = Image.getInstance(Application.getHomeDirectory() + "/resources/png/logo.png");
+            Image image = Image.getInstance(Application.getHomeDirectory() + "/resources/logo/logo.png");
             image.setAlignment(1);
             image.scaleAbsolute(40,40);
             paragraph.add(image);
@@ -119,7 +115,7 @@ public class ApiDocumentGenerator {
                 paragraph = new Paragraph();
                 paragraph.setSpacingBefore(40);
                 paragraph.setAlignment(Element.ALIGN_LEFT);
-                font = new Font(SimHeiBaseFont, Font.BOLD);
+                font = new Font(simHeiBaseFont, Font.BOLD);
                 font.setSize(16);
                 paragraph.setFont(font);
                 chunk = new Chunk((i + 1) + ". " + table.getDescription());
@@ -132,7 +128,7 @@ public class ApiDocumentGenerator {
                     paragraph = new Paragraph();
                     paragraph.setSpacingBefore(20);
                     paragraph.setAlignment(Element.ALIGN_LEFT);
-                    font = new Font(SimHeiBaseFont, Font.BOLD);
+                    font = new Font(simHeiBaseFont, Font.BOLD);
                     font.setSize(14);
                     paragraph.setFont(font);
                     chunk = new Chunk((i + 1) + "." + (k + 1) + " " + keywords.get(k).getValue() + table.getDescription() + "接口");
@@ -144,7 +140,7 @@ public class ApiDocumentGenerator {
                     paragraph.setSpacingBefore(10);
                     paragraph.setSpacingAfter(10);
                     paragraph.setAlignment(Element.ALIGN_LEFT);
-                    font = new Font(SimHeiBaseFont, Font.BOLD);
+                    font = new Font(simHeiBaseFont, Font.BOLD);
                     font.setSize(12);
                     paragraph.setFont(font);
                     chunk = new Chunk((i + 1) + "." + (k + 1) + ".1 描述");
@@ -154,9 +150,7 @@ public class ApiDocumentGenerator {
                     // Description content
                     paragraph = new Paragraph(18);
                     paragraph.setAlignment(Element.ALIGN_LEFT);
-                    font = new Font(simSunBaseFont);
-                    font.setSize(12);
-                    paragraph.setFont(font);
+                    paragraph.setFont(normalChineseFont);
                     chunk = new Chunk("    此接口提供" + keywords.get(k).getValue() + table.getDescription() + "的功能。\n" +
                             "    调用URL： http://<server_name>/api/" + table.getCamelName() + "\n" +
                             "    调用方法： " + keywords.get(k).getRequestMethod());
@@ -168,7 +162,7 @@ public class ApiDocumentGenerator {
                     paragraph.setSpacingBefore(10);
                     paragraph.setSpacingAfter(10);
                     paragraph.setAlignment(Element.ALIGN_LEFT);
-                    font = new Font(SimHeiBaseFont, Font.BOLD);
+                    font = new Font(simHeiBaseFont, Font.BOLD);
                     font.setSize(12);
                     paragraph.setFont(font);
                     chunk = new Chunk((i + 1) + "." + (k + 1) + ".2 参数");
@@ -184,15 +178,20 @@ public class ApiDocumentGenerator {
                     pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     pdfPCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
-                    pdfPTable.addCell("");
+                    pdfPTable.addCell(tableHeaderCell(""));
                     pdfPTable.addCell(tableHeaderCell("参数名"));
                     pdfPTable.addCell(tableHeaderCell("类型"));
                     pdfPTable.addCell(tableHeaderCell("参数描述"));
 
                     for (Column column: table.getColumns()) {
+                        if (column.isPrimaryKey()) {
+                            continue;
+                        }
                         pdfPTable.addCell("");
                         pdfPTable.addCell(tableCell(column.getCamelName(table.getName())));
-                        pdfPTable.addCell(tableCell("-"));
+
+                        pdfPTable.addCell(tableCell(DataTypeConverter.convertToJavaDataType(column.getType())));
+
                         if (column.getDescription() != null && !column.getDescription().isEmpty()) {
                             pdfPTable.addCell(tableCell(column.getDescription()));
                         } else {
@@ -201,16 +200,6 @@ public class ApiDocumentGenerator {
                     }
 
                     document.add(pdfPTable);
-                    /*paragraph = new Paragraph(18);
-                    paragraph.setAlignment(Element.ALIGN_LEFT);
-                    font = new Font(songTiChinese);
-                    font.setSize(12);
-                    paragraph.setFont(font);
-                    chunk = new Chunk("    此接口提供" + keywords.get(k).getValue() + table.getDescription() + "的功能。\n" +
-                            "    调用URL： http://<server_name>/api/" + table.getCamelName() + "\n" +
-                            "    调用方法： " + keywords.get(k).getRequestMethod());
-                    paragraph.add(chunk);
-                    document.add(paragraph);*/
                 }
             }
 
@@ -227,12 +216,8 @@ public class ApiDocumentGenerator {
 
         public BaseFont bfChinese;
 
-        /**
-         * 重写PdfPageEventHelper中的onOpenDocument方法
-         */
         @Override
         public void onOpenDocument(PdfWriter writer, Document document) {
-            // 得到文档的内容并为该内容新建一个模板
             total = writer.getDirectContent().createTemplate(500, 500);
             try {
 
@@ -252,9 +237,6 @@ public class ApiDocumentGenerator {
             }
         }
 
-        /**
-         * 重写PdfPageEventHelper中的onEndPage方法
-         */
         @Override
         public void onEndPage(PdfWriter writer, Document document) {
             // 新建获得用户页面文本和图片内容位置的对象
@@ -282,33 +264,5 @@ public class ApiDocumentGenerator {
 
             pdfContentByte.restoreState();
         }
-
-        /**
-         * 重写PdfPageEventHelper中的onCloseDocument方法
-         */
-       /* @Override
-        public void onCloseDocument(PdfWriter writer, Document document) {
-            total.beginText();
-            try {
-                String prefixFont = "";
-                String os = System.getProperties().getProperty("os.name");
-                if(os.startsWith("win") || os.startsWith("Win")){
-                    prefixFont = "C:\\Windows\\Fonts" + File.separator;
-                }else {
-                    prefixFont = "/usr/share/fonts/chinese" + File.separator;
-                }
-
-                bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
-                total.setFontAndSize(bfChinese, 15);
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            total.setTextMatrix(0, 0);
-            // 设置总页数的值到模板上，并应用到每个界面
-            total.showText(String.valueOf(writer.getPageNumber() - 1));
-            total.endText();
-        }*/
     }
 }

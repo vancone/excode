@@ -4,6 +4,7 @@
     - [Installation](./ch01-01-installation.md)
 - [ExCRUD XML File Organizations](./ch02-00-excrud-xml-file-organizations.md)
     - [XML Schema](./ch02-01-xml-schema.md)
+    - [Smart Description](./ch02-02-smart-description.md)
 - [Databases and Tables](./ch03-00-databases-and-tables.md)
     - [Database](./ch03-01-database.md)
     - [Table](./ch03-02-table.md)

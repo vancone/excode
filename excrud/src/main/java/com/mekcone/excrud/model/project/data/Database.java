@@ -1,4 +1,4 @@
-package com.mekcone.excrud.loader.model.data;
+package com.mekcone.excrud.model.project.data;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -13,6 +13,9 @@ public class Database {
 
     @JacksonXmlProperty(isAttribute = true)
     private String host;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private String name;
 
     @JacksonXmlProperty(isAttribute = true)
     private String username;
