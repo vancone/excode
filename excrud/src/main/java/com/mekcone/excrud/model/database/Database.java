@@ -1,4 +1,4 @@
-package com.mekcone.excrud.model.project.data;
+package com.mekcone.excrud.model.database;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -26,4 +26,11 @@ public class Database {
     @JacksonXmlElementWrapper(localName = "tables")
     @JacksonXmlProperty(localName = "table")
     private List<Table> tables;
+
+    public boolean hasTable() {
+        if (tables.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
 }

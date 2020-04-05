@@ -6,9 +6,8 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.mekcone.excrud.model.project.components.ApiDocument;
-import com.mekcone.excrud.model.project.components.Export;
-import com.mekcone.excrud.model.project.data.Database;
+import com.mekcone.excrud.model.apidoc.ApiDocument;
+import com.mekcone.excrud.model.database.Database;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Data;
 
@@ -56,8 +55,8 @@ public class Project {
             XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             return xmlMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
-        } catch (Exception ex) {
-            LogUtil.warn(ex.getMessage());
+        } catch (Exception e) {
+            LogUtil.warn(e.getMessage());
             return null;
         }
     }

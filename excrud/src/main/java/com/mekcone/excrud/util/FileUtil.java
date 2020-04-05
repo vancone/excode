@@ -14,9 +14,8 @@ public class FileUtil {
             inputStream.close();
             return new String(bytes);
         } catch(Exception e) {
-            LogUtil.warn("Read file \"" + path + "\" failed");
+            return null;
         }
-        return null;
     }
 
     public static boolean write(String url, String data) {

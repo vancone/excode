@@ -4,9 +4,8 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
-import com.mekcone.excrud.constant.SpringBootProject;
 import com.mekcone.excrud.model.project.Project;
-import com.mekcone.excrud.model.project.data.Table;
+import com.mekcone.excrud.model.database.Table;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Data;
@@ -60,8 +59,8 @@ public class JavaTemplate implements Template {
     }
 
     public void preprocessForSpringBootProject(Project project, Table table) {
-        insert(SpringBootProject.GROUP_ID, project.getGroupId());
-        insert(SpringBootProject.ARTIFACT_ID, project.getArtifactId());
+        insert("groupId", project.getGroupId());
+        insert("artifactId", project.getArtifactId());
         if (table != null) {
             insert("Table", table.getCapitalizedCamelName());
             insert("table", table.getCamelName());

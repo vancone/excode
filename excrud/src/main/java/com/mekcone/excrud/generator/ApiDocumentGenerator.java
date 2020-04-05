@@ -4,11 +4,14 @@ import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.mekcone.excrud.Application;
+import com.mekcone.excrud.model.database.Database;
 import com.mekcone.excrud.model.project.Project;
-import com.mekcone.excrud.model.project.components.Keyword;
-import com.mekcone.excrud.model.project.data.Column;
-import com.mekcone.excrud.model.project.data.Table;
+import com.mekcone.excrud.model.apidoc.Keyword;
+import com.mekcone.excrud.model.database.Column;
+import com.mekcone.excrud.model.database.Table;
+import com.mekcone.excrud.parser.PropertiesParser;
 import com.mekcone.excrud.util.DataTypeConverter;
+import com.mekcone.excrud.util.LogUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,6 +28,7 @@ public class ApiDocumentGenerator {
 
     public ApiDocumentGenerator(Project project) {
         this.project = project;
+        smartDescription();
 
         try {
             simSunBaseFont = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
@@ -40,6 +44,35 @@ public class ApiDocumentGenerator {
 
         emphasisChineseFont = new Font(simSunBaseFont, Font.BOLD);
         emphasisChineseFont.setSize(12);
+    }
+
+    public void smartDescription() {
+        PropertiesParser propertiesParser = PropertiesParser.readFrom(Application.getHomeDirectory() + "/exports/api-documents/smart-description.properties");
+        if (propertiesParser == null) {
+            LogUtil.warn("Smart description dataset not found");
+            return;
+        }
+
+        for (Database database: project.getDatabases()) {
+            for (Table table: database.getTables()) {
+                for (Column column: table.getColumns()) {
+                    if (column.getDescription() == null || column.getDescription().isEmpty()) {
+                        String[] words = column.getName().split("_");
+                        String generatedDescription = "";
+                        for (String word: words) {
+                            if (propertiesParser.exist(word)) {
+                                generatedDescription += propertiesParser.get(word);
+                            } else {
+                                generatedDescription += word + " ";
+                            }
+                        }
+                        if (!generatedDescription.isEmpty()) {
+                            column.setDescription(generatedDescription);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public PdfPCell tableCell(String str) {

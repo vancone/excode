@@ -2,16 +2,16 @@
 
 Table's attributes:
 
-| Parameter Name |   Type   | Required | Default Value |
+| Attribute Name |   Type   | Required | Default Value |
 |    ----        |  ----    |   ----   |     ----      |
 |   description  |  string  |          |               |
 |   name         |  string  |   true   |               |
 
-Table's child nodes:
+Table's child elements:
 
-|   Node Name   | Required |
-|   ----        |   ----   |
-|   columns     |   true   |
+|  Element Name | Required |
+|  ----         |   ----   |
+|  columns      |   true   |
 
 
 Here is an example:

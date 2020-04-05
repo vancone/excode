@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-    xsi:noNamespaceSchemaLocation="file:///D:/Projects/excrud/resources/xsd/excrud.xsd">
+    xsi:noNamespaceSchemaLocation="../../resources/xsd/excrud.xsd">
     <groupId>com.mekcone.excrud.example</groupId>
     <artifactId>mall</artifactId>
     <name>MekCone 商城</name>
@@ -25,25 +25,25 @@
             <tables>
                 <table name="goods" description="商品对象">
                     <columns>
-                        <column name="goods_id" type="int" primaryKey="true" description="商品ID"/>
-                        <column name="goods_name" type="varchar(50)" description="商品名称"/>
-                        <column name="catalogue_id" type="varchar(50)" description="商品类别ID"/>
-                        <column name="goods_price" type="double" description="商品价格"/>
-                        <column name="goods_description" type="varchar(50)" description="商品描述"/>
+                        <column name="goods_id" type="int" primaryKey="true"/>
+                        <column name="goods_name" type="varchar(50)"/>
+                        <column name="catalogue_id" type="varchar(50)"/>
+                        <column name="goods_price" type="double"/>
+                        <column name="goods_description" type="varchar(50)" detail="true"/>
                     </columns>
                 </table>
                 <table name="cart" description="购物车对象">
                     <columns>
-                        <column name="item_id" type="varchar(50)" primaryKey="true" description="购物车条目ID"/>
-                        <column name="goods_id" type="varchar(50)" description="商品ID"/>
-                        <column name="user_id" type="varchar(20)" description="用户ID"/>
-                        <column name="amount" type="int" description="购物车选购数目"/>
+                        <column name="item_id" type="varchar(50)" primaryKey="true"/>
+                        <column name="goods_id" type="varchar(50)"/>
+                        <column name="user_id" type="varchar(20)"/>
+                        <column name="amount" type="int"/>
                     </columns>
                 </table>
                 <table name="catalogue" description="商品门类">
                     <columns>
-                        <column name="catalogue_id" type="varchar(50)" primaryKey="true" description="商品类别ID"/>
-                        <column name="catalogue_name" type="varchar(50)" description="商品类别名"/>
+                        <column name="catalogue_id" type="varchar(50)" primaryKey="true"/>
+                        <column name="catalogue_name" type="varchar(50)"/>
                     </columns>
                 </table>
             </tables>

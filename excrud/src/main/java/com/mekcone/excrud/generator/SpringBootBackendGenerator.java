@@ -14,24 +14,22 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.mekcone.excrud.Application;
+import com.mekcone.excrud.constant.DataType;
 import com.mekcone.excrud.constant.ExportType;
-import com.mekcone.excrud.constant.JavaWords;
 import com.mekcone.excrud.constant.SpringBootBackendProperty;
-import com.mekcone.excrud.constant.SpringBootProject;
 import com.mekcone.excrud.enums.ErrorEnum;
 import com.mekcone.excrud.model.project.Project;
-import com.mekcone.excrud.model.project.components.ApiDocument;
-import com.mekcone.excrud.model.project.components.Dependency;
-import com.mekcone.excrud.model.project.components.Export;
-import com.mekcone.excrud.model.project.data.Column;
-import com.mekcone.excrud.model.project.data.Database;
-import com.mekcone.excrud.model.project.data.Table;
+import com.mekcone.excrud.model.apidoc.ApiDocument;
+import com.mekcone.excrud.model.springboot.Dependency;
+import com.mekcone.excrud.model.project.Export;
+import com.mekcone.excrud.model.database.Column;
+import com.mekcone.excrud.model.database.Database;
+import com.mekcone.excrud.model.database.Table;
 import com.mekcone.excrud.model.template.JavaTemplate;
 import com.mekcone.excrud.model.template.PlainTemplate;
 import com.mekcone.excrud.parser.PropertiesParser;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
-import com.mekcone.excrud.util.SqlUtil;
 import com.mekcone.excrud.util.StringUtil;
 import org.jdom2.Comment;
 import org.jdom2.Document;
@@ -41,7 +39,9 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,21 +50,38 @@ import java.util.Optional;
 public class SpringBootBackendGenerator {
 
     private final String EXCRUD_HOME = Application.getHomeDirectory();
+    private Export export;
+    private Project project;
+    private String springBootBackendPath;
     private final String templatePath = EXCRUD_HOME + "/exports/" + ExportType.SPRING_BOOT_BACKEND + "/templates/";
 
-    private String springBootBackendPath;
-
-    private Project project;
-
-    private Export export;
 
     public SpringBootBackendGenerator(Project project, Export export) {
         this.project = project;
         this.export = export;
+        springBootBackendPath = ExportType.SPRING_BOOT_BACKEND + "/";
     }
 
     public boolean build() {
-        return false;
+        File file = new File(springBootBackendPath);
+
+        // Compiling
+        try {
+            // Only work on Windows
+            Process child = Runtime.getRuntime().exec("mvn.cmd clean compile package", null, file);
+
+            InputStream child_in = child.getInputStream();
+            int c;
+            while (true) {
+                if (!((c = child_in.read()) != -1)) break;
+                final int d = c;
+                LogUtil.print(String.valueOf((char) d));
+            }
+        } catch (IOException e) {
+            LogUtil.error(-1, "Compiling project failed");
+            return false;
+        }
+        return true;
     }
 
     private void createDirectories() {
@@ -86,11 +103,11 @@ public class SpringBootBackendGenerator {
 
     private void preprocessTemplate(PlainTemplate plainTemplate, Table table) {
         String templateText = plainTemplate.toString();
-        if (templateText.indexOf("## " + SpringBootProject.GROUP_ID + " ##") > -1) {
-            plainTemplate.insert(SpringBootProject.GROUP_ID, project.getGroupId());
+        if (templateText.indexOf("## groupId ##") > -1) {
+            plainTemplate.insert("groupId", project.getGroupId());
         }
-        if (templateText.indexOf("## " + SpringBootProject.ARTIFACT_ID + " ##") > -1) {
-            plainTemplate.insert(SpringBootProject.ARTIFACT_ID, project.getArtifactId());
+        if (templateText.indexOf("## artifactId ##") > -1) {
+            plainTemplate.insert("artifactId", project.getArtifactId());
         }
 
         if (table == null) return;
@@ -114,11 +131,11 @@ public class SpringBootBackendGenerator {
 
     private void preprocessTemplate(JavaTemplate javaTemplate, Table table) {
         String templateText = javaTemplate.toString();
-        if (templateText.indexOf("__" + SpringBootProject.GROUP_ID + "__") > -1) {
-            javaTemplate.insert(SpringBootProject.GROUP_ID, project.getGroupId());
+        if (templateText.indexOf("__groupId__") > -1) {
+            javaTemplate.insert("groupId", project.getGroupId());
         }
-        if (templateText.indexOf("__" + SpringBootProject.ARTIFACT_ID + "__") > -1) {
-            javaTemplate.insert(SpringBootProject.ARTIFACT_ID, project.getArtifactId());
+        if (templateText.indexOf("__artifactId__") > -1) {
+            javaTemplate.insert("artifactId", project.getArtifactId());
         }
 
         if (table == null) return;
@@ -147,7 +164,6 @@ public class SpringBootBackendGenerator {
 
     public void generate() {
         createDirectories();
-        springBootBackendPath = ExportType.SPRING_BOOT_BACKEND + "/";
         String resourcesPath = ExportType.SPRING_BOOT_BACKEND + "/src/main/resources/";
         String sourcePath = springBootBackendPath + "src/main/java/" + (project.getGroupId() + "." + project.getArtifactId()).replace('.', '/') + "/";
 
@@ -156,7 +172,6 @@ public class SpringBootBackendGenerator {
         FileUtil.write(springBootBackendPath + "pom.xml", stringifyPomXml());
         FileUtil.write(resourcesPath + "application.properties", stringifyApplicationProperties());
         FileUtil.write(sourcePath + StringUtil.capitalizedCamel(project.getArtifactId()) + "Application.java", stringifyApplicationEntry());
-        FileUtil.write(springBootBackendPath + project.getArtifactId() + ".sql", stringifySql());
 
         String controllerPath = sourcePath + "controller/";
         String entityPath = sourcePath + "entity/";
@@ -186,24 +201,6 @@ public class SpringBootBackendGenerator {
         if (export.getBooleanProperty(SpringBootBackendProperty.SWAGGER2_ENABLE)) {
             FileUtil.write(configPath + "Swagger2Config.java", stringifyConfig("swagger2"));
         }
-
-        /*if (export.getProperty("cross_origin_enable").equals("true")) {
-            LogUtil.error(-1, "exist cors");
-        } else {
-            LogUtil.error(-1, "not exist cors");
-        }*/
-        /*if (export.getPlugins() != null) {
-            for (Plugin plugin : export.getPlugins()) {
-                String configText = stringifyConfig(plugin);
-                if (configText != null) {
-                    String filePath = configPath + StringUtil.capitalizedCamel(plugin.getName()) + "Config.java";
-                    if (plugin.getName().equals("spring-boot")) {
-                        filePath = filePath = configPath + "CrossOriginConfig.java";
-                    }
-                    FileUtil.write(filePath, configText);
-                }
-            }
-        }*/
 
         // Utils
         String utilPath = sourcePath + "util/";
@@ -479,8 +476,8 @@ public class SpringBootBackendGenerator {
         }
         for (Column column : table.getColumns()) {
             String type = column.getType();
-            if (!type.equals(JavaWords.INT)) {
-                type = JavaWords.STRING;
+            if (!type.equals(DataType.JAVA_INT)) {
+                type = DataType.JAVA_STRING;
             }
 
             entityClassDeclaration.addField(type, column.getCamelName(table.getName()), Modifier.Keyword.PRIVATE);
@@ -490,7 +487,7 @@ public class SpringBootBackendGenerator {
                 // Getter
                 MethodDeclaration getterMethodDeclaration =
                         entityClassDeclaration.addMethod("get" + column.getCapitalizedCamelName(table.getName()), Modifier.Keyword.PUBLIC);
-                getterMethodDeclaration.setType(JavaWords.STRING);
+                getterMethodDeclaration.setType(DataType.JAVA_STRING);
                 BlockStmt getterMethodBody = new BlockStmt();
                 getterMethodBody.addAndGetStatement(new ReturnStmt(column.getCamelName(table.getName())));
                 getterMethodDeclaration.setBody(getterMethodBody);
@@ -498,8 +495,8 @@ public class SpringBootBackendGenerator {
                 // Setter
                 MethodDeclaration setterMethodDeclaration =
                         entityClassDeclaration.addMethod("set" + column.getCapitalizedCamelName(table.getName()), Modifier.Keyword.PUBLIC);
-                setterMethodDeclaration.setType(JavaWords.VOID);
-                setterMethodDeclaration.addParameter(JavaWords.STRING, column.getCamelName(table.getName()));
+                setterMethodDeclaration.setType(DataType.JAVA_VOID);
+                setterMethodDeclaration.addParameter(DataType.JAVA_STRING, column.getCamelName(table.getName()));
                 BlockStmt setterMethodBody = new BlockStmt();
                 AssignExpr assignExpr = new AssignExpr();
                 assignExpr.setOperator(AssignExpr.Operator.ASSIGN);
@@ -525,10 +522,15 @@ public class SpringBootBackendGenerator {
             for (AnnotationExpr annotation : annotations) {
                 if (annotation.getNameAsString().equals("Insert")) {
                     annotation.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
-                            SqlUtil.insertQuery(table, true)));
+                            SqlGenerator.insertQuery(table, true)));
                 } else if (annotation.getNameAsString().equals("Results")) {
                     ArrayInitializerExpr array = new ArrayInitializerExpr();
                     for (Column column : table.getColumns()) {
+                        if (method.getNameAsString().equals("retrieveList")) {
+                            if (column.isDetail()) {
+                                continue;
+                            }
+                        }
                         NormalAnnotationExpr resultAnnotation = new NormalAnnotationExpr();
                         resultAnnotation.setName("Result");
                         resultAnnotation.addPair("property", new StringLiteralExpr(column.getCamelName(table.getName())));
@@ -540,7 +542,7 @@ public class SpringBootBackendGenerator {
 //                        LogUtil.error(-1, yamlPrinter.output(javaTemplate.getCompilationUnit()));
                 } else if (annotation.getNameAsString().equals("Update")) {
                     annotation.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
-                            SqlUtil.updateQuery(table)));
+                            SqlGenerator.updateQuery(table)));
                 }
             }
         }
@@ -552,7 +554,9 @@ public class SpringBootBackendGenerator {
         // Root
         Element rootElement = new Element("project");
         Document document = new Document(rootElement);
-        rootElement.addContent(new Comment("NO_DESCRIPTION"));
+        if (Application.description != null) {
+            rootElement.addContent(new Comment(Application.description));
+        }
         Namespace xmlns = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
         rootElement.setNamespace(xmlns);
         Namespace xsi = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
@@ -563,19 +567,16 @@ public class SpringBootBackendGenerator {
         // Parent
         Element parentElement = new Element("parent", xmlns);
         rootElement.addContent(parentElement);
-        parentElement.addContent(new Element(SpringBootProject.GROUP_ID, xmlns).setText("org.springframework.boot"));
-        parentElement.addContent(new Element(SpringBootProject.ARTIFACT_ID, xmlns).setText("spring-boot-starter-parent"));
-        parentElement.addContent(new Element(SpringBootProject.VERSION, xmlns).setText("2.2.1.RELEASE"));
+        parentElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
+        parentElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-starter-parent"));
+        parentElement.addContent(new Element("version", xmlns).setText("2.2.1.RELEASE"));
         parentElement.addContent(new Element("relativePath", xmlns));
 
         rootElement.addContent(new Element("groupId", xmlns).setText(project.getGroupId()));
         rootElement.addContent(new Element("artifactId", xmlns).setText(project.getArtifactId()));
         rootElement.addContent(new Element("version", xmlns).setText(project.getVersion()));
         rootElement.addContent(new Element("name", xmlns).setText(project.getArtifactId()));
-        rootElement.addContent(new Element("description", xmlns).setText(
-                StringUtil.capitalize(project.getArtifactId()) +
-                        " Project auto-generated by MekCone ExCRUD"
-        ));
+        rootElement.addContent(new Element("description", xmlns).setText(project.getDescription()));
 
         // Properties
         Element propertiesElement = new Element("properties", xmlns);
@@ -716,24 +717,5 @@ public class SpringBootBackendGenerator {
         JavaTemplate javaTemplate = new JavaTemplate(templatePath + "VO/" + VOName + ".java");
         javaTemplate.preprocessForSpringBootProject(project, null);
         return javaTemplate.toString();
-    }
-
-    public String stringifySql() {
-        String code = "-- NO DESCRIPTIONS" + "\n\n";
-        for (Table table : project.getDatabases().get(0).getTables()) {
-            code += "CREATE TABLE " + table.getName() + "\n(\n";
-            for (int i = 0; i < table.getColumns().size(); i++) {
-                code += table.getColumns().get(i).getName() + " " + table.getColumns().get(i).getType();
-                if (table.getColumns().get(i).isPrimaryKey()) {
-                    code += " NOT NULL AUTO_INCREMENT";
-                }
-                code += ",\n";
-                if (i + 1 == table.getColumns().size()) {
-                    code += "PRIMARY KEY(" + table.getPrimaryKey() + ")\n";
-                }
-            }
-            code += ");\n\n";
-        }
-        return code;
     }
 }

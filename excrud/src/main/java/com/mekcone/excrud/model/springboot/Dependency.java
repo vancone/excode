@@ -1,4 +1,4 @@
-package com.mekcone.excrud.model.project.components;
+package com.mekcone.excrud.model.springboot;
 
 import lombok.Data;
 

@@ -4,18 +4,18 @@ ExCRUD supports multi database source in a project. However, so far only the fir
 
 Database's attributes:
 
-| Parameter Name |   Type   | Required | Default Value |
+| Attribute Name |   Type   | Required | Default Value |
 |    ----        |  ----    |   ----   |     ----      |
 |    host        |  string  |   true   |               |
 |    password    |  string  |   true   |               |
 |    type        |  string  |          |     mysql     |
 |    username    |  string  |          |     root      |
 
-Database's child nodes:
+Database's child elements:
 
-|   Node Name   | Required |
-|   ----        |   ----   |
-|   tables      |   true   |
+|  Element Name | Required |
+|  ----         |   ----   |
+|  tables       |   true   |
 
 
 Here is an example:

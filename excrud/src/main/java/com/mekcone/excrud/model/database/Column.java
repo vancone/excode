@@ -1,4 +1,4 @@
-package com.mekcone.excrud.model.project.data;
+package com.mekcone.excrud.model.database;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -18,6 +18,9 @@ public class Column {
 
     @JacksonXmlProperty(isAttribute = true)
     private boolean filter;
+
+    @JacksonXmlProperty(isAttribute = true)
+    private boolean detail;
 
     @JacksonXmlProperty(isAttribute = true)
     private String description;

@@ -24,6 +24,13 @@ public class PropertiesParser {
         this.addSeparator();
     }
 
+    public boolean exist(String key) {
+        if (get(key) != null) {
+            return true;
+        }
+        return false;
+    }
+
     public String generate() {
         String outputContent = "";
         for (Pair propertyPair: properties) {
@@ -34,6 +41,15 @@ public class PropertiesParser {
             outputContent += propertyPair.getKey() + " = " + propertyPair.getValue() + "\n";
         }
         return outputContent;
+    }
+
+    public String get(String key) {
+        for (Pair<String, String> property: properties) {
+            if (property.getKey().equals(key)) {
+                return property.getValue();
+            }
+        }
+        return null;
     }
 
     public static PropertiesParser parse(String propertiesText) {

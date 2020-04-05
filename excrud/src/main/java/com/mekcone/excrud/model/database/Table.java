@@ -1,4 +1,4 @@
-package com.mekcone.excrud.model.project.data;
+package com.mekcone.excrud.model.database;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -49,5 +49,12 @@ public class Table {
 
     public void addColumn(Column column) {
         this.columns.add(column);
+    }
+
+    public boolean hasColumn() {
+        if (columns.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 }

@@ -1,4 +1,4 @@
-package com.mekcone.excrud.model.project.components;
+package com.mekcone.excrud.model.project;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;

@@ -5,12 +5,14 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mekcone.excrud.constant.ExportType;
 import com.mekcone.excrud.enums.ErrorEnum;
 import com.mekcone.excrud.generator.ApiDocumentGenerator;
+import com.mekcone.excrud.generator.EnterpriseOfficialWebsiteGenerator;
 import com.mekcone.excrud.generator.SpringBootBackendGenerator;
+import com.mekcone.excrud.generator.SqlGenerator;
 import com.mekcone.excrud.model.project.Project;
-import com.mekcone.excrud.model.project.components.Export;
-import com.mekcone.excrud.model.project.data.Column;
-import com.mekcone.excrud.model.project.data.Database;
-import com.mekcone.excrud.model.project.data.Table;
+import com.mekcone.excrud.model.project.Export;
+import com.mekcone.excrud.model.database.Column;
+import com.mekcone.excrud.model.database.Database;
+import com.mekcone.excrud.model.database.Table;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Getter;
@@ -23,6 +25,20 @@ public class ProjectLoader {
     private Project project;
 
     private final String projectFileName = "excrud.xml";
+    private int tableAmount = 0;
+
+    public void build() {
+        for (Export export: project.getExports()) {
+            switch (export.getType()) {
+                case ExportType.SPRING_BOOT_BACKEND:
+                    SpringBootBackendGenerator springBootBackendGenerator = new SpringBootBackendGenerator(project, export);
+                    springBootBackendGenerator.build();
+                    break;
+                default:
+                    return;
+            }
+        }
+    }
 
     public void generate() {
 
@@ -31,6 +47,14 @@ public class ProjectLoader {
             System.exit(0);
         }
 
+        if (tableAmount > 0) {
+            SqlGenerator sqlGenerator = new SqlGenerator(project);
+        }
+
+        ApiDocumentGenerator apiDocumentGenerator = new ApiDocumentGenerator(project);
+        apiDocumentGenerator.generatePdf();
+        System.exit(-1);
+
         for (Export export : project.getExports()) {
             if (!export.isEnable()) {
                 continue;
@@ -38,11 +62,13 @@ public class ProjectLoader {
             LogUtil.title(export.getType());
             switch (export.getType()) {
                 case ExportType.API_DOCUMENT:
-                    ApiDocumentGenerator apiDocumentGenerator = new ApiDocumentGenerator(project);
-                    apiDocumentGenerator.generatePdf();
+//                    ApiDocumentGenerator apiDocumentGenerator = new ApiDocumentGenerator(project);
+//                    apiDocumentGenerator.generatePdf();
                     break;
 
                 case ExportType.ENTERPRISE_OFFICIAL_WEBSITE:
+                    EnterpriseOfficialWebsiteGenerator enterpriseOfficialWebsiteGenerator = new EnterpriseOfficialWebsiteGenerator();
+                    enterpriseOfficialWebsiteGenerator.generate();
                     break;
 
                 case ExportType.SPRING_BOOT_BACKEND:
@@ -78,7 +104,6 @@ public class ProjectLoader {
             LogUtil.error(ErrorEnum.DATABASE_UNDEFINED);
         }
 
-        int tableAmount = 0;
         for (Database database : databases) {
             if (database == null) {
                 continue;
@@ -103,41 +128,7 @@ public class ProjectLoader {
                 }
             }
         }
-
         return true;
-//
-//        // TEST: Encrypt with RSA public key
-//        RSA rsaTest = new RSA(null, settingService.getSettings().getDefaultRsaPublicKeyBytes());
-//        for (Dependency dependency: project.getDependencies()) {
-//            if (dependency.getProperties() != null) {
-//                for (Property property: dependency.getProperties()) {
-//                    byte[] encrypt = rsaTest.encrypt(StrUtil.bytes(property.getValue(), CharsetUtil.CHARSET_UTF_8), KeyType.PublicKey);
-//                    LogUtil.debug(property.getValue() + ": RSA(" + Base64.encode(encrypt) + ")");
-//                }
-//            }
-//        }
-//
-//        String rsaPublicKey = project.getRsaPublicKey();
-//        if (rsaPublicKey != null) {
-//            byte[] rsaPrivateKey = settingService.getSettings().getRsaPrivateKeyBytes(rsaPublicKey);
-//            if (rsaPrivateKey != null) {
-//                /*for (Dependency dependency: project.getDependencies()) {
-//                    if (dependency.getProperties() != null) {
-//                        for (Property property: dependency.getProperties()) {
-//                            if (property.getValue().matches("RSA\\(.*\\)")) {
-//                                RSA rsa = new RSA(rsaPrivateKey, null);
-//                                // LogUtil.error(property.getValue().substring(4, property.getValue().length() - 2));
-//                                byte[] propertyBytes = Base64.decode(property.getValue().substring(4, property.getValue().length() - 1));
-//                                byte[] decrypt = rsa.decrypt(propertyBytes, KeyType.PrivateKey);
-//                                property.setValue(StrUtil.str(decrypt, CharsetUtil.CHARSET_UTF_8));
-//                            }
-//                        }
-//                    }
-//                }*/
-//            } else {
-//                LogUtil.warn("No RSA key pair matched");
-//            }
-//        }
     }
 
 

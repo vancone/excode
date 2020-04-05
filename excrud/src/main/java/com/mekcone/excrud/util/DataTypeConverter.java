@@ -1,7 +1,6 @@
 package com.mekcone.excrud.util;
 
-import com.mekcone.excrud.constant.JavaWords;
-import com.mekcone.excrud.constant.SqlDataType;
+import com.mekcone.excrud.constant.DataType;
 
 public class DataTypeConverter {
     public static String convertToJavaDataType(String dataType) {
@@ -9,22 +8,22 @@ public class DataTypeConverter {
         dataType =  stringArray[0].toUpperCase();
 
         switch (dataType) {
-            case SqlDataType.INT:
-                return JavaWords.INT;
+            case DataType.SQL_INT:
+                return DataType.JAVA_INT;
 
-            case SqlDataType.FLOAT:
-                return JavaWords.FLOAT;
+            case DataType.SQL_FLOAT:
+                return DataType.JAVA_FLOAT;
 
-            case SqlDataType.DOUBLE:
-                return JavaWords.DOUBLE;
+            case DataType.SQL_DOUBLE:
+                return DataType.JAVA_DOUBLE;
 
-            case SqlDataType.VARCHAR:
-            case SqlDataType.TEXT:
-            case SqlDataType.TIMESTAMP:
-                return JavaWords.STRING;
+            case DataType.SQL_VARCHAR:
+            case DataType.SQL_TEXT:
+            case DataType.SQL_TIMESTAMP:
+                return DataType.JAVA_STRING;
 
             default:
-                LogUtil.warn(dataType);
+                LogUtil.warn("Invalid data type " + dataType);
                 return "-";
         }
     }

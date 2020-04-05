@@ -1,4 +1,4 @@
-package com.mekcone.excrud.model.project.components;
+package com.mekcone.excrud.model.apidoc;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
