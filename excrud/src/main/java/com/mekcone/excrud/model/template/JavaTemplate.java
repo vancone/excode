@@ -7,10 +7,11 @@ import com.github.javaparser.ast.NodeList;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.model.database.Table;
 import com.mekcone.excrud.util.FileUtil;
-import com.mekcone.excrud.util.LogUtil;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public class JavaTemplate implements Template {
     private String path;
     private CompilationUnit compilationUnit;
@@ -22,7 +23,7 @@ public class JavaTemplate implements Template {
     }
 
     public boolean insert(String tag, String replacement) {
-        String templateText = compilationUnit.toString();
+        var templateText = compilationUnit.toString();
         int index = templateText.indexOf("__" + tag + "__");
         if (index < 0) {
             // LogUtil.warn("Tag \"" + tag  + "\" not found.");
@@ -38,13 +39,13 @@ public class JavaTemplate implements Template {
         try {
             compilationUnit = StaticJavaParser.parse(templateText);
         } catch(Exception e) {
-            LogUtil.error(-1, "Error parsing: " + templateText + "\n" + e.getMessage());
+            log.error("Error parsing: " + templateText + "\n" + e.getMessage());
         }
         return true;
     }
 
     public boolean insertOnce(String tag, String replacement) {
-        String templateText = compilationUnit.toString();
+        var templateText = compilationUnit.toString();
         int index = templateText.indexOf("__" + tag + "__");
         if (index < 0) {
             // LogUtil.warn("Tag \"" + tag  + "\" not found.");

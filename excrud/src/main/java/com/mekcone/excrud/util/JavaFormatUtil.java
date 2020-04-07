@@ -2,14 +2,15 @@ package com.mekcone.excrud.util;
 
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JavaFormatUtil {
     public static String format(String code) {
         try {
-            String formattedCode = new Formatter().formatSource(code);
-            return  formattedCode;
+            return  new Formatter().formatSource(code);
         } catch (FormatterException e) {
-            LogUtil.warn("Format Java source code failed.");
+            log.warn("Format Java source code failed.");
             return code;
         }
     }

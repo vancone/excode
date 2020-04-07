@@ -1,4 +1,4 @@
-package com.mekcone.excrud.generator;
+package com.mekcone.excrud.generator.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,6 +18,7 @@ import com.mekcone.excrud.constant.DataType;
 import com.mekcone.excrud.constant.ExportType;
 import com.mekcone.excrud.constant.SpringBootBackendProperty;
 import com.mekcone.excrud.enums.ErrorEnum;
+import com.mekcone.excrud.generator.Generator;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.model.apidoc.ApiDocument;
 import com.mekcone.excrud.model.springboot.Dependency;
@@ -29,8 +30,8 @@ import com.mekcone.excrud.model.template.JavaTemplate;
 import com.mekcone.excrud.model.template.PlainTemplate;
 import com.mekcone.excrud.parser.PropertiesParser;
 import com.mekcone.excrud.util.FileUtil;
-import com.mekcone.excrud.util.LogUtil;
-import com.mekcone.excrud.util.StringUtil;
+import com.mekcone.excrud.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.jdom2.Comment;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -47,7 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SpringBootBackendGenerator {
+@Slf4j
+public class SpringBootBackendGenerator implements Generator {
 
     private final String EXCRUD_HOME = Application.getHomeDirectory();
     private Export export;
@@ -63,7 +65,7 @@ public class SpringBootBackendGenerator {
     }
 
     public boolean build() {
-        File file = new File(springBootBackendPath);
+        var file = new File(springBootBackendPath);
 
         // Compiling
         try {
@@ -75,10 +77,10 @@ public class SpringBootBackendGenerator {
             while (true) {
                 if (!((c = child_in.read()) != -1)) break;
                 final int d = c;
-                LogUtil.print(String.valueOf((char) d));
+                System.out.print(String.valueOf((char) d));
             }
         } catch (IOException e) {
-            LogUtil.error(-1, "Compiling project failed");
+            log.error("Compiling project failed");
             return false;
         }
         return true;
@@ -86,12 +88,12 @@ public class SpringBootBackendGenerator {
 
     private void createDirectories() {
         if (EXCRUD_HOME == null) {
-            LogUtil.error(ErrorEnum.EXCRUD_HOME_ENV_VARIABLE_NOT_SET);
+            log.error(ErrorEnum.EXCRUD_HOME_ENV_VARIABLE_NOT_SET.toString());
         }
 
         List<String> paths = FileUtil.readLine(EXCRUD_HOME + "/exports/" + ExportType.SPRING_BOOT_BACKEND + "/directories.txt");
         if (paths == null) {
-            LogUtil.error(ErrorEnum.SBP_DIRECTORIES_TXT_NOT_FOUND);
+            log.error(ErrorEnum.SBP_DIRECTORIES_TXT_NOT_FOUND.toString());
         }
         String sourcePath = ExportType.SPRING_BOOT_BACKEND + "/src/main/java/" + (project.getGroupId() + "." +
                 project.getArtifactId()).replace('.', '/');
@@ -171,7 +173,7 @@ public class SpringBootBackendGenerator {
 
         FileUtil.write(springBootBackendPath + "pom.xml", stringifyPomXml());
         FileUtil.write(resourcesPath + "application.properties", stringifyApplicationProperties());
-        FileUtil.write(sourcePath + StringUtil.capitalizedCamel(project.getArtifactId()) + "Application.java", stringifyApplicationEntry());
+        FileUtil.write(sourcePath + StrUtil.capitalizedCamel(project.getArtifactId()) + "Application.java", stringifyApplicationEntry());
 
         String controllerPath = sourcePath + "controller/";
         String entityPath = sourcePath + "entity/";
@@ -179,7 +181,7 @@ public class SpringBootBackendGenerator {
         String servicePath = sourcePath + "service/";
         String serviceImplPath = sourcePath + "service/impl/";
 
-        for (Table table : project.getDatabases().get(0).getTables()) {
+        for (var table : project.getDatabases().get(0).getTables()) {
             FileUtil.write(controllerPath + table.getCapitalizedCamelName() + "Controller.java", stringifyController(table));
             FileUtil.write(entityPath + table.getCapitalizedCamelName() + ".java", stringifyEntity(table));
             FileUtil.write(mybatisMapperPath + table.getCapitalizedCamelName() + "Mapper.java", stringifyMybatisMapper(table));
@@ -210,7 +212,7 @@ public class SpringBootBackendGenerator {
         String VOPath = sourcePath + "VO/";
         FileUtil.write(VOPath + "ResultVO.java", stringifyVO("ResultVO"));
 
-        LogUtil.info("Generate " + ExportType.SPRING_BOOT_BACKEND + " completed");
+        log.info("Generate {} completed", ExportType.SPRING_BOOT_BACKEND);
 
         // throw new ExportException(ExportExceptionEnums.GENERATE_PROJECT_FAILED);
     }
@@ -219,7 +221,7 @@ public class SpringBootBackendGenerator {
         List<String> dependencies = new ArrayList<>();
         Class springBootBackendPropertyInterface = SpringBootBackendProperty.class;
         Field[] fields = springBootBackendPropertyInterface.getDeclaredFields();
-        for (Field field : fields) {
+        for (var field : fields) {
             String fieldName = field.getName().toLowerCase();
             if (fieldName.contains("_enable")) {
                 fieldName = fieldName.substring(0, fieldName.length() - "_enable".length());
@@ -236,15 +238,15 @@ public class SpringBootBackendGenerator {
 
 
     public String stringifyApplicationEntry() {
-        PlainTemplate plainTemplate = new PlainTemplate(templatePath + "Application.java");
+        var plainTemplate = new PlainTemplate(templatePath + "Application.java");
         preprocessTemplate(plainTemplate);
-        plainTemplate.insert("ArtifactId", StringUtil.capitalize(project.getArtifactId()));
+        plainTemplate.insert("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
         return plainTemplate.toString();
     }
 
 
     public String stringifyApplicationProperties() {
-        PropertiesParser globalPropertiesParser = new PropertiesParser();
+        var globalPropertiesParser = new PropertiesParser();
 
         // Server port
         String serverPort = export.getProperty(SpringBootBackendProperty.SERVER_PORT);
@@ -263,7 +265,7 @@ public class SpringBootBackendGenerator {
                     globalPropertiesParser.add("spring.datasource.password", defaultDatabase.getPassword());
                     globalPropertiesParser.addSeparator();
                 } else {
-                    PropertiesParser localPropertiesParser = PropertiesParser.readFrom(templatePath + "properties/" + dependencyName + ".properties");
+                    var localPropertiesParser = PropertiesParser.readFrom(templatePath + "properties/" + dependencyName + ".properties");
                     if (localPropertiesParser != null) {
                         globalPropertiesParser.combine(localPropertiesParser);
                     }
@@ -322,7 +324,7 @@ public class SpringBootBackendGenerator {
                     String[] origins = export.getProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_ORIGINS).split(",");
                     if (origins.length >= 1) {
                         String allowedOriginsText = "";
-                        for (int i = 0; i < origins.length; i++) {
+                        for (var i = 0; i < origins.length; i++) {
                             allowedOriginsText += "\"" + origins[i].trim() + "\"";
                             if (i + 1 != origins.length) {
                                 allowedOriginsText += ",";
@@ -348,7 +350,7 @@ public class SpringBootBackendGenerator {
                 } else if (project.getName() != null) {
                     plainTemplate.insert("title", project.getName());
                 } else {
-                    plainTemplate.insert("title", StringUtil.capitalize(project.getArtifactId()));
+                    plainTemplate.insert("title", StrUtil.capitalize(project.getArtifactId()));
                 }
 
                 String description = project.getApiDocument().getDescription();
@@ -362,7 +364,7 @@ public class SpringBootBackendGenerator {
 
                 String swaggerTags = "";
                 List<Table> tables = project.getDatabases().get(0).getTables();
-                for (int i = 0; i < tables.size(); i++) {
+                for (var i = 0; i < tables.size(); i++) {
                     swaggerTags += "new Tag(\"" + tables.get(i).getCapitalizedCamelName() + "\", " + "\"" + tables.get(i).getDescription() + "\")";
                     if (i + 1 == tables.size()) {
                         swaggerTags += "\n";
@@ -374,10 +376,9 @@ public class SpringBootBackendGenerator {
 
                 return plainTemplate.toString();
             default:
-                LogUtil.warn("Unsupported config item \"" + configName + "\"");
+                log.warn("Unsupported config item \"{}\"", configName);
                 return null;
         }
-        /**/
     }
 
     public String stringifyController(Table table) {
@@ -474,7 +475,7 @@ public class SpringBootBackendGenerator {
             entityCompilationUnit.addImport("lombok.Data");
             entityClassDeclaration.addMarkerAnnotation("Data");
         }
-        for (Column column : table.getColumns()) {
+        for (var column : table.getColumns()) {
             String type = column.getType();
             if (!type.equals(DataType.JAVA_INT)) {
                 type = DataType.JAVA_STRING;
@@ -485,7 +486,7 @@ public class SpringBootBackendGenerator {
             if (!lombokEnabled) {
 
                 // Getter
-                MethodDeclaration getterMethodDeclaration =
+                var getterMethodDeclaration =
                         entityClassDeclaration.addMethod("get" + column.getCapitalizedCamelName(table.getName()), Modifier.Keyword.PUBLIC);
                 getterMethodDeclaration.setType(DataType.JAVA_STRING);
                 BlockStmt getterMethodBody = new BlockStmt();
@@ -493,12 +494,12 @@ public class SpringBootBackendGenerator {
                 getterMethodDeclaration.setBody(getterMethodBody);
 
                 // Setter
-                MethodDeclaration setterMethodDeclaration =
+                var setterMethodDeclaration =
                         entityClassDeclaration.addMethod("set" + column.getCapitalizedCamelName(table.getName()), Modifier.Keyword.PUBLIC);
                 setterMethodDeclaration.setType(DataType.JAVA_VOID);
                 setterMethodDeclaration.addParameter(DataType.JAVA_STRING, column.getCamelName(table.getName()));
                 BlockStmt setterMethodBody = new BlockStmt();
-                AssignExpr assignExpr = new AssignExpr();
+                var assignExpr = new AssignExpr();
                 assignExpr.setOperator(AssignExpr.Operator.ASSIGN);
                 assignExpr.setTarget(new FieldAccessExpr(new NameExpr("this"), column.getCamelName(table.getName())));
                 assignExpr.setValue(new NameExpr(column.getCamelName(table.getName())));
@@ -511,10 +512,10 @@ public class SpringBootBackendGenerator {
 
     public String stringifyMybatisMapper(Table table) {
         if (table.isPrimaryKeyBlank()) {
-            LogUtil.warn("Mapper interface cannot be generated from a table without a primary key");
+            log.warn("Mapper interface cannot be generated from a table without a primary key");
         }
 
-        JavaTemplate javaTemplate = new JavaTemplate(templatePath + "mapper/Mapper.java");
+        var javaTemplate = new JavaTemplate(templatePath + "mapper/Mapper.java");
         javaTemplate.preprocessForSpringBootProject(project, table);
 
         for (MethodDeclaration method : javaTemplate.getCompilationUnit().getInterfaceByName(table.getCapitalizedCamelName() + "Mapper").get().getMethods()) {
@@ -552,8 +553,8 @@ public class SpringBootBackendGenerator {
 
     public String stringifyPomXml() {
         // Root
-        Element rootElement = new Element("project");
-        Document document = new Document(rootElement);
+        var rootElement = new Element("project");
+        var document = new Document(rootElement);
         if (Application.description != null) {
             rootElement.addContent(new Comment(Application.description));
         }
@@ -565,7 +566,7 @@ public class SpringBootBackendGenerator {
         rootElement.addContent(new Element("modelVersion", xmlns).setText("4.0.0"));
 
         // Parent
-        Element parentElement = new Element("parent", xmlns);
+        var parentElement = new Element("parent", xmlns);
         rootElement.addContent(parentElement);
         parentElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
         parentElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-starter-parent"));
@@ -579,7 +580,7 @@ public class SpringBootBackendGenerator {
         rootElement.addContent(new Element("description", xmlns).setText(project.getDescription()));
 
         // Properties
-        Element propertiesElement = new Element("properties", xmlns);
+        var propertiesElement = new Element("properties", xmlns);
         rootElement.addContent(propertiesElement);
         propertiesElement.addContent(new Element("java.version", xmlns).setText("1.8"));
 
@@ -587,14 +588,14 @@ public class SpringBootBackendGenerator {
         List<Dependency> dependencies = new ArrayList<>();
         Class springBootBackendPropertyInterface = SpringBootBackendProperty.class;
         Field[] fields = springBootBackendPropertyInterface.getDeclaredFields();
-        for (Field field : fields) {
+        for (var field : fields) {
             String fieldName = field.getName().toLowerCase();
             if (fieldName.contains("_enable")) {
                 if (export.getBooleanProperty(fieldName)) {
                     fieldName = fieldName.substring(0, fieldName.length() - "_enable".length());
                     String pomDependenciesText = FileUtil.read(templatePath + "pom/" + fieldName + ".xml");
                     if (pomDependenciesText != null && !pomDependenciesText.isEmpty()) {
-                        XmlMapper xmlMapper = new XmlMapper();
+                        var xmlMapper = new XmlMapper();
 
                         try {
                             List<Dependency> pomDependencies = xmlMapper.readValue(pomDependenciesText, new TypeReference<List<Dependency>>() {
@@ -607,16 +608,16 @@ public class SpringBootBackendGenerator {
                         }
                     }
                 } else {
-                    LogUtil.warn("\"" + fieldName + "\" not found");
+                    log.warn("\"{}\" not found", fieldName);
                 }
             }
         }
 
-        Element dependenciesElement = new Element("dependencies", xmlns);
+        var dependenciesElement = new Element("dependencies", xmlns);
         rootElement.addContent(dependenciesElement);
 
-        for (Dependency dependency : dependencies) {
-            Element dependencyElement = new Element("dependency", xmlns);
+        for (var dependency : dependencies) {
+            var dependencyElement = new Element("dependency", xmlns);
             dependencyElement.addContent(new Element("groupId", xmlns).setText(dependency.getGroupId()));
             dependencyElement.addContent(new Element("artifactId", xmlns).setText(dependency.getArtifactId()));
             if (dependency.getVersion() != null) {
@@ -628,10 +629,10 @@ public class SpringBootBackendGenerator {
 
             List<Dependency> exclusionDependencies = dependency.getExclusions();
             if (exclusionDependencies != null && !exclusionDependencies.isEmpty()) {
-                Element exclusionsElement = new Element("exclusions", xmlns);
+                var exclusionsElement = new Element("exclusions", xmlns);
                 dependencyElement.addContent(exclusionsElement);
                 for (Dependency exclusionDependency : dependency.getExclusions()) {
-                    Element exclusionElement = new Element("exclusion", xmlns);
+                    var exclusionElement = new Element("exclusion", xmlns);
                     exclusionElement.addContent(new Element("groupId", xmlns).setText(exclusionDependency.getGroupId()));
                     exclusionElement.addContent(new Element("artifactId", xmlns).setText(exclusionDependency.getArtifactId()));
                     exclusionsElement.addContent(exclusionElement);
@@ -641,39 +642,39 @@ public class SpringBootBackendGenerator {
         }
 
         // <build></build>
-        Element buildElement = new Element("build", xmlns);
+        var buildElement = new Element("build", xmlns);
         rootElement.addContent(buildElement);
-        Element pluginsElement = new Element("plugins", xmlns);
+        var pluginsElement = new Element("plugins", xmlns);
         buildElement.addContent(pluginsElement);
-        Element pluginElement = new Element("plugin", xmlns);
+        var pluginElement = new Element("plugin", xmlns);
         pluginsElement.addContent(pluginElement);
         pluginElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
         pluginElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-maven-plugin"));
 
         // Generate string
-        Format format = Format.getPrettyFormat();
+        var format = Format.getPrettyFormat();
         format.setEncoding("UTF-8");
-        XMLOutputter xmlOutputter = new XMLOutputter(format);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        var xmlOutputter = new XMLOutputter(format);
+        var byteArrayOutputStream = new ByteArrayOutputStream();
 
         try {
             xmlOutputter.output(document, byteArrayOutputStream);
         } catch (IOException e) {
-            LogUtil.warn(e.getMessage());
+            log.warn(e.getMessage());
         }
         return byteArrayOutputStream.toString();
     }
 
     public String stringifyService(Table table) {
-        JavaTemplate javaTemplate = new JavaTemplate(templatePath + "service/Service.java");
+        var javaTemplate = new JavaTemplate(templatePath + "service/Service.java");
         javaTemplate.preprocessForSpringBootProject(project, table);
 
         if (!export.getBooleanProperty(SpringBootBackendProperty.PAGE_HELPER_ENABLE)) {
             javaTemplate.removeImport("com.github.pagehelper");
-            for (MethodDeclaration method : javaTemplate.getCompilationUnit().getInterfaceByName(
+            for (var methodDeclaration : javaTemplate.getCompilationUnit().getInterfaceByName(
                     table.getCapitalizedCamelName() + "Service").get().getMethods()) {
-                if (method.getNameAsString().equals("retrieveList") && !method.getParameters().isEmpty()) {
-                    method.remove();
+                if (methodDeclaration.getNameAsString().equals("retrieveList") && !methodDeclaration.getParameters().isEmpty()) {
+                    methodDeclaration.remove();
                     break;
                 }
             }
@@ -683,7 +684,7 @@ public class SpringBootBackendGenerator {
     }
 
     public String stringifyServiceImpl(Table table) {
-        JavaTemplate javaTemplate = new JavaTemplate(templatePath + "service/impl/ServiceImpl.java");
+        var javaTemplate = new JavaTemplate(templatePath + "service/impl/ServiceImpl.java");
         javaTemplate.preprocessForSpringBootProject(project, table);
 
         if (export.getBooleanProperty(SpringBootBackendProperty.PAGE_HELPER_ENABLE)) {
@@ -699,7 +700,7 @@ public class SpringBootBackendGenerator {
                     }
                 }
             } catch (Exception e) {
-                LogUtil.error(-1, e.getMessage() + "\nClass Name: " + table.getCapitalizedCamelName() + "ServiceImpl");
+                log.error(e.getMessage());
             }
 
         }
@@ -708,13 +709,13 @@ public class SpringBootBackendGenerator {
     }
 
     public String stringifyUtil(String utilName) {
-        JavaTemplate javaTemplate = new JavaTemplate(templatePath + "util/" + utilName + ".java");
+        var javaTemplate = new JavaTemplate(templatePath + "util/" + utilName + ".java");
         javaTemplate.preprocessForSpringBootProject(project, null);
         return javaTemplate.toString();
     }
 
     public String stringifyVO(String VOName) {
-        JavaTemplate javaTemplate = new JavaTemplate(templatePath + "VO/" + VOName + ".java");
+        var javaTemplate = new JavaTemplate(templatePath + "VO/" + VOName + ".java");
         javaTemplate.preprocessForSpringBootProject(project, null);
         return javaTemplate.toString();
     }

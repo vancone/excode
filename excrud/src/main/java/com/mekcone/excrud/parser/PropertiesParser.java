@@ -1,12 +1,13 @@
 package com.mekcone.excrud.parser;
 
+import cn.hutool.core.lang.Pair;
 import com.mekcone.excrud.util.FileUtil;
-import com.mekcone.excrud.util.LogUtil;
-import javafx.util.Pair;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class PropertiesParser {
 
     private List<Pair<String, String>> properties = new ArrayList<>();
@@ -33,7 +34,7 @@ public class PropertiesParser {
 
     public String generate() {
         String outputContent = "";
-        for (Pair propertyPair: properties) {
+        for (var propertyPair: properties) {
             if (propertyPair.getKey().equals("GROUP_SEPARATOR")) {
                 outputContent += "\n";
                 continue;
@@ -53,12 +54,12 @@ public class PropertiesParser {
     }
 
     public static PropertiesParser parse(String propertiesText) {
-        PropertiesParser propertiesParser = new PropertiesParser();
+        var propertiesParser = new PropertiesParser();
         String[] properties = propertiesText.split("\n");
         for (String property: properties) {
             String[] keyAndValue = property.split("=");
             if (keyAndValue.length == 1) {
-                LogUtil.warn("No value found at \"" + property + "\"");
+                log.warn("No value found at \"" + property + "\"");
             } else if (keyAndValue.length == 2) {
                 String key = keyAndValue[0].trim();
                 String value = keyAndValue[1].trim();
@@ -66,7 +67,7 @@ public class PropertiesParser {
             } else if (keyAndValue.length > 2) {
                 String key = keyAndValue[0].trim();
                 String value = "";
-                for (int i = 1; i < keyAndValue.length; i ++) {
+                for (var i = 1; i < keyAndValue.length; i ++) {
                     value += keyAndValue[i];
                     if (i + 1 != keyAndValue.length) {
                         value += "=";

@@ -17,7 +17,7 @@ public class ApiDocument {
     private List<Keyword> keywords = new ArrayList<>();
 
     public String getKeywordByType(String type) {
-        for (Keyword keyword: keywords) {
+        for (var keyword: keywords) {
             if (keyword.getType().equals(type)) {
                 return keyword.getValue();
             }

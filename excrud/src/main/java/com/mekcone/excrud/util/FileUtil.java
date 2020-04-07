@@ -1,13 +1,16 @@
 package com.mekcone.excrud.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class FileUtil {
     public static String read(String path){
         try {
-            InputStream inputStream = new FileInputStream(path);
+            var inputStream = new FileInputStream(path);
             int inputStreamAvailable = inputStream.available();
             byte[] bytes = new byte[inputStreamAvailable];
             inputStream.read(bytes);
@@ -20,18 +23,18 @@ public class FileUtil {
 
     public static boolean write(String url, String data) {
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(url));
+            var bufferedWriter = new BufferedWriter(new FileWriter(url));
             bufferedWriter.write(data);
             bufferedWriter.close();
             return true;
         } catch(IOException ex) {
-            LogUtil.warn(ex.getMessage());
+            log.warn(ex.getMessage());
             return false;
         }
     }
 
     public static void checkDirectory(String path) {
-        File directory = new File(path);
+        var directory = new File(path);
         if ((!directory.exists()) || (!directory.isDirectory())) {
             directory.mkdirs();
         }

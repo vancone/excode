@@ -3,7 +3,7 @@ package com.mekcone.excrud.model.database;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.util.StringUtil;
+import com.mekcone.excrud.util.StrUtil;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -26,25 +26,22 @@ public class Table {
 
     @JsonIgnore
     public String getCamelName() {
-        return StringUtil.camel(getName());
+        return StrUtil.camel(getName());
     }
 
     @JsonIgnore
     public String getCapitalizedCamelName() {
-        return StringUtil.capitalizedCamel(getName());
+        return StrUtil.capitalizedCamel(getName());
     }
 
     @JsonIgnore
     public String getCamelPrimaryKey() {
-        return StringUtil.camel(getPrimaryKey());
+        return StrUtil.camel(getPrimaryKey());
     }
 
     @JsonIgnore
     public boolean isPrimaryKeyBlank() {
-        if (primaryKey == null || primaryKey.isEmpty()) {
-            return true;
-        }
-        return false;
+        return (primaryKey == null || primaryKey.isEmpty());
     }
 
     public void addColumn(Column column) {
@@ -52,9 +49,6 @@ public class Table {
     }
 
     public boolean hasColumn() {
-        if (columns.isEmpty()) {
-            return false;
-        }
-        return true;
+        return !(columns.isEmpty());
     }
 }

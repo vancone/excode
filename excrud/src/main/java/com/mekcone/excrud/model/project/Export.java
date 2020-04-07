@@ -17,29 +17,16 @@ public class Export {
 
     public String getProperty(String key) {
         String value = properties.get(key);
-        if (value != null) {
-            return value;
-        } else {
-            return "";
-        }
+        return (value != null ? value : "");
     }
 
     public boolean getBooleanProperty(String key) {
-        String value = properties.get(key);
-        if (value != null && value.toLowerCase().equals("false")) {
-            return false;
-        } else {
-            // Default return value
-            return true;
-        }
+        var value = properties.get(key);
+        return !(value != null && value.toLowerCase().equals("false"));
     }
 
     public boolean existProperty(String key) {
-        String value = properties.get(key);
-        if (value != null) {
-            return true;
-        } else {
-            return false;
-        }
+        var value = properties.get(key);
+        return (value != null);
     }
 }

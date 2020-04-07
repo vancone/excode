@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xsi:noNamespaceSchemaLocation="../../resources/xsd/excrud.xsd">
+    <groupId>com.mekcone.excrud.example</groupId>
+    <artifactId>blog</artifactId>
+    <name>MekCone 博客</name>
+    <version>0.0.1</version>
+    <description>MekCone Blog Project</description>
+    <language>zh-CN</language>
+
+    <apiDocument>
+        <title>MekCone 博客 {br}API 文档</title>
+        <!-- <description>MekCone 商城接口文档</description> -->
+        <keywords>
+            <keyword type="create">创建</keyword>
+            <keyword type="retrieve">获取</keyword>
+            <keyword type="retrieveList">获取所有</keyword>
+            <keyword type="update">更新</keyword>
+            <keyword type="delete">删除</keyword>
+        </keywords>
+    </apiDocument>
+
+    <databases>
+        <database type="mysql" host="localhost:3306" name="mekcone_blog" username="root" password="123456">
+            <tables>
+                <table name="article" description="文章对象">
+                    <columns>
+                        <column name="article_id" type="int" primaryKey="true"/>
+                        <column name="article_title" type="varchar(50)"/>
+                        <column name="article_author" type="varchar(50)"/>
+                        <column name="article_content" type="double" detail="true"/>
+                        <column name="publish_time" type="varchar(50)" detail="true"/>
+                    </columns>
+                </table>
+                <table name="catalogue" description="文章门类">
+                    <columns>
+                        <column name="catalogue_id" type="varchar(50)" primaryKey="true"/>
+                        <column name="catalogue_name" type="varchar(50)"/>
+                    </columns>
+                </table>
+            </tables>
+        </database>
+    </databases>
+
+    <exports>
+        <export type="spring-boot-backend" enable="true">
+            <properties>
+                <application_name>Blog</application_name>
+                <cross_origin_allowed_methods>GET, POST, PUT, DELETE</cross_origin_allowed_methods>
+                <cross_origin_allowed_origins>*</cross_origin_allowed_origins>
+                <lombok_enable>true</lombok_enable>
+                <mybatis_enable>true</mybatis_enable>
+                <page_helper_enable>true</page_helper_enable>
+                <server_port>10011</server_port>
+                <swagger2_enable>true</swagger2_enable>
+            </properties>
+        </export>
+    </exports>
+</project>

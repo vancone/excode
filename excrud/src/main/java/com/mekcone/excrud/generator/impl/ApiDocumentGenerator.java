@@ -1,9 +1,10 @@
-package com.mekcone.excrud.generator;
+package com.mekcone.excrud.generator.impl;
 
 import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.mekcone.excrud.Application;
+import com.mekcone.excrud.generator.Generator;
 import com.mekcone.excrud.model.database.Database;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.model.apidoc.Keyword;
@@ -11,13 +12,14 @@ import com.mekcone.excrud.model.database.Column;
 import com.mekcone.excrud.model.database.Table;
 import com.mekcone.excrud.parser.PropertiesParser;
 import com.mekcone.excrud.util.DataTypeConverter;
-import com.mekcone.excrud.util.LogUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.List;
 
-public class ApiDocumentGenerator {
+@Slf4j
+public class ApiDocumentGenerator implements Generator {
     private Project project;
 
     private BaseFont simSunBaseFont;
@@ -49,13 +51,13 @@ public class ApiDocumentGenerator {
     public void smartDescription() {
         PropertiesParser propertiesParser = PropertiesParser.readFrom(Application.getHomeDirectory() + "/exports/api-documents/smart-description.properties");
         if (propertiesParser == null) {
-            LogUtil.warn("Smart description dataset not found");
+            log.warn("Smart description dataset not found");
             return;
         }
 
-        for (Database database: project.getDatabases()) {
-            for (Table table: database.getTables()) {
-                for (Column column: table.getColumns()) {
+        for (var database: project.getDatabases()) {
+            for (var table: database.getTables()) {
+                for (var column: table.getColumns()) {
                     if (column.getDescription() == null || column.getDescription().isEmpty()) {
                         String[] words = column.getName().split("_");
                         String generatedDescription = "";
@@ -92,18 +94,23 @@ public class ApiDocumentGenerator {
         return pdfPCell;
     }
 
+    @Override
+    public void generate() {
+
+    }
+
     public void generatePdf() {
         try {
-            Document document = new Document(PageSize.A4, 50, 50, 50, 50);
+            var document = new Document(PageSize.A4, 50, 50, 50, 50);
 
-            PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
+            var pdfWriter = PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
             pdfWriter.setViewerPreferences(PdfWriter.PageLayoutOneColumn);
             pdfWriter.setPageEvent(new PdfPageEvent());
             document.open();
 
             // Title
-            Paragraph paragraph = new Paragraph(180);
-            Chunk chunk = new Chunk(" ");
+            var paragraph = new Paragraph(180);
+            var chunk = new Chunk(" ");
             paragraph.add(chunk);
             document.add(paragraph);
             paragraph = new Paragraph(30);
@@ -143,7 +150,7 @@ public class ApiDocumentGenerator {
             document.newPage();
 
             for (int i = 0; i < project.getDatabases().get(0).getTables().size(); i ++) {
-                Table table = project.getDatabases().get(0).getTables().get(i);
+                var table = project.getDatabases().get(0).getTables().get(i);
                 // Title
                 paragraph = new Paragraph();
                 paragraph.setSpacingBefore(40);
@@ -156,7 +163,7 @@ public class ApiDocumentGenerator {
                 document.add(paragraph);
 
                 List<Keyword> keywords = project.getApiDocument().getKeywords();
-                for (int k = 0; k < keywords.size(); k ++) {
+                for (var k = 0; k < keywords.size(); k ++) {
                     // API title
                     paragraph = new Paragraph();
                     paragraph.setSpacingBefore(20);
@@ -216,7 +223,7 @@ public class ApiDocumentGenerator {
                     pdfPTable.addCell(tableHeaderCell("类型"));
                     pdfPTable.addCell(tableHeaderCell("参数描述"));
 
-                    for (Column column: table.getColumns()) {
+                    for (var column: table.getColumns()) {
                         if (column.isPrimaryKey()) {
                             continue;
                         }
@@ -235,7 +242,6 @@ public class ApiDocumentGenerator {
                     document.add(pdfPTable);
                 }
             }
-
 
             document.close();
             pdfWriter.close();

@@ -1,7 +1,6 @@
 package com.mekcone.excrud.model.template;
 
 import com.mekcone.excrud.util.FileUtil;
-import com.mekcone.excrud.util.LogUtil;
 
 public class PlainTemplate implements Template {
     private String template;

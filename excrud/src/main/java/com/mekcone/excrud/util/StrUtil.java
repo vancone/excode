@@ -1,6 +1,6 @@
 package com.mekcone.excrud.util;
 
-public class StringUtil {
+public class StrUtil {
     public static String camel(String data) {
         String[] stringArray;
         if (data.indexOf('_') > -1) {
