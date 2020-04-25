@@ -1,6 +1,6 @@
 package com.mekcone.excrud.util;
 
-import com.mekcone.excrud.constant.DataType;
+import com.mekcone.excrud.constant.basic.DataType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

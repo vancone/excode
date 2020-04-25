@@ -1,0 +1,13 @@
+{
+    "name": "vue-element-admin",
+    "version": {
+        "element-ui": "2.7.0",
+        "vue": "2.6.10",
+        "vue-element-admin": "4.2.1"
+    },
+    "initial": {
+        "paths": {
+            "srcPath": "src/"
+        }
+    }
+}

@@ -12,11 +12,11 @@ public class FileUtil {
         try {
             var inputStream = new FileInputStream(path);
             int inputStreamAvailable = inputStream.available();
-            byte[] bytes = new byte[inputStreamAvailable];
-            inputStream.read(bytes);
+            var byteArray = new byte[inputStreamAvailable];
+            inputStream.read(byteArray);
             inputStream.close();
-            return new String(bytes);
-        } catch(Exception e) {
+            return new String(byteArray);
+        } catch (Exception e) {
             return null;
         }
     }

@@ -24,24 +24,27 @@ public class Table {
     @JacksonXmlProperty(localName = "column")
     private List<Column> columns = new ArrayList<>();
 
+    @JacksonXmlProperty(isAttribute = true)
+    private String catalogueOf;
+
     @JsonIgnore
-    public String getCamelName() {
-        return StrUtil.camel(getName());
+    public String getCamelCaseName() {
+        return StrUtil.camelCase(getName());
     }
 
     @JsonIgnore
-    public String getCapitalizedCamelName() {
-        return StrUtil.capitalizedCamel(getName());
+    public String getUpperCamelCaseName() {
+        return StrUtil.upperCamelCase(getName());
     }
 
     @JsonIgnore
-    public String getCamelPrimaryKey() {
-        return StrUtil.camel(getPrimaryKey());
+    public String getCamelCasePrimaryKey() {
+        return StrUtil.camelCase(getPrimaryKey());
     }
 
     @JsonIgnore
-    public boolean isPrimaryKeyBlank() {
-        return (primaryKey == null || primaryKey.isEmpty());
+    public boolean hasPrimaryKey() {
+        return !(primaryKey == null || primaryKey.isEmpty());
     }
 
     public void addColumn(Column column) {

@@ -1,12 +1,14 @@
 package com.mekcone.excrud.util;
 
 public class StrUtil {
-    public static String camel(String data) {
+    public static String camelCase(String data) {
         String[] stringArray;
-        if (data.indexOf('_') > -1) {
+        if (data.contains("_")) {
             stringArray = data.split("_");
-        } else {
+        } else if (data.contains("-")) {
             stringArray = data.split("-");
+        } else {
+            return data;
         }
 
         if (stringArray.length > 1) {
@@ -25,8 +27,8 @@ public class StrUtil {
         return (data.substring(0, 1).toUpperCase() + data.substring(1));
     }
 
-    public static String capitalizedCamel(String data) {
-        data = camel(data);
+    public static String upperCamelCase(String data) {
+        data = camelCase(data);
         return (data.substring(0, 1).toUpperCase() + data.substring(1));
     }
 }

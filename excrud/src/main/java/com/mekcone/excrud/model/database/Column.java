@@ -17,6 +17,9 @@ public class Column {
     private boolean primaryKey;
 
     @JacksonXmlProperty(isAttribute = true)
+    private String bind;
+
+    @JacksonXmlProperty(isAttribute = true)
     private boolean filter;
 
     @JacksonXmlProperty(isAttribute = true)
@@ -26,8 +29,8 @@ public class Column {
     private String description;
 
     @JsonIgnore
-    public String getCamelName(String tableName) {
-        String[] stringArray = getName().split("_");
+    public String getCamelCaseName(String tableName) {
+        var stringArray = getName().split("_");
         String name = "";
         if (stringArray[0].equals(tableName)) {
             for (var i = 1; i < stringArray.length; i ++) {
@@ -36,20 +39,11 @@ public class Column {
         } else {
             name = getName();
         }
-        return StrUtil.camel(name);
+        return StrUtil.camelCase(name);
     }
 
     @JsonIgnore
-    public String getCapitalizedCamelName(String tableName) {
-        String[] stringArray = getName().split("_");
-        String name = "";
-        if (stringArray[0].equals(tableName)) {
-            for (var i = 1; i < stringArray.length; i ++) {
-                name += stringArray[i];
-            }
-        } else {
-            name = getName();
-        }
-        return StrUtil.capitalizedCamel(name);
+    public String getUpperCamelCaseName(String tableName) {
+        return StrUtil.capitalize(getCamelCaseName(tableName));
     }
 }

@@ -1,12 +1,9 @@
 package com.mekcone.excrud.model.database;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.util.StrUtil;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

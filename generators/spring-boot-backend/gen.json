@@ -1,0 +1,25 @@
+{
+    "name": "spring-boot-backend",
+    "version": {
+        "jdk": "1.8"
+    },
+    "initial": {
+        "paths": {
+            "configPath": "src/main/java/${PACKAGE_PATH}/config/",
+            "controllerPath": "src/main/java/${PACKAGE_PATH}/controller/",
+            "entityPath": "src/main/java/${PACKAGE_PATH}/entity/",
+            "enumsPath": "src/main/java/${PACKAGE_PATH}/enums/",
+            "exceptionPath": "src/main/java/${PACKAGE_PATH}/exception/",
+            "mapperPath": "src/main/java/${PACKAGE_PATH}/mapper/",
+            "resourcesPath": "src/main/resources/",
+            "servicePath": "src/main/java/${PACKAGE_PATH}/service/",
+            "serviceImplPath": "src/main/java/${PACKAGE_PATH}/service/impl/",
+            "srcPath": "src/main/java/${PACKAGE_PATH}/",
+            "utilPath": "src/main/java/${PACKAGE_PATH}/util/",
+            "voPath": "src/main/java/${PACKAGE_PATH}/VO/"
+        },
+        "components": {
+            "${artifactId}Application.java": "srcPath"
+        }
+    }
+}

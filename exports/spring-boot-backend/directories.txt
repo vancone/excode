@@ -1,9 +1,0 @@
-SRC_PATH/config
-SRC_PATH/controller
-SRC_PATH/entity
-SRC_PATH/enums
-SRC_PATH/exception
-SRC_PATH/mapper
-SRC_PATH/service/impl
-SRC_PATH/util
-SRC_PATH/VO
