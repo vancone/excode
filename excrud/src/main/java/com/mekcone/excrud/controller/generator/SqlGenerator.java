@@ -1,4 +1,4 @@
-package com.mekcone.excrud.controller.generator.impl;
+package com.mekcone.excrud.controller.generator;
 
 import com.mekcone.excrud.Application;
 import com.mekcone.excrud.controller.generator.BaseGenerator;

@@ -1,4 +1,4 @@
-package com.mekcone.excrud.controller.generator.impl;
+package com.mekcone.excrud.controller.generator.springboot;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,10 +18,10 @@ import com.mekcone.excrud.constant.basic.DataType;
 import com.mekcone.excrud.constant.basic.ExportType;
 import com.mekcone.excrud.constant.properties.SpringBootBackendProperty;
 import com.mekcone.excrud.controller.generator.BaseGenerator;
+import com.mekcone.excrud.controller.generator.SqlGenerator;
 import com.mekcone.excrud.controller.parser.PropertiesParser;
 import com.mekcone.excrud.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.controller.parser.template.impl.UniversalTemplate;
-import com.mekcone.excrud.enums.ErrorEnum;
 import com.mekcone.excrud.model.database.Column;
 import com.mekcone.excrud.model.database.Database;
 import com.mekcone.excrud.model.database.Table;
@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -80,7 +81,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
     private void preprocessTemplate(UniversalTemplate universalTemplate, Table table) {
         String templateText = universalTemplate.toString();
         if (templateText == null || templateText.isEmpty()) {
-            LogUtil.info("ERROR");
+            LogUtil.info("Preprocess templates failed");
             System.exit(-1);
         }
         if (templateText.contains("## groupId ##")) {
@@ -141,7 +142,6 @@ public class SpringBootBackendGenerator extends BaseGenerator {
         preprocessTemplate(universalTemplate, null);
     }
 
-
     public void generate() {
         copyInitialTemplates();
 
@@ -197,6 +197,10 @@ public class SpringBootBackendGenerator extends BaseGenerator {
         // throw new ExportException(ExportExceptionEnums.GENERATE_PROJECT_FAILED);
     }
 
+    public List<JavaTemplate> getControllerTemplates() {
+        return null;
+    }
+
     private List<String> getSupportedDependencies() {
         List<String> dependencies = new ArrayList<>();
         Class springBootBackendPropertyInterface = SpringBootBackendProperty.class;
@@ -218,7 +222,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
 
 
     public String stringifyApplicationEntry() {
-        var plainTemplate = new UniversalTemplate(componentTemplatePath + "Application.java");
+        var plainTemplate = new UniversalTemplate(templatePath + "Application.java");
         if (plainTemplate != null) {
             preprocessTemplate(plainTemplate);
         } else {
@@ -249,7 +253,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
                     globalPropertiesParser.add("spring.datasource.password", defaultDatabase.getPassword());
                     globalPropertiesParser.addSeparator();
                 } else {
-                    var localPropertiesParser = PropertiesParser.readFrom(componentTemplatePath + "properties/" + dependencyName + ".properties");
+                    var localPropertiesParser = PropertiesParser.readFrom(templatePath + "properties/" + dependencyName + ".properties");
                     if (localPropertiesParser != null) {
                         globalPropertiesParser.combine(localPropertiesParser);
                     }
@@ -262,7 +266,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
     public String stringifyConfig(String configName) {
         switch (configName) {
             case "cross_origin":
-                UniversalTemplate universalTemplate = new UniversalTemplate(componentTemplatePath + "/config/CrossOriginConfig.java");
+                UniversalTemplate universalTemplate = new UniversalTemplate(templatePath + "/config/CrossOriginConfig.java");
                 preprocessTemplate(universalTemplate);
 
                 // Allowed headers
@@ -325,7 +329,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
                 return universalTemplate.toString();
 
             case "swagger2":
-                universalTemplate = new UniversalTemplate(componentTemplatePath + "config/Swagger2Config.java");
+                universalTemplate = new UniversalTemplate(templatePath + "config/Swagger2Config.java");
                 preprocessTemplate(universalTemplate);
 
                 String title = project.getApiDocument().getTitle();
@@ -366,7 +370,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
     }
 
     public String stringifyController(Table table) {
-        var javaTemplate = new JavaTemplate(componentTemplatePath + "controller/Controller.java");
+        var javaTemplate = new JavaTemplate(templatePath + "controller/Controller.java");
         javaTemplate.preprocessForSpringBootProject(project, table);
 
         // Swagger2
@@ -498,7 +502,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
             log.warn("Mapper interface cannot be generated from a table without a primary key");
         }
 
-        var javaTemplate = new JavaTemplate(componentTemplatePath + "mapper/Mapper.java");
+        var javaTemplate = new JavaTemplate(templatePath + "mapper/Mapper.java");
         javaTemplate.preprocessForSpringBootProject(project, table);
 
         for (var methodDeclaration : javaTemplate.getCompilationUnit().getInterfaceByName(table.getUpperCamelCaseName() + "Mapper").get().getMethods()) {
@@ -576,7 +580,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
             if (fieldName.contains("_enable")) {
                 if (export.getBooleanProperty(fieldName)) {
                     fieldName = fieldName.substring(0, fieldName.length() - "_enable".length());
-                    String pomDependenciesText = FileUtil.read(componentTemplatePath + "pom/" + fieldName + ".xml");
+                    String pomDependenciesText = FileUtil.read(templatePath + "pom/" + fieldName + ".xml");
                     if (pomDependenciesText != null && !pomDependenciesText.isEmpty()) {
                         var xmlMapper = new XmlMapper();
 
@@ -649,7 +653,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
     }
 
     public String stringifyService(Table table) {
-        var javaTemplate = new JavaTemplate(componentTemplatePath + "service/Service.java");
+        var javaTemplate = new JavaTemplate(templatePath + "service/Service.java");
         javaTemplate.preprocessForSpringBootProject(project, table);
 
         if (!export.getBooleanProperty(SpringBootBackendProperty.PAGE_HELPER_ENABLE)) {
@@ -667,7 +671,7 @@ public class SpringBootBackendGenerator extends BaseGenerator {
     }
 
     public String stringifyServiceImpl(Table table) {
-        var javaTemplate = new JavaTemplate(componentTemplatePath + "service/impl/ServiceImpl.java");
+        var javaTemplate = new JavaTemplate(templatePath + "service/impl/ServiceImpl.java");
         javaTemplate.preprocessForSpringBootProject(project, table);
 
         if (export.getBooleanProperty(SpringBootBackendProperty.PAGE_HELPER_ENABLE)) {
@@ -692,13 +696,13 @@ public class SpringBootBackendGenerator extends BaseGenerator {
     }
 
     public String stringifyUtil(String utilName) {
-        var javaTemplate = new JavaTemplate(componentTemplatePath + "util/" + utilName + ".java");
+        var javaTemplate = new JavaTemplate(templatePath + "util/" + utilName + ".java");
         javaTemplate.preprocessForSpringBootProject(project, null);
         return javaTemplate.toString();
     }
 
     public String stringifyVO(String VOName) {
-        var javaTemplate = new JavaTemplate(componentTemplatePath + "VO/" + VOName + ".java");
+        var javaTemplate = new JavaTemplate(templatePath + "VO/" + VOName + ".java");
         javaTemplate.preprocessForSpringBootProject(project, null);
         return javaTemplate.toString();
     }

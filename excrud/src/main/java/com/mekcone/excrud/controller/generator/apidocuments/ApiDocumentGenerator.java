@@ -1,4 +1,4 @@
-package com.mekcone.excrud.controller.generator.impl;
+package com.mekcone.excrud.controller.generator.apidocuments;
 
 import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;

@@ -79,8 +79,4 @@ public class Application {
         @Parameter(names={"help"}, description = "Help options", help = true)
         private boolean help;
     }
-
-//    public static String getHomeDirectory() {
-//        return System.getenv(applicationName.toUpperCase() + "_HOME");
-//    }
 }

@@ -10,9 +10,11 @@ import com.mekcone.excrud.model.project.Export;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
+import lombok.Data;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -30,18 +32,34 @@ public abstract class BaseGenerator {
 
     private Map<String, String> paths = new HashMap<>();
 
+    @Data
+    private class OutputFile {
+        private String path;
+        private String type;
+        private String content;
+
+        public OutputFile(String path, String type, String content) {
+            this.path = path;
+            this.type = type;
+            this.content = content;
+        }
+    }
+
+    private List<OutputFile> outputFiles;
+
     // Copy templates to the target path
     protected void copyInitialTemplates() {
         // Read initial.txt
-        String initialFile = FileUtil.read(templatePath + "initial.json");
+        String initialFile = FileUtil.read(templatePath + "../gen.json");
         if (initialFile == null) {
-            LogUtil.info("No default initializing behavior.");
+            LogUtil.error(ErrorEnum.NO_DEFAULT_INITIALIZING_BEHAVIOR, templatePath + "gen.json");
+            return;
         }
         var objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
         try {
             var rootJsonNode = objectMapper.readTree(initialFile);
-            var pathsJsonNode = rootJsonNode.get("paths");
+            var pathsJsonNode = rootJsonNode.path("initial").path("paths");
 
             if (pathsJsonNode.isObject()) {
                 Iterator<Entry<String, JsonNode>> entryIterator = pathsJsonNode.fields();
@@ -77,6 +95,9 @@ public abstract class BaseGenerator {
     }
 
     protected void initialize(Project project, String exportType) {
+        if (EXCRUD_HOME == null) {
+            LogUtil.fatalError(ErrorEnum.EXCRUD_HOME_ENV_VARIABLE_NOT_SET);
+        }
         this.project = project;
         this.export = project.getExport(exportType);
         this.exportType = exportType;
@@ -85,5 +106,15 @@ public abstract class BaseGenerator {
         this.templatePath = EXCRUD_HOME + "/generators/" + exportType + "/templates/";
         this.componentTemplatePath = templatePath + "components/";
         this.generatedDataPath = exportType + "/";
+    }
+
+    public void addOutputFile(String path, String type, String content) {
+        outputFiles.add(new OutputFile(path, type, content));
+    }
+
+    public void write() {
+        for (OutputFile outputFile: outputFiles) {
+            FileUtil.write(outputFile.getPath(), outputFile.getContent());
+        }
     }
 }
