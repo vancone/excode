@@ -1,13 +1,10 @@
 package com.mekcone.excrud.model.project;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.mekcone.excrud.model.apidoc.ApiDocument;
-import com.mekcone.excrud.model.database.Database;
 import lombok.Data;
 
 import java.util.List;
@@ -26,18 +23,16 @@ public class Project {
     @JacksonXmlProperty(isAttribute = true)
     private String noNamespaceSchemaLocation;
 
-    @JacksonXmlElementWrapper(localName = "databases")
-    @JacksonXmlProperty(localName = "database")
-    private List<Database> databases;
+//    @JacksonXmlElementWrapper(localName = "databases")
+//    @JacksonXmlProperty(localName = "database")
+//    private List<Database> databases;
 
-    private ApiDocument apiDocument;
+//    private ApiDocument apiDocument;
 
-    @JacksonXmlElementWrapper(localName = "exports")
-    @JacksonXmlProperty(localName = "export")
-    private List<Export> exports;
+    private Exports exports;
 
-    @JsonIgnore
-    public Export getExport(String exportType) {
+    /*@JsonIgnore
+    public OldExport getExport(String exportType) {
         if (exports != null) {
             for (var export : exports) {
                 if (export.getType().equals(exportType)) {
@@ -46,7 +41,7 @@ public class Project {
             }
         }
         return null;
-    }
+    }*/
 
     @Override
     public String toString() {

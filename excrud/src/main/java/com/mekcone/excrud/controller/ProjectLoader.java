@@ -7,12 +7,12 @@ import com.mekcone.excrud.constant.basic.ExportType;
 import com.mekcone.excrud.controller.generator.EnterpriseOfficialWebsiteGenerator;
 import com.mekcone.excrud.controller.generator.SqlGenerator;
 import com.mekcone.excrud.controller.generator.apidocuments.ApiDocumentGenerator;
-import com.mekcone.excrud.controller.generator.springboot.SpringBootBackendGenerator;
+import com.mekcone.excrud.controller.generator.springboot.SpringBootGenerator;
 import com.mekcone.excrud.controller.generator.vue.elementadmin.VueElementAdminGenerator;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.enums.ErrorEnum;
 import com.mekcone.excrud.controller.generator.BaseGenerator;
-import com.mekcone.excrud.model.database.Database;
+import com.mekcone.excrud.model.project.export.impl.relationaldatabase.database.Database;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Getter;
@@ -29,10 +29,10 @@ public class ProjectLoader {
     private int tableAmount = 0;
 
     public void build() {
-        for (var export: project.getExports()) {
-            switch (export.getType()) {
-                case ExportType.SPRING_BOOT_BACKEND:
-                    var springBootBackendGenerator = new SpringBootBackendGenerator(project);
+        for (var export: project.getExports().asList()) {
+            switch (export.type()) {
+                case ExportType.SPRING_BOOT:
+                    var springBootBackendGenerator = new SpringBootGenerator(project);
                     springBootBackendGenerator.build();
                     break;
                 default:
@@ -42,7 +42,7 @@ public class ProjectLoader {
     }
 
     public void generate() {
-        if (project.getExports() != null && project.getExports().isEmpty()) {
+        if (project.getExports().asList().isEmpty()) {
             log.info("No export options found");
             System.exit(0);
         }
@@ -56,13 +56,13 @@ public class ProjectLoader {
 //        apiDocumentGenerator.generatePdf();
 //        System.exit(-1);
 
-        for (var export : project.getExports()) {
-            if (!export.isEnable()) {
+        for (var export : project.getExports().asList()) {
+            if (!export.isUse()) {
                 continue;
             }
 
             // Print export type
-            var output = new StringBuilder("[ " + export.getType() + " ]");
+            var output = new StringBuilder("[ " + export.type() + " ]");
             int lineSignAmount = 72 - output.length();
             for (var i = 0; i < lineSignAmount/2; i ++) {
                 output.insert(0, "-");
@@ -77,17 +77,17 @@ public class ProjectLoader {
             log.info(output.toString());
 
             // Initialize generators
-            BaseGenerator generator = switch(export.getType()) {
+            BaseGenerator generator = switch(export.type()) {
                 case ExportType.API_DOCUMENT -> new ApiDocumentGenerator(project);
                 case ExportType.ENTERPRISE_OFFICIAL_WEBSITE -> new EnterpriseOfficialWebsiteGenerator();
-                case ExportType.SPRING_BOOT_BACKEND -> new SpringBootBackendGenerator(project);
+                case ExportType.SPRING_BOOT -> new SpringBootGenerator(project);
                 case ExportType.VUE_ELEMENT_ADMIN -> new VueElementAdminGenerator(project);
                 default -> null;
             };
             if (generator != null) {
                 generator.generate();
             } else {
-                log.warn("Unsupported export type \"{}\"", export.getType());
+                log.warn("Unsupported export type \"{}\"", export.type());
             }
         }
     }
@@ -109,7 +109,7 @@ public class ProjectLoader {
             LogUtil.fatalError(ErrorEnum.PARSE_XML_FAILED, e.getMessage());
         }
 
-        List<Database> databases = project.getDatabases();
+        List<Database> databases = project.getExports().getDatabases();
         if (databases == null || databases.isEmpty()) {
             LogUtil.fatalError(ErrorEnum.DATABASE_UNDEFINED);
         }
@@ -131,7 +131,7 @@ public class ProjectLoader {
             log.info("{} database(s), {} table(s) detected", databases.size(), tableAmount);
         }
 
-        for (var table : project.getDatabases().get(0).getTables()) {
+        for (var table : project.getExports().getDatabases().get(0).getTables()) {
             for (var column : table.getColumns()) {
                 if (column.isPrimaryKey()) {
                     table.setPrimaryKey(column.getName());

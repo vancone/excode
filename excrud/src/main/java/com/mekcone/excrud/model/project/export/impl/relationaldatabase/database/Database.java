@@ -1,4 +1,4 @@
-package com.mekcone.excrud.model.database;
+package com.mekcone.excrud.model.project.export.impl.relationaldatabase.database;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;

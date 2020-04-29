@@ -5,7 +5,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.mekcone.excrud.controller.generator.BaseGenerator;
 import com.mekcone.excrud.model.project.Project;
-import com.mekcone.excrud.model.apidoc.Keyword;
+import com.mekcone.excrud.model.project.export.impl.apidocument.Keyword;
 import com.mekcone.excrud.controller.parser.PropertiesParser;
 import com.mekcone.excrud.util.DataTypeConverter;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
             return;
         }
 
-        for (var database: project.getDatabases()) {
+        for (var database: project.getExports().getDatabases()) {
             for (var table: database.getTables()) {
                 for (var column: table.getColumns()) {
                     if (column.getDescription() == null || column.getDescription().isEmpty()) {
@@ -111,7 +111,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
             paragraph.setAlignment(Element.ALIGN_CENTER);
             Font font = new Font(simHeiBaseFont, 24, Font.BOLD);
             paragraph.setFont(font);
-            String title = project.getApiDocument().getTitle().replace("{br}", "\n");
+            String title = project.getExports().getApiDocumentExport().getTitle().replace("{br}", "\n");
             chunk = new Chunk(title);
             paragraph.add(chunk);
             document.add(paragraph);
@@ -143,8 +143,8 @@ public class ApiDocumentGenerator extends BaseGenerator {
 
             document.newPage();
 
-            for (var i = 0; i < project.getDatabases().get(0).getTables().size(); i ++) {
-                var table = project.getDatabases().get(0).getTables().get(i);
+            for (var i = 0; i < project.getExports().getDatabases().get(0).getTables().size(); i ++) {
+                var table = project.getExports().getDatabases().get(0).getTables().get(i);
                 // Title
                 paragraph = new Paragraph();
                 paragraph.setSpacingBefore(40);
@@ -156,7 +156,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
                 paragraph.add(chunk);
                 document.add(paragraph);
 
-                List<Keyword> keywords = project.getApiDocument().getKeywords();
+                List<Keyword> keywords = project.getExports().getApiDocumentExport().getKeywords();
                 for (var k = 0; k < keywords.size(); k ++) {
                     // API title
                     paragraph = new Paragraph();

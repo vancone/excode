@@ -6,16 +6,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mekcone.excrud.Application;
 import com.mekcone.excrud.enums.ErrorEnum;
-import com.mekcone.excrud.model.project.Export;
+import com.mekcone.excrud.model.project.OldExport;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Data;
+import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 // Every generator should extends this base class
@@ -24,16 +22,20 @@ public abstract class BaseGenerator {
     protected final String EXCRUD_HOME = System.getenv(Application.getApplicationName().toUpperCase() + "_HOME");
 
     protected String componentTemplatePath;
-    protected Export export;
+    protected OldExport oldExport;
     protected String exportType;
     protected String generatedDataPath;
+
+    @Getter
     protected Project project;
+
+    @Getter
     protected String templatePath;
 
     private Map<String, String> paths = new HashMap<>();
 
     @Data
-    private class OutputFile {
+    public class OutputFile {
         private String path;
         private String type;
         private String content;
@@ -43,9 +45,26 @@ public abstract class BaseGenerator {
             this.type = type;
             this.content = content;
         }
+
+        public String getFileName() {
+            System.out.println("path: " + path);
+            String[] stringArray = path.split("/");
+            if (stringArray.length > 0) {
+                String[] stringArray2 = stringArray[stringArray.length - 1].split("\\.");
+                if (stringArray2.length > 0) {
+                    return stringArray2[0];
+                }
+                return stringArray[stringArray.length - 1];
+            }
+            return path;
+        }
+
+        public boolean isType(String type) {
+            return type.equals(this.type);
+        }
     }
 
-    private List<OutputFile> outputFiles;
+    private List<OutputFile> outputFiles = new ArrayList<>();
 
     // Copy templates to the target path
     protected void copyInitialTemplates() {
@@ -99,7 +118,7 @@ public abstract class BaseGenerator {
             LogUtil.fatalError(ErrorEnum.EXCRUD_HOME_ENV_VARIABLE_NOT_SET);
         }
         this.project = project;
-        this.export = project.getExport(exportType);
+//        this.oldExport = project.getExport(exportType);
         this.exportType = exportType;
 
         // Set template paths
@@ -112,9 +131,14 @@ public abstract class BaseGenerator {
         outputFiles.add(new OutputFile(path, type, content));
     }
 
+    public List<OutputFile> getOutputFiles() {
+        return outputFiles;
+    }
+
     public void write() {
         for (OutputFile outputFile: outputFiles) {
-            FileUtil.write(outputFile.getPath(), outputFile.getContent());
+            LogUtil.info("Output " + outputFile.getType() + " file: " + outputFile.getPath());
+//            FileUtil.write(outputFile.getPath(), outputFile.getContent());
         }
     }
 }

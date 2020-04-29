@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public class Export {
+public class OldExport {
     @JacksonXmlProperty(isAttribute = true)
     private String type;
 
