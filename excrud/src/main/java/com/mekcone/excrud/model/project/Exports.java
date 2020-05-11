@@ -1,12 +1,10 @@
 package com.mekcone.excrud.model.project;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.model.project.export.impl.relationaldatabase.RelationalDatabaseExport;
-import com.mekcone.excrud.model.project.export.impl.relationaldatabase.database.Database;
-import com.mekcone.excrud.model.project.export.Export;
-import com.mekcone.excrud.model.project.export.impl.SpringBootExport;
-import com.mekcone.excrud.model.project.export.impl.apidocument.ApiDocumentExport;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.RelationalDatabaseGenModel;
+import com.mekcone.excrud.model.export.GenModel;
+import com.mekcone.excrud.model.export.impl.springboot.SpringBootGenModel;
+import com.mekcone.excrud.model.export.impl.apidocument.ApiDocumentGenModel;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -15,19 +13,19 @@ import java.util.List;
 @Data
 public class Exports {
     @JacksonXmlProperty(localName = "api-document")
-    private ApiDocumentExport apiDocumentExport;
+    private ApiDocumentGenModel apiDocumentExport;
 
     @JacksonXmlProperty(localName = "relational-database")
-    private RelationalDatabaseExport relationalDatabaseExport;
+    private RelationalDatabaseGenModel relationalDatabaseExport;
 
     @JacksonXmlProperty(localName = "spring-boot")
-    private SpringBootExport springBootExport;
+    private SpringBootGenModel springBootGenModel;
 
-    public List<Export> asList() {
-        List<Export> exports = new ArrayList<>();
-        exports.add(apiDocumentExport);
-        exports.add(relationalDatabaseExport);
-        exports.add(springBootExport);
-        return exports;
+    public List<GenModel> asList() {
+        List<GenModel> genModels = new ArrayList<>();
+        genModels.add(apiDocumentExport);
+        genModels.add(relationalDatabaseExport);
+        genModels.add(springBootGenModel);
+        return genModels;
     }
 }

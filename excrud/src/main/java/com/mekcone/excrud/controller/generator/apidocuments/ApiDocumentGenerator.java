@@ -5,7 +5,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.mekcone.excrud.controller.generator.BaseGenerator;
 import com.mekcone.excrud.model.project.Project;
-import com.mekcone.excrud.model.project.export.impl.apidocument.Keyword;
+import com.mekcone.excrud.model.export.impl.apidocument.component.Keyword;
 import com.mekcone.excrud.controller.parser.PropertiesParser;
 import com.mekcone.excrud.util.DataTypeConverter;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
             return;
         }
 
-        for (var database: project.getExports().getDatabases()) {
+        for (var database: project.getExports().getRelationalDatabaseExport().getDatabases()) {
             for (var table: database.getTables()) {
                 for (var column: table.getColumns()) {
                     if (column.getDescription() == null || column.getDescription().isEmpty()) {
@@ -143,8 +143,8 @@ public class ApiDocumentGenerator extends BaseGenerator {
 
             document.newPage();
 
-            for (var i = 0; i < project.getExports().getDatabases().get(0).getTables().size(); i ++) {
-                var table = project.getExports().getDatabases().get(0).getTables().get(i);
+            for (var i = 0; i < project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables().size(); i ++) {
+                var table = project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables().get(i);
                 // Title
                 paragraph = new Paragraph();
                 paragraph.setSpacingBefore(40);

@@ -12,7 +12,7 @@ import com.mekcone.excrud.controller.generator.vue.elementadmin.VueElementAdminG
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.enums.ErrorEnum;
 import com.mekcone.excrud.controller.generator.BaseGenerator;
-import com.mekcone.excrud.model.project.export.impl.relationaldatabase.database.Database;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Getter;
@@ -109,7 +109,7 @@ public class ProjectLoader {
             LogUtil.fatalError(ErrorEnum.PARSE_XML_FAILED, e.getMessage());
         }
 
-        List<Database> databases = project.getExports().getDatabases();
+        List<Database> databases = project.getExports().getRelationalDatabaseExport().getDatabases();
         if (databases == null || databases.isEmpty()) {
             LogUtil.fatalError(ErrorEnum.DATABASE_UNDEFINED);
         }
@@ -131,7 +131,7 @@ public class ProjectLoader {
             log.info("{} database(s), {} table(s) detected", databases.size(), tableAmount);
         }
 
-        for (var table : project.getExports().getDatabases().get(0).getTables()) {
+        for (var table : project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables()) {
             for (var column : table.getColumns()) {
                 if (column.isPrimaryKey()) {
                     table.setPrimaryKey(column.getName());

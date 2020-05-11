@@ -22,13 +22,13 @@
 
         <relational-database>
             <databases>
-                <database type="mysql" host="localhost:3306" name="mekcone_mall" username="root" password="123456">
+                <database type="mysql" host="localhost:3306" name="mekcone_mall" username="root" password="123456" timezone="GMT%2B8">
                     <tables>
                         <table name="goods" description="商品对象">
                             <columns>
                                 <column name="goods_id" type="int" primaryKey="true" />
                                 <column name="goods_name" type="varchar(50)" />
-                                <column name="catalogue_id" type="varchar(50)" foreignKeyTo="catalogue" filter="true" />
+                                <column name="catalogue_id" type="varchar(50)" filter="true" />
                                 <column name="goods_price" type="double" />
                                 <column name="goods_description" type="varchar(50)" detail="true" />
                             </columns>
@@ -64,17 +64,18 @@
             </databases>
         </mongodb> -->
 
-        <spring-boot gen="true">
+        <spring-boot use="true">
             <extensions>
-                <lombok use="false" />
-                <swagger2 use="false" />
+                <extension id="lombok" use="true"></extension>
+                <extension id="swagger2" use="false"></extension>
             </extensions>
 
             <properties>
                 <application-name>Mall</application-name>
                 <server-port>9090</server-port>
-                <cors-allowedOrigins>*</cors-allowedOrigins>
-                <cors-allowedMethods>{GET, POST, PUT, DELETE}</cors-allowedMethods>
+                <!-- <cors-allowedOrigins>*</cors-allowedOrigins>
+                <cors-allowedMethods>{GET, POST, PUT, DELETE}</cors-allowedMethods> -->
+                <page-size>15</page-size>
             </properties>
         </spring-boot>
 

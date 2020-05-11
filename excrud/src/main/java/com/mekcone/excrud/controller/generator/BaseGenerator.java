@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mekcone.excrud.Application;
 import com.mekcone.excrud.enums.ErrorEnum;
-import com.mekcone.excrud.model.project.OldExport;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
@@ -22,7 +21,6 @@ public abstract class BaseGenerator {
     protected final String EXCRUD_HOME = System.getenv(Application.getApplicationName().toUpperCase() + "_HOME");
 
     protected String componentTemplatePath;
-    protected OldExport oldExport;
     protected String exportType;
     protected String generatedDataPath;
 
@@ -30,24 +28,25 @@ public abstract class BaseGenerator {
     protected Project project;
 
     @Getter
-    protected String templatePath;
+    protected static String templatePath;
 
     private Map<String, String> paths = new HashMap<>();
+
+    @Getter
+    private List<String> extensions = new ArrayList<>();
 
     @Data
     public class OutputFile {
         private String path;
-        private String type;
         private String content;
 
-        public OutputFile(String path, String type, String content) {
+        public OutputFile(String path, String content) {
             this.path = path;
-            this.type = type;
             this.content = content;
         }
 
         public String getFileName() {
-            System.out.println("path: " + path);
+//            System.out.println("path: " + path);
             String[] stringArray = path.split("/");
             if (stringArray.length > 0) {
                 String[] stringArray2 = stringArray[stringArray.length - 1].split("\\.");
@@ -57,10 +56,6 @@ public abstract class BaseGenerator {
                 return stringArray[stringArray.length - 1];
             }
             return path;
-        }
-
-        public boolean isType(String type) {
-            return type.equals(this.type);
         }
     }
 
@@ -79,6 +74,7 @@ public abstract class BaseGenerator {
         try {
             var rootJsonNode = objectMapper.readTree(initialFile);
             var pathsJsonNode = rootJsonNode.path("initial").path("paths");
+            var extensionsJsonNode = rootJsonNode.path("initial").path("extensions");
 
             if (pathsJsonNode.isObject()) {
                 Iterator<Entry<String, JsonNode>> entryIterator = pathsJsonNode.fields();
@@ -93,6 +89,13 @@ public abstract class BaseGenerator {
                 }
             } else {
                 LogUtil.fatalError(ErrorEnum.PATHS_NOT_A_VALID_OBJECT);
+            }
+
+            if (extensionsJsonNode.isArray()) {
+                for (var extensionJsonNode: extensionsJsonNode) {
+//                    LogUtil.info("EXT: " + extensionJsonNode.asText());
+                    extensions.add(extensionJsonNode.asText());
+                }
             }
 
             // Create directories
@@ -118,7 +121,6 @@ public abstract class BaseGenerator {
             LogUtil.fatalError(ErrorEnum.EXCRUD_HOME_ENV_VARIABLE_NOT_SET);
         }
         this.project = project;
-//        this.oldExport = project.getExport(exportType);
         this.exportType = exportType;
 
         // Set template paths
@@ -127,8 +129,8 @@ public abstract class BaseGenerator {
         this.generatedDataPath = exportType + "/";
     }
 
-    public void addOutputFile(String path, String type, String content) {
-        outputFiles.add(new OutputFile(path, type, content));
+    public void addOutputFile(String path, String content) {
+        outputFiles.add(new OutputFile(path, content));
     }
 
     public List<OutputFile> getOutputFiles() {
@@ -137,8 +139,21 @@ public abstract class BaseGenerator {
 
     public void write() {
         for (OutputFile outputFile: outputFiles) {
-            LogUtil.info("Output " + outputFile.getType() + " file: " + outputFile.getPath());
-//            FileUtil.write(outputFile.getPath(), outputFile.getContent());
+            // LogUtil.info("Output " + outputFile.getType() + " file: " + outputFile.getPath());
+            FileUtil.write(outputFile.getPath(), outputFile.getContent());
         }
+    }
+
+    public void addExtension(String addedExtension) {
+        for (var extension: extensions) {
+            if (addedExtension.equals(extension)) {
+                return;
+            }
+        }
+        extensions.add(addedExtension);
+    }
+
+    public boolean removeExtension(String removedExtension) {
+        return extensions.remove(removedExtension);
     }
 }

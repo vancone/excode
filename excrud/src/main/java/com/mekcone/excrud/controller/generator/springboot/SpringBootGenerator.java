@@ -1,75 +1,45 @@
 package com.mekcone.excrud.controller.generator.springboot;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.*;
-import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.stmt.ReturnStmt;
-import com.github.javaparser.ast.type.TypeParameter;
-import com.mekcone.excrud.Application;
-import com.mekcone.excrud.constant.basic.DataType;
 import com.mekcone.excrud.constant.basic.ExportType;
-import com.mekcone.excrud.constant.properties.SpringBootBackendProperty;
+import com.mekcone.excrud.constant.extensions.SpringBootExtensionType;
 import com.mekcone.excrud.controller.generator.BaseGenerator;
 import com.mekcone.excrud.controller.generator.SqlGenerator;
-import com.mekcone.excrud.controller.generator.springboot.extension.impl.Swagger2Extension;
+import com.mekcone.excrud.controller.generator.springboot.extension.impl.LombokExtensionManager;
+import com.mekcone.excrud.controller.generator.springboot.extension.impl.Swagger2ExtensionManager;
 import com.mekcone.excrud.controller.parser.PropertiesParser;
 import com.mekcone.excrud.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.controller.parser.template.impl.UniversalTemplate;
-import com.mekcone.excrud.model.project.export.impl.relationaldatabase.database.Column;
-import com.mekcone.excrud.model.project.export.impl.relationaldatabase.database.Database;
-import com.mekcone.excrud.model.project.export.impl.relationaldatabase.database.Table;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.model.project.Project;
-import com.mekcone.excrud.model.springboot.Dependency;
-import com.mekcone.excrud.util.FileUtil;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Column;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.model.export.impl.springboot.SpringBootGenModel;
+import com.mekcone.excrud.model.export.impl.springboot.component.SpringBootDataClass;
+import com.mekcone.excrud.model.export.impl.springboot.component.SpringBootComponent;
+import com.mekcone.excrud.model.export.impl.springboot.component.ProjectObjectModel;
 import com.mekcone.excrud.util.LogUtil;
 import com.mekcone.excrud.util.StrUtil;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.jdom2.Comment;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 public class SpringBootGenerator extends BaseGenerator {
+    @Getter
+    private SpringBootGenModel springBootGenModel;
 
-    // Bean types
-    public final static String CONFIG_TYPE = "config";
-    public final static String CONTROLLER_TYPE = "controller";
-    public final static String ENTITY_TYPE = "entity";
-    public final static String MAPPER_TYPE = "mapper";
-    public final static String MODEL_TYPE = "model";
-    public final static String SERVICE_TYPE = "service";
-    public final static String SERVICE_IMPL_TYPE = "serviceImpl";
-
-    // Method types
-    public final static String CREATING_METHOD = "create";
-    public final static String RETRIEVING_METHOD = "retrieve";
-    public final static String RETRIEVING_LIST_METHOD = "retrieveList";
-    public final static String UPDATING_METHOD = "update";
-    public final static String DELETING_METHOD = "delete";
+    public PropertiesParser applicationPropertiesParser = new PropertiesParser();
 
     public SpringBootGenerator(Project project) {
         initialize(project, ExportType.SPRING_BOOT);
+        springBootGenModel = project.getExports().getSpringBootGenModel();
+        springBootGenModel.setGroupId(project.getGroupId());
+        springBootGenModel.setArtifactId(project.getArtifactId());
     }
 
     public boolean build() {
@@ -162,79 +132,129 @@ public class SpringBootGenerator extends BaseGenerator {
     public void generate() {
         copyInitialTemplates();
 
-        String resourcesPath = generatedDataPath + getPath("resourcesPath");
-        String sourcePath = generatedDataPath + getPath("srcPath");
-
-        FileUtil.write(generatedDataPath + "pom.xml", stringifyPomXml());
-        FileUtil.write(resourcesPath + "application.properties", stringifyApplicationProperties());
-        FileUtil.write(sourcePath + StrUtil.upperCamelCase(project.getArtifactId()) + "Application.java", stringifyApplicationEntry());
-
-        String controllerPath = sourcePath + "controller/";
-        String entityPath = sourcePath + "entity/";
-        String mybatisMapperPath = sourcePath + "mapper/";
-        String servicePath = sourcePath + "service/";
-        String serviceImplPath = sourcePath + "service/impl/";
-
-        for (var table : project.getExports().getDatabases().get(0).getTables()) {
+        for (var table : project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables()) {
             if (table.getCatalogueOf() != null && !table.getCatalogueOf().isEmpty()) {
                 continue;
             }
-            String tableName = table.getUpperCamelCaseName();
-            addOutputFile(controllerPath + tableName + "Controller.java", CONTROLLER_TYPE, stringifyController(table));
-            addOutputFile(entityPath + tableName + ".java", ENTITY_TYPE, stringifyEntity(table));
-            addOutputFile(mybatisMapperPath + tableName + "Mapper.java", MAPPER_TYPE, stringifyMybatisMapper(table));
-            addOutputFile(servicePath + tableName + "Service.java", SERVICE_TYPE, stringifyService(table));
-            addOutputFile(serviceImplPath + tableName + "ServiceImpl.java", SERVICE_IMPL_TYPE, stringifyServiceImpl(table));
+            createControllerComponent(table);
+            createEntityBean(table);
+            createMybatisMapperComponent(table);
+            createServiceComponent(table);
+            createServiceImplComponent(table);
         }
 
-        for (var outputFile: getOutputFiles()) {
-            getCreatingMethod(outputFile);
+        // Application properties
+        var applicationPropertiesParser = springBootGenModel.getApplicationPropertiesParser();
+
+        int serverPort = springBootGenModel.getProperties().getServerPort();
+        if (serverPort > -1 && serverPort < 65536) {
+            applicationPropertiesParser.add("server.port", Integer.toString(serverPort));
         }
+        applicationPropertiesParser.addSeparator();
+
+
+        Database defaultDatabase = project.getExports().getRelationalDatabaseExport().getDatabases().get(0);
+        String dataSourceUrl = "jdbc:" + defaultDatabase.getType() + "://" + defaultDatabase.getHost() + "/" + defaultDatabase.getName();
+        if (defaultDatabase.getTimezone() != null) {
+            dataSourceUrl += "?serverTimezone=" + defaultDatabase.getTimezone();
+        }
+        applicationPropertiesParser.add("spring.datasource.url", dataSourceUrl);
+        applicationPropertiesParser.add("spring.datasource.username", defaultDatabase.getUsername());
+        applicationPropertiesParser.add("spring.datasource.password", defaultDatabase.getPassword());
+        applicationPropertiesParser.addSeparator();
 
         // Config
-        String configPath = sourcePath + "config/";
 
         // Cross origin
-        if (oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_HEADERS) ||
+        /*if (oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_HEADERS) ||
                 oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_METHODS) ||
                 oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_ORIGINS)) {
-            FileUtil.write(configPath + "CrossOriginConfig.java", stringifyConfig("cross_origin"));
+            FileUtil.write(getPath("configPath") + "CrossOriginConfig.java", stringifyConfig("cross_origin"));
         }
 
         // Swagger2
         if (oldExport.getBooleanProperty(SpringBootBackendProperty.SWAGGER2_ENABLE)) {
-            FileUtil.write(configPath + "Swagger2Config.java", stringifyConfig("swagger2"));
+            FileUtil.write(getPath("configPath") + "Swagger2Config.java", stringifyConfig("swagger2"));
+        }*/
+
+//        addOutputFile(getPath("resourcesPath") + "application.properties", "properties", applicationPropertiesParser.generate());
+
+        // Remove disabled extensions
+        for (var springBootExtension : springBootGenModel.getExtensions()) {
+            if (!springBootExtension.isUse()) {
+                removeExtension(springBootExtension.getId());
+            }
         }
 
-        // Utils
-        String utilPath = sourcePath + "util/";
-        FileUtil.write(utilPath + "ResultVOUtil.java", stringifyUtil("ResultVOUtil"));
+        LogUtil.info("Enabled extensions: " + getExtensions().toString());
 
-        // VOs
-        String VOPath = sourcePath + "VO/";
-        FileUtil.write(VOPath + "ResultVO.java", stringifyVO("ResultVO"));
+        // Run extension manager
+        springBootGenModel.setProjectObjectModel(new ProjectObjectModel(project));
 
-        // Execute extensions
-        Swagger2Extension.execute(this);
+        for (String extensionName : getExtensions()) {
+            switch (extensionName) {
+                case SpringBootExtensionType.LOMBOK:
+                    new LombokExtensionManager(springBootGenModel);
+                    break;
+                case SpringBootExtensionType.SWAGGER2:
+                    new Swagger2ExtensionManager(springBootGenModel);
+                    break;
+                default:
+                    ;
+            }
+        }
 
-        // Call write method of base generator
+        // Write to files
         write();
 
         LogUtil.info("Generate " + ExportType.SPRING_BOOT + " completed");
     }
 
-    private List<String> getSupportedDependencies() {
-        List<String> dependencies = new ArrayList<>();
-        Class springBootBackendPropertyInterface = SpringBootBackendProperty.class;
-        var fieldArray = springBootBackendPropertyInterface.getDeclaredFields();
-        for (var field : fieldArray) {
-            String fieldName = field.getName().toLowerCase();
-            if (fieldName.contains("_enable")) {
-                fieldName = fieldName.substring(0, fieldName.length() - "_enable".length());
-                dependencies.add(fieldName);
-            }
+    @Override
+    public void write() {
+        // Application entry
+        var universalTemplate = new UniversalTemplate(templatePath + "Application.java");
+        if (universalTemplate != null) {
+            preprocessTemplate(universalTemplate);
+        } else {
+            LogUtil.info("Application.java not found");
         }
-        return dependencies;
+        universalTemplate.insert("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
+        addOutputFile(exportType + "/" + getPath("srcPath") + StrUtil.upperCamelCase(project.getArtifactId()) + "Application.java", universalTemplate.toString());
+
+        // Application properties
+//        LogUtil.info("AP: " + springBootGenModel.getApplicationPropertiesParser());
+        addOutputFile(exportType + "/" + getPath("resourcesPath") + "application.properties", springBootGenModel.getApplicationPropertiesParser().generate());
+
+        // Controllers
+        for (SpringBootComponent controllerComponent: springBootGenModel.getControllers()) {
+            addOutputFile(exportType + "/" + getPath("controllerPath") + controllerComponent.getName() + ".java", controllerComponent.toString());
+        }
+
+        // Entities
+        for (SpringBootDataClass entityBean: springBootGenModel.getEntities()) {
+            addOutputFile(exportType + "/" + getPath("entityPath") + entityBean.getName() + ".java", entityBean.toString());
+        }
+
+        // Mappers
+        for (SpringBootComponent mybatisMapperComponent: springBootGenModel.getMybatisMappers()) {
+            addOutputFile(exportType + "/" + getPath("mapperPath") + mybatisMapperComponent.getName() + ".java", mybatisMapperComponent.toString());
+        }
+
+        // POM
+        addOutputFile(generatedDataPath + "pom.xml", springBootGenModel.getProjectObjectModel().toString());
+
+        // Services
+        for (SpringBootComponent serviceComponent: springBootGenModel.getServices()) {
+            addOutputFile(exportType + "/" + getPath("servicePath") + serviceComponent.getName() + ".java", serviceComponent.toString());
+        }
+
+        // ServiceImpls
+        for (SpringBootComponent serviceImplComponent: springBootGenModel.getServiceImpls()) {
+            addOutputFile(exportType + "/" + getPath("serviceImplPath") + serviceImplComponent.getName() + ".java", serviceImplComponent.toString());
+        }
+
+        super.write();
     }
 
 
@@ -243,19 +263,7 @@ public class SpringBootGenerator extends BaseGenerator {
     }
 
 
-    public String stringifyApplicationEntry() {
-        var plainTemplate = new UniversalTemplate(templatePath + "Application.java");
-        if (plainTemplate != null) {
-            preprocessTemplate(plainTemplate);
-        } else {
-            LogUtil.info("Application.java not found");
-        }
-        plainTemplate.insert("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
-        return plainTemplate.toString();
-    }
-
-
-    public String stringifyApplicationProperties() {
+    /*public String stringifyApplicationProperties() {
         var globalPropertiesParser = new PropertiesParser();
 
         // Server port
@@ -268,7 +276,7 @@ public class SpringBootGenerator extends BaseGenerator {
         for (String dependencyName : getSupportedDependencies()) {
             if (oldExport.getBooleanProperty(dependencyName + "_enable")) {
                 if (dependencyName.equals("mybatis")) {
-                    Database defaultDatabase = project.getExports().getDatabases().get(0);
+                    Database defaultDatabase = project.getExports().getRelationalDatabaseExport().getDatabases().get(0);
                     globalPropertiesParser.add("spring.datasource.url",
                             "jdbc:" + defaultDatabase.getType() + "://" + defaultDatabase.getHost() + "/" + defaultDatabase.getName());
                     globalPropertiesParser.add("spring.datasource.username", defaultDatabase.getUsername());
@@ -283,9 +291,9 @@ public class SpringBootGenerator extends BaseGenerator {
             }
         }
         return globalPropertiesParser.generate();
-    }
+    }*/
 
-    public String stringifyConfig(String configName) {
+    /*public String stringifyConfig(String configName) {
         switch (configName) {
             case "cross_origin":
                 UniversalTemplate universalTemplate = new UniversalTemplate(templatePath + "/config/CrossOriginConfig.java");
@@ -373,7 +381,7 @@ public class SpringBootGenerator extends BaseGenerator {
                 universalTemplate.insert("version", project.getVersion());
 
                 String swaggerTags = "";
-                List<Table> tables = project.getExports().getDatabases().get(0).getTables();
+                List<Table> tables = project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables();
                 for (var i = 0; i < tables.size(); i++) {
                     swaggerTags += "new Tag(\"" + tables.get(i).getUpperCamelCaseName() + "\", " + "\"" + tables.get(i).getDescription() + "\")";
                     if (i + 1 == tables.size()) {
@@ -389,142 +397,31 @@ public class SpringBootGenerator extends BaseGenerator {
                 log.warn("Unsupported config item \"{}\"", configName);
                 return null;
         }
+    }*/
+
+    public void createControllerComponent(Table table) {
+        String controllerTemplatePath = templatePath + "controller/Controller.java";
+        SpringBootComponent controllerComponent = new SpringBootComponent(controllerTemplatePath, project, table);
+        springBootGenModel.addController(controllerComponent);
     }
 
-    public String stringifyController(Table table) {
-        var javaTemplate = new JavaTemplate(templatePath + "controller/Controller.java");
-        javaTemplate.preprocessForSpringBootProject(project, table);
-
-        // Swagger2
-        //Plugin swagger2Plugin = export.getPlugin(SpringBootProject.PLUGIN_SWAGGER2);
-        List<MethodDeclaration> methods = javaTemplate.getCompilationUnit().getClassByName(
-                table.getUpperCamelCaseName() + "Controller").get().getMethods();
-        if (oldExport.getProperty("swagger2_enable").equals("true")) {
-            var apiDocument = project.getExports().getApiDocumentExport();
-
-            for (var methodDeclaration : methods) {
-                var apiOperationAnnotationExpr = methodDeclaration.getAnnotationByName("ApiOperation").get();
-                NodeList<MemberValuePair> pairs = apiOperationAnnotationExpr.asNormalAnnotationExpr().getPairs();
-                for (var memberValuePair : pairs) {
-                    if (memberValuePair.getNameAsString().equals("value")) {
-                        memberValuePair.setValue(new NameExpr("\"" + apiDocument.getKeywordByType(methodDeclaration.getNameAsString()) + table.getDescription() + "\""));
-                    }
-                }
-            }
-        } else {
-            NodeList<ImportDeclaration> imports = javaTemplate.getCompilationUnit().getImports();
-            if (imports != null && !imports.isEmpty()) {
-                for (var i = 0; i < imports.size(); i++) {
-                    if (imports.get(i).getNameAsString().contains("io.swagger")) {
-                        imports.get(i).remove();
-                        i--;
-                    }
-                }
-            }
-
-            Optional<AnnotationExpr> apiAnnotation =
-                    javaTemplate.getCompilationUnit().getClassByName(
-                            table.getUpperCamelCaseName() + "Controller").get().getAnnotationByName("Api");
-            if (apiAnnotation.get() != null) {
-                apiAnnotation.get().remove();
-            }
-
-            for (var methodDeclaration : methods) {
-                Optional<AnnotationExpr> apiOperationAnnotation = methodDeclaration.getAnnotationByName("ApiOperation");
-                if (apiOperationAnnotation.get() != null) {
-                    apiOperationAnnotation.get().remove();
-                }
-            }
-        }
-
-        // PageHelper
-        String tableName = table.getUpperCamelCaseName();
-        var retrieveListMethodDeclaration = new MethodDeclaration(NodeList.nodeList(Modifier.publicModifier()), new TypeParameter("ResultVO"), "retrieveList");
-        retrieveListMethodDeclaration.addMarkerAnnotation("GetMapping");
-
-        if (oldExport.getBooleanProperty(SpringBootBackendProperty.PAGE_HELPER_ENABLE)) {
-            for (var methodDeclaration : javaTemplate.getCompilationUnit().getClassByName(tableName + "Controller").get().getMethods()) {
-                if (methodDeclaration.getNameAsString().equals("retrieveList") && methodDeclaration.getParameters().isEmpty()) {
-                    methodDeclaration.remove();
-                }
-            }
-        } else {
-            NodeList<ImportDeclaration> imports = javaTemplate.getCompilationUnit().getImports();
-            if (imports != null && !imports.isEmpty()) {
-                for (var i = 0; i < imports.size(); i++) {
-                    if (imports.get(i).getNameAsString().contains("com.github.pagehelper")) {
-                        imports.get(i).remove();
-                        i--;
-                    }
-                }
-            }
-
-            for (var methodDeclaration : javaTemplate.getCompilationUnit().getClassByName(tableName + "Controller").get().getMethods()) {
-                if (methodDeclaration.getNameAsString().equals("retrieveList") && !methodDeclaration.getParameters().isEmpty()) {
-                    methodDeclaration.remove();
-                }
-            }
-        }
-
-        return javaTemplate.toString();
+    public void createEntityBean(Table table) {
+        SpringBootDataClass entityBean = new SpringBootDataClass(project, table);
+        springBootGenModel.addEntity(entityBean);
+        /**/
     }
 
-    public String stringifyEntity(Table table) {
-        String groupId = project.getGroupId();
-        String artifactId = project.getArtifactId();
-
-        boolean lombokEnabled = oldExport.getBooleanProperty(SpringBootBackendProperty.LOMBOK_ENABLE);
-
-        var entityCompilationUnit = new CompilationUnit();
-        entityCompilationUnit.setPackageDeclaration(groupId + "." + artifactId + "." + "entity");
-        ClassOrInterfaceDeclaration entityClassDeclaration =
-                entityCompilationUnit.addClass(table.getUpperCamelCaseName(), Modifier.Keyword.PUBLIC);
-
-        if (lombokEnabled) {
-            entityCompilationUnit.addImport("lombok.Data");
-            entityClassDeclaration.addMarkerAnnotation("Data");
-        }
-        for (var column : table.getColumns()) {
-            String type = column.getType();
-            if (!type.equals(DataType.JAVA_INT)) {
-                type = DataType.JAVA_STRING;
-            }
-
-            entityClassDeclaration.addField(type, column.getCamelCaseName(table.getName()), Modifier.Keyword.PRIVATE);
-
-            if (!lombokEnabled) {
-
-                // Getter
-                var getterMethodDeclaration =
-                        entityClassDeclaration.addMethod("get" + column.getUpperCamelCaseName(table.getName()), Modifier.Keyword.PUBLIC);
-                getterMethodDeclaration.setType(DataType.JAVA_STRING);
-                BlockStmt getterMethodBody = new BlockStmt();
-                getterMethodBody.addAndGetStatement(new ReturnStmt(column.getCamelCaseName(table.getName())));
-                getterMethodDeclaration.setBody(getterMethodBody);
-
-                // Setter
-                var setterMethodDeclaration =
-                        entityClassDeclaration.addMethod("set" + column.getUpperCamelCaseName(table.getName()), Modifier.Keyword.PUBLIC);
-                setterMethodDeclaration.setType(DataType.JAVA_VOID);
-                setterMethodDeclaration.addParameter(DataType.JAVA_STRING, column.getCamelCaseName(table.getName()));
-                BlockStmt setterMethodBody = new BlockStmt();
-                var assignExpr = new AssignExpr();
-                assignExpr.setOperator(AssignExpr.Operator.ASSIGN);
-                assignExpr.setTarget(new FieldAccessExpr(new NameExpr("this"), column.getCamelCaseName(table.getName())));
-                assignExpr.setValue(new NameExpr(column.getCamelCaseName(table.getName())));
-                setterMethodBody.addAndGetStatement(assignExpr);
-                setterMethodDeclaration.setBody(setterMethodBody);
-            }
-        }
-        return entityCompilationUnit.toString();
-    }
-
-    public String stringifyMybatisMapper(Table table) {
+    public void createMybatisMapperComponent(Table table) {
         if (!table.hasPrimaryKey()) {
             log.warn("Mapper interface cannot be generated from a table without a primary key");
+            return;
         }
 
-        var javaTemplate = new JavaTemplate(templatePath + "mapper/Mapper.java");
+        String mybatisMapperTemplatePath = templatePath + "mapper/Mapper.java";
+        SpringBootComponent mybatisMapperComponent = new SpringBootComponent(mybatisMapperTemplatePath, project, table);
+        springBootGenModel.addMybatisMapper(mybatisMapperComponent);
+
+        var javaTemplate = mybatisMapperComponent.getJavaTemplate();
         javaTemplate.preprocessForSpringBootProject(project, table);
 
         for (var methodDeclaration : javaTemplate.getCompilationUnit().getInterfaceByName(table.getUpperCamelCaseName() + "Mapper").get().getMethods()) {
@@ -556,233 +453,17 @@ public class SpringBootGenerator extends BaseGenerator {
                 }
             }
         }
-
-        return javaTemplate.toString();
     }
 
-    public String stringifyPomXml() {
-        // Root
-        var rootElement = new Element("project");
-        var document = new Document(rootElement);
-        if (Application.getDescription() != null) {
-            rootElement.addContent(new Comment(Application.getDescription()));
-        }
-        Namespace xmlns = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
-        rootElement.setNamespace(xmlns);
-        Namespace xsi = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        rootElement.addNamespaceDeclaration(xsi);
-        rootElement.setAttribute("schemaLocation", "http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd", xsi);
-        rootElement.addContent(new Element("modelVersion", xmlns).setText("4.0.0"));
-
-        // Parent
-        var parentElement = new Element("parent", xmlns);
-        rootElement.addContent(parentElement);
-        parentElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
-        parentElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-starter-parent"));
-        parentElement.addContent(new Element("version", xmlns).setText("2.2.1.RELEASE"));
-        parentElement.addContent(new Element("relativePath", xmlns));
-
-        rootElement.addContent(new Element("groupId", xmlns).setText(project.getGroupId()));
-        rootElement.addContent(new Element("artifactId", xmlns).setText(project.getArtifactId()));
-        rootElement.addContent(new Element("version", xmlns).setText(project.getVersion()));
-        rootElement.addContent(new Element("name", xmlns).setText(project.getArtifactId()));
-        rootElement.addContent(new Element("description", xmlns).setText(project.getDescription()));
-
-        // Properties
-        var propertiesElement = new Element("properties", xmlns);
-        rootElement.addContent(propertiesElement);
-        propertiesElement.addContent(new Element("java.version", xmlns).setText("1.8"));
-
-        // Dependencies
-        List<Dependency> dependencies = new ArrayList<>();
-        Class springBootBackendPropertyInterface = SpringBootBackendProperty.class;
-        Field[] fields = springBootBackendPropertyInterface.getDeclaredFields();
-        for (var field : fields) {
-            String fieldName = field.getName().toLowerCase();
-            if (fieldName.contains("_enable")) {
-                if (oldExport.getBooleanProperty(fieldName)) {
-                    fieldName = fieldName.substring(0, fieldName.length() - "_enable".length());
-                    String pomDependenciesText = FileUtil.read(templatePath + "pom/" + fieldName + ".xml");
-                    if (pomDependenciesText != null && !pomDependenciesText.isEmpty()) {
-                        var xmlMapper = new XmlMapper();
-
-                        try {
-                            List<Dependency> pomDependencies = xmlMapper.readValue(pomDependenciesText, new TypeReference<List<Dependency>>() {
-                            });
-                            if (pomDependencies != null && !pomDependencies.isEmpty()) {
-                                dependencies.addAll(pomDependencies);
-                            }
-                        } catch (JsonProcessingException e) {
-                            log.error(e.getMessage());
-                        }
-                    }
-                } else {
-                    log.warn("\"{}\" not found", fieldName);
-                }
-            }
-        }
-
-        var dependenciesElement = new Element("dependencies", xmlns);
-        rootElement.addContent(dependenciesElement);
-
-        for (var dependency : dependencies) {
-            var dependencyElement = new Element("dependency", xmlns);
-            dependencyElement.addContent(new Element("groupId", xmlns).setText(dependency.getGroupId()));
-            dependencyElement.addContent(new Element("artifactId", xmlns).setText(dependency.getArtifactId()));
-            if (dependency.getVersion() != null) {
-                dependencyElement.addContent(new Element("version", xmlns).setText(dependency.getVersion()));
-            }
-            if (dependency.getScope() != null) {
-                dependencyElement.addContent(new Element("scope", xmlns).setText(dependency.getScope()));
-            }
-
-            List<Dependency> exclusionDependencies = dependency.getExclusions();
-            if (exclusionDependencies != null && !exclusionDependencies.isEmpty()) {
-                var exclusionsElement = new Element("exclusions", xmlns);
-                dependencyElement.addContent(exclusionsElement);
-                for (var exclusionDependency : dependency.getExclusions()) {
-                    var exclusionElement = new Element("exclusion", xmlns);
-                    exclusionElement.addContent(new Element("groupId", xmlns).setText(exclusionDependency.getGroupId()));
-                    exclusionElement.addContent(new Element("artifactId", xmlns).setText(exclusionDependency.getArtifactId()));
-                    exclusionsElement.addContent(exclusionElement);
-                }
-            }
-            dependenciesElement.addContent(dependencyElement);
-        }
-
-        // <build></build>
-        var buildElement = new Element("build", xmlns);
-        rootElement.addContent(buildElement);
-        var pluginsElement = new Element("plugins", xmlns);
-        buildElement.addContent(pluginsElement);
-        var pluginElement = new Element("plugin", xmlns);
-        pluginsElement.addContent(pluginElement);
-        pluginElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
-        pluginElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-maven-plugin"));
-
-        // Generate string
-        var format = Format.getPrettyFormat();
-        format.setEncoding("UTF-8");
-        var xmlOutputter = new XMLOutputter(format);
-        var byteArrayOutputStream = new ByteArrayOutputStream();
-
-        try {
-            xmlOutputter.output(document, byteArrayOutputStream);
-        } catch (IOException e) {
-            log.warn(e.getMessage());
-        }
-        return byteArrayOutputStream.toString();
+    public void createServiceComponent(Table table) {
+        String serviceTemplatePath = templatePath + "service/Service.java";
+        SpringBootComponent serviceComponent = new SpringBootComponent(serviceTemplatePath, project, table);
+        springBootGenModel.addService(serviceComponent);
     }
 
-    public String stringifyService(Table table) {
-        var javaTemplate = new JavaTemplate(templatePath + "service/Service.java");
-        javaTemplate.preprocessForSpringBootProject(project, table);
-
-        if (!oldExport.getBooleanProperty(SpringBootBackendProperty.PAGE_HELPER_ENABLE)) {
-            javaTemplate.removeImport("com.github.pagehelper");
-            for (var methodDeclaration : javaTemplate.getCompilationUnit().getInterfaceByName(
-                    table.getUpperCamelCaseName() + "Service").get().getMethods()) {
-                if (methodDeclaration.getNameAsString().equals("retrieveList") && !methodDeclaration.getParameters().isEmpty()) {
-                    methodDeclaration.remove();
-                    break;
-                }
-            }
-        }
-
-        return javaTemplate.toString();
-    }
-
-    public String stringifyServiceImpl(Table table) {
-        var javaTemplate = new JavaTemplate(templatePath + "service/impl/ServiceImpl.java");
-        javaTemplate.preprocessForSpringBootProject(project, table);
-
-        if (oldExport.getBooleanProperty(SpringBootBackendProperty.PAGE_HELPER_ENABLE)) {
-
-        } else {
-            javaTemplate.removeImport("com.github.pagehelper");
-            try {
-                List<MethodDeclaration> methods =
-                        javaTemplate.getCompilationUnit().getClassByName(table.getUpperCamelCaseName() + "ServiceImpl").get().getMethods();
-                for (var methodDeclaration : methods) {
-                    if (methodDeclaration.getNameAsString().equals("retrieveList") && !methodDeclaration.getParameters().isEmpty()) {
-                        methodDeclaration.remove();
-                    }
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-
-        }
-
-        return javaTemplate.toString();
-    }
-
-    public String stringifyUtil(String utilName) {
-        var javaTemplate = new JavaTemplate(templatePath + "util/" + utilName + ".java");
-        javaTemplate.preprocessForSpringBootProject(project, null);
-        return javaTemplate.toString();
-    }
-
-    public String stringifyVO(String VOName) {
-        var javaTemplate = new JavaTemplate(templatePath + "VO/" + VOName + ".java");
-        javaTemplate.preprocessForSpringBootProject(project, null);
-        return javaTemplate.toString();
-    }
-
-
-    // Process output files
-
-    private List<BaseGenerator.OutputFile> getBeans(String type) {
-        List<BaseGenerator.OutputFile> outputFiles = new ArrayList<>();
-        for (var outputFile: getOutputFiles()) {
-            if (outputFile.getType().equals(type)) {
-                outputFiles.add(outputFile);
-            }
-        }
-        return outputFiles;
-    }
-
-    public List<BaseGenerator.OutputFile> getControllers() {
-        return getBeans(SpringBootGenerator.CONTROLLER_TYPE);
-    }
-
-    public List<BaseGenerator.OutputFile> getEntities() {
-        return getBeans(SpringBootGenerator.ENTITY_TYPE);
-    }
-
-    public List<BaseGenerator.OutputFile> getServices() {
-        return getBeans(SpringBootGenerator.SERVICE_TYPE);
-    }
-
-    public List<BaseGenerator.OutputFile> getServiceImpls() {
-        return getBeans(SpringBootGenerator.SERVICE_IMPL_TYPE);
-    }
-
-    public MethodDeclaration getMethodByType(String type, BaseGenerator.OutputFile outputFile) {
-        CompilationUnit compilationUnit = StaticJavaParser.parse(outputFile.getContent());
-        System.out.println(outputFile.getFileName());
-        //ClassOrInterfaceDeclaration mainClass = compilationUnit.getClassByName(outputFile.getFileName()).get();
-        //System.out.println(mainClass.getNameAsString());
-        return null;
-    }
-
-    public MethodDeclaration getCreatingMethod(BaseGenerator.OutputFile outputFile) {
-        return getMethodByType(SpringBootGenerator.CREATING_METHOD, outputFile);
-    }
-
-    public MethodDeclaration getRetrievingMethod(BaseGenerator.OutputFile outputFile) {
-        return getMethodByType(SpringBootGenerator.RETRIEVING_METHOD, outputFile);
-    }
-
-    public MethodDeclaration getRetrievingListMethod(BaseGenerator.OutputFile outputFile) {
-        return getMethodByType(SpringBootGenerator.RETRIEVING_LIST_METHOD, outputFile);
-    }
-
-    public MethodDeclaration getUpdatingMethod(BaseGenerator.OutputFile outputFile) {
-        return getMethodByType(SpringBootGenerator.UPDATING_METHOD, outputFile);
-    }
-
-    public MethodDeclaration getDeletingMethod(BaseGenerator.OutputFile outputFile) {
-        return getMethodByType(SpringBootGenerator.DELETING_METHOD, outputFile);
+    public void createServiceImplComponent(Table table) {
+        String serviceImplTemplatePath = templatePath + "service/impl/ServiceImpl.java";
+        SpringBootComponent serviceImplComponent = new SpringBootComponent(serviceImplTemplatePath, project, table);
+        springBootGenModel.addServiceImpl(serviceImplComponent);
     }
 }
