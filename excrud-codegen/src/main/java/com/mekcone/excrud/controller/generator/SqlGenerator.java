@@ -20,7 +20,7 @@ public class SqlGenerator extends BaseGenerator {
 
     public static String createTableQuery(Table table) {
         String query = "CREATE TABLE " + table.getName() + " (\n";
-        for (var i = 0; i < table.getColumns().size(); i++) {
+        for (int i = 0; i < table.getColumns().size(); i++) {
             query += "    " + table.getColumns().get(i).getName() + " " + table.getColumns().get(i).getType();
             if (table.getColumns().get(i).isPrimaryKey()) {
                 query += " NOT NULL AUTO_INCREMENT";
@@ -37,7 +37,7 @@ public class SqlGenerator extends BaseGenerator {
     public static String insertQuery(Table table, boolean ignorePrimaryKey) {
         String query = "INSERT INTO " + table.getName() + " (";
         // If the last column is a primary key, this block of codes may not work out the correct result
-        for (var i = 0; i < table.getColumns().size(); i ++) {
+        for (int i = 0; i < table.getColumns().size(); i ++) {
             if (ignorePrimaryKey && table.getColumns().get(i).isPrimaryKey()) {
                 continue;
             }
@@ -49,7 +49,7 @@ public class SqlGenerator extends BaseGenerator {
             }
         }
         query += "VALUES(";
-        for (var i = 0; i < table.getColumns().size(); i ++) {
+        for (int i = 0; i < table.getColumns().size(); i ++) {
             if (ignorePrimaryKey && table.getColumns().get(i).isPrimaryKey()) {
                 continue;
             }
@@ -65,7 +65,7 @@ public class SqlGenerator extends BaseGenerator {
 
     public static String updateQuery(Table table) {
         String query = "UPDATE " + table.getName() + " SET ";
-        for (var i = 0; i < table.getColumns().size(); i ++) {
+        for (int i = 0; i < table.getColumns().size(); i ++) {
             if (table.getColumns().get(i).isPrimaryKey()) {
                 continue;
             }
@@ -85,10 +85,10 @@ public class SqlGenerator extends BaseGenerator {
         if (Application.getDescription() != null) {
             code += "-- " + Application.getDescription() + "\n\n";
         }
-        for (var database: project.getExports().getRelationalDatabaseExport().getDatabases()) {
+        for (Database database: project.getExports().getRelationalDatabaseExport().getDatabases()) {
             if (database != null && database.hasTable()) {
                 code += createDatabaseQuery(database) + "\n\n";
-                for (var table: database.getTables()) {
+                for (Table table: database.getTables()) {
                     if (table != null && table.hasColumn()) {
                         code += createTableQuery(table) + "\n\n";
                     }

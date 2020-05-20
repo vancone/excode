@@ -4,6 +4,9 @@ import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.mekcone.excrud.controller.generator.BaseGenerator;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Column;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Database;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.model.export.impl.apidocument.component.Keyword;
 import com.mekcone.excrud.controller.parser.PropertiesParser;
@@ -43,15 +46,15 @@ public class ApiDocumentGenerator extends BaseGenerator {
     }
 
     public void smartDescription() {
-        var propertiesParser = PropertiesParser.readFrom(EXCRUD_HOME + "/exports/api-documents/smart-description.properties");
+        PropertiesParser propertiesParser = PropertiesParser.readFrom(EXCRUD_HOME + "/exports/api-documents/smart-description.properties");
         if (propertiesParser == null) {
             log.warn("Smart description dataset not found");
             return;
         }
 
-        for (var database: project.getExports().getRelationalDatabaseExport().getDatabases()) {
-            for (var table: database.getTables()) {
-                for (var column: table.getColumns()) {
+        for (Database database: project.getExports().getRelationalDatabaseExport().getDatabases()) {
+            for (Table table: database.getTables()) {
+                for (Column column: table.getColumns()) {
                     if (column.getDescription() == null || column.getDescription().isEmpty()) {
                         String[] words = column.getName().split("_");
                         String generatedDescription = "";
@@ -72,7 +75,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
     }
 
     public PdfPCell tableCell(String str) {
-        var pdfPCell = new PdfPCell();
+        PdfPCell pdfPCell = new PdfPCell();
         pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
         pdfPCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
         Font font = new Font(simSunBaseFont);
@@ -82,7 +85,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
     }
 
     public PdfPCell tableHeaderCell(String str) {
-        var pdfPCell = tableCell(str);
+        PdfPCell pdfPCell = tableCell(str);
         pdfPCell.setBackgroundColor(new BaseColor(0xffcccccc));
         pdfPCell.getPhrase().getFont().setStyle(Font.BOLD);
         return pdfPCell;
@@ -95,16 +98,16 @@ public class ApiDocumentGenerator extends BaseGenerator {
 
     public void generatePdf() {
         try {
-            var document = new Document(PageSize.A4, 50, 50, 50, 50);
+            Document document = new Document(PageSize.A4, 50, 50, 50, 50);
 
-            var pdfWriter = PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
             pdfWriter.setViewerPreferences(PdfWriter.PageLayoutOneColumn);
             pdfWriter.setPageEvent(new PdfPageEvent());
             document.open();
 
             // Title
-            var paragraph = new Paragraph(180);
-            var chunk = new Chunk(" ");
+            Paragraph paragraph = new Paragraph(180);
+            Chunk chunk = new Chunk(" ");
             paragraph.add(chunk);
             document.add(paragraph);
             paragraph = new Paragraph(30);
@@ -143,8 +146,8 @@ public class ApiDocumentGenerator extends BaseGenerator {
 
             document.newPage();
 
-            for (var i = 0; i < project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables().size(); i ++) {
-                var table = project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables().get(i);
+            for (int i = 0; i < project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables().size(); i ++) {
+                Table table = project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables().get(i);
                 // Title
                 paragraph = new Paragraph();
                 paragraph.setSpacingBefore(40);
@@ -157,7 +160,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
                 document.add(paragraph);
 
                 List<Keyword> keywords = project.getExports().getApiDocumentExport().getKeywords();
-                for (var k = 0; k < keywords.size(); k ++) {
+                for (int k = 0; k < keywords.size(); k ++) {
                     // API title
                     paragraph = new Paragraph();
                     paragraph.setSpacingBefore(20);
@@ -204,11 +207,11 @@ public class ApiDocumentGenerator extends BaseGenerator {
                     document.add(paragraph);
 
                     // Parameter content
-                    var pdfPTable = new PdfPTable(4);
+                    PdfPTable pdfPTable = new PdfPTable(4);
                     pdfPTable.setHorizontalAlignment(Element.ALIGN_CENTER);
                     pdfPTable.setTotalWidth(new float[]{100, 100, 80, 300});
 
-                    var pdfPCell = new PdfPCell();
+                    PdfPCell pdfPCell = new PdfPCell();
                     pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     pdfPCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
@@ -217,7 +220,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
                     pdfPTable.addCell(tableHeaderCell("类型"));
                     pdfPTable.addCell(tableHeaderCell("参数描述"));
 
-                    for (var column: table.getColumns()) {
+                    for (Column column: table.getColumns()) {
                         if (column.isPrimaryKey()) {
                             continue;
                         }
@@ -261,7 +264,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
 
         @Override
         public void onEndPage(PdfWriter writer, Document document) {
-            var pdfContentByte = writer.getDirectContent();
+            PdfContentByte pdfContentByte = writer.getDirectContent();
 
             pdfContentByte.saveState();
             String text ="www.mekcone.com      "+ writer.getPageNumber();

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mekcone.excrud.Application;
 import com.mekcone.excrud.controller.generator.springboot.SpringBootGenerator;
-import com.mekcone.excrud.model.export.impl.springboot.component.Dependency;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
@@ -45,7 +44,7 @@ public class ProjectObjectModel {
     public void addDependencies(String pomFileName) {
         String pomDependenciesText = FileUtil.read(SpringBootGenerator.getTemplatePath() + "pom/" + pomFileName + ".xml");
         if (pomDependenciesText != null && !pomDependenciesText.isEmpty()) {
-            var xmlMapper = new XmlMapper();
+            XmlMapper xmlMapper = new XmlMapper();
 
             try {
                 List<Dependency> pomDependencies = xmlMapper.readValue(pomDependenciesText, new TypeReference<List<Dependency>>() {
@@ -62,8 +61,8 @@ public class ProjectObjectModel {
     @Override
     public String toString() {
         // Root
-        var rootElement = new Element("project");
-        var document = new Document(rootElement);
+        Element rootElement = new Element("project");
+        Document document = new Document(rootElement);
         if (Application.getDescription() != null) {
             rootElement.addContent(new Comment(Application.getDescription()));
         }
@@ -75,7 +74,7 @@ public class ProjectObjectModel {
         rootElement.addContent(new Element("modelVersion", xmlns).setText("4.0.0"));
 
         // Parent
-        var parentElement = new Element("parent", xmlns);
+        Element parentElement = new Element("parent", xmlns);
         rootElement.addContent(parentElement);
         parentElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
         parentElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-starter-parent"));
@@ -89,16 +88,16 @@ public class ProjectObjectModel {
         rootElement.addContent(new Element("description", xmlns).setText(description));
 
         // Properties
-        var propertiesElement = new Element("properties", xmlns);
+        Element propertiesElement = new Element("properties", xmlns);
         rootElement.addContent(propertiesElement);
         propertiesElement.addContent(new Element("java.version", xmlns).setText("1.8"));
 
         // Dependencies
-        var dependenciesElement = new Element("dependencies", xmlns);
+        Element dependenciesElement = new Element("dependencies", xmlns);
         rootElement.addContent(dependenciesElement);
 
-        for (var dependency : dependencies) {
-            var dependencyElement = new Element("dependency", xmlns);
+        for (Dependency dependency : dependencies) {
+            Element dependencyElement = new Element("dependency", xmlns);
             dependencyElement.addContent(new Element("groupId", xmlns).setText(dependency.getGroupId()));
             dependencyElement.addContent(new Element("artifactId", xmlns).setText(dependency.getArtifactId()));
             if (dependency.getVersion() != null) {
@@ -110,10 +109,10 @@ public class ProjectObjectModel {
 
             List<Dependency> exclusionDependencies = dependency.getExclusions();
             if (exclusionDependencies != null && !exclusionDependencies.isEmpty()) {
-                var exclusionsElement = new Element("exclusions", xmlns);
+                Element exclusionsElement = new Element("exclusions", xmlns);
                 dependencyElement.addContent(exclusionsElement);
-                for (var exclusionDependency : dependency.getExclusions()) {
-                    var exclusionElement = new Element("exclusion", xmlns);
+                for (Dependency exclusionDependency : dependency.getExclusions()) {
+                    Element exclusionElement = new Element("exclusion", xmlns);
                     exclusionElement.addContent(new Element("groupId", xmlns).setText(exclusionDependency.getGroupId()));
                     exclusionElement.addContent(new Element("artifactId", xmlns).setText(exclusionDependency.getArtifactId()));
                     exclusionsElement.addContent(exclusionElement);
@@ -123,20 +122,20 @@ public class ProjectObjectModel {
         }
 
         // <build></build>
-        var buildElement = new Element("build", xmlns);
+        Element buildElement = new Element("build", xmlns);
         rootElement.addContent(buildElement);
-        var pluginsElement = new Element("plugins", xmlns);
+        Element pluginsElement = new Element("plugins", xmlns);
         buildElement.addContent(pluginsElement);
-        var pluginElement = new Element("plugin", xmlns);
+        Element pluginElement = new Element("plugin", xmlns);
         pluginsElement.addContent(pluginElement);
         pluginElement.addContent(new Element("groupId", xmlns).setText("org.springframework.boot"));
         pluginElement.addContent(new Element("artifactId", xmlns).setText("spring-boot-maven-plugin"));
 
         // Generate string
-        var format = Format.getPrettyFormat();
+        Format format = Format.getPrettyFormat();
         format.setEncoding("UTF-8");
-        var xmlOutputter = new XMLOutputter(format);
-        var byteArrayOutputStream = new ByteArrayOutputStream();
+        XMLOutputter xmlOutputter = new XMLOutputter(format);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
         try {
             xmlOutputter.output(document, byteArrayOutputStream);

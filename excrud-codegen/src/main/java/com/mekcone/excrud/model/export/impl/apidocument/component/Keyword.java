@@ -15,12 +15,14 @@ public class Keyword {
     private String requestMethod;
 
     public String getRequestMethod() {
-        return switch (type) {
-            case "create" -> "POST";
-            case "retrieve", "retrieveList" -> "GET";
-            case "update" -> "PUT";
-            case "delete" -> "DELETE";
-            default -> "";
+        String requestMethod;
+        switch (type) {
+            case "create": requestMethod = "POST"; break;
+            case "retrieve": requestMethod = "GET"; break;
+            case "update": requestMethod = "PUT"; break;
+            case "delete": requestMethod = "DELETE"; break;
+            default: requestMethod = "";
         };
+        return requestMethod;
     }
 }

@@ -30,10 +30,10 @@ public class Column {
 
     @JsonIgnore
     public String getCamelCaseName(String tableName) {
-        var stringArray = getName().split("_");
+        String[] stringArray = getName().split("_");
         String name = "";
         if (stringArray[0].equals(tableName)) {
-            for (var i = 1; i < stringArray.length; i ++) {
+            for (int i = 1; i < stringArray.length; i ++) {
                 name += stringArray[i];
             }
         } else {

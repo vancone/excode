@@ -1,6 +1,7 @@
 package com.mekcone.excrud.controller.generator.springboot;
 
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.*;
 import com.mekcone.excrud.constant.basic.ExportType;
 import com.mekcone.excrud.constant.extensions.SpringBootExtensionType;
@@ -12,6 +13,7 @@ import com.mekcone.excrud.controller.parser.PropertiesParser;
 import com.mekcone.excrud.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.controller.parser.template.impl.UniversalTemplate;
 import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Database;
+import com.mekcone.excrud.model.export.impl.springboot.component.SpringBootExtension;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Column;
 import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Table;
@@ -43,7 +45,7 @@ public class SpringBootGenerator extends BaseGenerator {
     }
 
     public boolean build() {
-        var file = new File(generatedDataPath);
+        File file = new File(generatedDataPath);
 
         // Compiling
         try {
@@ -132,7 +134,7 @@ public class SpringBootGenerator extends BaseGenerator {
     public void generate() {
         copyInitialTemplates();
 
-        for (var table : project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables()) {
+        for (Table table : project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables()) {
             if (table.getCatalogueOf() != null && !table.getCatalogueOf().isEmpty()) {
                 continue;
             }
@@ -144,7 +146,7 @@ public class SpringBootGenerator extends BaseGenerator {
         }
 
         // Application properties
-        var applicationPropertiesParser = springBootGenModel.getApplicationPropertiesParser();
+        PropertiesParser applicationPropertiesParser = springBootGenModel.getApplicationPropertiesParser();
 
         int serverPort = springBootGenModel.getProperties().getServerPort();
         if (serverPort > -1 && serverPort < 65536) {
@@ -180,7 +182,7 @@ public class SpringBootGenerator extends BaseGenerator {
 //        addOutputFile(getPath("resourcesPath") + "application.properties", "properties", applicationPropertiesParser.generate());
 
         // Remove disabled extensions
-        for (var springBootExtension : springBootGenModel.getExtensions()) {
+        for (SpringBootExtension springBootExtension : springBootGenModel.getExtensions()) {
             if (!springBootExtension.isUse()) {
                 removeExtension(springBootExtension.getId());
             }
@@ -213,7 +215,7 @@ public class SpringBootGenerator extends BaseGenerator {
     @Override
     public void write() {
         // Application entry
-        var universalTemplate = new UniversalTemplate(templatePath + "Application.java");
+        UniversalTemplate universalTemplate = new UniversalTemplate(templatePath + "Application.java");
         if (universalTemplate != null) {
             preprocessTemplate(universalTemplate);
         } else {
@@ -421,12 +423,12 @@ public class SpringBootGenerator extends BaseGenerator {
         SpringBootComponent mybatisMapperComponent = new SpringBootComponent(mybatisMapperTemplatePath, project, table);
         springBootGenModel.addMybatisMapper(mybatisMapperComponent);
 
-        var javaTemplate = mybatisMapperComponent.getJavaTemplate();
+        JavaTemplate javaTemplate = mybatisMapperComponent.getJavaTemplate();
         javaTemplate.preprocessForSpringBootProject(project, table);
 
-        for (var methodDeclaration : javaTemplate.getCompilationUnit().getInterfaceByName(table.getUpperCamelCaseName() + "Mapper").get().getMethods()) {
+        for (MethodDeclaration methodDeclaration : javaTemplate.getCompilationUnit().getInterfaceByName(table.getUpperCamelCaseName() + "Mapper").get().getMethods()) {
             NodeList<AnnotationExpr> annotations = methodDeclaration.getAnnotations();
-            for (var annotationExpr : annotations) {
+            for (AnnotationExpr annotationExpr : annotations) {
                 if (annotationExpr.getNameAsString().equals("Insert")) {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
                             SqlGenerator.insertQuery(table, true)));

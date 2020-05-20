@@ -34,7 +34,7 @@ public class PropertiesParser {
 
     public String generate() {
         String outputContent = "";
-        for (var propertyPair: properties) {
+        for (Pair propertyPair: properties) {
             if (propertyPair.getKey().equals("GROUP_SEPARATOR")) {
                 outputContent += "\n";
                 continue;
@@ -54,7 +54,7 @@ public class PropertiesParser {
     }
 
     public static PropertiesParser parse(String propertiesText) {
-        var propertiesParser = new PropertiesParser();
+        PropertiesParser propertiesParser = new PropertiesParser();
         String[] properties = propertiesText.split("\n");
         for (String property: properties) {
             String[] keyAndValue = property.split("=");
@@ -67,7 +67,7 @@ public class PropertiesParser {
             } else if (keyAndValue.length > 2) {
                 String key = keyAndValue[0].trim();
                 String value = "";
-                for (var i = 1; i < keyAndValue.length; i ++) {
+                for (int i = 1; i < keyAndValue.length; i ++) {
                     value += keyAndValue[i];
                     if (i + 1 != keyAndValue.length) {
                         value += "=";
@@ -76,7 +76,7 @@ public class PropertiesParser {
                 propertiesParser.properties.add(new Pair<>(key, value));
             }
         }
-        return  propertiesParser;
+        return propertiesParser;
     }
 
     public static PropertiesParser readFrom(String url) {

@@ -10,9 +10,9 @@ import java.util.List;
 public class FileUtil {
     public static String read(String path){
         try {
-            var inputStream = new FileInputStream(path);
+            FileInputStream inputStream = new FileInputStream(path);
             int inputStreamAvailable = inputStream.available();
-            var byteArray = new byte[inputStreamAvailable];
+            byte[] byteArray = new byte[inputStreamAvailable];
             inputStream.read(byteArray);
             inputStream.close();
             return new String(byteArray);
@@ -23,7 +23,7 @@ public class FileUtil {
 
     public static boolean write(String url, String data) {
         try {
-            var bufferedWriter = new BufferedWriter(new FileWriter(url));
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(url));
             bufferedWriter.write(data);
             bufferedWriter.close();
             return true;
@@ -34,7 +34,7 @@ public class FileUtil {
     }
 
     public static void checkDirectory(String path) {
-        var directory = new File(path);
+        File directory = new File(path);
         if ((!directory.exists()) || (!directory.isDirectory())) {
             directory.mkdirs();
         }

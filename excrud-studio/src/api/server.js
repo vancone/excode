@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/project',
+    url: '/server',
     method: 'get',
     params: query
   })

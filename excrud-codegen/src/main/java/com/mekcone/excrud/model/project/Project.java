@@ -46,7 +46,7 @@ public class Project {
     @Override
     public String toString() {
         try {
-            var xmlMapper = new XmlMapper();
+            XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             return xmlMapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
         } catch (Exception e) {

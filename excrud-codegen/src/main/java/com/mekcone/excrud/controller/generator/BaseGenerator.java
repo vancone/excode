@@ -69,12 +69,12 @@ public abstract class BaseGenerator {
             LogUtil.error(ErrorEnum.NO_DEFAULT_INITIALIZING_BEHAVIOR, templatePath + "gen.json");
             return;
         }
-        var objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
         try {
-            var rootJsonNode = objectMapper.readTree(initialFile);
-            var pathsJsonNode = rootJsonNode.path("initial").path("paths");
-            var extensionsJsonNode = rootJsonNode.path("initial").path("extensions");
+            JsonNode rootJsonNode = objectMapper.readTree(initialFile);
+            JsonNode pathsJsonNode = rootJsonNode.path("initial").path("paths");
+            JsonNode extensionsJsonNode = rootJsonNode.path("initial").path("extensions");
 
             if (pathsJsonNode.isObject()) {
                 Iterator<Entry<String, JsonNode>> entryIterator = pathsJsonNode.fields();
@@ -92,7 +92,7 @@ public abstract class BaseGenerator {
             }
 
             if (extensionsJsonNode.isArray()) {
-                for (var extensionJsonNode: extensionsJsonNode) {
+                for (JsonNode extensionJsonNode: extensionsJsonNode) {
 //                    LogUtil.info("EXT: " + extensionJsonNode.asText());
                     extensions.add(extensionJsonNode.asText());
                 }
@@ -145,7 +145,7 @@ public abstract class BaseGenerator {
     }
 
     public void addExtension(String addedExtension) {
-        for (var extension: extensions) {
+        for (String extension: extensions) {
             if (addedExtension.equals(extension)) {
                 return;
             }

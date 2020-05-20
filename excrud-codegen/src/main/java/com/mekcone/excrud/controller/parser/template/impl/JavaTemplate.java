@@ -28,7 +28,7 @@ public class JavaTemplate implements Template {
     }
 
     public boolean insert(String tag, String replacement) {
-        var templateText = compilationUnit.toString();
+        String templateText = compilationUnit.toString();
         int index = templateText.indexOf("__" + tag + "__");
         if (index < 0) {
             return false;
@@ -49,7 +49,7 @@ public class JavaTemplate implements Template {
     }
 
     public boolean insertOnce(String tag, String replacement) {
-        var templateText = compilationUnit.toString();
+        String templateText = compilationUnit.toString();
         int index = templateText.indexOf("__" + tag + "__");
         if (index < 0) {
             // LogUtil.warn("Tag \"" + tag  + "\" not found.");

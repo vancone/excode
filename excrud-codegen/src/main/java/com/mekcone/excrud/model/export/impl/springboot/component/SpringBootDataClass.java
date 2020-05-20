@@ -3,15 +3,18 @@ package com.mekcone.excrud.model.export.impl.springboot.component;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.mekcone.excrud.constant.basic.DataType;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Column;
 import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Table;
 import lombok.Data;
+import org.springframework.expression.spel.ast.Assign;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,7 @@ public class SpringBootDataClass {
         entityClassDeclaration =
                 compilationUnit.addClass(table.getUpperCamelCaseName(), Modifier.Keyword.PUBLIC);
 
-        for (var column : table.getColumns()) {
+        for (Column column : table.getColumns()) {
             String type = column.getType();
             if (!type.equals(DataType.JAVA_INT)) {
                 type = DataType.JAVA_STRING;
@@ -53,9 +56,9 @@ public class SpringBootDataClass {
     }
 
     private void addGetterAndSetter() {
-        for (var column : table.getColumns()) {
+        for (Column column : table.getColumns()) {
             // Getter
-            var getterMethodDeclaration =
+            MethodDeclaration getterMethodDeclaration =
                     entityClassDeclaration.addMethod("get" + column.getUpperCamelCaseName(table.getName()), Modifier.Keyword.PUBLIC);
             getterMethodDeclaration.setType(DataType.JAVA_STRING);
             BlockStmt getterMethodBody = new BlockStmt();
@@ -63,12 +66,12 @@ public class SpringBootDataClass {
             getterMethodDeclaration.setBody(getterMethodBody);
 
             // Setter
-            var setterMethodDeclaration =
+            MethodDeclaration setterMethodDeclaration =
                     entityClassDeclaration.addMethod("set" + column.getUpperCamelCaseName(table.getName()), Modifier.Keyword.PUBLIC);
             setterMethodDeclaration.setType(DataType.JAVA_VOID);
             setterMethodDeclaration.addParameter(DataType.JAVA_STRING, column.getCamelCaseName(table.getName()));
             BlockStmt setterMethodBody = new BlockStmt();
-            var assignExpr = new AssignExpr();
+            AssignExpr assignExpr = new AssignExpr();
             assignExpr.setOperator(AssignExpr.Operator.ASSIGN);
             assignExpr.setTarget(new FieldAccessExpr(new NameExpr("this"), column.getCamelCaseName(table.getName())));
             assignExpr.setValue(new NameExpr(column.getCamelCaseName(table.getName())));

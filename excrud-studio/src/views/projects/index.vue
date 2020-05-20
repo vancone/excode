@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="Title" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.name" placeholder="Name" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
       </el-select>
@@ -35,32 +35,52 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+      <!-- <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="Date" width="150px" align="center">
+      </el-table-column> -->
+      <!-- <el-table-column label="Date" width="150px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="Title" min-width="150px">
+      </el-table-column> -->
+      <el-table-column label="Group ID" min-width="80px" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.type | typeFilter }}</el-tag>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.groupId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110px" align="center">
+      <el-table-column label="Artifact ID" min-width="80px" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.artifactId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Version" min-width="60px" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.version }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Name" min-width="100px" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.name }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
+        </template>
+      </el-table-column>
+      <el-table-column label="Updated Time" min-width="100px" align="center">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.updatedTime }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="Author" width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.author }}</span>
-        </template>
-      </el-table-column>
+        </template> -->
+      <!-- </el-table-column>
       <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
         <template slot-scope="{row}">
           <span style="color:red;">{{ row.reviewer }}</span>
-        </template>
-      </el-table-column>
+        </template> -->
+      <!-- </el-table-column>
       <el-table-column label="Imp" width="80px">
         <template slot-scope="{row}">
           <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
@@ -71,12 +91,26 @@
           <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
           <span v-else>0</span>
         </template>
-      </el-table-column>
-      <el-table-column label="Status" class-name="status-col" width="100">
+      </el-table-column> -->
+      <el-table-column label="Modules" class-name="status-col" width="200">
         <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
+          <!-- <el-tag :type="row.status | statusFilter">
             {{ row.status }}
-          </el-tag>
+          </el-tag> -->
+          <el-tag>Spring Boot</el-tag>
+          <el-tag>API Doc</el-tag>
+          <el-tag>Vue Element Admin</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="Deployment" align="center" width="110" class-name="small-padding fixed-width">
+        <template slot-scope="{row,$index}">
+          <el-button v-if="row.status!='deployed'" size="mini" type="success" @click="handleModifyStatus(row,'deployed')">
+            Deploy
+          </el-button>
+          <el-tooltip class="item" effect="dark" content="Deployed at 15:07:39, 2020-05-19" placement="bottom">
+            <span v-if="row.status=='deployed'">Deployed</span>
+          </el-tooltip>
+          
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
@@ -84,12 +118,16 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
           </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
-            Publish
-          </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
-            Draft
-          </el-button>
+          <el-dropdown>
+            <el-button type="primary" size="mini" style="background:purple;border:purple">
+              Download<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>ExCRUD Project File</el-dropdown-item>
+              <el-dropdown-item>Source Code (Premium)</el-dropdown-item>
+              <el-dropdown-item>Built Packages</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             Delete
           </el-button>
@@ -147,7 +185,7 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/project'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -233,13 +271,15 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+        this.list = response.data
+        this.total = Math.max(0, response.data.length - 1)
+        this.total = response.data.length //response.data.total
+        this.listLoading = false
 
         // Just to simulate the time of the request
-        setTimeout(() => {
+        /* setTimeout(() => {
           this.listLoading = false
-        }, 1.5 * 1000)
+        }, 1.5 * 1000) */
       })
     },
     handleFilter() {

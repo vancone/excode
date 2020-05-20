@@ -2,7 +2,7 @@
   <el-row :gutter="40" class="panel-group">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
-        <div class="card-panel-icon-wrapper icon-people">
+        <div class="card-panel-icon-wrapper icon-server">
           <svg-icon icon-class="server" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
@@ -16,7 +16,7 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
+          <svg-icon icon-class="project" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
@@ -90,7 +90,7 @@ export default {
     font-size: 12px;
     position: relative;
     overflow: hidden;
-    color: #666;
+    color: #333;
     background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
@@ -100,37 +100,37 @@ export default {
         color: #fff;
       }
 
-      .icon-people {
-        background: #40c9c6;
+      .icon-server {
+        background: #0499fd;
       }
 
       .icon-message {
-        background: #36a3f7;
+        background: #0499fd;
       }
 
       .icon-money {
-        background: #f4516c;
+        background: #0499fd;
       }
 
       .icon-shopping {
-        background: #34bfa3
+        background: #0499fd;
       }
     }
 
-    .icon-people {
-      color: #40c9c6;
+    .icon-server {
+      color: #0499fd;
     }
 
     .icon-message {
-      color: #36a3f7;
+      color: #0499fd;
     }
 
     .icon-money {
-      color: #f4516c;
+      color: #0499fd;
     }
 
     .icon-shopping {
-      color: #34bfa3
+      color: #0499fd;
     }
 
     .card-panel-icon-wrapper {
@@ -154,7 +154,7 @@ export default {
 
       .card-panel-text {
         line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
+        color: #333;
         font-size: 16px;
         margin-bottom: 12px;
       }

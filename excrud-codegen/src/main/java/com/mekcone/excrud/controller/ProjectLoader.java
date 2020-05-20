@@ -4,15 +4,18 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mekcone.excrud.Application;
 import com.mekcone.excrud.constant.basic.ExportType;
+import com.mekcone.excrud.controller.generator.BaseGenerator;
 import com.mekcone.excrud.controller.generator.EnterpriseOfficialWebsiteGenerator;
 import com.mekcone.excrud.controller.generator.SqlGenerator;
 import com.mekcone.excrud.controller.generator.apidocuments.ApiDocumentGenerator;
 import com.mekcone.excrud.controller.generator.springboot.SpringBootGenerator;
 import com.mekcone.excrud.controller.generator.vue.elementadmin.VueElementAdminGenerator;
-import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.enums.ErrorEnum;
-import com.mekcone.excrud.controller.generator.BaseGenerator;
+import com.mekcone.excrud.model.export.GenModel;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Column;
 import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Database;
+import com.mekcone.excrud.model.export.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.model.project.Project;
 import com.mekcone.excrud.util.FileUtil;
 import com.mekcone.excrud.util.LogUtil;
 import lombok.Getter;
@@ -29,10 +32,10 @@ public class ProjectLoader {
     private int tableAmount = 0;
 
     public void build() {
-        for (var export: project.getExports().asList()) {
+        for (GenModel export: project.getExports().asList()) {
             switch (export.type()) {
                 case ExportType.SPRING_BOOT:
-                    var springBootBackendGenerator = new SpringBootGenerator(project);
+                    SpringBootGenerator springBootBackendGenerator = new SpringBootGenerator(project);
                     springBootBackendGenerator.build();
                     break;
                 default:
@@ -48,7 +51,7 @@ public class ProjectLoader {
         }
 
         if (tableAmount > 0) {
-            var sqlGenerator = new SqlGenerator(project);
+            SqlGenerator sqlGenerator = new SqlGenerator(project);
             sqlGenerator.generate();
         }
 
@@ -56,33 +59,34 @@ public class ProjectLoader {
 //        apiDocumentGenerator.generatePdf();
 //        System.exit(-1);
 
-        for (var export : project.getExports().asList()) {
+        for (GenModel export : project.getExports().asList()) {
             if (!export.isUse()) {
                 continue;
             }
 
             // Print export type
-            var output = new StringBuilder("[ " + export.type() + " ]");
+            StringBuilder output = new StringBuilder("[ " + export.type() + " ]");
             int lineSignAmount = 72 - output.length();
-            for (var i = 0; i < lineSignAmount/2; i ++) {
+            for (int i = 0; i < lineSignAmount/2; i ++) {
                 output.insert(0, "-");
             }
             int rightLineSignAmount = lineSignAmount / 2;
             if (lineSignAmount % 2 == 0) {
                 rightLineSignAmount ++;
             }
-            for (var i = 0; i < rightLineSignAmount; i ++) {
+            for (int i = 0; i < rightLineSignAmount; i ++) {
                 output.append("-");
             }
             log.info(output.toString());
 
             // Initialize generators
-            BaseGenerator generator = switch(export.type()) {
-                case ExportType.API_DOCUMENT -> new ApiDocumentGenerator(project);
-                case ExportType.ENTERPRISE_OFFICIAL_WEBSITE -> new EnterpriseOfficialWebsiteGenerator();
-                case ExportType.SPRING_BOOT -> new SpringBootGenerator(project);
-                case ExportType.VUE_ELEMENT_ADMIN -> new VueElementAdminGenerator(project);
-                default -> null;
+            BaseGenerator generator;
+            switch(export.type()) {
+                case ExportType.API_DOCUMENT: generator = new ApiDocumentGenerator(project);
+                case ExportType.ENTERPRISE_OFFICIAL_WEBSITE: generator = new EnterpriseOfficialWebsiteGenerator();
+                case ExportType.SPRING_BOOT: generator = new SpringBootGenerator(project);
+                case ExportType.VUE_ELEMENT_ADMIN: generator = new VueElementAdminGenerator(project);
+                default: generator = null;
             };
             if (generator != null) {
                 generator.generate();
@@ -94,13 +98,13 @@ public class ProjectLoader {
 
     public boolean load(String path) {
         String projectFileName = Application.getApplicationName().toLowerCase() + ".xml";
-        var projectFile = new File(projectFileName);
+        File projectFile = new File(projectFileName);
         if ((!projectFile.exists())) {
             LogUtil.fatalError(ErrorEnum.PROJECT_FILE_NOT_FOUND, projectFile.getAbsolutePath());
         }
 
         try {
-            var xmlMapper = new XmlMapper();
+            XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             project = xmlMapper.readValue(FileUtil.read(path), Project.class);
             log.info("Load project {}:{} completed", project.getGroupId(), project.getArtifactId());
@@ -114,11 +118,11 @@ public class ProjectLoader {
             LogUtil.fatalError(ErrorEnum.DATABASE_UNDEFINED);
         }
 
-        for (var database : databases) {
+        for (Database database : databases) {
             if (database == null) {
                 continue;
             }
-            for (var table : database.getTables()) {
+            for (Table table : database.getTables()) {
                 if (table != null) {
                     tableAmount++;
                 }
@@ -131,8 +135,8 @@ public class ProjectLoader {
             log.info("{} database(s), {} table(s) detected", databases.size(), tableAmount);
         }
 
-        for (var table : project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables()) {
-            for (var column : table.getColumns()) {
+        for (Table table : project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables()) {
+            for (Column column : table.getColumns()) {
                 if (column.isPrimaryKey()) {
                     table.setPrimaryKey(column.getName());
                     break;

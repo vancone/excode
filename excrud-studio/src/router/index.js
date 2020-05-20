@@ -89,8 +89,9 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/projects/complex-table'),
-        meta: { title: 'Projects', icon: 'documentation', affix: true }
+        component: () => import('@/views/projects/index'),
+        name: 'Projects',
+        meta: { title: 'Projects', icon: 'project' }
       }
     ]
   },
@@ -101,8 +102,9 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/servers/complex-table'),
-        meta: { title: 'Servers', icon: 'server', affix: true }
+        component: () => import('@/views/servers/index'),
+        name: 'Servers',
+        meta: { title: 'Servers', icon: 'server' }
       }
     ]
   },
@@ -113,8 +115,8 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/projects/complex-table'),
-        meta: { title: 'Tools', icon: 'component', affix: true }
+        component: () => import('@/views/projects/index'),
+        meta: { title: 'Tools', icon: 'component' }
       }
     ]
   },
@@ -127,7 +129,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/documentation/index'),
         name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
+        meta: { title: 'Documentation', icon: 'documentation' }
       }
     ]
   },

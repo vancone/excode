@@ -23,7 +23,7 @@ public class ApiDocumentGenModel implements GenModel {
     private List<Keyword> keywords = new ArrayList<>();
 
     public String getKeywordByType(String type) {
-        for (var keyword: keywords) {
+        for (Keyword keyword: keywords) {
             if (keyword.getType().equals(type)) {
                 return keyword.getValue();
             }
