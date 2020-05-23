@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+        New Project
+      </el-button>
       <el-input v-model="listQuery.name" placeholder="Name" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
@@ -14,25 +17,22 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
-        Add
-      </el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <!-- <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         Export
-      </el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
+      </el-button> -->
+      <!-- <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
         reviewer
-      </el-checkbox>
+      </el-checkbox> -->
     </div>
 
     <el-table
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
-      style="width: 100%;"
+      style="width: 100%;box-shadow:0px 2px 5px #ddd;font-size:13px"
       @sort-change="sortChange"
     >
       <!-- <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
@@ -45,31 +45,40 @@
           <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column> -->
-      <el-table-column label="Group ID" min-width="80px" align="center">
+      <el-table-column
+      type="selection"
+      width="35">
+    </el-table-column>
+     <el-table-column label="Basic Information">
+      <el-table-column label="ID" width="130px">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.groupId }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Artifact ID" min-width="80px" align="center">
-        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.groupId }}</span><br>
           <span class="link-type" @click="handleUpdate(row)">{{ row.artifactId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Version" min-width="60px" align="center">
+      <el-table-column label="Version" width="70px">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.version }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Name" min-width="100px" align="center">
+      <el-table-column label="Name" min-width="60px">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.name }}</span>
           <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
-      <el-table-column label="Updated Time" min-width="100px" align="center">
+      <el-table-column label="Description" min-width="120px">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.updatedTime }}</span>
+          <span class="link-type" @click="handleUpdate(row)">{{ row.description }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
+      </el-table-column>
+      <el-table-column label="Updated Time" width="110px">
+        <template slot-scope="{row}">
+          <span>{{ row.updatedDate }}</span><br>
+          <span>{{ row.updatedTime }}</span>
+        </template>
+      </el-table-column>
       </el-table-column>
       <!-- <el-table-column label="Author" width="110px" align="center">
         <template slot-scope="{row}">
@@ -92,75 +101,123 @@
           <span v-else>0</span>
         </template>
       </el-table-column> -->
-      <el-table-column label="Modules" class-name="status-col" width="200">
+      <el-table-column label="Modules" width="110">
         <template slot-scope="{row}">
+           <el-dropdown>
+            <el-button type="primary" size="mini" style="background:#fff;border:solid 1px #ddd;color:black;">
+              Modules<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>Add Module...</el-dropdown-item>
+              <el-dropdown-item divided>API Document</el-dropdown-item>
+              <el-dropdown-item>Relational Database</el-dropdown-item>
+              <el-dropdown-item>Spring Boot</el-dropdown-item>
+              <el-dropdown-item>Vue Element Admin</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <!-- <el-tag :type="row.status | statusFilter">
             {{ row.status }}
           </el-tag> -->
+          
+          <!-- <el-tag>API Doc</el-tag>
+          <el-tag>Relational Database</el-tag>
           <el-tag>Spring Boot</el-tag>
-          <el-tag>API Doc</el-tag>
-          <el-tag>Vue Element Admin</el-tag>
+          <el-tag>Vue Element Admin</el-tag> -->
         </template>
       </el-table-column>
-      <el-table-column label="Deployment" align="center" width="110" class-name="small-padding fixed-width">
+      <el-table-column label="Deployment">
+        <el-table-column label="Host" width="120px">
+        <template slot-scope="{row}">
+          <span>127.0.0.1</span><br><span>192.168.255.250</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Deploy" width="90">
         <template slot-scope="{row,$index}">
-          <el-button v-if="row.status!='deployed'" size="mini" type="success" @click="handleModifyStatus(row,'deployed')">
+          <el-button v-if="row.status!='deployed'" size="mini" type="primary" @click="handleModifyStatus(row,'deployed')">
             Deploy
           </el-button>
           <el-tooltip class="item" effect="dark" content="Deployed at 15:07:39, 2020-05-19" placement="bottom">
-            <span v-if="row.status=='deployed'">Deployed</span>
+            <span v-if="row.status=='deployed'" style="color:green">Deployed</span>
           </el-tooltip>
           
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="Status" width="110">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-dropdown>
+            <el-button type="primary" size="mini" style="background:#fff;border:solid 1px #ddd;color:black;">
+              Running<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>Run</el-dropdown-item>
+              <el-dropdown-item>Stop</el-dropdown-item>
+              <el-dropdown-item>Restart</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+          
+        </template>
+      </el-table-column>
+       </el-table-column>
+      <el-table-column label="Actions" width="100" class-name="small-padding fixed-width">
+        <template slot-scope="{row,$index}">
+          <!-- <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
-          </el-button>
+          </el-button> -->
           <el-dropdown>
             <el-button type="primary" size="mini" style="background:purple;border:purple">
               Download<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>ExCRUD Project File</el-dropdown-item>
-              <el-dropdown-item>Source Code (Premium)</el-dropdown-item>
+              <el-dropdown-item>Source Code (Premium only)</el-dropdown-item>
               <el-dropdown-item>Built Packages</el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
+          </el-dropdown><br/>
+          <el-button v-if="row.status!='deleted'" style="margin-top:5px;" size="mini" type="danger" @click="handleDelete(row,$index)">
             Delete
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination style="height:50px;margin-top:15px;padding-top:10px;box-shadow:0px 2px 5px #ddd;" v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Type" prop="type">
+        <!-- <el-form-item label="Type" prop="type">
           <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
             <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
-        </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
+        </el-form-item> -->
+        <!-- <el-form-item label="Date" prop="timestamp">
           <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
+        </el-form-item> -->
+        <el-form-item label="Group ID" prop="groupId" label-width="100px">
+          <el-input v-model="temp.groupId" />
         </el-form-item>
-        <el-form-item label="Title" prop="title">
-          <el-input v-model="temp.title" />
+        <el-form-item label="Artifact ID" prop="artifactId" label-width="100px">
+          <el-input v-model="temp.artifactId" />
         </el-form-item>
-        <el-form-item label="Status">
+        <el-form-item label="Version" prop="version" label-width="100px">
+          <el-input v-model="temp.version" />
+        </el-form-item>
+        <el-form-item label="Name" prop="name" label-width="100px">
+          <el-input v-model="temp.name" />
+        </el-form-item>
+        <el-form-item label="Description" prop="description" label-width="100px">
+          <el-input v-model="temp.description" />
+        </el-form-item>
+        <!-- <el-form-item label="Status">
           <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
           </el-select>
-        </el-form-item>
-        <el-form-item label="Imp">
+        </el-form-item> -->
+        <!-- <el-form-item label="Imp">
           <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
-        </el-form-item>
-        <el-form-item label="Remark">
+        </el-form-item> -->
+        <!-- <el-form-item label="Remark">
           <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -271,6 +328,12 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
+        let responseData = response.data.map(element => {
+          //element.updatedTime = '2010-01-01<br>\n19:30:20'
+          element.updatedDate = element.updatedTime.substr(0,10)
+          element.updatedTime = element.updatedTime.substr(11, 8)
+          return element
+        })
         this.list = response.data
         this.total = Math.max(0, response.data.length - 1)
         this.total = response.data.length //response.data.total

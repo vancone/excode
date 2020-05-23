@@ -34,8 +34,8 @@ export function createArticle(data) {
 
 export function updateArticle(data) {
   return request({
-    url: '/exstudio/project/update',
-    method: 'post',
+    url: '/project',
+    method: 'put',
     data
   })
 }
