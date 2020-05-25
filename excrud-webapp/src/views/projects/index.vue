@@ -1,9 +1,16 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
-        New Project
-      </el-button>
+      <el-dropdown class="filter-item">
+            <el-button type="primary">
+              +&nbsp;&nbsp;New<i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="handleCreate">Create Project</el-dropdown-item>
+              <el-dropdown-item divided @click.native="$refs.file.click()">Import</el-dropdown-item>
+            </el-dropdown-menu>
+      </el-dropdown>
+      <input type="file" ref="file" id="file" accept=".xml,.json" style="display:none" @change="importProject($event)">
       <el-input v-model="listQuery.name" placeholder="Name" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
@@ -17,12 +24,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         Search
       </el-button>
-      <!-- <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        Export
-      </el-button> -->
-      <!-- <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        reviewer
-      </el-checkbox> -->
     </div>
 
     <el-table
@@ -110,7 +111,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>Add Module...</el-dropdown-item>
               <el-dropdown-item divided>API Document</el-dropdown-item>
-              <el-dropdown-item>Relational Database</el-dropdown-item>
+              <router-link to="/servers"><el-dropdown-item>Relational Database</el-dropdown-item></router-link>
               <el-dropdown-item>Spring Boot</el-dropdown-item>
               <el-dropdown-item>Vue Element Admin</el-dropdown-item>
             </el-dropdown-menu>
@@ -160,15 +161,12 @@
        </el-table-column>
       <el-table-column label="Actions" width="100" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <!-- <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            Edit
-          </el-button> -->
           <el-dropdown>
             <el-button type="primary" size="mini" style="background:purple;border:purple">
-              Download<i class="el-icon-arrow-down el-icon--right"></i>
+              Export<i class="el-icon-arrow-down el-icon--right"></i>
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>ExCRUD Project File</el-dropdown-item>
+              <el-dropdown-item @click.native="exportProject('xml', row.id)">ExCRUD Project File</el-dropdown-item>
               <el-dropdown-item>Source Code (Premium only)</el-dropdown-item>
               <el-dropdown-item>Built Packages</el-dropdown-item>
             </el-dropdown-menu>
@@ -242,10 +240,11 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/project'
+import { fetchList, uploadProject, fetchPv, createArticle, updateArticle, deleteProject } from '@/api/project'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import axios from 'axios'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -362,6 +361,38 @@ export default {
         this.sortByID(order)
       }
     },
+    importProject(event) {
+      var file = event.target.files[0]
+      var formData = new FormData()
+      formData.append('file', file)
+      var config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      axios.post('/api/excrud/project/import', formData, config).then( res => {
+        if (res.data.code == 0) {
+          this.$notify({
+            title: 'Success',
+            message: 'Import project successfully',
+            type: 'success'
+          });
+          this.getList()
+        } else {
+          this.$notify.error({
+          title: 'Error',
+          message: 'Import project failed'
+        });
+        }
+        
+      }).catch( res => {
+        this.$notify.error({
+          title: 'Error',
+          message: 'Upload file failed'
+        });
+      })
+
+    },
     sortByID(order) {
       if (order === 'ascending') {
         this.listQuery.sort = '+id'
@@ -389,6 +420,38 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
+    exportProject(type, id) {
+      let config = {responseType: 'blob'}
+      let url = '/api/excrud/project/download/' + type + '/' + id
+      axios.get(url, config).then( data => {
+        if (!data) {
+          this.$notify({
+            title: 'Success',
+            message: 'Export project successfully',
+            type: 'success'
+          });
+        } else {
+          let link = document.createElement('a')
+          link.style.display = 'none'
+          link.href = url
+          link.setAttribute('download', id + '.' + type)
+          document.body.appendChild(link)
+          link.click()
+          this.$notify({
+            title: 'Success',
+            message: 'Export project successfully',
+            type: 'success'
+          });
+          document.body.removeChild(link)
+        }
+      }).catch( res => {
+        this.$notify.error({
+          title: 'Error',
+          message: 'Download file failed: ' + res
+        });
+      })
+    },
+
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -436,32 +499,32 @@ export default {
       })
     },
     handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      deleteProject(row.id).then(response => {
+        if (response.code == 0) {
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
+          this.getList()
+        } else {
+          this.$notify({
+            title: 'Fail',
+            message: 'Delete failed',
+            type: 'error',
+            duration: 2000
+          })
+        }
       })
-      this.list.splice(index, 1)
+      
+      //this.list.splice(index, 1)
+
     },
     handleFetchPv(pv) {
       fetchPv(pv).then(response => {
         this.pvData = response.data.pvData
         this.dialogPvVisible = true
-      })
-    },
-    handleDownload() {
-      this.downloadLoading = true
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-        const data = this.formatJson(filterVal)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'table-list'
-        })
-        this.downloadLoading = false
       })
     },
     formatJson(filterVal) {

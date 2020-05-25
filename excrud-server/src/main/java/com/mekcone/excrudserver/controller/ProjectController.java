@@ -1,10 +1,14 @@
 package com.mekcone.excrudserver.controller;
 
-import com.mekcone.excrudserver.entity.ProjectRecord;
-import com.mekcone.excrudserver.repository.ProjectRepository;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.mekcone.excrud.model.project.Project;
+import com.mekcone.excrud.util.FileUtil;
+import com.mekcone.excrudserver.service.ProjectService;
 import com.mekcone.webplatform.common.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -12,27 +16,29 @@ import java.io.*;
 @RestController
 @RequestMapping("/api/excrud/project")
 public class ProjectController {
+
     @Autowired
-    private ProjectRepository projectRepository;
+    private ProjectService projectService;
 
     @GetMapping("/{projectId}")
     public Response retrieve(@PathVariable String projectId) {
-        return Response.success(projectRepository.findAll());
+        return Response.success();
     }
 
     @GetMapping
     public Response retrieveList() {
-        return Response.success(projectRepository.findAll());
+        return Response.success(projectService.retrieveList());
     }
 
     @PutMapping
-    public Response update(@RequestBody ProjectRecord projectRecord) {
-        projectRepository.saveProject(projectRecord);
+    public Response update(@RequestBody Project project) {
+        projectService.saveProject(project);
         return Response.success();
     }
 
-    @GetMapping("/download/{projectId}")
-    public Response downloadFile(HttpServletResponse response, @PathVariable String projectId) {
+    // 下载随机文件
+    @GetMapping("/download/random")
+    public Response downloadRandomFile(HttpServletResponse response) {
         String downloadFilePath = "D:/Documents/Masterin Redis.pdf";//被下载的文件在服务器中的路径,
         String fileName = "Mastering%20Redis.pdf";//被下载文件的名称
 
@@ -76,9 +82,33 @@ public class ProjectController {
         return Response.fail();
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "ok2";
+    @PostMapping("/import")
+    public Response importProject(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return Response.fail(1, "File is empty");
+        }
+
+        try {
+            XmlMapper xmlMapper = new XmlMapper();
+            xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            Project project = xmlMapper.readValue(new String(file.getBytes()), Project.class);
+            projectService.saveProject(project);
+            return Response.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.fail(2, "Import failed");
+        }
+    }
+
+    @GetMapping("/download/{fileType}/{projectId}")
+    public void downloadFile(HttpServletResponse response, @PathVariable String fileType, @PathVariable String projectId) {
+        projectService.exportProject(response, fileType, projectId);
+    }
+
+    @DeleteMapping("/{projectId}")
+    public Response deleteProject(@PathVariable String projectId) {
+        projectService.deleteProject(projectId);
+        return Response.success();
     }
 
     @PostMapping("/login")

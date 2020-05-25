@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      title: 'MekCone ExStudio',
+      title: 'MekCone ExCRUD',
       logo: excrudLogo
     }
   }

@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'MekCone ExStudio',
+  title: 'MekCone ExCRUD',
 
   /**
    * @type {boolean} true | false

@@ -8,6 +8,21 @@ export function fetchList(query) {
   })
 }
 
+export function uploadProject(query) {
+  return request({
+    url: '/project/import',
+    method: 'post',
+    params: query
+  })
+}
+
+export function deleteProject(id) {
+  return request({
+    url: '/project/' + id,
+    method: 'delete'
+  })
+}
+
 export function fetchArticle(id) {
   return request({
     url: '/exstudio/project/detail',

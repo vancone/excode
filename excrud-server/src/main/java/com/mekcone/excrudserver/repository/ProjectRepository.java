@@ -1,13 +1,12 @@
 package com.mekcone.excrudserver.repository;
 
-import com.mekcone.excrudserver.entity.ProjectRecord;
+import com.mekcone.excrud.model.project.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -16,16 +15,28 @@ public class ProjectRepository {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    public void saveProject(ProjectRecord projectRecord) {
-        Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        projectRecord.setUpdatedTime(simpleDateFormat.format(date));
-        mongoTemplate.save(projectRecord);
+    public void saveProject(Project project) {
+        mongoTemplate.save(project);
     }
 
-    public List<ProjectRecord> findAll() {
+    public List<Project> findAll() {
+        List<Project> project = mongoTemplate.findAll(Project.class, "project");
+        return project;
+    }
+
+    public Project find(String projectId) {
         Query query = new Query();
-        List<ProjectRecord> projectRecords = mongoTemplate.findAll(ProjectRecord.class, "project");
-        return projectRecords;
+        query.addCriteria(Criteria.where("id").is(projectId));
+        List<Project> projects = mongoTemplate.find(query, Project.class);
+        if (projects != null && !projects.isEmpty()) {
+            return projects.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public void delete(String projectId) {
+        Query query = Query.query(Criteria.where("id").is(projectId));
+        mongoTemplate.remove(query, Project.class);
     }
 }
