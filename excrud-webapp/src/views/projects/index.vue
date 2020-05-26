@@ -2,15 +2,15 @@
   <div class="app-container">
     <div class="filter-container">
       <el-dropdown class="filter-item">
-            <el-button type="primary">
-              +&nbsp;&nbsp;New<i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item @click.native="handleCreate">Create Project</el-dropdown-item>
-              <el-dropdown-item divided @click.native="$refs.file.click()">Import</el-dropdown-item>
-            </el-dropdown-menu>
+        <el-button type="primary">
+          +&nbsp;&nbsp;New<i class="el-icon-arrow-down el-icon--right" />
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item @click.native="handleCreate">Create Project</el-dropdown-item>
+          <el-dropdown-item divided @click.native="$refs.file.click()">Import</el-dropdown-item>
+        </el-dropdown-menu>
       </el-dropdown>
-      <input type="file" ref="file" id="file" accept=".xml,.json" style="display:none" @change="importProject($event)">
+      <input ref="file" type="file" accept=".xml,.json" style="display:none" @change="importProject($event)">
       <el-input v-model="listQuery.name" placeholder="Name" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
@@ -33,80 +33,44 @@
       stripe
       fit
       highlight-current-row
-      style="width: 100%;box-shadow:0px 2px 5px #ddd;font-size:13px"
+      style="width: 100%;box-shadow:0px 2px 5px #eee;font-size:13px"
       @sort-change="sortChange"
     >
-      <!-- <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
-        <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column> -->
-      <!-- <el-table-column label="Date" width="150px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column> -->
-      <el-table-column
-      type="selection"
-      width="35">
-    </el-table-column>
-     <el-table-column label="Basic Information">
-      <el-table-column label="ID" width="130px">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.groupId }}</span><br>
-          <span class="link-type" @click="handleUpdate(row)">{{ row.artifactId }}</span>
-        </template>
+      <el-table-column type="selection" width="35" />
+      <el-table-column label="Basic Information">
+        <el-table-column label="ID" width="130px">
+          <template slot-scope="{row}">
+            <span class="link-type" @click="handleUpdate(row)">{{ row.groupId }}</span><br>
+            <span class="link-type" @click="handleUpdate(row)">{{ row.artifactId }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Version" width="70px">
+          <template slot-scope="{row}">
+            <span class="link-type" @click="handleUpdate(row)">{{ row.version }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Name" min-width="60px">
+          <template slot-scope="{row}">
+            <span class="link-type" @click="handleUpdate(row)">{{ row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Description" min-width="120px">
+          <template slot-scope="{row}">
+            <span class="link-type" @click="handleUpdate(row)">{{ row.description }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Updated Time" width="110px">
+          <template slot-scope="{row}">
+            <span>{{ row.updatedDate }}</span><br>
+            <span>{{ row.updatedTime }}</span>
+          </template>
+        </el-table-column>
       </el-table-column>
-      <el-table-column label="Version" width="70px">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.version }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Name" min-width="60px">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.name }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
-        </template>
-      </el-table-column>
-      <el-table-column label="Description" min-width="120px">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.description }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
-        </template>
-      </el-table-column>
-      <el-table-column label="Updated Time" width="110px">
-        <template slot-scope="{row}">
-          <span>{{ row.updatedDate }}</span><br>
-          <span>{{ row.updatedTime }}</span>
-        </template>
-      </el-table-column>
-      </el-table-column>
-      <!-- <el-table-column label="Author" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
-        </template> -->
-      <!-- </el-table-column>
-      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
-        <template slot-scope="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
-        </template> -->
-      <!-- </el-table-column>
-      <el-table-column label="Imp" width="80px">
-        <template slot-scope="{row}">
-          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
-        </template>
-      </el-table-column>
-      <el-table-column label="Readings" align="center" width="95">
-        <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column> -->
       <el-table-column label="Modules" width="110">
         <template slot-scope="{row}">
-           <el-dropdown>
+          <el-dropdown>
             <el-button type="primary" size="mini" style="background:#fff;border:solid 1px #ddd;color:black;">
-              Modules<i class="el-icon-arrow-down el-icon--right"></i>
+              Modules<i class="el-icon-arrow-down el-icon--right" />
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>Add Module...</el-dropdown-item>
@@ -116,61 +80,51 @@
               <el-dropdown-item>Vue Element Admin</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <!-- <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag> -->
-          
-          <!-- <el-tag>API Doc</el-tag>
-          <el-tag>Relational Database</el-tag>
-          <el-tag>Spring Boot</el-tag>
-          <el-tag>Vue Element Admin</el-tag> -->
         </template>
       </el-table-column>
       <el-table-column label="Deployment">
         <el-table-column label="Host" width="120px">
-        <template slot-scope="{row}">
-          <span>127.0.0.1</span><br><span>192.168.255.250</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Deploy" width="90">
-        <template slot-scope="{row,$index}">
-          <el-button v-if="row.status!='deployed'" size="mini" type="primary" @click="handleModifyStatus(row,'deployed')">
-            Deploy
-          </el-button>
-          <el-tooltip class="item" effect="dark" content="Deployed at 15:07:39, 2020-05-19" placement="bottom">
-            <span v-if="row.status=='deployed'" style="color:green">Deployed</span>
-          </el-tooltip>
-          
-        </template>
-      </el-table-column>
-      <el-table-column label="Status" width="110">
-        <template slot-scope="{row,$index}">
-          <el-dropdown>
-            <el-button type="primary" size="mini" style="background:#fff;border:solid 1px #ddd;color:black;">
-              Running<i class="el-icon-arrow-down el-icon--right"></i>
+          <template slot-scope="{row}">
+            <span>127.0.0.1</span><br><span>192.168.255.250</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Deploy" width="90">
+          <template slot-scope="{row,$index}">
+            <el-button v-if="row.status!='deployed'" size="mini" type="primary" @click="handleModifyStatus(row,'deployed')">
+              Deploy
             </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>Run</el-dropdown-item>
-              <el-dropdown-item>Stop</el-dropdown-item>
-              <el-dropdown-item>Restart</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          
-        </template>
+            <el-tooltip class="item" effect="dark" content="Deployed at 15:07:39, 2020-05-19" placement="bottom">
+              <span v-if="row.status=='deployed'" style="color:green">Deployed</span>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column label="Status" width="110">
+          <template slot-scope="{row, $index}">
+            <el-dropdown>
+              <el-button type="primary" size="mini" style="background:#fff;border:solid 1px #ddd;color:black;">
+                Running<i class="el-icon-arrow-down el-icon--right" />
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>Run</el-dropdown-item>
+                <el-dropdown-item>Stop</el-dropdown-item>
+                <el-dropdown-item>Restart</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column>
       </el-table-column>
-       </el-table-column>
       <el-table-column label="Actions" width="100" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-dropdown>
             <el-button type="primary" size="mini" style="background:purple;border:purple">
-              Export<i class="el-icon-arrow-down el-icon--right"></i>
+              Export<i class="el-icon-arrow-down el-icon--right" />
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item @click.native="exportProject('xml', row.id)">ExCRUD Project File</el-dropdown-item>
               <el-dropdown-item>Source Code (Premium only)</el-dropdown-item>
               <el-dropdown-item>Built Packages</el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown><br/>
+          </el-dropdown><br>
           <el-button v-if="row.status!='deleted'" style="margin-top:5px;" size="mini" type="danger" @click="handleDelete(row,$index)">
             Delete
           </el-button>
@@ -178,7 +132,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination style="height:50px;margin-top:15px;padding-top:10px;box-shadow:0px 2px 5px #ddd;" v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination style="height:50px;margin-top:15px;padding-top:10px;box-shadow:0px 2px 5px #eee;" v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
@@ -327,15 +281,14 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        let responseData = response.data.map(element => {
-          //element.updatedTime = '2010-01-01<br>\n19:30:20'
-          element.updatedDate = element.updatedTime.substr(0,10)
+        const responseData = response.data.map(element => {
+          element.updatedDate = element.updatedTime.substr(0, 10)
           element.updatedTime = element.updatedTime.substr(11, 8)
           return element
         })
         this.list = response.data
         this.total = Math.max(0, response.data.length - 1)
-        this.total = response.data.length //response.data.total
+        this.total = response.data.length
         this.listLoading = false
 
         // Just to simulate the time of the request
@@ -370,28 +323,26 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }
-      axios.post('/api/excrud/project/import', formData, config).then( res => {
-        if (res.data.code == 0) {
+      axios.post('/api/excrud/project/import', formData, config).then(res => {
+        if (res.data.code === 0) {
           this.$notify({
             title: 'Success',
             message: 'Import project successfully',
             type: 'success'
-          });
+          })
           this.getList()
         } else {
           this.$notify.error({
-          title: 'Error',
-          message: 'Import project failed'
-        });
+            title: 'Error',
+            message: 'Import project failed'
+          })
         }
-        
-      }).catch( res => {
+      }).catch(res => {
         this.$notify.error({
           title: 'Error',
           message: 'Upload file failed'
-        });
+        })
       })
-
     },
     sortByID(order) {
       if (order === 'ascending') {
@@ -421,17 +372,17 @@ export default {
       })
     },
     exportProject(type, id) {
-      let config = {responseType: 'blob'}
-      let url = '/api/excrud/project/download/' + type + '/' + id
-      axios.get(url, config).then( data => {
+      const config = { responseType: 'blob' }
+      const url = '/api/excrud/project/download/' + type + '/' + id
+      axios.get(url, config).then(data => {
         if (!data) {
           this.$notify({
             title: 'Success',
             message: 'Export project successfully',
             type: 'success'
-          });
+          })
         } else {
-          let link = document.createElement('a')
+          const link = document.createElement('a')
           link.style.display = 'none'
           link.href = url
           link.setAttribute('download', id + '.' + type)
@@ -441,14 +392,14 @@ export default {
             title: 'Success',
             message: 'Export project successfully',
             type: 'success'
-          });
+          })
           document.body.removeChild(link)
         }
-      }).catch( res => {
+      }).catch(res => {
         this.$notify.error({
           title: 'Error',
           message: 'Download file failed: ' + res
-        });
+        })
       })
     },
 
@@ -500,7 +451,7 @@ export default {
     },
     handleDelete(row, index) {
       deleteProject(row.id).then(response => {
-        if (response.code == 0) {
+        if (response.code === 0) {
           this.$notify({
             title: 'Success',
             message: 'Delete Successfully',
@@ -517,9 +468,6 @@ export default {
           })
         }
       })
-      
-      //this.list.splice(index, 1)
-
     },
     handleFetchPv(pv) {
       fetchPv(pv).then(response => {
