@@ -27,23 +27,23 @@
                         <table name="goods" description="商品对象">
                             <columns>
                                 <column name="goods_id" type="int" primaryKey="true" />
-                                <column name="goods_name" type="varchar(50)" />
-                                <column name="catalogue_id" type="varchar(50)" filter="true" />
+                                <column name="goods_name" type="varchar" length="50" />
+                                <column name="catalogue_id" type="varchar" length="50" filter="true" />
                                 <column name="goods_price" type="double" />
-                                <column name="goods_description" type="varchar(50)" detail="true" />
+                                <column name="goods_description" type="varchar" length="50" detail="true" />
                             </columns>
                         </table>
                         <table name="cart" description="购物车对象">
                             <columns>
-                                <column name="item_id" type="varchar(50)" primaryKey="true" />
-                                <column name="goods_id" type="varchar(50)" />
-                                <column name="user_id" type="varchar(20)" />
+                                <column name="item_id" type="varchar" length="50" primaryKey="true" />
+                                <column name="goods_id" type="varchar" length="50" />
+                                <column name="user_id" type="varchar" length="20" />
                                 <column name="amount" type="int" />
                             </columns>
                         </table>
                         <table name="catalogue" description="商品门类" catalogueOf="goods">
                             <columns>
-                                <column name="catalogue_id" type="varchar(50)" primaryKey="true" />
+                                <column name="catalogue_id" type="varchar(50)"  primaryKey="true" />
                                 <column name="catalogue_name" type="varchar(50)" />
                             </columns>
                         </table>

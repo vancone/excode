@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ExcrudCodegenTests {
 
     @Test
-    void contextLoads() {
-
+    void printHello() {
+        System.out.println("hello");
     }
 }

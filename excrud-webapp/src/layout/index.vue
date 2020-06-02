@@ -7,7 +7,7 @@
         <navbar />
         <tags-view v-if="needTagsView" />
       </div>
-      <app-main />
+      <app-main class="app-main" />
       <right-panel v-if="showSettings">
         <settings />
       </right-panel>
@@ -98,5 +98,9 @@ export default {
 
   .mobile .fixed-header {
     width: 100%;
+  }
+
+  .app-main {
+    padding-top: 85px;
   }
 </style>

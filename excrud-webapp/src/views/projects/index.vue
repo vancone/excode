@@ -15,9 +15,6 @@
       <el-select v-model="listQuery.importance" placeholder="Imp" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
       </el-select>
-      <el-select v-model="listQuery.type" placeholder="Type" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
-      </el-select>
       <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
@@ -38,7 +35,7 @@
     >
       <el-table-column type="selection" width="35" />
       <el-table-column label="Basic Information">
-        <el-table-column label="ID" width="130px">
+        <el-table-column label="ID" width="160px">
           <template slot-scope="{row}">
             <span class="link-type" @click="handleUpdate(row)">{{ row.groupId }}</span><br>
             <span class="link-type" @click="handleUpdate(row)">{{ row.artifactId }}</span>
@@ -49,7 +46,7 @@
             <span class="link-type" @click="handleUpdate(row)">{{ row.version }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Name" min-width="60px">
+        <el-table-column label="Name" min-width="80px">
           <template slot-scope="{row}">
             <span class="link-type" @click="handleUpdate(row)">{{ row.name }}</span>
           </template>
@@ -74,10 +71,10 @@
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>Add Module...</el-dropdown-item>
-              <el-dropdown-item divided>API Document</el-dropdown-item>
-              <router-link to="/servers"><el-dropdown-item>Relational Database</el-dropdown-item></router-link>
-              <el-dropdown-item>Spring Boot</el-dropdown-item>
-              <el-dropdown-item>Vue Element Admin</el-dropdown-item>
+              <el-dropdown-item divided @click.native="showModule('api-document', row)">API Document</el-dropdown-item>
+              <el-dropdown-item @click.native="showModule('rdb', row)">Relational Database</el-dropdown-item>
+              <el-dropdown-item @click.native="showModule('spring-boot', row)">Spring Boot</el-dropdown-item>
+              <el-dropdown-item @click.native="showModule('vue-element-admin', row)">Vue Element Admin</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -132,7 +129,11 @@
       </el-table-column>
     </el-table>
 
-    <pagination style="height:50px;margin-top:15px;padding-top:10px;box-shadow:0px 2px 5px #eee;" v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" style="height:50px;margin-top:15px;padding-top:10px;box-shadow:0px 2px 5px #eee;" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+
+    <el-dialog title="Relational Database Module" :visible.sync="rdbModuleVisible" :fullscreen="false" width="80%">
+      <rdb-module :project="temp" />
+    </el-dialog>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
@@ -194,28 +195,16 @@
 </template>
 
 <script>
-import { fetchList, uploadProject, fetchPv, createArticle, updateArticle, deleteProject } from '@/api/project'
+import { fetchList, fetchPv, createArticle, updateArticle, deleteProject } from '@/api/project'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import RdbModule from './rdb-module'
 import axios from 'axios'
-
-const calendarTypeOptions = [
-  { key: 'CN', display_name: 'China' },
-  { key: 'US', display_name: 'USA' },
-  { key: 'JP', display_name: 'Japan' },
-  { key: 'EU', display_name: 'Eurozone' }
-]
-
-// arr to obj, such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination, RdbModule },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -225,9 +214,6 @@ export default {
         deleted: 'danger'
       }
       return statusMap[status]
-    },
-    typeFilter(type) {
-      return calendarTypeKeyValue[type]
     }
   },
   data() {
@@ -245,7 +231,6 @@ export default {
         sort: '+id'
       },
       importanceOptions: [1, 2, 3],
-      calendarTypeOptions,
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
@@ -259,6 +244,7 @@ export default {
         status: 'published'
       },
       dialogFormVisible: false,
+      rdbModuleVisible: false,
       dialogStatus: '',
       textMap: {
         update: 'Edit',
@@ -286,15 +272,9 @@ export default {
           element.updatedTime = element.updatedTime.substr(11, 8)
           return element
         })
-        this.list = response.data
-        this.total = Math.max(0, response.data.length - 1)
-        this.total = response.data.length
+        this.list = responseData
+        this.total = Math.max(0, responseData.length - 1)
         this.listLoading = false
-
-        // Just to simulate the time of the request
-        /* setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000) */
       })
     },
     handleFilter() {
@@ -487,6 +467,14 @@ export default {
     getSortClass: function(key) {
       const sort = this.listQuery.sort
       return sort === `+${key}` ? 'ascending' : 'descending'
+    },
+    showModule(moduleType, row) {
+      this.temp = Object.assign({}, row) // copy obj
+      switch (moduleType) {
+        case 'rdb':
+          this.rdbModuleVisible = true
+          break
+      }
     }
   }
 }

@@ -22,6 +22,9 @@ const mutations = {
 const actions = {
   changeSetting({ commit }, data) {
     commit('CHANGE_SETTING', data)
+    // data: 
+    // {"key":"theme","value":"#17BBE5"}
+    // {"key":"tagsView","value":false}
   }
 }
 

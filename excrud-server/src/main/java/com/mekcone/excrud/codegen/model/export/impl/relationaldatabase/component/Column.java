@@ -14,6 +14,9 @@ public class Column {
     private String type;
 
     @JacksonXmlProperty(isAttribute = true)
+    private Integer length;
+
+    @JacksonXmlProperty(isAttribute = true)
     private boolean primaryKey;
 
     @JacksonXmlProperty(isAttribute = true)

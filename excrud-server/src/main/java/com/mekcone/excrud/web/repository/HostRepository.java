@@ -1,6 +1,6 @@
 package com.mekcone.excrud.web.repository;
 
-import com.mekcone.excrud.web.entity.Host;
+import com.mekcone.excrud.hostkeeper.entity.Host;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;

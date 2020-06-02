@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
 
 @RestController
 @RequestMapping("/api/excrud/project")
@@ -33,52 +32,6 @@ public class ProjectController {
     public Response update(@RequestBody Project project) {
         projectService.saveProject(project);
         return Response.success();
-    }
-
-    // 下载随机文件
-    @GetMapping("/download/random")
-    public Response downloadRandomFile(HttpServletResponse response) {
-        String downloadFilePath = "D:/Documents/Masterin Redis.pdf";//被下载的文件在服务器中的路径,
-        String fileName = "Mastering%20Redis.pdf";//被下载文件的名称
-
-        File file = new File(downloadFilePath);
-        if (file.exists()) {
-            response.setContentType("application/force-download");// 设置强制下载不打开
-            response.addHeader("Content-Disposition", "attachment;fileName=" + fileName);
-            byte[] buffer = new byte[1024];
-            FileInputStream fileInputStream = null;
-            BufferedInputStream bufferedInputStream = null;
-            try {
-                fileInputStream = new FileInputStream(file);
-                bufferedInputStream = new BufferedInputStream(fileInputStream);
-                OutputStream outputStream = response.getOutputStream();
-                int i = bufferedInputStream.read(buffer);
-                while (i != -1) {
-                    outputStream.write(buffer, 0, i);
-                    i = bufferedInputStream.read(buffer);
-                }
-
-                return Response.success();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (bufferedInputStream != null) {
-                    try {
-                        bufferedInputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (fileInputStream != null) {
-                    try {
-                        fileInputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return Response.fail();
     }
 
     @PostMapping("/import")

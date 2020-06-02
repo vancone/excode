@@ -31,6 +31,7 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
+    alert('user.js login start, user info=' + JSON.stringify(userInfo) + ', commit=' + JSON.stringify(commit))
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
@@ -39,7 +40,7 @@ const actions = {
         setToken(data.token)
         resolve()
       }).catch(error => {
-        reject(error)
+        reject('Login error: ' + error)
       })
     })
   },
@@ -68,7 +69,7 @@ const actions = {
         commit('SET_INTRODUCTION', introduction)
         resolve(data)
       }).catch(error => {
-        reject(error)
+        reject('getInfo error: ' + error)
       })
     })
   },
@@ -88,7 +89,7 @@ const actions = {
 
         resolve()
       }).catch(error => {
-        reject(error)
+        reject('Logout error: ' + error)
       })
     })
   },

@@ -1,4 +1,4 @@
-package com.mekcone.excrud.web.entity;
+package com.mekcone.excrud.hostkeeper.entity;
 
 import lombok.Data;
 

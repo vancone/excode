@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      title: 'MekCone ExCRUD',
+      title: 'ExCRUD Studio',
       logo: excrudLogo
     }
   }
@@ -68,7 +68,8 @@ export default {
       color: #fff;
       font-weight: 600;
       line-height: 50px;
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: 200;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
     }
