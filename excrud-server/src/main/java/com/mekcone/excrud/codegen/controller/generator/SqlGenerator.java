@@ -1,9 +1,10 @@
 package com.mekcone.excrud.codegen.controller.generator;
 
-import com.mekcone.excrud.Application;
-import com.mekcone.excrud.codegen.model.export.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.ServerApplication;
+import com.mekcone.excrud.codegen.constant.ApplicationParameter;
+import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
-import com.mekcone.excrud.codegen.model.export.impl.relationaldatabase.component.Database;
+import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,10 +83,8 @@ public class SqlGenerator extends BaseGenerator {
     public void generate() {
         //FileUtil.checkDirectory("sql");
         String code = "";
-        if (Application.getDescription() != null) {
-            code += "-- " + Application.getDescription() + "\n\n";
-        }
-        for (Database database: project.getExports().getRelationalDatabaseExport().getDatabases()) {
+        code += "-- " + ApplicationParameter.DESCRIPTION + "\n\n";
+        for (Database database: project.getModuleSet().getRelationalDatabaseModule().getDatabases()) {
             if (database != null && database.hasTable()) {
                 code += createDatabaseQuery(database) + "\n\n";
                 for (Table table: database.getTables()) {

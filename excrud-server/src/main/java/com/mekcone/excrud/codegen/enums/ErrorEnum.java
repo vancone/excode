@@ -22,7 +22,7 @@ public enum ErrorEnum {
     // SpringBootBackendGenerator Errors (E004000 ~ E004999)
     SBP_DIRECTORIES_TXT_NOT_FOUND("E004000", "\"$val\" not found");
 
-    // Export vue-admin-project Errors (2001 ~ 3000)
+    // Module vue-admin-project Errors (2001 ~ 3000)
 
     private String code;
     private String message;

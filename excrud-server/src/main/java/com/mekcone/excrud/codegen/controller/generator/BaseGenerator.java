@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mekcone.excrud.Application;
+import com.mekcone.excrud.codegen.constant.ApplicationParameter;
 import com.mekcone.excrud.codegen.enums.ErrorEnum;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
@@ -12,17 +12,16 @@ import com.mekcone.excrud.codegen.util.LogUtil;
 import lombok.Data;
 import lombok.Getter;
 
+import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
 
 // Every generator should extends this base class
 public abstract class BaseGenerator {
 
-    protected final String EXCRUD_HOME = System.getenv(Application.getApplicationName().toUpperCase() + "_HOME");
-
     protected String componentTemplatePath;
-    protected String exportType;
-    protected String generatedDataPath;
+    protected String moduleType;
+    protected String outputPath;
 
     @Getter
     protected Project project;
@@ -46,7 +45,6 @@ public abstract class BaseGenerator {
         }
 
         public String getFileName() {
-//            System.out.println("path: " + path);
             String[] stringArray = path.split("/");
             if (stringArray.length > 0) {
                 String[] stringArray2 = stringArray[stringArray.length - 1].split("\\.");
@@ -99,9 +97,9 @@ public abstract class BaseGenerator {
             }
 
             // Create directories
-            FileUtil.checkDirectory(generatedDataPath);
+            FileUtil.checkDirectory(outputPath);
             for (String path: paths.values()) {
-                FileUtil.checkDirectory(generatedDataPath + path);
+                FileUtil.checkDirectory(outputPath + path);
             }
 
         } catch (JsonProcessingException e) {
@@ -116,17 +114,21 @@ public abstract class BaseGenerator {
         return paths.get(pathName);
     }
 
-    protected void initialize(Project project, String exportType) {
-        if (EXCRUD_HOME == null) {
+    protected void initialize(Project project, String moduleType) {
+        if (ApplicationParameter.EXCRUD_HOME == null) {
             LogUtil.fatalError(ErrorEnum.EXCRUD_HOME_ENV_VARIABLE_NOT_SET);
         }
         this.project = project;
-        this.exportType = exportType;
+        this.moduleType = moduleType;
 
         // Set template paths
-        this.templatePath = EXCRUD_HOME + "/generators/" + exportType + "/templates/";
-        this.componentTemplatePath = templatePath + "components/";
-        this.generatedDataPath = exportType + "/";
+        templatePath = ApplicationParameter.EXCRUD_HOME + "/modules/" + moduleType + "/templates/";
+        componentTemplatePath = templatePath + "components/";
+        outputPath = ApplicationParameter.EXCRUD_HOME +
+                "gen" + File.separator +
+                project.getGroupId() + "." + project.getArtifactId() + "-" + project.getVersion() + File.separator +
+                moduleType + File.separator;
+        FileUtil.checkDirectory(outputPath);
     }
 
     public void addOutputFile(String path, String content) {
@@ -140,7 +142,7 @@ public abstract class BaseGenerator {
     public void write() {
         for (OutputFile outputFile: outputFiles) {
             // LogUtil.info("Output " + outputFile.getType() + " file: " + outputFile.getPath());
-            FileUtil.write(outputFile.getPath(), outputFile.getContent());
+            FileUtil.write(outputPath + outputFile.getPath(), outputFile.getContent());
         }
     }
 

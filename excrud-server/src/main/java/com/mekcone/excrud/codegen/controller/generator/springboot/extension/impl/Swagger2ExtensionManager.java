@@ -1,11 +1,11 @@
 package com.mekcone.excrud.codegen.controller.generator.springboot.extension.impl;
 
 import com.mekcone.excrud.codegen.controller.generator.springboot.extension.SpringBootExtensionManager;
-import com.mekcone.excrud.codegen.model.export.impl.springboot.SpringBootGenModel;
+import com.mekcone.excrud.codegen.model.module.impl.springboot.SpringBootModule;
 
 public class Swagger2ExtensionManager extends SpringBootExtensionManager {
 
-    public Swagger2ExtensionManager(SpringBootGenModel springBootGenModel) {
+    public Swagger2ExtensionManager(SpringBootModule springBootGenModel) {
         this.springBootGenModel = springBootGenModel;
         addConfig();
 

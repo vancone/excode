@@ -1,6 +1,6 @@
 package com.mekcone.excrud.codegen.util;
 
-import com.mekcone.excrud.codegen.constant.basic.DataType;
+import com.mekcone.excrud.codegen.constant.DataType;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

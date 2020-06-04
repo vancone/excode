@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+    <groupId>com.mekcone</groupId>
+    <artifactId>mall</artifactId>
+    <name>锥云商城</name>
+    <version>0.0.1</version>
+    <description>MekCone Mall Project</description>
+    <language>zh-CN</language>
+
+    <modules>
+        <api-document>
+            <title>锥云商城 {br}API 文档</title>
+            <!-- <description>MekCone 商城接口文档</description> -->
+            <keywords>
+                <keyword type="create">创建</keyword>
+                <keyword type="retrieve">获取</keyword>
+                <keyword type="retrieveList">获取所有</keyword>
+                <keyword type="update">更新</keyword>
+                <keyword type="delete">删除</keyword>
+            </keywords>
+        </api-document>
+
+        <relational-database>
+            <databases>
+                <database type="mysql" host="localhost:3306" name="mekcone_mall" username="root" password="123456" timezone="GMT%2B8">
+                    <tables>
+                        <table name="goods" description="商品对象">
+                            <columns>
+                                <column name="goods_id" type="int" primaryKey="true" />
+                                <column name="goods_name" type="varchar" length="50" />
+                                <column name="catalogue_id" type="varchar" length="50" filter="true" />
+                                <column name="goods_price" type="double" />
+                                <column name="goods_description" type="varchar" length="50" detail="true" />
+                            </columns>
+                        </table>
+                        <table name="cart" description="购物车对象">
+                            <columns>
+                                <column name="item_id" type="varchar" length="50" primaryKey="true" />
+                                <column name="goods_id" type="varchar" length="50" />
+                                <column name="user_id" type="varchar" length="20" />
+                                <column name="amount" type="int" />
+                            </columns>
+                        </table>
+                        <table name="catalogue" description="商品门类" catalogueOf="goods">
+                            <columns>
+                                <column name="catalogue_id" type="varchar(50)"  primaryKey="true" />
+                                <column name="catalogue_name" type="varchar(50)" />
+                            </columns>
+                        </table>
+                    </tables>
+                </database>
+            </databases>
+        </relational-database>
+
+        <!-- <mongodb>
+            <databases>
+                <database>
+                    <collections>
+                        <collection>
+                            <document></document>
+                        </collection>
+                    </collections>
+                </database>
+            </databases>
+        </mongodb> -->
+
+        <spring-boot use="true">
+            <extensions>
+                <extension id="lombok" use="true"></extension>
+                <extension id="swagger2" use="false"></extension>
+            </extensions>
+
+            <properties>
+                <application-name>Mall</application-name>
+                <server-port>9090</server-port>
+                <!-- <cors-allowedOrigins>*</cors-allowedOrigins>
+                <cors-allowedMethods>{GET, POST, PUT, DELETE}</cors-allowedMethods> -->
+                <page-size>15</page-size>
+            </properties>
+        </spring-boot>
+
+        <!-- <export type="enterprise-official-website" enable="false">
+        <properties>
+            <title>MekCone China</title>
+        </properties>
+    </export> -->
+    </modules>
+</project>

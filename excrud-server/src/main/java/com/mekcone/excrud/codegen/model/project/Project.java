@@ -25,25 +25,8 @@ public class Project {
     @JacksonXmlProperty(isAttribute = true)
     private String noNamespaceSchemaLocation;
 
-//    @JacksonXmlElementWrapper(localName = "databases")
-//    @JacksonXmlProperty(localName = "database")
-//    private List<Database> databases;
-
-//    private ApiDocument apiDocument;
-
-    private Exports exports;
-
-    /*@JsonIgnore
-    public OldExport getExport(String exportType) {
-        if (exports != null) {
-            for (var export : exports) {
-                if (export.getType().equals(exportType)) {
-                    return export;
-                }
-            }
-        }
-        return null;
-    }*/
+    @JacksonXmlProperty(localName = "modules")
+    private ModuleSet moduleSet;
 
     public String toXMLString() {
         try {

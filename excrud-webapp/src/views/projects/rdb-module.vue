@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-switch inactive-text="Enable Module" v-model="project.use"></el-switch><br>
       <span>Database</span>
       <el-select size="mini" v-model="listQuery.importance" :placeholder="this.databaseList.length>0?this.databaseList[0]:NONE" clearable style="width: 200px" class="filter-item">
         <el-option v-for="item in databaseList" :key="item" :label="item" :value="item" />

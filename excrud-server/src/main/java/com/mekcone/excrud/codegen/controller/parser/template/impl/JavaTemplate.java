@@ -4,7 +4,7 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
-import com.mekcone.excrud.codegen.model.export.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import com.mekcone.excrud.codegen.controller.parser.template.Template;

@@ -2,19 +2,19 @@ package com.mekcone.excrud.codegen.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.mekcone.excrud.Application;
-import com.mekcone.excrud.codegen.constant.basic.ExportType;
+import com.mekcone.excrud.codegen.constant.ApplicationParameter;
+import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.controller.generator.BaseGenerator;
 import com.mekcone.excrud.codegen.controller.generator.EnterpriseOfficialWebsiteGenerator;
 import com.mekcone.excrud.codegen.controller.generator.SqlGenerator;
-import com.mekcone.excrud.codegen.controller.generator.apidocuments.ApiDocumentGenerator;
+import com.mekcone.excrud.codegen.controller.generator.apidocument.ApiDocumentGenerator;
 import com.mekcone.excrud.codegen.controller.generator.springboot.SpringBootGenerator;
 import com.mekcone.excrud.codegen.controller.generator.vue.elementadmin.VueElementAdminGenerator;
 import com.mekcone.excrud.codegen.enums.ErrorEnum;
-import com.mekcone.excrud.codegen.model.export.GenModel;
-import com.mekcone.excrud.codegen.model.export.impl.relationaldatabase.component.Column;
-import com.mekcone.excrud.codegen.model.export.impl.relationaldatabase.component.Database;
-import com.mekcone.excrud.codegen.model.export.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.codegen.model.module.Module;
+import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
+import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
+import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import com.mekcone.excrud.codegen.util.LogUtil;
@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 @Slf4j
@@ -31,10 +32,12 @@ public class ProjectLoader {
 
     private int tableAmount = 0;
 
+    private Path projectPath;
+
     public void build() {
-        for (GenModel export: project.getExports().asList()) {
-            switch (export.type()) {
-                case ExportType.SPRING_BOOT:
+        for (Module module: project.getModuleSet().asList()) {
+            switch (module.type()) {
+                case ModuleType.SPRING_BOOT:
                     SpringBootGenerator springBootBackendGenerator = new SpringBootGenerator(project);
                     springBootBackendGenerator.build();
                     break;
@@ -45,27 +48,23 @@ public class ProjectLoader {
     }
 
     public void generate() {
-        if (project.getExports().asList().isEmpty()) {
-            log.info("No export options found");
+        if (project.getModuleSet().asList().isEmpty()) {
+            log.info("No module options found");
             System.exit(0);
         }
 
-        if (tableAmount > 0) {
+        /*if (tableAmount > 0) {
             SqlGenerator sqlGenerator = new SqlGenerator(project);
             sqlGenerator.generate();
-        }
+        }*/
 
-//        ApiDocumentGenerator apiDocumentGenerator = new ApiDocumentGenerator(project);
-//        apiDocumentGenerator.generatePdf();
-//        System.exit(-1);
-
-        for (GenModel export : project.getExports().asList()) {
-            if (!export.isUse()) {
+        for (Module module : project.getModuleSet().asList()) {
+            if (!module.isUse()) {
                 continue;
             }
 
-            // Print export type
-            StringBuilder output = new StringBuilder("[ " + export.type() + " ]");
+            // Print module type
+            StringBuilder output = new StringBuilder("[ " + module.type() + " ]");
             int lineSignAmount = 72 - output.length();
             for (int i = 0; i < lineSignAmount/2; i ++) {
                 output.insert(0, "-");
@@ -81,39 +80,40 @@ public class ProjectLoader {
 
             // Initialize generators
             BaseGenerator generator;
-            switch(export.type()) {
-                case ExportType.API_DOCUMENT: generator = new ApiDocumentGenerator(project);
-                case ExportType.ENTERPRISE_OFFICIAL_WEBSITE: generator = new EnterpriseOfficialWebsiteGenerator();
-                case ExportType.SPRING_BOOT: generator = new SpringBootGenerator(project);
-                case ExportType.VUE_ELEMENT_ADMIN: generator = new VueElementAdminGenerator(project);
+            switch(module.type()) {
+                case ModuleType.API_DOCUMENT:
+                    generator = new ApiDocumentGenerator(project);
+                    break;
+                case ModuleType.ENTERPRISE_OFFICIAL_WEBSITE:
+                    generator = new EnterpriseOfficialWebsiteGenerator();
+                    break;
+                case ModuleType.SPRING_BOOT:
+                    generator = new SpringBootGenerator(project);
+                    break;
+                case ModuleType.VUE_ELEMENT_ADMIN:
+                    generator = new VueElementAdminGenerator(project);
+                    break;
                 default: generator = null;
             };
             if (generator != null) {
                 generator.generate();
             } else {
-                log.warn("Unsupported export type \"{}\"", export.type());
+                log.warn("Unsupported module type \"{}\"", module.type());
             }
         }
     }
 
-    public boolean load(String path) {
-        String projectFileName = Application.getApplicationName().toLowerCase() + ".xml";
-        File projectFile = new File(projectFileName);
-        if ((!projectFile.exists())) {
-            LogUtil.fatalError(ErrorEnum.PROJECT_FILE_NOT_FOUND, projectFile.getAbsolutePath());
-        }
-
+    public boolean load(String content) {
         try {
             XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            project = xmlMapper.readValue(FileUtil.read(path), Project.class);
+            project = xmlMapper.readValue(content, Project.class);
             log.info("Load project {}:{} completed", project.getGroupId(), project.getArtifactId());
         } catch (Exception e) {
-            // log.error("Parse XML failed ({})", e.getMessage());
             LogUtil.fatalError(ErrorEnum.PARSE_XML_FAILED, e.getMessage());
         }
 
-        List<Database> databases = project.getExports().getRelationalDatabaseExport().getDatabases();
+        List<Database> databases = project.getModuleSet().getRelationalDatabaseModule().getDatabases();
         if (databases == null || databases.isEmpty()) {
             LogUtil.fatalError(ErrorEnum.DATABASE_UNDEFINED);
         }
@@ -135,7 +135,7 @@ public class ProjectLoader {
             log.info("{} database(s), {} table(s) detected", databases.size(), tableAmount);
         }
 
-        for (Table table : project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables()) {
+        for (Table table : project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0).getTables()) {
             for (Column column : table.getColumns()) {
                 if (column.isPrimaryKey()) {
                     table.setPrimaryKey(column.getName());

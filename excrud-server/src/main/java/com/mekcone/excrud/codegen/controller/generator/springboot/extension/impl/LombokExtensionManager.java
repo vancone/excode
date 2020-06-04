@@ -1,16 +1,16 @@
 package com.mekcone.excrud.codegen.controller.generator.springboot.extension.impl;
 
-import com.mekcone.excrud.codegen.constant.extensions.SpringBootExtensionType;
+import com.mekcone.excrud.codegen.constant.ModuleExtensionType;
 import com.mekcone.excrud.codegen.controller.generator.springboot.extension.SpringBootExtensionManager;
-import com.mekcone.excrud.codegen.model.export.impl.springboot.SpringBootGenModel;
-import com.mekcone.excrud.codegen.model.export.impl.springboot.component.SpringBootDataClass;
+import com.mekcone.excrud.codegen.model.module.impl.springboot.SpringBootModule;
+import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootDataClass;
 import com.mekcone.excrud.codegen.util.LogUtil;
 
 public class LombokExtensionManager extends SpringBootExtensionManager {
 
-    public LombokExtensionManager(SpringBootGenModel springBootGenModel) {
+    public LombokExtensionManager(SpringBootModule springBootGenModel) {
         this.springBootGenModel = springBootGenModel;
-        springBootGenModel.getProjectObjectModel().addDependencies(SpringBootExtensionType.LOMBOK);
+        springBootGenModel.getProjectObjectModel().addDependencies(ModuleExtensionType.LOMBOK);
 
         // Remove getters and setters of the data class
         for (SpringBootDataClass entity: springBootGenModel.getEntities()) {
