@@ -32,21 +32,6 @@ public class ProjectLoader {
 
     private int tableAmount = 0;
 
-    private Path projectPath;
-
-    public void build() {
-        for (Module module: project.getModuleSet().asList()) {
-            switch (module.type()) {
-                case ModuleType.SPRING_BOOT:
-                    SpringBootGenerator springBootBackendGenerator = new SpringBootGenerator(project);
-                    springBootBackendGenerator.build();
-                    break;
-                default:
-                    return;
-            }
-        }
-    }
-
     public void generate() {
         if (project.getModuleSet().asList().isEmpty()) {
             log.info("No module options found");

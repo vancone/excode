@@ -6,10 +6,8 @@ import com.mekcone.excrud.codegen.util.FileUtil;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.nio.file.Path;
 
-
-public class GeneratingTest {
+public class GenerateTest {
 
     private final String examplePath = ApplicationParameter.EXCRUD_HOME + "examples" + File.separator;
 

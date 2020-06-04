@@ -2,9 +2,12 @@ package com.mekcone.excrud.codegen.controller.generator.springboot;
 
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.expr.*;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.github.javaparser.ast.expr.AnnotationExpr;
+import com.github.javaparser.ast.expr.ArrayInitializerExpr;
+import com.github.javaparser.ast.expr.NormalAnnotationExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.mekcone.excrud.codegen.constant.ModuleExtensionType;
+import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.controller.generator.BaseGenerator;
 import com.mekcone.excrud.codegen.controller.generator.SqlGenerator;
 import com.mekcone.excrud.codegen.controller.generator.springboot.extension.impl.LombokExtensionManager;
@@ -12,23 +15,19 @@ import com.mekcone.excrud.codegen.controller.generator.springboot.extension.impl
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.UniversalTemplate;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
-import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootExtension;
-import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
+import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.SpringBootModule;
-import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootDataClass;
-import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootComponent;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.ProjectObjectModel;
+import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootComponent;
+import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootDataClass;
+import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootExtension;
+import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.LogUtil;
 import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 @Slf4j
 public class SpringBootGenerator extends BaseGenerator {
@@ -42,29 +41,6 @@ public class SpringBootGenerator extends BaseGenerator {
         springBootModule = project.getModuleSet().getSpringBootModule();
         springBootModule.setGroupId(project.getGroupId());
         springBootModule.setArtifactId(project.getArtifactId());
-    }
-
-    public boolean build() {
-        File file = new File(outputPath);
-
-        // Compiling
-        try {
-            // Only work on Windows
-            Process child = Runtime.getRuntime().exec("mvn.cmd clean compile package", null, file);
-
-            InputStream child_in = child.getInputStream();
-            int c;
-            while (true) {
-                if (!((c = child_in.read()) != -1)) break;
-                final int d = c;
-                System.out.print(String.valueOf((char) d));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            //LogUtil.error("Compiling project failed");
-            return false;
-        }
-        return true;
     }
 
     public void preprocessTemplate(UniversalTemplate universalTemplate, Table table) {
@@ -258,12 +234,6 @@ public class SpringBootGenerator extends BaseGenerator {
 
         super.write();
     }
-
-
-    public boolean run() {
-        return false;
-    }
-
 
     /*public String stringifyApplicationProperties() {
         var globalPropertiesParser = new PropertiesParser();

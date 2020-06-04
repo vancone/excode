@@ -141,7 +141,6 @@ public abstract class BaseGenerator {
 
     public void write() {
         for (OutputFile outputFile: outputFiles) {
-            // LogUtil.info("Output " + outputFile.getType() + " file: " + outputFile.getPath());
             FileUtil.write(outputPath + outputFile.getPath(), outputFile.getContent());
         }
     }

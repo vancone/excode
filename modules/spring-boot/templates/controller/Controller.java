@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/__table__")
+@RequestMapping("/api/__artifactId__/__table__")
 public class __Table__Controller {
   @Autowired private __Table__Service __table__Service;
 

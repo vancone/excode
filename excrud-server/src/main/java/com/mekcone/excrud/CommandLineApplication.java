@@ -60,10 +60,6 @@ public class CommandLineApplication {
             projectLoader.load(System.getProperty("user.dir") + "/" + applicationName.toLowerCase() + ".xml");
             projectLoader.generate();
         }
-
-        if (commandArgument.isBuild()) {
-            projectLoader.build();
-        }
     }
 
     @Data
