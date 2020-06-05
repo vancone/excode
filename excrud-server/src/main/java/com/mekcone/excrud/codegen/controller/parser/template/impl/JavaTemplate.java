@@ -8,6 +8,7 @@ import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import com.mekcone.excrud.codegen.controller.parser.template.Template;
+import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,6 +67,7 @@ public class JavaTemplate implements Template {
     public void preprocessForSpringBootProject(Project project, Table table) {
         insert("groupId", project.getGroupId());
         insert("artifactId", project.getArtifactId());
+        insert("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
         if (table != null) {
             insert("Table", table.getUpperCamelCaseName());
             insert("table", table.getCamelCaseName());

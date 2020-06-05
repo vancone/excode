@@ -1,9 +1,7 @@
 package com.mekcone.excrud.codegen.controller.packager;
 
 import com.mekcone.excrud.codegen.constant.ApplicationParameter;
-import com.mekcone.excrud.codegen.constant.ModuleType;
-import com.mekcone.excrud.codegen.model.project.Project;
-import com.mekcone.excrud.codegen.util.FileUtil;
+import com.mekcone.excrud.codegen.constant.Module;
 import com.mekcone.excrud.codegen.util.LogUtil;
 
 import java.io.File;
@@ -19,7 +17,7 @@ public class SpringBootPackager {
                 groupId + "." +
                 artifactId + "-" +
                 version + File.separator +
-                ModuleType.SPRING_BOOT + File.separator;
+                Module.SPRING_BOOT + File.separator;
     }
 
     public boolean build() {

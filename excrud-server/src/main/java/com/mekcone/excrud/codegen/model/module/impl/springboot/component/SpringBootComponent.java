@@ -1,7 +1,6 @@
 package com.mekcone.excrud.codegen.model.module.impl.springboot.component;
 
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.mekcone.excrud.codegen.constant.SpringBootComponentType;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
@@ -24,13 +23,13 @@ public class SpringBootComponent {
         javaTemplate = new JavaTemplate(templatePath);
         javaTemplate.preprocessForSpringBootProject(project, table);
 
-        if (templatePath.toLowerCase().contains(SpringBootComponentType.CONTROLLER)) {
+        if (templatePath.toLowerCase().contains(com.mekcone.excrud.codegen.constant.SpringBootComponent.CONTROLLER)) {
             name = table.getUpperCamelCaseName() + "Controller";
-        } else if (templatePath.toLowerCase().contains(SpringBootComponentType.MAPPER)) {
+        } else if (templatePath.toLowerCase().contains(com.mekcone.excrud.codegen.constant.SpringBootComponent.MAPPER)) {
             name = table.getUpperCamelCaseName() + "Mapper";
-        } else if (templatePath.toLowerCase().contains(SpringBootComponentType.SERVICE_IMPL.toLowerCase())) {
+        } else if (templatePath.toLowerCase().contains(com.mekcone.excrud.codegen.constant.SpringBootComponent.SERVICE_IMPL.toLowerCase())) {
             name = table.getUpperCamelCaseName() + "ServiceImpl";
-        } else if (templatePath.toLowerCase().contains(SpringBootComponentType.SERVICE)) {
+        } else if (templatePath.toLowerCase().contains(com.mekcone.excrud.codegen.constant.SpringBootComponent.SERVICE)) {
             name = table.getUpperCamelCaseName() + "Service";
         }
     }

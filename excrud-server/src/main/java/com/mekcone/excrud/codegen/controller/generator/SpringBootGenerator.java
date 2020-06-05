@@ -1,4 +1,4 @@
-package com.mekcone.excrud.codegen.controller.generator.springboot;
+package com.mekcone.excrud.codegen.controller.generator;
 
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
@@ -6,12 +6,12 @@ import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.ArrayInitializerExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.mekcone.excrud.codegen.constant.ModuleExtensionType;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleExtension;
+import com.mekcone.excrud.codegen.constant.Module;
 import com.mekcone.excrud.codegen.controller.generator.BaseGenerator;
 import com.mekcone.excrud.codegen.controller.generator.SqlGenerator;
-import com.mekcone.excrud.codegen.controller.generator.springboot.extension.impl.LombokExtensionManager;
-import com.mekcone.excrud.codegen.controller.generator.springboot.extension.impl.Swagger2ExtensionManager;
+import com.mekcone.excrud.codegen.controller.extmgr.springboot.LombokExtensionManager;
+import com.mekcone.excrud.codegen.controller.extmgr.springboot.Swagger2ExtensionManager;
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.UniversalTemplate;
@@ -37,13 +37,13 @@ public class SpringBootGenerator extends BaseGenerator {
     public PropertiesParser applicationPropertiesParser = new PropertiesParser();
 
     public SpringBootGenerator(Project project) {
-        initialize(project, ModuleType.SPRING_BOOT);
+        initialize(project, Module.SPRING_BOOT);
         springBootModule = project.getModuleSet().getSpringBootModule();
         springBootModule.setGroupId(project.getGroupId());
         springBootModule.setArtifactId(project.getArtifactId());
     }
 
-    public void preprocessTemplate(UniversalTemplate universalTemplate, Table table) {
+    /*public void preprocessTemplate(UniversalTemplate universalTemplate, Table table) {
         String templateText = universalTemplate.toString();
         if (templateText == null || templateText.isEmpty()) {
             LogUtil.info("Preprocess templates failed");
@@ -105,7 +105,7 @@ public class SpringBootGenerator extends BaseGenerator {
 
     public void preprocessTemplate(UniversalTemplate universalTemplate) {
         preprocessTemplate(universalTemplate, null);
-    }
+    }*/
 
     public void generate() {
         copyInitialTemplates();
@@ -171,11 +171,11 @@ public class SpringBootGenerator extends BaseGenerator {
 
         for (String extensionName : getExtensions()) {
             switch (extensionName) {
-                case ModuleExtensionType.LOMBOK:
+                case ModuleExtension.LOMBOK:
                     new LombokExtensionManager(springBootModule);
                     break;
-                case ModuleExtensionType.SWAGGER2:
-                    new Swagger2ExtensionManager(springBootModule);
+                case ModuleExtension.SWAGGER2:
+                    new Swagger2ExtensionManager(project);
                     break;
                 default:
                     ;
@@ -185,20 +185,22 @@ public class SpringBootGenerator extends BaseGenerator {
         // Write to files
         write();
 
-        LogUtil.info("Generate " + ModuleType.SPRING_BOOT + " completed");
+        LogUtil.info("Generate " + Module.SPRING_BOOT + " completed");
     }
 
     @Override
     public void write() {
         // Application entry
-        UniversalTemplate universalTemplate = new UniversalTemplate(templatePath + "Application.java");
-        if (universalTemplate != null) {
-            preprocessTemplate(universalTemplate);
+        //UniversalTemplate universalTemplate = new UniversalTemplate(templatePath + "Application.java");
+        JavaTemplate javaTemplate = new JavaTemplate(templatePath + "Application.java");
+        if (javaTemplate != null) {
+            javaTemplate.preprocessForSpringBootProject(project, null);
+            // preprocessTemplate(universalTemplate);
         } else {
             LogUtil.info("Application.java not found");
         }
-        universalTemplate.insert("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
-        addOutputFile(getPath("srcPath") + StrUtil.upperCamelCase(project.getArtifactId()) + "Application.java", universalTemplate.toString());
+        javaTemplate.insert("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
+        addOutputFile(getPath("srcPath") + StrUtil.upperCamelCase(project.getArtifactId()) + "Application.java", javaTemplate.toString());
 
         // Application properties
 //        LogUtil.info("AP: " + springBootGenModel.getApplicationPropertiesParser());

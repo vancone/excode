@@ -3,9 +3,9 @@ package com.mekcone.excrud.codegen.model.module.impl.springboot;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.Module;
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
-import com.mekcone.excrud.codegen.model.module.Module;
+import com.mekcone.excrud.codegen.model.module.impl.apidocument.ApiDocumentModule;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.*;
 import lombok.Data;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class SpringBootModule implements Module {
+public class SpringBootModule implements com.mekcone.excrud.codegen.model.module.Module {
 
     @JsonIgnore
     private String groupId;
@@ -76,7 +76,7 @@ public class SpringBootModule implements Module {
 
     @Override
     public String type() {
-        return ModuleType.SPRING_BOOT;
+        return Module.SPRING_BOOT;
     }
 
 }

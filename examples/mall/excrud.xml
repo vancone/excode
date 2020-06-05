@@ -67,7 +67,7 @@
         <spring-boot use="true">
             <extensions>
                 <extension id="lombok" use="true"></extension>
-                <extension id="swagger2" use="false"></extension>
+                <extension id="swagger2" use="true"></extension>
             </extensions>
 
             <properties>

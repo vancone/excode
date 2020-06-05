@@ -1,7 +1,7 @@
 package com.mekcone.excrud.codegen.controller.executor;
 
 import com.mekcone.excrud.codegen.constant.ApplicationParameter;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.Module;
 import com.mekcone.excrud.codegen.util.LogUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +20,7 @@ public class SpringBootExecutor {
                 groupId + "." +
                 artifactId + "-" +
                 version + File.separator +
-                ModuleType.SPRING_BOOT + File.separator +
+                Module.SPRING_BOOT + File.separator +
                 "target" + File.separator +
                 artifactId + "-" +
                 version + ".jar";

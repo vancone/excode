@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mekcone.excrud.codegen.constant.ApplicationParameter;
-import com.mekcone.excrud.codegen.controller.generator.springboot.SpringBootGenerator;
+import com.mekcone.excrud.codegen.controller.generator.SpringBootGenerator;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import com.mekcone.excrud.codegen.util.LogUtil;

@@ -2,27 +2,21 @@ package com.mekcone.excrud.codegen.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.mekcone.excrud.codegen.constant.ApplicationParameter;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.Module;
 import com.mekcone.excrud.codegen.controller.generator.BaseGenerator;
 import com.mekcone.excrud.codegen.controller.generator.EnterpriseOfficialWebsiteGenerator;
-import com.mekcone.excrud.codegen.controller.generator.SqlGenerator;
-import com.mekcone.excrud.codegen.controller.generator.apidocument.ApiDocumentGenerator;
-import com.mekcone.excrud.codegen.controller.generator.springboot.SpringBootGenerator;
-import com.mekcone.excrud.codegen.controller.generator.vue.elementadmin.VueElementAdminGenerator;
+import com.mekcone.excrud.codegen.controller.generator.ApiDocumentGenerator;
+import com.mekcone.excrud.codegen.controller.generator.SpringBootGenerator;
+import com.mekcone.excrud.codegen.controller.generator.VueElementAdminGenerator;
 import com.mekcone.excrud.codegen.enums.ErrorEnum;
-import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
-import com.mekcone.excrud.codegen.util.FileUtil;
 import com.mekcone.excrud.codegen.util.LogUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
 
 @Slf4j
@@ -43,7 +37,7 @@ public class ProjectLoader {
             sqlGenerator.generate();
         }*/
 
-        for (Module module : project.getModuleSet().asList()) {
+        for (com.mekcone.excrud.codegen.model.module.Module module : project.getModuleSet().asList()) {
             if (!module.isUse()) {
                 continue;
             }
@@ -66,16 +60,16 @@ public class ProjectLoader {
             // Initialize generators
             BaseGenerator generator;
             switch(module.type()) {
-                case ModuleType.API_DOCUMENT:
+                case Module.API_DOCUMENT:
                     generator = new ApiDocumentGenerator(project);
                     break;
-                case ModuleType.ENTERPRISE_OFFICIAL_WEBSITE:
+                case Module.ENTERPRISE_OFFICIAL_WEBSITE:
                     generator = new EnterpriseOfficialWebsiteGenerator();
                     break;
-                case ModuleType.SPRING_BOOT:
+                case Module.SPRING_BOOT:
                     generator = new SpringBootGenerator(project);
                     break;
-                case ModuleType.VUE_ELEMENT_ADMIN:
+                case Module.VUE_ELEMENT_ADMIN:
                     generator = new VueElementAdminGenerator(project);
                     break;
                 default: generator = null;

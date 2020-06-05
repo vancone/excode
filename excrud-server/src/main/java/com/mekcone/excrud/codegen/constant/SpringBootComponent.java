@@ -1,6 +1,6 @@
 package com.mekcone.excrud.codegen.constant;
 
-public interface SpringBootComponentType {
+public interface SpringBootComponent {
     String CONFIG = "config";
     String CONTROLLER = "controller";
     String ENTITY = "entity";
