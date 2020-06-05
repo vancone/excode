@@ -1,52 +1,59 @@
 package com.mekcone.excrud.codegen.controller.extmgr.springboot;
 
-import com.mekcone.excrud.codegen.constant.ModuleExtension;
-import com.mekcone.excrud.codegen.controller.extmgr.SpringBootExtensionManager;
-import com.mekcone.excrud.codegen.controller.parser.template.impl.UniversalTemplate;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.expr.*;
+import com.mekcone.excrud.codegen.constant.ModuleExtensionType;
+import com.mekcone.excrud.codegen.constant.UrlPath;
+import com.mekcone.excrud.codegen.controller.generator.SpringBootGenerator;
+import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.codegen.model.module.impl.apidocument.ApiDocumentModule;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.RelationalDatabaseModule;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.SpringBootModule;
+import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootComponent;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.StrUtil;
 
 import java.util.List;
 
-public class Swagger2ExtensionManager extends SpringBootExtensionManager {
+public class Swagger2ExtensionManager {
 
-    public Swagger2ExtensionManager(Project project) {
+    private Project project;
+    private SpringBootGenerator callBackObject;
+
+    public Swagger2ExtensionManager(SpringBootGenerator callBackObject, Project project) {
         this.project = project;
+        this.callBackObject = callBackObject;
         SpringBootModule springBootModule = project.getModuleSet().getSpringBootModule();
-        springBootModule.getProjectObjectModel().addDependencies(ModuleExtension.SWAGGER2);
+        springBootModule.getProjectObjectModel().addDependencies(ModuleExtensionType.SWAGGER2);
         addConfig();
-
+        addAnnotation();
     }
 
-    @Override
-    public void addConfig() {
-        /*ApiDocumentModule apiDocumentModule = project.getModuleSet().getApiDocumentModule();
+    private void addConfig() {
+        ApiDocumentModule apiDocumentModule = project.getModuleSet().getApiDocumentModule();
         RelationalDatabaseModule relationalDatabaseModule = project.getModuleSet().getRelationalDatabaseModule();
 
-        UniversalTemplate universalTemplate = new UniversalTemplate(springBootGenerator.getTemplatePath() + "config/Swagger2Config.java");
-        springBootGenerator.preprocessTemplate(universalTemplate);
+        JavaTemplate javaTemplate = new JavaTemplate(UrlPath.SPRING_BOOT_TEMPLATE_PATH + "config/Swagger2Config.java");
+        javaTemplate.preprocessForSpringBootProject(project, null);
 
         String title = apiDocumentModule.getTitle();
         if (title != null) {
-            universalTemplate.insert("title", title.replace("{br}", ""));
+            javaTemplate.insert("title", title.replace("{br}", ""));
         } else if (project.getName() != null) {
-            universalTemplate.insert("title", project.getName());
+            javaTemplate.insert("title", project.getName());
         } else {
-            universalTemplate.insert("title", StrUtil.capitalize(project.getArtifactId()));
+            javaTemplate.insert("title", StrUtil.capitalize(project.getArtifactId()));
         }
 
         String description = apiDocumentModule.getDescription();
         if (description != null) {
-            universalTemplate.insert("description", description);
+            javaTemplate.insert("description", description);
         } else {
-            universalTemplate.insert("description", "API Documents of " + project.getName());
+            javaTemplate.insert("description", "API Documents of " + project.getName());
         }
 
-        universalTemplate.insert("version", project.getVersion());
+        javaTemplate.insert("version", project.getVersion());
 
         String swaggerTags = "";
         List<Table> tables = relationalDatabaseModule.getDatabases().get(0).getTables();
@@ -58,9 +65,28 @@ public class Swagger2ExtensionManager extends SpringBootExtensionManager {
                 swaggerTags += ",\n";
             }
         }
-        universalTemplate.insert("tags", swaggerTags);*/
+        javaTemplate.insert("tags", swaggerTags);
+        callBackObject.addOutputFile(callBackObject.getPath("configPath") + "Swagger2Config.java", javaTemplate.toString());
+    }
 
-        //springBootGenerator.addOutputFile("" + "Swagger2Config.java", SpringBootComponentType.CONFIG, universalTemplate.toString());
+    private void addAnnotation() {
+        SpringBootModule springBootModule = project.getModuleSet().getSpringBootModule();
+
+        // Add Api annotation to each controller
+        for (SpringBootComponent springBootComponent: springBootModule.getControllers()) {
+            springBootComponent.addImport("io.swagger.annotations.Api");
+            NormalAnnotationExpr apiAnnotationExpr = new NormalAnnotationExpr();
+            apiAnnotationExpr.setName("Api");
+
+            // Add Swagger2 tag name into annotation
+            NodeList nodeList = new NodeList();
+            nodeList.add(new StringLiteralExpr(springBootComponent.getName().replace("Controller", "")));
+            ArrayInitializerExpr arrayInitializerExpr = new ArrayInitializerExpr();
+            arrayInitializerExpr.setValues(nodeList);
+
+            apiAnnotationExpr.addPair("tags", arrayInitializerExpr);
+            springBootComponent.addClassAnnotation(apiAnnotationExpr);
+        }
     }
 
 }

@@ -2,7 +2,7 @@ package com.mekcone.excrud.codegen.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.mekcone.excrud.codegen.constant.Module;
+import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.controller.generator.BaseGenerator;
 import com.mekcone.excrud.codegen.controller.generator.EnterpriseOfficialWebsiteGenerator;
 import com.mekcone.excrud.codegen.controller.generator.ApiDocumentGenerator;
@@ -13,7 +13,6 @@ import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
-import com.mekcone.excrud.codegen.util.LogUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,16 +59,16 @@ public class ProjectLoader {
             // Initialize generators
             BaseGenerator generator;
             switch(module.type()) {
-                case Module.API_DOCUMENT:
+                case ModuleType.API_DOCUMENT:
                     generator = new ApiDocumentGenerator(project);
                     break;
-                case Module.ENTERPRISE_OFFICIAL_WEBSITE:
+                case ModuleType.ENTERPRISE_OFFICIAL_WEBSITE:
                     generator = new EnterpriseOfficialWebsiteGenerator();
                     break;
-                case Module.SPRING_BOOT:
+                case ModuleType.SPRING_BOOT:
                     generator = new SpringBootGenerator(project);
                     break;
-                case Module.VUE_ELEMENT_ADMIN:
+                case ModuleType.VUE_ELEMENT_ADMIN:
                     generator = new VueElementAdminGenerator(project);
                     break;
                 default: generator = null;
@@ -89,12 +88,12 @@ public class ProjectLoader {
             project = xmlMapper.readValue(content, Project.class);
             log.info("Load project {}:{} completed", project.getGroupId(), project.getArtifactId());
         } catch (Exception e) {
-            LogUtil.fatalError(ErrorEnum.PARSE_XML_FAILED, e.getMessage());
+            log.error("{}: {}", ErrorEnum.PARSE_XML_FAILED, e.getMessage());
         }
 
         List<Database> databases = project.getModuleSet().getRelationalDatabaseModule().getDatabases();
         if (databases == null || databases.isEmpty()) {
-            LogUtil.fatalError(ErrorEnum.DATABASE_UNDEFINED);
+            log.error(ErrorEnum.DATABASE_UNDEFINED.toString());
         }
 
         for (Database database : databases) {
@@ -108,7 +107,7 @@ public class ProjectLoader {
             }
         }
         if (tableAmount == 0) {
-            LogUtil.error(ErrorEnum.TABLE_UNDEFINED);
+            log.error(ErrorEnum.TABLE_UNDEFINED.toString());
             System.exit(-1);
         } else {
             log.info("{} database(s), {} table(s) detected", databases.size(), tableAmount);

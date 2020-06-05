@@ -1,8 +1,7 @@
 package com.mekcone.excrud.codegen.controller.executor;
 
-import com.mekcone.excrud.codegen.constant.ApplicationParameter;
-import com.mekcone.excrud.codegen.constant.Module;
-import com.mekcone.excrud.codegen.util.LogUtil;
+import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.UrlPath;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -16,11 +15,11 @@ public class SpringBootExecutor {
     private String jarFilePath;
 
     public SpringBootExecutor(String groupId, String artifactId, String version) {
-        jarFilePath = ApplicationParameter.EXCRUD_HOME + "gen" + File.separator +
+        jarFilePath = UrlPath.EXCRUD_HOME + "gen" + File.separator +
                 groupId + "." +
                 artifactId + "-" +
                 version + File.separator +
-                Module.SPRING_BOOT + File.separator +
+                ModuleType.SPRING_BOOT + File.separator +
                 "target" + File.separator +
                 artifactId + "-" +
                 version + ".jar";
@@ -31,7 +30,7 @@ public class SpringBootExecutor {
         if (!jarFile.exists()) {
             log.error("Executable JAR file not found");
         }
-        LogUtil.info("Begin running " + jarFilePath);
+        log.info("Begin running {}", jarFilePath);
         Path jarPath = jarFile.toPath();
         Path parentPath = jarPath.getParent();
         String fileName = jarPath.getFileName().toString();

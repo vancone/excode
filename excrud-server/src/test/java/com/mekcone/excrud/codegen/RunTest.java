@@ -1,6 +1,6 @@
 package com.mekcone.excrud.codegen;
 
-import com.mekcone.excrud.codegen.constant.ApplicationParameter;
+import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.controller.ProjectLoader;
 import com.mekcone.excrud.codegen.controller.executor.SpringBootExecutor;
 import com.mekcone.excrud.codegen.model.project.Project;
@@ -13,11 +13,9 @@ import java.io.File;
 @Slf4j
 public class RunTest {
 
-    private final String examplePath = ApplicationParameter.EXCRUD_HOME + "examples" + File.separator;
-
     @Test
     void runSpringBootModuleOfMall() {
-        String mallPath = examplePath + "mall" + File.separator + "excrud.xml";
+        String mallPath = UrlPath.EXAMPLE_PATH + "mall" + File.separator + "excrud.xml";
         String projectContent = FileUtil.read(mallPath);
         if (projectContent != null) {
             ProjectLoader projectLoader = new ProjectLoader();

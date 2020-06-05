@@ -1,9 +1,13 @@
 package com.mekcone.excrud.codegen.model.module.impl.springboot.component;
 
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.AnnotationExpr;
+import com.mekcone.excrud.codegen.constant.SpringBootComponentType;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
-import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.Data;
 
 @Data
@@ -23,15 +27,30 @@ public class SpringBootComponent {
         javaTemplate = new JavaTemplate(templatePath);
         javaTemplate.preprocessForSpringBootProject(project, table);
 
-        if (templatePath.toLowerCase().contains(com.mekcone.excrud.codegen.constant.SpringBootComponent.CONTROLLER)) {
+        if (templatePath.toLowerCase().contains(SpringBootComponentType.CONTROLLER)) {
             name = table.getUpperCamelCaseName() + "Controller";
-        } else if (templatePath.toLowerCase().contains(com.mekcone.excrud.codegen.constant.SpringBootComponent.MAPPER)) {
+        } else if (templatePath.toLowerCase().contains(SpringBootComponentType.MAPPER)) {
             name = table.getUpperCamelCaseName() + "Mapper";
-        } else if (templatePath.toLowerCase().contains(com.mekcone.excrud.codegen.constant.SpringBootComponent.SERVICE_IMPL.toLowerCase())) {
+        } else if (templatePath.toLowerCase().contains(SpringBootComponentType.SERVICE_IMPL.toLowerCase())) {
             name = table.getUpperCamelCaseName() + "ServiceImpl";
-        } else if (templatePath.toLowerCase().contains(com.mekcone.excrud.codegen.constant.SpringBootComponent.SERVICE)) {
+        } else if (templatePath.toLowerCase().contains(SpringBootComponentType.SERVICE)) {
             name = table.getUpperCamelCaseName() + "Service";
         }
+    }
+
+    public void addClassAnnotation(AnnotationExpr annotationExpr) {
+        CompilationUnit compilationUnit = javaTemplate.getCompilationUnit();
+        ClassOrInterfaceDeclaration mainClass = compilationUnit.getClassByName(name).get();
+        mainClass.addAnnotation(annotationExpr);
+    }
+
+    public void addMethodAnnotation(MethodDeclaration methodDeclaration, AnnotationExpr annotationExpr) {
+        methodDeclaration.addAnnotation(annotationExpr);
+    }
+
+    public void addImport(String importItem) {
+        CompilationUnit compilationUnit = javaTemplate.getCompilationUnit();
+        compilationUnit.addImport(importItem);
     }
 
     @Override

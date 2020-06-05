@@ -2,7 +2,7 @@ package com.mekcone.excrud.codegen.model.module.impl.apidocument;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.codegen.constant.Module;
+import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.model.module.impl.apidocument.component.Keyword;
 import lombok.Data;
 
@@ -32,6 +32,6 @@ public class ApiDocumentModule implements com.mekcone.excrud.codegen.model.modul
 
     @Override
     public String type() {
-        return Module.API_DOCUMENT;
+        return ModuleType.API_DOCUMENT;
     }
 }

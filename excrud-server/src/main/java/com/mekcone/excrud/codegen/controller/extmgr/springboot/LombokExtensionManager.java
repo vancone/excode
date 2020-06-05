@@ -1,15 +1,18 @@
 package com.mekcone.excrud.codegen.controller.extmgr.springboot;
 
-import com.mekcone.excrud.codegen.constant.ModuleExtension;
-import com.mekcone.excrud.codegen.controller.extmgr.SpringBootExtensionManager;
+import com.mekcone.excrud.codegen.constant.ModuleExtensionType;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.SpringBootModule;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootDataClass;
-import com.mekcone.excrud.codegen.util.LogUtil;
+import com.mekcone.excrud.codegen.model.project.Project;
+import lombok.extern.slf4j.Slf4j;
 
-public class LombokExtensionManager extends SpringBootExtensionManager {
+@Slf4j
+public class LombokExtensionManager {
+
+    private Project project;
 
     public LombokExtensionManager(SpringBootModule springBootModule) {
-        springBootModule.getProjectObjectModel().addDependencies(ModuleExtension.LOMBOK);
+        springBootModule.getProjectObjectModel().addDependencies(ModuleExtensionType.LOMBOK);
 
         // Remove getters and setters of the data class
         for (SpringBootDataClass entity: springBootModule.getEntities()) {
@@ -18,11 +21,6 @@ public class LombokExtensionManager extends SpringBootExtensionManager {
             entity.getEntityClassDeclaration().addMarkerAnnotation("Data");
         }
 
-        LogUtil.info("Execute extension Lombok complete");
-    }
-
-    @Override
-    public void addConfig() {
-
+        log.info("Execute extension Lombok complete");
     }
 }

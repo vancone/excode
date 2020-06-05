@@ -1,4 +1,4 @@
-package ## groupId ##.## artifactId ##.config;
+package __groupId__.__artifactId__.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,15 +16,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class Swagger2Config {
 
     // API package scanning path
-    public static final String SWAGGER_SCAN_BASE_PACKAGE = "## groupId ##.## artifactId ##";
+    public static final String SWAGGER_SCAN_BASE_PACKAGE = "__groupId__.__artifactId__";
 
-    public static final String VERSION = "## version ##";
+    public static final String VERSION = "__version__";
 
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-                .tags(## tags ##)
+                .tags(__tags__)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(SWAGGER_SCAN_BASE_PACKAGE))
                 .paths(PathSelectors.any())
@@ -33,8 +33,8 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("## title ##")
-                .description("## description ##")
+                .title("__title__")
+                .description("__description__")
                 .version(VERSION)
                 .termsOfServiceUrl("http://www.mekcone.com")
                 .build();

@@ -1,6 +1,6 @@
 package com.mekcone.excrud.codegen.constant;
 
-public interface ModuleExtension {
+public interface ModuleExtensionType {
     // Spring Boot
     String LOMBOK = "lombok";
     String SWAGGER2 = "swagger2";

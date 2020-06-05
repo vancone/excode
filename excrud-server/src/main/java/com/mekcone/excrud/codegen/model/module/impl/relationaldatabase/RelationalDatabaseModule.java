@@ -2,7 +2,7 @@ package com.mekcone.excrud.codegen.model.module.impl.relationaldatabase;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.codegen.constant.Module;
+import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import lombok.Data;
 
@@ -20,6 +20,6 @@ public class RelationalDatabaseModule implements com.mekcone.excrud.codegen.mode
 
     @Override
     public String type() {
-        return Module.RELATIONAL_DATABASE;
+        return ModuleType.RELATIONAL_DATABASE;
     }
 }

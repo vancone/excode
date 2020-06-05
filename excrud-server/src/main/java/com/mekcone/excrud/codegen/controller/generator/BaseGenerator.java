@@ -4,19 +4,20 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mekcone.excrud.codegen.constant.ApplicationParameter;
+import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.enums.ErrorEnum;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
-import com.mekcone.excrud.codegen.util.LogUtil;
 import lombok.Data;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
 
 // Every generator should extends this base class
+@Slf4j
 public abstract class BaseGenerator {
 
     protected String componentTemplatePath;
@@ -64,7 +65,7 @@ public abstract class BaseGenerator {
         // Read initial.txt
         String initialFile = FileUtil.read(templatePath + "../gen.json");
         if (initialFile == null) {
-            LogUtil.error(ErrorEnum.NO_DEFAULT_INITIALIZING_BEHAVIOR, templatePath + "gen.json");
+            log.error(ErrorEnum.NO_DEFAULT_INITIALIZING_BEHAVIOR.toString() + templatePath + "gen.json");
             return;
         }
         ObjectMapper objectMapper = new ObjectMapper();
@@ -86,7 +87,7 @@ public abstract class BaseGenerator {
                     paths.put(entry.getKey(), value);
                 }
             } else {
-                LogUtil.fatalError(ErrorEnum.PATHS_NOT_A_VALID_OBJECT);
+                log.error(ErrorEnum.PATHS_NOT_A_VALID_OBJECT.toString());
             }
 
             if (extensionsJsonNode.isArray()) {
@@ -110,23 +111,22 @@ public abstract class BaseGenerator {
     // This method should be initialized in each child class
     public abstract void generate();
 
-    protected String getPath(String pathName) {
+    public String getPath(String pathName) {
         return paths.get(pathName);
     }
 
     protected void initialize(Project project, String moduleType) {
-        if (ApplicationParameter.EXCRUD_HOME == null) {
-            LogUtil.fatalError(ErrorEnum.EXCRUD_HOME_ENV_VARIABLE_NOT_SET);
+        if (UrlPath.EXCRUD_HOME == null) {
+            log.error(ErrorEnum.EXCRUD_HOME_ENV_VARIABLE_NOT_SET.toString());
         }
         this.project = project;
         this.moduleType = moduleType;
 
         // Set template paths
-        templatePath = ApplicationParameter.EXCRUD_HOME + "/modules/" + moduleType + "/templates/";
+        templatePath = UrlPath.SPRING_BOOT_TEMPLATE_PATH;
         componentTemplatePath = templatePath + "components/";
-        outputPath = ApplicationParameter.EXCRUD_HOME +
-                "gen" + File.separator +
-                project.getGroupId() + "." + project.getArtifactId() + "-" + project.getVersion() + File.separator +
+        outputPath = UrlPath.GEN_PATH + project.getGroupId() + "." +
+                project.getArtifactId() + "-" + project.getVersion() + File.separator +
                 moduleType + File.separator;
         FileUtil.checkDirectory(outputPath);
     }

@@ -6,15 +6,12 @@ import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.ArrayInitializerExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.mekcone.excrud.codegen.constant.ModuleExtension;
-import com.mekcone.excrud.codegen.constant.Module;
-import com.mekcone.excrud.codegen.controller.generator.BaseGenerator;
-import com.mekcone.excrud.codegen.controller.generator.SqlGenerator;
+import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleExtensionType;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.LombokExtensionManager;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.Swagger2ExtensionManager;
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
-import com.mekcone.excrud.codegen.controller.parser.template.impl.UniversalTemplate;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
@@ -24,7 +21,6 @@ import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringB
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootDataClass;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootExtension;
 import com.mekcone.excrud.codegen.model.project.Project;
-import com.mekcone.excrud.codegen.util.LogUtil;
 import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -37,75 +33,11 @@ public class SpringBootGenerator extends BaseGenerator {
     public PropertiesParser applicationPropertiesParser = new PropertiesParser();
 
     public SpringBootGenerator(Project project) {
-        initialize(project, Module.SPRING_BOOT);
+        initialize(project, ModuleType.SPRING_BOOT);
         springBootModule = project.getModuleSet().getSpringBootModule();
         springBootModule.setGroupId(project.getGroupId());
         springBootModule.setArtifactId(project.getArtifactId());
     }
-
-    /*public void preprocessTemplate(UniversalTemplate universalTemplate, Table table) {
-        String templateText = universalTemplate.toString();
-        if (templateText == null || templateText.isEmpty()) {
-            LogUtil.info("Preprocess templates failed");
-            System.exit(-1);
-        }
-        if (templateText.contains("## groupId ##")) {
-            universalTemplate.insert("groupId", project.getGroupId());
-        }
-        if (templateText.contains("## artifactId ##")) {
-            universalTemplate.insert("artifactId", project.getArtifactId());
-        }
-
-        if (table == null) return;
-
-        if (templateText.contains("## Table ##")) {
-            universalTemplate.insert("Table", table.getUpperCamelCaseName());
-        }
-
-        if (templateText.contains("## table ##")) {
-            universalTemplate.insert("table", table.getCamelCaseName());
-        }
-
-        if (templateText.contains("## primaryKey ##")) {
-            universalTemplate.insert("primaryKey", table.getCamelCasePrimaryKey());
-        }
-
-        if (templateText.contains("## primary_key ##")) {
-            universalTemplate.insert("primary_key", table.getPrimaryKey());
-        }
-    }
-
-    private void preprocessTemplate(JavaTemplate javaTemplate, Table table) {
-        String templateText = javaTemplate.toString();
-        if (templateText.contains("__groupId__")) {
-            javaTemplate.insert("groupId", project.getGroupId());
-        }
-        if (templateText.contains("__artifactId__")) {
-            javaTemplate.insert("artifactId", project.getArtifactId());
-        }
-
-        if (table == null) return;
-
-        if (templateText.contains("__Table__")) {
-            javaTemplate.insert("Table", table.getUpperCamelCaseName());
-        }
-
-        if (templateText.contains("__table__")) {
-            javaTemplate.insert("table", table.getCamelCaseName());
-        }
-
-        if (templateText.contains("__primaryKey__")) {
-            javaTemplate.insert("primaryKey", table.getCamelCasePrimaryKey());
-        }
-
-        if (templateText.contains("__primary_key__")) {
-            javaTemplate.insert("primary_key", table.getPrimaryKey());
-        }
-    }
-
-    public void preprocessTemplate(UniversalTemplate universalTemplate) {
-        preprocessTemplate(universalTemplate, null);
-    }*/
 
     public void generate() {
         copyInitialTemplates();
@@ -141,22 +73,6 @@ public class SpringBootGenerator extends BaseGenerator {
         applicationPropertiesParser.add("spring.datasource.password", defaultDatabase.getPassword());
         applicationPropertiesParser.addSeparator();
 
-        // Config
-
-        // Cross origin
-        /*if (oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_HEADERS) ||
-                oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_METHODS) ||
-                oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_ORIGINS)) {
-            FileUtil.write(getPath("configPath") + "CrossOriginConfig.java", stringifyConfig("cross_origin"));
-        }
-
-        // Swagger2
-        if (oldExport.getBooleanProperty(SpringBootBackendProperty.SWAGGER2_ENABLE)) {
-            FileUtil.write(getPath("configPath") + "Swagger2Config.java", stringifyConfig("swagger2"));
-        }*/
-
-//        addOutputFile(getPath("resourcesPath") + "application.properties", "properties", applicationPropertiesParser.generate());
-
         // Remove disabled extensions
         for (SpringBootExtension springBootExtension : springBootModule.getExtensions()) {
             if (!springBootExtension.isUse()) {
@@ -164,18 +80,18 @@ public class SpringBootGenerator extends BaseGenerator {
             }
         }
 
-        LogUtil.info("Enabled extensions: " + getExtensions().toString());
+        log.info("Enabled extensions: {}", getExtensions().toString());
 
         // Run extension manager
         springBootModule.setProjectObjectModel(new ProjectObjectModel(project));
 
         for (String extensionName : getExtensions()) {
             switch (extensionName) {
-                case ModuleExtension.LOMBOK:
+                case ModuleExtensionType.LOMBOK:
                     new LombokExtensionManager(springBootModule);
                     break;
-                case ModuleExtension.SWAGGER2:
-                    new Swagger2ExtensionManager(project);
+                case ModuleExtensionType.SWAGGER2:
+                    new Swagger2ExtensionManager(this, project);
                     break;
                 default:
                     ;
@@ -185,25 +101,22 @@ public class SpringBootGenerator extends BaseGenerator {
         // Write to files
         write();
 
-        LogUtil.info("Generate " + Module.SPRING_BOOT + " completed");
+        log.info("Generate {} completed", ModuleType.SPRING_BOOT);
     }
 
     @Override
     public void write() {
         // Application entry
-        //UniversalTemplate universalTemplate = new UniversalTemplate(templatePath + "Application.java");
         JavaTemplate javaTemplate = new JavaTemplate(templatePath + "Application.java");
         if (javaTemplate != null) {
             javaTemplate.preprocessForSpringBootProject(project, null);
-            // preprocessTemplate(universalTemplate);
         } else {
-            LogUtil.info("Application.java not found");
+            log.info("Application.java not found");
         }
         javaTemplate.insert("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
         addOutputFile(getPath("srcPath") + StrUtil.upperCamelCase(project.getArtifactId()) + "Application.java", javaTemplate.toString());
 
         // Application properties
-//        LogUtil.info("AP: " + springBootGenModel.getApplicationPropertiesParser());
         addOutputFile(getPath("resourcesPath") + "application.properties", springBootModule.getApplicationPropertiesParser().generate());
 
         // Controllers
@@ -236,142 +149,6 @@ public class SpringBootGenerator extends BaseGenerator {
 
         super.write();
     }
-
-    /*public String stringifyApplicationProperties() {
-        var globalPropertiesParser = new PropertiesParser();
-
-        // Server port
-        String serverPort = oldExport.getProperty(SpringBootBackendProperty.SERVER_PORT);
-        if (serverPort != null && !serverPort.isEmpty()) {
-            globalPropertiesParser.add("server.port", serverPort);
-            globalPropertiesParser.addSeparator();
-        }
-
-        for (String dependencyName : getSupportedDependencies()) {
-            if (oldExport.getBooleanProperty(dependencyName + "_enable")) {
-                if (dependencyName.equals("mybatis")) {
-                    Database defaultDatabase = project.getExports().getRelationalDatabaseExport().getDatabases().get(0);
-                    globalPropertiesParser.add("spring.datasource.url",
-                            "jdbc:" + defaultDatabase.getType() + "://" + defaultDatabase.getHost() + "/" + defaultDatabase.getName());
-                    globalPropertiesParser.add("spring.datasource.username", defaultDatabase.getUsername());
-                    globalPropertiesParser.add("spring.datasource.password", defaultDatabase.getPassword());
-                    globalPropertiesParser.addSeparator();
-                } else {
-                    var localPropertiesParser = PropertiesParser.readFrom(templatePath + "properties/" + dependencyName + ".properties");
-                    if (localPropertiesParser != null) {
-                        globalPropertiesParser.combine(localPropertiesParser);
-                    }
-                }
-            }
-        }
-        return globalPropertiesParser.generate();
-    }*/
-
-    /*public String stringifyConfig(String configName) {
-        switch (configName) {
-            case "cross_origin":
-                UniversalTemplate universalTemplate = new UniversalTemplate(templatePath + "/config/CrossOriginConfig.java");
-                preprocessTemplate(universalTemplate);
-
-                // Allowed headers
-                if (oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_HEADERS)) {
-                    String[] headers = oldExport.getProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_HEADERS).split(",");
-                    if (headers.length >= 1) {
-                        String allowedHeadersText = "";
-                        for (int i = 0; i < headers.length; i++) {
-                            allowedHeadersText += "\"" + headers[i].trim() + "\"";
-                            if (i + 1 != headers.length) {
-                                allowedHeadersText += ",";
-                            }
-                        }
-                        universalTemplate.insert("allowedHeaders", ".allowedHeaders(" + allowedHeadersText + ")");
-                    } else {
-                        universalTemplate.remove("allowedHeaders");
-                    }
-                } else {
-                    universalTemplate.remove("allowedHeaders");
-                }
-
-                // Allowed methods
-                if (oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_METHODS)) {
-                    String[] methods = oldExport.getProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_METHODS).split(",");
-                    if (methods.length >= 1) {
-                        String allowedMethodsText = "";
-                        for (var i = 0; i < methods.length; i++) {
-                            allowedMethodsText += "\"" + methods[i].trim() + "\"";
-                            if (i + 1 != methods.length) {
-                                allowedMethodsText += ",";
-                            }
-                        }
-                        universalTemplate.insert("allowedMethods", ".allowedMethods(" + allowedMethodsText + ")");
-                    } else {
-                        universalTemplate.remove("allowedMethods");
-                    }
-                } else {
-                    universalTemplate.remove("allowedMethods");
-                }
-
-                // Allowed origins
-                if (oldExport.existProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_ORIGINS)) {
-                    String[] origins = oldExport.getProperty(SpringBootBackendProperty.CROSS_ORIGIN_ALLOWED_ORIGINS).split(",");
-                    if (origins.length >= 1) {
-                        String allowedOriginsText = "";
-                        for (var i = 0; i < origins.length; i++) {
-                            allowedOriginsText += "\"" + origins[i].trim() + "\"";
-                            if (i + 1 != origins.length) {
-                                allowedOriginsText += ",";
-                            }
-                        }
-                        universalTemplate.insert("allowedOrigins", ".allowedOrigins(" + allowedOriginsText + ")");
-                    } else {
-                        universalTemplate.remove("allowedOrigins");
-                    }
-                } else {
-                    universalTemplate.remove("allowedOrigins");
-                }
-
-                return universalTemplate.toString();
-
-            case "swagger2":
-                universalTemplate = new UniversalTemplate(templatePath + "config/Swagger2Config.java");
-                preprocessTemplate(universalTemplate);
-
-                String title = project.getExports().getApiDocumentExport().getTitle();
-                if (title != null) {
-                    universalTemplate.insert("title", title.replace("{br}", ""));
-                } else if (project.getName() != null) {
-                    universalTemplate.insert("title", project.getName());
-                } else {
-                    universalTemplate.insert("title", StrUtil.capitalize(project.getArtifactId()));
-                }
-
-                String description = project.getExports().getApiDocumentExport().getDescription();
-                if (description != null) {
-                    universalTemplate.insert("description", description);
-                } else {
-                    universalTemplate.insert("description", "API Documents of " + project.getName());
-                }
-
-                universalTemplate.insert("version", project.getVersion());
-
-                String swaggerTags = "";
-                List<Table> tables = project.getExports().getRelationalDatabaseExport().getDatabases().get(0).getTables();
-                for (var i = 0; i < tables.size(); i++) {
-                    swaggerTags += "new Tag(\"" + tables.get(i).getUpperCamelCaseName() + "\", " + "\"" + tables.get(i).getDescription() + "\")";
-                    if (i + 1 == tables.size()) {
-                        swaggerTags += "\n";
-                    } else {
-                        swaggerTags += ",\n";
-                    }
-                }
-                universalTemplate.insert("tags", swaggerTags);
-
-                return universalTemplate.toString();
-            default:
-                log.warn("Unsupported config item \"{}\"", configName);
-                return null;
-        }
-    }*/
 
     public void createControllerComponent(Table table) {
         String controllerTemplatePath = templatePath + "controller/Controller.java";
@@ -418,8 +195,6 @@ public class SpringBootGenerator extends BaseGenerator {
                         array.getValues().add(resultAnnotation);
                     }
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(array);
-//                        YamlPrinter yamlPrinter = new YamlPrinter(true);
-//                        LogUtil.error(-1, yamlPrinter.output(javaTemplate.getCompilationUnit()));
                 } else if (annotationExpr.getNameAsString().equals("Update")) {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
                             SqlGenerator.updateQuery(table)));

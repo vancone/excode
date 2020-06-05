@@ -1,0 +1,39 @@
+package com.mekcone.excrud.codegen.ast.examples;
+
+import com.mekcone.webplatform.account.entity.User;
+import com.mekcone.webplatform.account.service.LoginService;
+import com.mekcone.webplatform.common.model.Response;
+import io.swagger.annotations.Api;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@Api(tags={"Login"})
+@RestController
+@RequestMapping("/api/login")
+public class Swagger2ControllerExample {
+
+    @Autowired
+    private LoginService loginService;
+
+    @GetMapping
+    public Response getLoginStatus(HttpServletRequest httpServletRequest) {
+        loginService.getLoginStatus(httpServletRequest);
+        return Response.success("already login", null);
+    }
+
+    @PostMapping
+    public Response login(HttpServletResponse httpServletResponse, @RequestBody User user) {
+        loginService.login(httpServletResponse, user);
+        return Response.success();
+    }
+
+    @DeleteMapping
+    public Response logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        loginService.signOut(httpServletRequest, httpServletResponse);
+        return Response.success();
+    }
+}
+

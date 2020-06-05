@@ -3,8 +3,7 @@ package com.mekcone.excrud.codegen.controller.generator;
 import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import com.mekcone.excrud.codegen.constant.ApplicationParameter;
-import com.mekcone.excrud.codegen.controller.generator.BaseGenerator;
+import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
@@ -47,7 +46,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
     }
 
     public void smartDescription() {
-        PropertiesParser propertiesParser = PropertiesParser.readFrom(ApplicationParameter.EXCRUD_HOME + "/modules/api-documents/smart-description.properties");
+        PropertiesParser propertiesParser = PropertiesParser.readFrom(UrlPath.EXCRUD_HOME + "/modules/api-documents/smart-description.properties");
         if (propertiesParser == null) {
             log.warn("Smart description dataset not found");
             return;
@@ -134,7 +133,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
             paragraph = new Paragraph();
             paragraph.setSpacingBefore(100);
             paragraph.setAlignment(1);
-            Image image = Image.getInstance(ApplicationParameter.EXCRUD_HOME + "/resources/logo/logo.png");
+            Image image = Image.getInstance(UrlPath.EXCRUD_HOME + "/resources/logo/logo.png");
             image.setAlignment(1);
             image.scaleAbsolute(40,40);
             paragraph.add(image);

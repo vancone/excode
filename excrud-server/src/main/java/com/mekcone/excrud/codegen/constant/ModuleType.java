@@ -1,6 +1,6 @@
 package com.mekcone.excrud.codegen.constant;
 
-public interface Module {
+public interface ModuleType {
     String API_DOCUMENT = "api-document";
     String ENTERPRISE_OFFICIAL_WEBSITE = "enterprise-official-website";
     String RELATIONAL_DATABASE = "relational-database";

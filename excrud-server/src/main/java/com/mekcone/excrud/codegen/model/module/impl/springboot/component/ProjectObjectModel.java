@@ -7,8 +7,8 @@ import com.mekcone.excrud.codegen.constant.ApplicationParameter;
 import com.mekcone.excrud.codegen.controller.generator.SpringBootGenerator;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
-import com.mekcone.excrud.codegen.util.LogUtil;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.jdom2.Comment;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Slf4j
 public class ProjectObjectModel {
     private String groupId;
     private String artifactId;
@@ -53,7 +54,7 @@ public class ProjectObjectModel {
                     dependencies.addAll(pomDependencies);
                 }
             } catch (JsonProcessingException e) {
-                LogUtil.info("Parse XML error while retrieving dependencies of extension \"" + pomDependenciesText + "\": "+ e.getMessage());
+                log.info("Parse XML error while retrieving dependencies of extension \"{}\": {}",pomDependenciesText, e.getMessage());
             }
         }
     }
@@ -138,7 +139,7 @@ public class ProjectObjectModel {
         try {
             xmlOutputter.output(document, byteArrayOutputStream);
         } catch (IOException e) {
-            LogUtil.info(e.getMessage());
+            log.info(e.getMessage());
         }
         return byteArrayOutputStream.toString();
     }
