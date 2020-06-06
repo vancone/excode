@@ -4,6 +4,8 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.MethodDeclaration;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
@@ -11,6 +13,8 @@ import com.mekcone.excrud.codegen.controller.parser.template.Template;
 import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 @Data
 @Slf4j
@@ -91,6 +95,16 @@ public class JavaTemplate implements Template {
                     i --;
                 }
             }
+        }
+    }
+
+    public MethodDeclaration getMethodByName(String className, String methodName) {
+        ClassOrInterfaceDeclaration mainClass = compilationUnit.getClassByName(className).get();
+        List<MethodDeclaration> methods = mainClass.getMethodsByName(methodName);
+        if (!methods.isEmpty()) {
+            return methods.get(0);
+        } else {
+            return null;
         }
     }
 

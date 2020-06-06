@@ -23,17 +23,13 @@ public abstract class BaseGenerator {
     protected String componentTemplatePath;
     protected String moduleType;
     protected String outputPath;
+    private Map<String, String> paths = new HashMap<>();
 
     @Getter
     protected Project project;
 
     @Getter
     protected static String templatePath;
-
-    private Map<String, String> paths = new HashMap<>();
-
-    @Getter
-    private List<String> extensions = new ArrayList<>();
 
     @Data
     public class OutputFile {
@@ -90,13 +86,6 @@ public abstract class BaseGenerator {
                 log.error(ErrorEnum.PATHS_NOT_A_VALID_OBJECT.toString());
             }
 
-            if (extensionsJsonNode.isArray()) {
-                for (JsonNode extensionJsonNode: extensionsJsonNode) {
-//                    LogUtil.info("EXT: " + extensionJsonNode.asText());
-                    extensions.add(extensionJsonNode.asText());
-                }
-            }
-
             // Create directories
             FileUtil.checkDirectory(outputPath);
             for (String path: paths.values()) {
@@ -143,18 +132,5 @@ public abstract class BaseGenerator {
         for (OutputFile outputFile: outputFiles) {
             FileUtil.write(outputPath + outputFile.getPath(), outputFile.getContent());
         }
-    }
-
-    public void addExtension(String addedExtension) {
-        for (String extension: extensions) {
-            if (addedExtension.equals(extension)) {
-                return;
-            }
-        }
-        extensions.add(addedExtension);
-    }
-
-    public boolean removeExtension(String removedExtension) {
-        return extensions.remove(removedExtension);
     }
 }

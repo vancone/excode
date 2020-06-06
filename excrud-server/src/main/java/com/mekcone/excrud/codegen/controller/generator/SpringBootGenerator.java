@@ -8,6 +8,7 @@ import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.constant.ModuleExtensionType;
+import com.mekcone.excrud.codegen.controller.extmgr.springboot.CrossOriginExtensionManager;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.LombokExtensionManager;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.Swagger2ExtensionManager;
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
@@ -24,6 +25,8 @@ import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Iterator;
 
 @Slf4j
 public class SpringBootGenerator extends BaseGenerator {
@@ -74,19 +77,23 @@ public class SpringBootGenerator extends BaseGenerator {
         applicationPropertiesParser.addSeparator();
 
         // Remove disabled extensions
-        for (SpringBootExtension springBootExtension : springBootModule.getExtensions()) {
-            if (!springBootExtension.isUse()) {
-                removeExtension(springBootExtension.getId());
+        Iterator<SpringBootExtension> springBootExtensionIterator = springBootModule.getExtensions().iterator();
+        while (springBootExtensionIterator.hasNext()) {
+            if (!springBootExtensionIterator.next().isUse()) {
+                springBootExtensionIterator.remove();
             }
         }
 
-        log.info("Enabled extensions: {}", getExtensions().toString());
+        log.info("Enabled extensions: {}", springBootModule.getExtensions().toString());
 
         // Run extension manager
         springBootModule.setProjectObjectModel(new ProjectObjectModel(project));
 
-        for (String extensionName : getExtensions()) {
-            switch (extensionName) {
+        for (SpringBootExtension springBootExtension : springBootModule.getExtensions()) {
+            switch (springBootExtension.getId()) {
+                case ModuleExtensionType.CROSS_ORIGIN:
+                    new CrossOriginExtensionManager(this, project);
+                    break;
                 case ModuleExtensionType.LOMBOK:
                     new LombokExtensionManager(springBootModule);
                     break;
@@ -94,7 +101,7 @@ public class SpringBootGenerator extends BaseGenerator {
                     new Swagger2ExtensionManager(this, project);
                     break;
                 default:
-                    ;
+                    log.warn("Unknown extension: {}", springBootExtension.getId());
             }
         }
 

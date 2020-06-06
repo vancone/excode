@@ -68,14 +68,25 @@
             <extensions>
                 <extension id="lombok" use="true"></extension>
                 <extension id="swagger2" use="true"></extension>
+                <extension id="cross-origin" use="true"></extension>
             </extensions>
 
             <properties>
                 <application-name>Mall</application-name>
                 <server-port>9090</server-port>
-                <!-- <cors-allowedOrigins>*</cors-allowedOrigins>
-                <cors-allowedMethods>{GET, POST, PUT, DELETE}</cors-allowedMethods> -->
                 <page-size>15</page-size>
+                <cross-origin>
+                    <!-- <allowed-headers>
+                        <allowed-header>X-Custom-Header</allowed-header>
+                    </allowed-headers>
+                    <allowed-methods>
+                        <allowed-method>GET</allowed-method>
+                        <allowed-method>POST</allowed-method>
+                    </allowed-methods> -->
+                    <allowed-origins>
+                        <allowed-origin>*</allowed-origin>
+                    </allowed-origins>
+                </cross-origin>
             </properties>
         </spring-boot>
 
