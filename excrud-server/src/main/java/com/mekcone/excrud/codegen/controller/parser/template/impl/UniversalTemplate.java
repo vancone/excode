@@ -1,7 +1,7 @@
 package com.mekcone.excrud.codegen.controller.parser.template.impl;
 
-import com.mekcone.excrud.codegen.util.FileUtil;
 import com.mekcone.excrud.codegen.controller.parser.template.Template;
+import com.mekcone.excrud.codegen.util.FileUtil;
 
 public class UniversalTemplate implements Template {
     private String template;

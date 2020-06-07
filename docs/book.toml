@@ -3,4 +3,4 @@ authors = ["Tenton Lien"]
 language = "en"
 multilingual = false
 src = "src"
-title = "The ExCRUD CLI Tool"
+title = "The ExCRUD DevOps Tool"

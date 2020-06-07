@@ -1,6 +1,5 @@
 package com.mekcone.excrud.codegen;
 
-import com.mekcone.excrud.codegen.constant.ApplicationParameter;
 import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.controller.ProjectLoader;
 import com.mekcone.excrud.codegen.controller.packager.SpringBootPackager;

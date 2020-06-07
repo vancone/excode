@@ -1,7 +1,6 @@
 package com.mekcone.excrud.codegen.model.module.impl.springboot.component;
 
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.AnnotationExpr;
@@ -9,10 +8,7 @@ import com.mekcone.excrud.codegen.constant.SpringBootComponentType;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
-import com.sun.org.apache.xerces.internal.dom.ChildNode;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class SpringBootComponent {

@@ -1,10 +1,9 @@
 package com.mekcone.excrud.codegen.controller.generator;
 
-import com.mekcone.excrud.ServerApplication;
 import com.mekcone.excrud.codegen.constant.ApplicationParameter;
+import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 

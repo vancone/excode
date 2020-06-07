@@ -11,8 +11,8 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.mekcone.excrud.codegen.constant.DataType;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
-import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.Data;
 
 import java.util.ArrayList;
