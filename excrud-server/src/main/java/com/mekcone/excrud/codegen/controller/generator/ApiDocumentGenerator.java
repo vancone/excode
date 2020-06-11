@@ -3,14 +3,15 @@ package com.mekcone.excrud.codegen.controller.generator;
 import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.constant.UrlPath;
+import com.mekcone.excrud.codegen.model.module.impl.apidocument.component.Keyword;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
-import com.mekcone.excrud.codegen.model.module.impl.apidocument.component.Keyword;
-import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
 import com.mekcone.excrud.codegen.util.DataTypeConverter;
+import com.mekcone.excrud.codegen.util.LangUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.FileOutputStream;
@@ -26,8 +27,8 @@ public class ApiDocumentGenerator extends BaseGenerator {
     private Font emphasisChineseFont;
 
     public ApiDocumentGenerator(Project project) {
-        this.project = project;
-        smartDescription();
+
+        initialize(project, ModuleType.API_DOCUMENT);
 
         try {
             simSunBaseFont = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
@@ -43,35 +44,13 @@ public class ApiDocumentGenerator extends BaseGenerator {
 
         emphasisChineseFont = new Font(simSunBaseFont, Font.BOLD);
         emphasisChineseFont.setSize(12);
-    }
 
-    public void smartDescription() {
-        PropertiesParser propertiesParser = PropertiesParser.readFrom(UrlPath.EXCRUD_HOME + "/modules/api-documents/smart-description.properties");
-        if (propertiesParser == null) {
-            log.warn("Smart description dataset not found");
-            return;
+        log.info("Start generating PDF document...");
+        for (String languageType: project.getLanguages()) {
+            generatePdf(languageType);
         }
 
-        for (Database database: project.getModuleSet().getRelationalDatabaseModule().getDatabases()) {
-            for (Table table: database.getTables()) {
-                for (Column column: table.getColumns()) {
-                    if (column.getDescription() == null || column.getDescription().isEmpty()) {
-                        String[] words = column.getName().split("_");
-                        String generatedDescription = "";
-                        for (String word: words) {
-                            if (propertiesParser.exist(word)) {
-                                generatedDescription += propertiesParser.get(word);
-                            } else {
-                                generatedDescription += word + " ";
-                            }
-                        }
-                        if (!generatedDescription.isEmpty()) {
-                            column.setDescription(generatedDescription);
-                        }
-                    }
-                }
-            }
-        }
+        log.info("Complete.");
     }
 
     public PdfPCell tableCell(String str) {
@@ -96,11 +75,11 @@ public class ApiDocumentGenerator extends BaseGenerator {
 
     }
 
-    public void generatePdf() {
+    public void generatePdf(String languageType) {
         try {
             Document document = new Document(PageSize.A4, 50, 50, 50, 50);
 
-            PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream("test.pdf"));
+            PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(outputPath + project.getName().getValue(languageType) + LangUtil.separator(languageType) + LangUtil.get(languageType, "api_document") + ".pdf"));
             pdfWriter.setViewerPreferences(PdfWriter.PageLayoutOneColumn);
             pdfWriter.setPageEvent(new PdfPageEvent());
             document.open();
@@ -114,7 +93,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
             paragraph.setAlignment(Element.ALIGN_CENTER);
             Font font = new Font(simHeiBaseFont, 24, Font.BOLD);
             paragraph.setFont(font);
-            String title = project.getModuleSet().getApiDocumentModule().getTitle().replace("{br}", "\n");
+            String title = project.getName().getValue(languageType) + "\n" + LangUtil.get(languageType, "api_document");
             chunk = new Chunk(title);
             paragraph.add(chunk);
             document.add(paragraph);
@@ -133,7 +112,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
             paragraph = new Paragraph();
             paragraph.setSpacingBefore(100);
             paragraph.setAlignment(1);
-            Image image = Image.getInstance(UrlPath.EXCRUD_HOME + "/resources/logo/logo.png");
+            Image image = Image.getInstance(UrlPath.EXCRUD_HOME + "/resources/logo/logo2.png");
             image.setAlignment(1);
             image.scaleAbsolute(40,40);
             paragraph.add(image);
@@ -146,8 +125,9 @@ public class ApiDocumentGenerator extends BaseGenerator {
 
             document.newPage();
 
-            for (int i = 0; i < project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0).getTables().size(); i ++) {
-                Table table = project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0).getTables().get(i);
+            Database database = project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0);
+            for (int i = 0; i < database.getTables().size(); i ++) {
+                Table table = database.getTables().get(i);
                 // Title
                 paragraph = new Paragraph();
                 paragraph.setSpacingBefore(40);
@@ -180,7 +160,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
                     font = new Font(simHeiBaseFont, Font.BOLD);
                     font.setSize(12);
                     paragraph.setFont(font);
-                    chunk = new Chunk((i + 1) + "." + (k + 1) + ".1 描述");
+                    chunk = new Chunk((i + 1) + "." + (k + 1) + ".1 " + LangUtil.get(languageType, "description"));
                     paragraph.add(chunk);
                     document.add(paragraph);
 
@@ -189,8 +169,8 @@ public class ApiDocumentGenerator extends BaseGenerator {
                     paragraph.setAlignment(Element.ALIGN_LEFT);
                     paragraph.setFont(normalChineseFont);
                     chunk = new Chunk("    此接口提供" + keywords.get(k).getValue() + table.getDescription() + "的功能。\n" +
-                            "    调用URL： http://<server_name>/api/" + table.getCamelCaseName() + "\n" +
-                            "    调用方法： " + keywords.get(k).getRequestMethod());
+                            "    " + LangUtil.get(languageType, "request_url") + "： http://<server_name>/api/" + table.getCamelCaseName() + "\n" +
+                            "    " + LangUtil.get(languageType, "request_method") + "： " + keywords.get(k).getRequestMethod());
                     paragraph.add(chunk);
                     document.add(paragraph);
 
@@ -202,7 +182,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
                     font = new Font(simHeiBaseFont, Font.BOLD);
                     font.setSize(12);
                     paragraph.setFont(font);
-                    chunk = new Chunk((i + 1) + "." + (k + 1) + ".2 参数");
+                    chunk = new Chunk((i + 1) + "." + (k + 1) + ".2 " + LangUtil.get(languageType, "param"));
                     paragraph.add(chunk);
                     document.add(paragraph);
 
@@ -216,9 +196,9 @@ public class ApiDocumentGenerator extends BaseGenerator {
                     pdfPCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
                     pdfPTable.addCell(tableHeaderCell(""));
-                    pdfPTable.addCell(tableHeaderCell("参数名"));
-                    pdfPTable.addCell(tableHeaderCell("类型"));
-                    pdfPTable.addCell(tableHeaderCell("参数描述"));
+                    pdfPTable.addCell(tableHeaderCell(LangUtil.get(languageType, "param_name")));
+                    pdfPTable.addCell(tableHeaderCell(LangUtil.get(languageType, "param_type")));
+                    pdfPTable.addCell(tableHeaderCell(LangUtil.get(languageType, "param_description")));
 
                     for (Column column: table.getColumns()) {
                         if (column.isPrimaryKey()) {
@@ -232,7 +212,17 @@ public class ApiDocumentGenerator extends BaseGenerator {
                         if (column.getDescription() != null && !column.getDescription().isEmpty()) {
                             pdfPTable.addCell(tableCell(column.getDescription()));
                         } else {
-                            pdfPTable.addCell("-");
+                            String[] words = column.getName().split("_");
+                            String generatedDescription = "";
+                            for (String word: words) {
+                                String result = LangUtil.get(languageType, word);
+                                if (result != null) {
+                                    generatedDescription += result + LangUtil.separator(languageType);
+                                } else {
+                                    generatedDescription += word + " ";
+                                }
+                            }
+                            pdfPTable.addCell(generatedDescription);
                         }
                     }
 
@@ -243,7 +233,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
             document.close();
             pdfWriter.close();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Generate PDF failed: {}", e.getMessage());
         }
     }
 

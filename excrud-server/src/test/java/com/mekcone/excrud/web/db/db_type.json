@@ -1,0 +1,10 @@
+[
+  {
+    "dbType": "varchar",
+    "javaType": "String"
+  },
+  {
+    "dbType": "text",
+    "javaType": "String"
+  }
+]

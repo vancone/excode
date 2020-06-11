@@ -17,53 +17,53 @@ public interface DataType {
     String JAVA_OBJECT = "Object";
 
     // SQL integer
-    String SQL_TINYINT = "TINYINT";
-    String SQL_SMALLINT = "SMALLINT";
-    String SQL_MEDIUMINT = "MEDIUMINT";
-    String SQL_INT = "INT";
-    String SQL_BIGINT = "BIGINT";
-    String SQL_BIT = "BIT";
+    String SQL_INT_TINYINT = "TINYINT";
+    String SQL_INT_SMALLINT = "SMALLINT";
+    String SQL_INT_MEDIUMINT = "MEDIUMINT";
+    String SQL_INT_INT = "INT";
+    String SQL_INT_BIGINT = "BIGINT";
+    String SQL_INT_BIT = "BIT";
 
     // SQL real
-    String SQL_FLOAT = "FLOAT";
-    String SQL_DOUBLE = "DOUBLE";
-    String SQL_DECIMAL = "DECIMAL";
+    String SQL_REAL_FLOAT = "FLOAT";
+    String SQL_REAL_DOUBLE = "DOUBLE";
+    String SQL_REAL_DECIMAL = "DECIMAL";
 
     // SQL text
-    String SQL_CHAR = "CHAR";
-    String SQL_VARCHAR = "VARCHAR";
-    String SQL_TINYTEXT = "TINYTEXT";
-    String SQL_TEXT = "TEXT";
-    String SQL_MEDIUMTEXT = "MEDIUMTEXT";
-    String SQL_LONGTEXT = "LONGTEXT";
-    String SQL_JSON = "JSON";
+    String SQL_TXT_CHAR = "CHAR";
+    String SQL_TXT_VARCHAR = "VARCHAR";
+    String SQL_TXT_TINYTEXT = "TINYTEXT";
+    String SQL_TXT_TEXT = "TEXT";
+    String SQL_TXT_MEDIUMTEXT = "MEDIUMTEXT";
+    String SQL_TXT_LONGTEXT = "LONGTEXT";
+    String SQL_TXT_JSON = "JSON";
 
     // SQL binary
-    String SQL_BINARY = "BINARY";
-    String SQL_VARBINARY = "VARBINARY";
-    String SQL_TINYBLOB = "TINYBLOB";
-    String SQL_BLOB = "BLOB";
-    String SQL_MEDIUMBLOB = "MEDIUMBLOB";
-    String SQL_LONGBLOB = "LONGBLOB";
+    String SQL_BIN_BINARY = "BINARY";
+    String SQL_BIN_VARBINARY = "VARBINARY";
+    String SQL_BIN_TINYBLOB = "TINYBLOB";
+    String SQL_BIN_BLOB = "BLOB";
+    String SQL_BIN_MEDIUMBLOB = "MEDIUMBLOB";
+    String SQL_BIN_LONGBLOB = "LONGBLOB";
 
     // SQL temporal (time)
-    String SQL_DATE = "DATE";
-    String SQL_TIME = "TIME";
-    String SQL_YEAR = "YEAR";
-    String SQL_DATETIME = "DATETIME";
-    String SQL_TIMESTAMP = "TIMESTAMP";
+    String SQL_TIME_DATE = "DATE";
+    String SQL_TIME_TIME = "TIME";
+    String SQL_TIME_YEAR = "YEAR";
+    String SQL_TIME_DATETIME = "DATETIME";
+    String SQL_TIME_TIMESTAMP = "TIMESTAMP";
 
     // SQL spatial (geometry)
-    String SQL_POINT = "POINT";
-    String SQL_LINESTRING = "LINESTRING";
-    String SQL_POLYGON = "POLYGON";
-    String SQL_GEOMETRY = "GEOMETRY";
-    String SQL_MULTIPOINT = "MULTIPOINT";
-    String SQL_MULTILINESTRING = "MULTILINESTRING";
-    String SQL_MULTIPOLYGON = "MULTIPOLYGON";
-    String SQL_GEOMETRYCOLLECTION = "GEOMETRYCOLLECTION";
+    String SQL_GEO_POINT = "POINT";
+    String SQL_GEO_LINESTRING = "LINESTRING";
+    String SQL_GEO_POLYGON = "POLYGON";
+    String SQL_GEO_GEOMETRY = "GEOMETRY";
+    String SQL_GEO_MULTIPOINT = "MULTIPOINT";
+    String SQL_GEO_MULTILINESTRING = "MULTILINESTRING";
+    String SQL_GEO_MULTIPOLYGON = "MULTIPOLYGON";
+    String SQL_GEO_GEOMETRYCOLLECTION = "GEOMETRYCOLLECTION";
 
     // SQL others
-    String SQL_ENUM = "ENUM";
-    String SQL_SET = "SET";
+    String SQL_OTHER_ENUM = "ENUM";
+    String SQL_OTHER_SET = "SET";
 }

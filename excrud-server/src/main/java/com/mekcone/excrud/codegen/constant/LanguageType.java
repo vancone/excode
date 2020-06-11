@@ -1,6 +1,6 @@
 package com.mekcone.excrud.codegen.constant;
 
-public interface LanguageCode {
+public interface LanguageType {
     String AFAR = "aa";
     String ABKHAZIAN = "ab";
     String AFRIKAANS = "af";
@@ -15,6 +15,7 @@ public interface LanguageCode {
     String DANISH = "da";
     String DUTCH = "nl";
     String ENGLISH = "en";
+    String ENGLISH_US = "en-US";
     String ESPERANTO = "eo";
     String FIJI = "fj";
     String FINNISH = "fi";

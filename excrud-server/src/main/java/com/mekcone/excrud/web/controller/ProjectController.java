@@ -2,6 +2,7 @@ package com.mekcone.excrud.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.mekcone.excrud.codegen.constant.DataType;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.web.service.ProjectService;
 import com.mekcone.webplatform.common.model.Response;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/excrud/project")
@@ -61,6 +65,19 @@ public class ProjectController {
     public Response deleteProject(@PathVariable String projectId) {
         projectService.deleteProject(projectId);
         return Response.success();
+    }
+
+    @GetMapping("/dbTypeList")
+    public Response retrieveDatabaseTypeList() throws IllegalAccessException {
+        // Todo: The list should be cached in Redis to optimize performance
+        List<String> dbTypes = new ArrayList<>();
+        Field[] fields = DataType.class.getFields();
+        for (Field field: fields) {
+            if (field.getName().matches("SQL_.*")) {
+                dbTypes.add(field.get(DataType.class).toString());
+            }
+        }
+        return Response.success(dbTypes);
     }
 
     @PostMapping("/login")

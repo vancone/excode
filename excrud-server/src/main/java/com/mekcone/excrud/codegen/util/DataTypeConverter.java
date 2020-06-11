@@ -11,25 +11,25 @@ public class DataTypeConverter {
 
         String javaDataType;
         switch (dataType) {
-            case DataType.SQL_INT:
+            case DataType.SQL_INT_INT:
                 javaDataType = DataType.JAVA_INT;
                 break;
-            case DataType.SQL_FLOAT:
+            case DataType.SQL_REAL_FLOAT:
                 javaDataType = DataType.JAVA_FLOAT;
                 break;
-            case DataType.SQL_DOUBLE:
+            case DataType.SQL_REAL_DOUBLE:
                 javaDataType = DataType.JAVA_DOUBLE;
                 break;
-            case DataType.SQL_VARCHAR:
-            case DataType.SQL_TEXT:
-            case DataType.SQL_TIMESTAMP:
+            case DataType.SQL_TXT_VARCHAR:
+            case DataType.SQL_TXT_TEXT:
+            case DataType.SQL_TIME_TIMESTAMP:
                 javaDataType = DataType.JAVA_STRING;
                 break;
             default:
                 log.warn("Invalid data type " + dataType);
                 javaDataType = "-";
         }
-        ;
+
         return javaDataType;
     }
 }

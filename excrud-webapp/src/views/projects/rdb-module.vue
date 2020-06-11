@@ -1,13 +1,13 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-switch inactive-text="Enable Module" v-model="project.use"></el-switch><br>
+      <el-switch v-model="project.use" inactive-text="Enable Module" style="margin-bottom:15px;" /><br>
       <span>Database</span>
-      <el-select size="mini" v-model="listQuery.importance" :placeholder="this.databaseList.length>0?this.databaseList[0]:NONE" clearable style="width: 200px" class="filter-item">
+      <el-select v-model="listQuery.importance" size="mini" :placeholder="this.databaseList.length>0?this.databaseList[0]:NONE" clearable style="width: 200px" class="filter-item">
         <el-option v-for="item in databaseList" :key="item" :label="item" :value="item" />
-      </el-select>
+      </el-select><br>
       <span>Table</span>
-      <el-select size="mini" v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
+      <el-select v-model="listQuery.sort" size="mini" style="width: 140px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
     </div>
@@ -29,7 +29,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Datatype" width="150">
+      <el-table-column label="Datatype" width="130">
         <template slot-scope="{row}">
           <el-dropdown>
             <el-button type="primary" size="mini" style="background:#fff;border:solid 1px #ddd;color:black">
@@ -46,21 +46,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Length" width="100px">
+      <el-table-column label="Length" width="70px">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.length }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="Allow NULL" min-width="80px" align="center">
+      <el-table-column label="Allow NULL" width="100px" align="center">
         <template slot-scope="{row}">
           <el-checkbox v-model="row.primaryKey" />
-        </template>
-      </el-table-column>
-      <el-table-column label="Comments" min-width="120px">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.description }}</span>
-          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
 
@@ -73,6 +67,13 @@
       <el-table-column label="Logic Foreign Key" width="150px" align="center">
         <template slot-scope="{row}">
           <el-checkbox v-model="row.primaryKey" />
+        </template>
+      </el-table-column>
+
+      <el-table-column label="Comments" width="200px">
+        <template slot-scope="{row}">
+          <span class="link-type" @click="handleUpdate(row)">{{ row.description }}</span>
+          <!-- <el-tag>{{ row.type | typeFilter }}</el-tag> -->
         </template>
       </el-table-column>
 
@@ -201,10 +202,10 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      this.databaseList = this.project.exports.relationalDatabaseExport.databases.map(element => {
+      this.databaseList = this.project.moduleSet.relationalDatabaseModule.databases.map(element => {
         return element.name
       })
-      this.list = this.project.exports.relationalDatabaseExport.databases[0].tables[0].columns
+      this.list = this.project.moduleSet.relationalDatabaseModule.databases[0].tables[0].columns
       this.listLoading = false
     },
     handleFilter() {

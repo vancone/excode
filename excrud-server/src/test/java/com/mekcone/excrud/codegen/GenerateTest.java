@@ -3,10 +3,12 @@ package com.mekcone.excrud.codegen;
 import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.controller.ProjectLoader;
 import com.mekcone.excrud.codegen.util.FileUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+@Slf4j
 public class GenerateTest {
 
     @Test
@@ -21,6 +23,8 @@ public class GenerateTest {
             ProjectLoader projectLoader = new ProjectLoader();
             projectLoader.load(projectContent);
             projectLoader.generate();
+        } else {
+            log.error("Project file not found: {}", path);
         }
     }
 }

@@ -35,8 +35,8 @@ public class ProjectObjectModel {
         groupId = project.getGroupId();
         artifactId = project.getArtifactId();
         version = project.getVersion();
-        name = project.getName();
-        description = project.getDescription();
+        name = project.getName().getDefaultValue();
+        description = project.getDescription().getDefaultValue();
 
         addDependencies("default");
         addDependencies("mybatis");

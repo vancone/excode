@@ -2,15 +2,25 @@
 <project>
     <groupId>com.mekcone</groupId>
     <artifactId>mall</artifactId>
-    <name>锥云商城</name>
     <version>0.0.1</version>
-    <description>MekCone Mall Project</description>
-    <language>zh-CN</language>
+    <languages>
+        <language>en-US</language>
+        <language>zh-CN</language>
+    </languages>
 
+    <name default="MekCone Mall">
+        <word lang="zh-CN" value="锥云商城" />
+        <word lang="zh-TW" value="錐雲商城" />
+        <word lang="jp" value="MekCone デパート" />
+        <word lang="th" value="MekCone มอลล์" />
+    </name>
+    
+    <description default="MekCone Mall Project">
+        <word lang="zh-CN" value="锥云商城后台项目" />
+    </description>
+    
     <modules>
-        <api-document>
-            <title>锥云商城 {br}API 文档</title>
-            <!-- <description>MekCone 商城接口文档</description> -->
+        <api-document use="true">
             <keywords>
                 <keyword type="create">创建</keyword>
                 <keyword type="retrieve">获取</keyword>
@@ -20,7 +30,7 @@
             </keywords>
         </api-document>
 
-        <relational-database>
+        <relational-database use="false">
             <databases>
                 <database type="mysql" host="localhost:3306" name="mekcone_mall" username="root" password="123456" timezone="GMT%2B8">
                     <tables>
@@ -64,7 +74,7 @@
             </databases>
         </mongodb> -->
 
-        <spring-boot use="true">
+        <spring-boot use="false">
             <extensions>
                 <extension id="lombok" use="true"></extension>
                 <extension id="swagger2" use="true"></extension>

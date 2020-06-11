@@ -2,13 +2,20 @@ package com.mekcone.excrud.codegen.controller.parser;
 
 import cn.hutool.core.lang.Pair;
 import com.mekcone.excrud.codegen.util.FileUtil;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 public class PropertiesParser {
+
+    @Getter @Setter
+    private String name;
 
     private List<Pair<String, String>> properties = new ArrayList<>();
 
@@ -55,11 +62,12 @@ public class PropertiesParser {
 
     public static PropertiesParser parse(String propertiesText) {
         PropertiesParser propertiesParser = new PropertiesParser();
+        propertiesParser.setName("unnamed");
         String[] properties = propertiesText.split("\n");
         for (String property: properties) {
             String[] keyAndValue = property.split("=");
             if (keyAndValue.length == 1) {
-                log.warn("No value found at \"" + property + "\"");
+                continue;
             } else if (keyAndValue.length == 2) {
                 String key = keyAndValue[0].trim();
                 String value = keyAndValue[1].trim();
@@ -82,7 +90,10 @@ public class PropertiesParser {
     public static PropertiesParser readFrom(String url) {
         String content = FileUtil.read(url);
         if (content != null && !content.isEmpty()) {
-            return PropertiesParser.parse(content);
+            String fileName = new File(url).toPath().getFileName().toString();
+            PropertiesParser propertiesParser = PropertiesParser.parse(content);
+            propertiesParser.setName(fileName.substring(0, fileName.lastIndexOf(".")));
+            return propertiesParser;
         }
         return null;
     }
