@@ -74,17 +74,19 @@
             </databases>
         </mongodb> -->
 
-        <spring-boot use="false">
+        <spring-boot use="true">
             <extensions>
                 <extension id="lombok" use="true"></extension>
                 <extension id="swagger2" use="true"></extension>
                 <extension id="cross-origin" use="true"></extension>
+                <extension id="mekcone-web-platform-account" use="true"></extension>
             </extensions>
 
             <properties>
                 <application-name>Mall</application-name>
                 <server-port>9090</server-port>
                 <page-size>15</page-size>
+
                 <cross-origin>
                     <!-- <allowed-headers>
                         <allowed-header>X-Custom-Header</allowed-header>
@@ -97,6 +99,14 @@
                         <allowed-origin>*</allowed-origin>
                     </allowed-origins>
                 </cross-origin>
+
+                <mekcone-web-platform-account>
+                    <test-account>
+                        <username>admin</username>
+                        <password>admin</password>
+                        <role>admin</role>
+                    </test-account>
+                </mekcone-web-platform-account>
             </properties>
         </spring-boot>
 

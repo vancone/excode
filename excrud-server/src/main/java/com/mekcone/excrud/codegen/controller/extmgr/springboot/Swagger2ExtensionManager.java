@@ -8,14 +8,12 @@ import com.mekcone.excrud.codegen.constant.ModuleExtensionType;
 import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.controller.generator.SpringBootGenerator;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
-import com.mekcone.excrud.codegen.model.module.impl.apidocument.ApiDocumentModule;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.RelationalDatabaseModule;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.SpringBootModule;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootComponent;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.LangUtil;
-import com.mekcone.excrud.codegen.util.StrUtil;
 
 import java.util.List;
 
@@ -34,20 +32,13 @@ public class Swagger2ExtensionManager {
     }
 
     private void addConfig() {
-        ApiDocumentModule apiDocumentModule = project.getModuleSet().getApiDocumentModule();
         RelationalDatabaseModule relationalDatabaseModule = project.getModuleSet().getRelationalDatabaseModule();
 
         JavaTemplate javaTemplate = new JavaTemplate(UrlPath.SPRING_BOOT_TEMPLATE_PATH + "config/Swagger2Config.java");
         javaTemplate.preprocessForSpringBootProject(project, null);
 
         String title = project.getName().getDefaultValue() + LangUtil.separator(project.getDefaultLanguage()) + LangUtil.get(project.getDefaultLanguage(), "api_document");
-        if (title != null) {
-            javaTemplate.insert("title", title.replace("{br}", ""));
-        } else if (project.getName() != null) {
-            javaTemplate.insert("title", project.getName().getDefaultValue());
-        } else {
-            javaTemplate.insert("title", StrUtil.capitalize(project.getArtifactId()));
-        }
+        javaTemplate.insert("title", title);
 
         String description = project.getDescription().getDefaultValue();
         if (description != null) {

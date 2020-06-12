@@ -3,7 +3,7 @@
     "version": {
         "element-ui": "2.7.0",
         "vue": "2.6.10",
-        "vue-element-admin": "4.2.1"
+        "vue-element-admin": "4.3.0"
     },
     "initial": {
         "paths": {
