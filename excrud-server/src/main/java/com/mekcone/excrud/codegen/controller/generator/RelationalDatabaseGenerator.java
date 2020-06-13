@@ -4,7 +4,6 @@ import com.mekcone.excrud.codegen.constant.ApplicationParameter;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
-import com.mekcone.excrud.codegen.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -99,6 +98,5 @@ public class RelationalDatabaseGenerator extends CommonGenerator {
         }
         addOutputFile(project.getArtifactId() + ".sql", code);
         write();
-        log.info("Generate SQL queries completed");
     }
 }
