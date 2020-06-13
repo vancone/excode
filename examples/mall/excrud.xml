@@ -30,7 +30,7 @@
             </keywords>
         </api-document>
 
-        <relational-database use="false">
+        <relational-database use="true">
             <databases>
                 <database type="mysql" host="localhost:3306" name="mekcone_mall" username="root" password="123456" timezone="GMT%2B8">
                     <tables>
@@ -53,8 +53,8 @@
                         </table>
                         <table name="catalogue" description="商品门类" catalogueOf="goods">
                             <columns>
-                                <column name="catalogue_id" type="varchar(50)"  primaryKey="true" />
-                                <column name="catalogue_name" type="varchar(50)" />
+                                <column name="catalogue_id" type="varchar" length="50" primaryKey="true" />
+                                <column name="catalogue_name" type="varchar" length="50" />
                             </columns>
                         </table>
                     </tables>
@@ -79,7 +79,7 @@
                 <extension id="lombok" use="true"></extension>
                 <extension id="swagger2" use="true"></extension>
                 <extension id="cross-origin" use="true"></extension>
-                <extension id="mekcone-web-platform-account" use="true"></extension>
+                <extension id="mwp-account" use="true"></extension>
             </extensions>
 
             <properties>
@@ -100,20 +100,13 @@
                     </allowed-origins>
                 </cross-origin>
 
-                <mekcone-web-platform-account>
-                    <test-account>
-                        <username>admin</username>
-                        <password>admin</password>
-                        <role>admin</role>
-                    </test-account>
-                </mekcone-web-platform-account>
+                <mwp-account>
+                    <test-account username="admin" password="admin" role="admin" profile="" />
+                </mwp-account>
             </properties>
         </spring-boot>
 
-        <!-- <export type="enterprise-official-website" enable="false">
-        <properties>
-            <title>MekCone China</title>
-        </properties>
-    </export> -->
+        <vue-element-admin use="true">
+        </vue-element-admin>
     </modules>
 </project>

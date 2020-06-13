@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mekcone.excrud.codegen.constant.ApplicationParameter;
+import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.controller.generator.SpringBootGenerator;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
@@ -17,6 +19,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,8 @@ public class ProjectObjectModel {
     }
 
     public void addDependencies(String pomFileName) {
-        String pomDependenciesText = FileUtil.read(SpringBootGenerator.getTemplatePath() + "pom/" + pomFileName + ".xml");
+        String templatePath = UrlPath.MODULE_PATH + ModuleType.SPRING_BOOT + File.separator + "templates" + File.separator;
+        String pomDependenciesText = FileUtil.read(templatePath + "pom" + File.separator + pomFileName + ".xml");
         if (pomDependenciesText != null && !pomDependenciesText.isEmpty()) {
             XmlMapper xmlMapper = new XmlMapper();
 

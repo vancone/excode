@@ -3,7 +3,6 @@ package com.mekcone.excrud.codegen.controller.generator;
 import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.model.module.impl.apidocument.component.Keyword;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
@@ -18,7 +17,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 @Slf4j
-public class ApiDocumentGenerator extends BaseGenerator {
+public class ApiDocumentGenerator extends CommonGenerator {
 
     private BaseFont simSunBaseFont;
     private BaseFont simHeiBaseFont;
@@ -27,8 +26,7 @@ public class ApiDocumentGenerator extends BaseGenerator {
     private Font emphasisChineseFont;
 
     public ApiDocumentGenerator(Project project) {
-
-        initialize(project, ModuleType.API_DOCUMENT);
+        super(project);
 
         try {
             simSunBaseFont = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);

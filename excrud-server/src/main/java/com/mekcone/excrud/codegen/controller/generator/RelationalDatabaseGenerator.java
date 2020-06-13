@@ -8,10 +8,10 @@ import com.mekcone.excrud.codegen.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class SqlGenerator extends BaseGenerator {
+public class RelationalDatabaseGenerator extends CommonGenerator {
 
-    public SqlGenerator(Project project) {
-        this.project = project;
+    public RelationalDatabaseGenerator(Project project) {
+        super(project);
     }
 
     public static String createDatabaseQuery(Database database) {
@@ -22,6 +22,11 @@ public class SqlGenerator extends BaseGenerator {
         String query = "CREATE TABLE " + table.getName() + " (\n";
         for (int i = 0; i < table.getColumns().size(); i++) {
             query += "    " + table.getColumns().get(i).getName() + " " + table.getColumns().get(i).getType();
+
+            Integer dataLength = table.getColumns().get(i).getLength();
+            if (dataLength != null && dataLength > 0) {
+                query += "(" + table.getColumns().get(i).getLength() + ")";
+            }
             if (table.getColumns().get(i).isPrimaryKey()) {
                 query += " NOT NULL AUTO_INCREMENT";
             }
@@ -80,7 +85,6 @@ public class SqlGenerator extends BaseGenerator {
 
     @Override
     public void generate() {
-        //FileUtil.checkDirectory("sql");
         String code = "";
         code += "-- " + ApplicationParameter.DESCRIPTION + "\n\n";
         for (Database database: project.getModuleSet().getRelationalDatabaseModule().getDatabases()) {
@@ -93,7 +97,8 @@ public class SqlGenerator extends BaseGenerator {
                 }
             }
         }
-        FileUtil.write(project.getArtifactId() + ".sql", code);
+        addOutputFile(project.getArtifactId() + ".sql", code);
+        write();
         log.info("Generate SQL queries completed");
     }
 }

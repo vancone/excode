@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class SpringBootProperties {
-
+    // Basic properties
     @JacksonXmlProperty(localName = "application-name")
     private String applicationName;
 
@@ -19,8 +19,12 @@ public class SpringBootProperties {
     @JacksonXmlProperty(localName = "server-port")
     private int serverPort;
 
+    // Extended properties
     @JacksonXmlProperty(localName = "cross-origin")
     private CrossOrigin crossOrigin;
+
+    @JacksonXmlProperty(localName = "mwp-account")
+    private MekConeWebPlatformAccount mekConeWebPlatformAccount;
 
     @Data
     public class CrossOrigin {
@@ -36,6 +40,27 @@ public class SpringBootProperties {
         @JacksonXmlElementWrapper(localName = "allowed-origins")
         @JacksonXmlProperty(localName = "allowed-origin")
         private List<String> allowedOrigins = new ArrayList<>();
+    }
 
+    @Data
+    public class MekConeWebPlatformAccount {
+
+        @JacksonXmlProperty(localName = "test-account")
+        private TestAccount testAccount = new TestAccount();
+
+        @Data
+        public class TestAccount {
+            @JacksonXmlProperty(isAttribute = true)
+            private String username;
+
+            @JacksonXmlProperty(isAttribute = true)
+            private String password;
+
+            @JacksonXmlProperty(isAttribute = true)
+            private String role;
+
+            @JacksonXmlProperty(isAttribute = true)
+            private String profile;
+        }
     }
 }

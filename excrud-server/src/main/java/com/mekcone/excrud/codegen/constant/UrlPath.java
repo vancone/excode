@@ -7,5 +7,4 @@ public interface UrlPath {
     String EXAMPLE_PATH = EXCRUD_HOME + File.separator + "examples" + File.separator;
     String GEN_PATH = EXCRUD_HOME + File.separator + "gen" + File.separator;
     String MODULE_PATH = EXCRUD_HOME + File.separator + "modules" + File.separator;
-    String SPRING_BOOT_TEMPLATE_PATH = MODULE_PATH + ModuleType.SPRING_BOOT + File.separator + "templates" + File.separator;
 }

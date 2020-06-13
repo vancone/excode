@@ -17,6 +17,11 @@ public class GenerateTest {
         generateProject(mallPath);
     }
 
+    @Test
+    void showThirdPartyComponents() {
+        log.info("\n{}", new ProjectLoader().showThirdPartyComponentList());
+    }
+
     void generateProject(String path) {
         String projectContent = FileUtil.read(path);
         if (projectContent != null) {

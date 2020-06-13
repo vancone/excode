@@ -12,6 +12,7 @@ import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -27,39 +28,26 @@ public class ProjectLoader {
             System.exit(0);
         }
 
-        /*if (tableAmount > 0) {
-            SqlGenerator sqlGenerator = new SqlGenerator(project);
-            sqlGenerator.generate();
-        }*/
-
         for (com.mekcone.excrud.codegen.model.module.Module module : project.getModuleSet().asList()) {
             if (!module.isUse()) {
                 continue;
             }
 
             // Print module type
-            StringBuilder output = new StringBuilder("[ " + module.type() + " ]");
-            int lineSignAmount = 72 - output.length();
-            for (int i = 0; i < lineSignAmount/2; i ++) {
-                output.insert(0, "-");
-            }
-            int rightLineSignAmount = lineSignAmount / 2;
-            if (lineSignAmount % 2 == 0) {
-                rightLineSignAmount ++;
-            }
-            for (int i = 0; i < rightLineSignAmount; i ++) {
-                output.append("-");
-            }
-            log.info(output.toString());
+            log.info("MODULE :: [ {} ]", module.type());
+            long startTime = new Date().getTime();
 
             // Initialize generators
-            BaseGenerator generator;
+            CommonGenerator generator;
             switch(module.type()) {
                 case ModuleType.API_DOCUMENT:
                     generator = new ApiDocumentGenerator(project);
                     break;
                 case ModuleType.ENTERPRISE_OFFICIAL_WEBSITE:
-                    generator = new EnterpriseOfficialWebsiteGenerator();
+                    generator = new EnterpriseOfficialWebsiteGenerator(project);
+                    break;
+                case ModuleType.RELATIONAL_DATABASE:
+                    generator = tableAmount > 0 ? new RelationalDatabaseGenerator(project) : null;
                     break;
                 case ModuleType.SPRING_BOOT:
                     generator = new SpringBootGenerator(project);
@@ -71,6 +59,8 @@ public class ProjectLoader {
             };
             if (generator != null) {
                 generator.generate();
+                long endTime = new Date().getTime();
+                log.info("Executing Module {} complete in {} ms", module.type(), (endTime - startTime));
             } else {
                 log.warn("Unsupported module type \"{}\"", module.type());
             }
@@ -122,5 +112,27 @@ public class ProjectLoader {
 
     public boolean output() {
         return false;
+    }
+
+    public String showThirdPartyComponentList() {
+        StringBuilder info = new StringBuilder();
+        info.append("==================== EXCRUD STANDS ON THE SHOULDERS OF GIANTS ====================\n");
+        info.append("|  Dataway *                  |  hasor.net                                       |\n");
+        info.append("|  Cordova *                  |  cordova.apache.org                              |\n");
+        info.append("|  ECMAScript                 |  ecma-international.org                          |\n");
+        info.append("|  Electron *                 |  electronjs.org                                  |\n");
+        info.append("|  Flutter *                  |  flutter.io                                      |\n");
+        info.append("|  Java                       |  java.com                                        |\n");
+        info.append("|  Maven                      |  maven.apache.org                                |\n");
+        info.append("|  MyBatis                    |  mybatis.org                                     |\n");
+        info.append("|  MySQL                      |  mysql.com                                       |\n");
+        info.append("|  Node.js                    |  nodejs.org                                      |\n");
+        info.append("|  Spring                     |  spring.io                                       |\n");
+        info.append("|  Swagger                    |  swagger.io                                      |\n");
+        info.append("|  TypeScript *               |  typescriptlang.org                              |\n");
+        info.append("|  Vue.js                     |  vuejs.org                                       |\n");
+        info.append("|  Vue Element Admin          |  panjiachen.github.io/vue-element-admin-site/    |\n");
+        info.append("==================================================================================");
+        return info.toString();
     }
 }

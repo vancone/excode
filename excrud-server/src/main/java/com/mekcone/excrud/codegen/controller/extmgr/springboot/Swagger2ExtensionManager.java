@@ -34,7 +34,7 @@ public class Swagger2ExtensionManager {
     private void addConfig() {
         RelationalDatabaseModule relationalDatabaseModule = project.getModuleSet().getRelationalDatabaseModule();
 
-        JavaTemplate javaTemplate = new JavaTemplate(UrlPath.SPRING_BOOT_TEMPLATE_PATH + "config/Swagger2Config.java");
+        JavaTemplate javaTemplate = new JavaTemplate(callBackObject.getTemplatePath() + "config/Swagger2Config.java");
         javaTemplate.preprocessForSpringBootProject(project, null);
 
         String title = project.getName().getDefaultValue() + LangUtil.separator(project.getDefaultLanguage()) + LangUtil.get(project.getDefaultLanguage(), "api_document");

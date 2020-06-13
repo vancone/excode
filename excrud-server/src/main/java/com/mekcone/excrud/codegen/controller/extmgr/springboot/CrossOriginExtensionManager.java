@@ -28,14 +28,13 @@ public class CrossOriginExtensionManager {
     }
 
     public void addConfig() {
-        JavaTemplate javaTemplate = new JavaTemplate(UrlPath.SPRING_BOOT_TEMPLATE_PATH + "config/CrossOriginConfig.java");
+        JavaTemplate javaTemplate = new JavaTemplate(callBackObject.getTemplatePath() + "config/CrossOriginConfig.java");
         if (javaTemplate != null) {
             javaTemplate.preprocessForSpringBootProject(project, null);
             MethodDeclaration addCorsMappingsMethod = javaTemplate.getMethodByName("CrossOriginConfig", "addCorsMappings");
             BlockStmt blockStmt = addCorsMappingsMethod.getBody().get();
             Statement statement = blockStmt.getStatements().get(0);
             MethodCallExpr addMappingExpr = statement.asExpressionStmt().getExpression().asMethodCallExpr();
-            log.info(addMappingExpr.toString());
 
             MethodCallExpr rootExpr = addMappingExpr;
             SpringBootProperties springBootProperties = project.getModuleSet().getSpringBootModule().getProperties();
