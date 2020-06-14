@@ -1,11 +1,10 @@
-package com.mekcone.excrud.codegen.model.module.impl.apidocument;
+package com.mekcone.excrud.codegen.model.module.impl;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.model.module.Module;
-import com.mekcone.excrud.codegen.model.module.impl.apidocument.component.Keyword;
-import com.mekcone.excrud.codegen.model.project.Internationalization;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -33,5 +32,28 @@ public class ApiDocumentModule implements Module {
     @Override
     public String type() {
         return ModuleType.API_DOCUMENT;
+    }
+
+    @Data
+    public static class Keyword {
+        @JacksonXmlProperty(isAttribute = true)
+        private String type;
+
+        @JacksonXmlText
+        private String value;
+
+        private String requestMethod;
+
+        public String getRequestMethod() {
+            String requestMethod;
+            switch (type) {
+                case "create": requestMethod = "POST"; break;
+                case "retrieve": requestMethod = "GET"; break;
+                case "update": requestMethod = "PUT"; break;
+                case "delete": requestMethod = "DELETE"; break;
+                default: requestMethod = "";
+            };
+            return requestMethod;
+        }
     }
 }

@@ -3,12 +3,15 @@ package com.mekcone.excrud.codegen.util;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class FileUtil {
-    public static String read(String path){
+    public static String read(String path) {
         try {
             FileInputStream inputStream = new FileInputStream(path);
             int inputStreamAvailable = inputStream.available();
@@ -27,13 +30,13 @@ public class FileUtil {
             bufferedWriter.write(data);
             bufferedWriter.close();
             return true;
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             log.warn(ex.getMessage());
             return false;
         }
     }
 
-    public static void checkDirectory(String path) {
+    public static void createDirectoryIfNotExist(String path) {
         File directory = new File(path);
         if ((!directory.exists()) || (!directory.isDirectory())) {
             directory.mkdirs();
@@ -58,5 +61,33 @@ public class FileUtil {
         }
 
         return arrayList;
+    }
+
+    public static void copyDirectory(String srcDir, String destDir) {
+        if (srcDir.charAt(srcDir.length() - 1) != File.separator.charAt(0)) {
+            srcDir += File.separator;
+        }
+
+        if (destDir.charAt(destDir.length() - 1) != File.separator.charAt(0)) {
+            destDir += File.separator;
+        }
+
+        createDirectoryIfNotExist(destDir);
+
+        File srcDirFile = new File(srcDir);
+        for (File file : Objects.requireNonNull(srcDirFile.listFiles())) {
+            if (file.isFile()) {
+                try {
+                    Files.copy(new File(srcDir + file.getName()).toPath(),
+                            new File(destDir + file.getName()).toPath());
+                } catch (FileAlreadyExistsException e) {
+                    continue;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (file.isDirectory()) {
+                copyDirectory(srcDir + file.getName(), destDir + file.getName());
+            }
+        }
     }
 }

@@ -2,9 +2,9 @@ package com.mekcone.excrud.codegen.controller.generator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mekcone.excrud.codegen.constant.ModuleType;
 import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.enums.ErrorEnum;
+import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.module.ModuleInfo;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +23,8 @@ import java.util.Map;
 public abstract class CommonGenerator {
 
     protected String componentTemplatePath;
+    protected Module module;
     private ModuleInfo moduleInfo;
-    protected String moduleType;
     private List<OutputFile> outputFiles = new ArrayList<>();
     protected String outputPath;
 
@@ -70,7 +69,7 @@ public abstract class CommonGenerator {
         String comparedString1 = callerClassName.substring(callerClassName.lastIndexOf('.') + 1)
                 .replace("Generator", "").toUpperCase();
 
-        for (Field field: ModuleType.class.getDeclaredFields()) {
+        /*for (Field field: ModuleType.class.getDeclaredFields()) {
             try {
                 String comparedString2 = field.getName().replace("_", "");
                 if (comparedString1.equals(comparedString2)) {
@@ -79,23 +78,33 @@ public abstract class CommonGenerator {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
+        }*/
+
+        for (Module module: project.getModuleSet().asList()) {
+            if (module.type().replace("-", "").toUpperCase().equals(comparedString1)) {
+                this.module = module;
+                break;
+            }
         }
 
         // Set template paths
-        templatePath = UrlPath.MODULE_PATH + moduleType + File.separator + "templates" + File.separator;
+        templatePath = UrlPath.MODULE_PATH + module.type() + File.separator + "templates" + File.separator;
         componentTemplatePath = templatePath + "components/";
         outputPath = UrlPath.GEN_PATH + project.getGroupId() + "." +
                 project.getArtifactId() + "-" + project.getVersion() + File.separator +
-                moduleType + File.separator;
-        FileUtil.checkDirectory(outputPath);
+                module.type() + File.separator;
+        FileUtil.createDirectoryIfNotExist(outputPath);
+
+        copyInitialTemplates();
     }
 
     // Copy templates to the target path
     protected void copyInitialTemplates() {
         // Read initial.txt
-        String initialFile = FileUtil.read(templatePath + "../gen.json");
+        String genFilePath = new File(templatePath).toPath().getParent().toString() + File.separator + "gen.json";
+        String initialFile = FileUtil.read(genFilePath);
         if (initialFile == null) {
-            log.error(ErrorEnum.NO_DEFAULT_INITIALIZING_BEHAVIOR.toString() + templatePath + "gen.json");
+            log.error(ErrorEnum.NO_DEFAULT_INITIALIZING_BEHAVIOR.getMessage(), genFilePath);
             return;
         }
         ObjectMapper objectMapper = new ObjectMapper();
@@ -105,7 +114,7 @@ public abstract class CommonGenerator {
             log.info(moduleInfo.toString());
 
             // Create directories
-            FileUtil.checkDirectory(outputPath);
+            FileUtil.createDirectoryIfNotExist(outputPath);
             Map<String, String> paths = new HashMap<>();
             for (String key: moduleInfo.getInitial().getPaths().keySet()) {
                 // Preprocess URL
@@ -115,7 +124,7 @@ public abstract class CommonGenerator {
                             project.getArtifactId()).replace('.', '/'));
                 }
                 paths.put(key, value);
-                FileUtil.checkDirectory(outputPath + value);
+                FileUtil.createDirectoryIfNotExist(outputPath + value);
             }
             moduleInfo.getInitial().setPaths(paths);
 

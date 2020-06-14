@@ -20,7 +20,7 @@
     </description>
     
     <modules>
-        <api-document use="true">
+        <api-document use="false">
             <keywords>
                 <keyword type="create">创建</keyword>
                 <keyword type="retrieve">获取</keyword>
@@ -30,7 +30,7 @@
             </keywords>
         </api-document>
 
-        <relational-database use="true">
+        <relational-database use="false">
             <databases>
                 <database type="mysql" host="localhost:3306" name="mekcone_mall" username="root" password="123456" timezone="GMT%2B8">
                     <tables>
@@ -74,7 +74,7 @@
             </databases>
         </mongodb> -->
 
-        <spring-boot use="true">
+        <spring-boot use="false">
             <extensions>
                 <extension id="lombok" use="true"></extension>
                 <extension id="swagger2" use="true"></extension>
@@ -108,5 +108,24 @@
 
         <vue-element-admin use="true">
         </vue-element-admin>
+
+        <website-page use="true">
+            <theme id="0" color="blue" />
+            <pages>
+                <page type="home">
+                    <title default="Mall">
+                        <word lang="zh-CN" value="商城" />
+                    </title>
+                    <images>
+                        <image></image>
+                    </images>
+                </page>
+                <page type="about">
+                    <content>
+
+                    </content>
+                </page>
+            </pages>
+        </website-page>
     </modules>
 </project>

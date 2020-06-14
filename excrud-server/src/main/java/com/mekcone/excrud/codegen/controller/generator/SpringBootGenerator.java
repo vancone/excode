@@ -23,26 +23,20 @@ import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringB
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootExtension;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.StrUtil;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 
 @Slf4j
 public class SpringBootGenerator extends CommonGenerator {
-    @Getter
-    private SpringBootModule springBootModule;
 
     public SpringBootGenerator(Project project) {
         super(project);
-        springBootModule = project.getModuleSet().getSpringBootModule();
-        springBootModule.setGroupId(project.getGroupId());
-        springBootModule.setArtifactId(project.getArtifactId());
+        ((SpringBootModule)module).setGroupId(project.getGroupId());
+        ((SpringBootModule)module).setArtifactId(project.getArtifactId());
     }
 
     public void generate() {
-        copyInitialTemplates();
-
         for (Table table : project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0).getTables()) {
             if (table.getCatalogueOf() != null && !table.getCatalogueOf().isEmpty()) {
                 continue;
@@ -55,9 +49,9 @@ public class SpringBootGenerator extends CommonGenerator {
         }
 
         // Application properties
-        PropertiesParser applicationPropertiesParser = springBootModule.getApplicationPropertiesParser();
+        PropertiesParser applicationPropertiesParser = ((SpringBootModule)module).getApplicationPropertiesParser();
 
-        int serverPort = springBootModule.getProperties().getServerPort();
+        int serverPort = ((SpringBootModule)module).getProperties().getServerPort();
         if (serverPort > -1 && serverPort < 65536) {
             applicationPropertiesParser.add("server.port", Integer.toString(serverPort));
         }
@@ -75,7 +69,7 @@ public class SpringBootGenerator extends CommonGenerator {
         applicationPropertiesParser.addSeparator();
 
         // Remove disabled extensions
-        Iterator<SpringBootExtension> springBootExtensionIterator = springBootModule.getExtensions().iterator();
+        Iterator<SpringBootExtension> springBootExtensionIterator = ((SpringBootModule)module).getExtensions().iterator();
         while (springBootExtensionIterator.hasNext()) {
             if (!springBootExtensionIterator.next().isUse()) {
                 springBootExtensionIterator.remove();
@@ -83,7 +77,7 @@ public class SpringBootGenerator extends CommonGenerator {
         }
 
         String extensionInfo = "Enable extensions: [";
-        Iterator iterator = springBootModule.getExtensions().iterator();
+        Iterator iterator = ((SpringBootModule)module).getExtensions().iterator();
         while (iterator.hasNext()) {
             extensionInfo += ((SpringBootExtension)(iterator.next())).getId();
             extensionInfo += iterator.hasNext() ? ", " : "";
@@ -92,9 +86,9 @@ public class SpringBootGenerator extends CommonGenerator {
         log.info(extensionInfo);
 
         // Run extension manager
-        springBootModule.setProjectObjectModel(new ProjectObjectModel(project));
+        ((SpringBootModule)module).setProjectObjectModel(new ProjectObjectModel(project));
 
-        for (SpringBootExtension springBootExtension : springBootModule.getExtensions()) {
+        for (SpringBootExtension springBootExtension : ((SpringBootModule)module).getExtensions()) {
             log.info("Executing Spring Boot extension manager: {}", springBootExtension.getId());
 
             switch (springBootExtension.getId()) {
@@ -102,7 +96,7 @@ public class SpringBootGenerator extends CommonGenerator {
                     new CrossOriginExtensionManager(this, project);
                     break;
                 case ModuleExtensionType.LOMBOK:
-                    new LombokExtensionManager(springBootModule);
+                    new LombokExtensionManager(((SpringBootModule)module));
                     break;
                 case ModuleExtensionType.MEKCONE_WEB_PLATFORM_ACCOUNT:
                     log.info("MWPA");
@@ -134,33 +128,33 @@ public class SpringBootGenerator extends CommonGenerator {
         addOutputFile(getPath("srcPath") + StrUtil.upperCamelCase(project.getArtifactId()) + "Application.java", javaTemplate.toString());
 
         // Application properties
-        addOutputFile(getPath("resourcesPath") + "application.properties", springBootModule.getApplicationPropertiesParser().generate());
+        addOutputFile(getPath("resourcesPath") + "application.properties", ((SpringBootModule)module).getApplicationPropertiesParser().generate());
 
         // Controllers
-        for (SpringBootComponent controllerComponent: springBootModule.getControllers()) {
+        for (SpringBootComponent controllerComponent: ((SpringBootModule)module).getControllers()) {
             addOutputFile(getPath("controllerPath") + controllerComponent.getName() + ".java", controllerComponent.toString());
         }
 
         // Entities
-        for (SpringBootDataClass entityBean: springBootModule.getEntities()) {
+        for (SpringBootDataClass entityBean: ((SpringBootModule)module).getEntities()) {
             addOutputFile(getPath("entityPath") + entityBean.getName() + ".java", entityBean.toString());
         }
 
         // Mappers
-        for (SpringBootComponent mybatisMapperComponent: springBootModule.getMybatisMappers()) {
+        for (SpringBootComponent mybatisMapperComponent: ((SpringBootModule)module).getMybatisMappers()) {
             addOutputFile(getPath("mapperPath") + mybatisMapperComponent.getName() + ".java", mybatisMapperComponent.toString());
         }
 
         // POM
-        addOutputFile("pom.xml", springBootModule.getProjectObjectModel().toString());
+        addOutputFile("pom.xml", ((SpringBootModule)module).getProjectObjectModel().toString());
 
         // Services
-        for (SpringBootComponent serviceComponent: springBootModule.getServices()) {
+        for (SpringBootComponent serviceComponent: ((SpringBootModule)module).getServices()) {
             addOutputFile(getPath("servicePath") + serviceComponent.getName() + ".java", serviceComponent.toString());
         }
 
         // ServiceImpls
-        for (SpringBootComponent serviceImplComponent: springBootModule.getServiceImpls()) {
+        for (SpringBootComponent serviceImplComponent: ((SpringBootModule)module).getServiceImpls()) {
             addOutputFile(getPath("serviceImplPath") + serviceImplComponent.getName() + ".java", serviceImplComponent.toString());
         }
 
@@ -170,12 +164,12 @@ public class SpringBootGenerator extends CommonGenerator {
     public void createControllerComponent(Table table) {
         String controllerTemplatePath = getTemplatePath() + "controller/Controller.java";
         SpringBootComponent controllerComponent = new SpringBootComponent(controllerTemplatePath, project, table);
-        springBootModule.addController(controllerComponent);
+        ((SpringBootModule)module).addController(controllerComponent);
     }
 
     public void createEntityBean(Table table) {
         SpringBootDataClass entityBean = new SpringBootDataClass(project, table);
-        springBootModule.addEntity(entityBean);
+        ((SpringBootModule)module).addEntity(entityBean);
     }
 
     public void createMybatisMapperComponent(Table table) {
@@ -186,7 +180,7 @@ public class SpringBootGenerator extends CommonGenerator {
 
         String mybatisMapperTemplatePath = getTemplatePath() + "mapper/Mapper.java";
         SpringBootComponent mybatisMapperComponent = new SpringBootComponent(mybatisMapperTemplatePath, project, table);
-        springBootModule.addMybatisMapper(mybatisMapperComponent);
+        ((SpringBootModule)module).addMybatisMapper(mybatisMapperComponent);
 
         JavaTemplate javaTemplate = mybatisMapperComponent.getJavaTemplate();
         javaTemplate.preprocessForSpringBootProject(project, table);
@@ -223,12 +217,12 @@ public class SpringBootGenerator extends CommonGenerator {
     public void createServiceComponent(Table table) {
         String serviceTemplatePath = getTemplatePath() + "service/Service.java";
         SpringBootComponent serviceComponent = new SpringBootComponent(serviceTemplatePath, project, table);
-        springBootModule.addService(serviceComponent);
+        ((SpringBootModule)module).addService(serviceComponent);
     }
 
     public void createServiceImplComponent(Table table) {
         String serviceImplTemplatePath = getTemplatePath() + "service/impl/ServiceImpl.java";
         SpringBootComponent serviceImplComponent = new SpringBootComponent(serviceImplTemplatePath, project, table);
-        springBootModule.addServiceImpl(serviceImplComponent);
+        ((SpringBootModule)module).addServiceImpl(serviceImplComponent);
     }
 }

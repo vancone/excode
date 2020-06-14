@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.mekcone.excrud.codegen.constant.UrlPath;
-import com.mekcone.excrud.codegen.model.module.impl.apidocument.component.Keyword;
+import com.mekcone.excrud.codegen.model.module.impl.ApiDocumentModule;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
@@ -137,7 +137,7 @@ public class ApiDocumentGenerator extends CommonGenerator {
                 paragraph.add(chunk);
                 document.add(paragraph);
 
-                List<Keyword> keywords = project.getModuleSet().getApiDocumentModule().getKeywords();
+                List<ApiDocumentModule.Keyword> keywords = project.getModuleSet().getApiDocumentModule().getKeywords();
                 for (int k = 0; k < keywords.size(); k ++) {
                     // API title
                     paragraph = new Paragraph();

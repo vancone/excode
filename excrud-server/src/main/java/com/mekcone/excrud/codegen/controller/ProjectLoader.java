@@ -43,9 +43,6 @@ public class ProjectLoader {
                 case ModuleType.API_DOCUMENT:
                     generator = new ApiDocumentGenerator(project);
                     break;
-                case ModuleType.ENTERPRISE_OFFICIAL_WEBSITE:
-                    generator = new EnterpriseOfficialWebsiteGenerator(project);
-                    break;
                 case ModuleType.RELATIONAL_DATABASE:
                     generator = tableAmount > 0 ? new RelationalDatabaseGenerator(project) : null;
                     break;
@@ -54,6 +51,9 @@ public class ProjectLoader {
                     break;
                 case ModuleType.VUE_ELEMENT_ADMIN:
                     generator = new VueElementAdminGenerator(project);
+                    break;
+                case ModuleType.WEBSITE_PAGE:
+                    generator = new WebsitePageGenerator(project);
                     break;
                 default: generator = null;
             };

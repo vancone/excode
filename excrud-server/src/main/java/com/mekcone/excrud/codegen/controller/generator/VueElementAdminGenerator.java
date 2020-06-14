@@ -8,7 +8,6 @@ public class VueElementAdminGenerator extends CommonGenerator {
 
     public VueElementAdminGenerator(Project project) {
         super(project);
-        copyInitialTemplates();
         log.info("VUE");
     }
 
