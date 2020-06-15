@@ -14,9 +14,6 @@
             "serviceImplPath": "src/main/java/${PACKAGE_PATH}/service/impl/",
             "srcPath": "src/main/java/${PACKAGE_PATH}/"
         },
-        "components": {
-            "${artifactId}Application.java": "srcPath"
-        },
         "extensions": [
             "lombok",
             "swagger2"

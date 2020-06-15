@@ -15,4 +15,4 @@
     - [Properties](./ch04-02-properties.md)
 - [Vue Element Admin Module](./ch05-00-vuejs-admin-platform-generator.md)
 - [Enterprise Official Website Module](./ch06-00-enterprise-offcial-website-generator.md)
-- [API Documents Module](./ch07-00-api-documents-generator.md)
+- [Document Module](./ch07-00-document-generator.md)

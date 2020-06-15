@@ -2,9 +2,10 @@ package com.mekcone.excrud.codegen.model.project;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.mekcone.excrud.codegen.model.module.Module;
+import com.mekcone.excrud.codegen.model.module.impl.DeploymentModule;
 import com.mekcone.excrud.codegen.model.module.impl.VueElementAdminModule;
 import com.mekcone.excrud.codegen.model.module.impl.WebsitePageModule;
-import com.mekcone.excrud.codegen.model.module.impl.ApiDocumentModule;
+import com.mekcone.excrud.codegen.model.module.impl.DocumentModule;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.RelationalDatabaseModule;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.SpringBootModule;
 import lombok.Data;
@@ -14,8 +15,11 @@ import java.util.List;
 
 @Data
 public class ModuleSet {
-    @JacksonXmlProperty(localName = "api-document")
-    private ApiDocumentModule apiDocumentModule;
+    @JacksonXmlProperty(localName = "document")
+    private DocumentModule documentModule;
+
+    @JacksonXmlProperty(localName = "deployment")
+    private DeploymentModule deploymentModule;
 
     @JacksonXmlProperty(localName = "relational-database")
     private RelationalDatabaseModule relationalDatabaseModule;
@@ -31,7 +35,8 @@ public class ModuleSet {
 
     public List<Module> asList() {
         List<Module> modules = new ArrayList<>();
-        modules.add(apiDocumentModule);
+        modules.add(documentModule);
+        modules.add(deploymentModule);
         modules.add(relationalDatabaseModule);
         modules.add(springBootModule);
         modules.add(vueElementAdminModule);

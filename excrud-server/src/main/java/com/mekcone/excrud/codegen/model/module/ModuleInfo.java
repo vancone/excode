@@ -1,5 +1,6 @@
 package com.mekcone.excrud.codegen.model.module;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -18,12 +19,12 @@ public class ModuleInfo {
 
     @Data
     public class Initial {
-
-        private Map<String, String> paths = new HashMap<>();
-
-        private Map<String, String> components = new HashMap<>();
+        @JsonProperty("dirs")
+        private List<String> directories = new ArrayList<>();
 
         private List<String> extensions = new ArrayList<>();
+        private List<String> files = new ArrayList<>();
+        private Map<String, String> paths = new HashMap<>();
     }
 
 }

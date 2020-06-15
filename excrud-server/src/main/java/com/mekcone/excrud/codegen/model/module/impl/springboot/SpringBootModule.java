@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class SpringBootModule implements com.mekcone.excrud.codegen.model.module.Module {
+public class SpringBootModule extends com.mekcone.excrud.codegen.model.module.Module {
 
     @JsonIgnore
     private String groupId;
@@ -22,12 +22,9 @@ public class SpringBootModule implements com.mekcone.excrud.codegen.model.module
 
     @JacksonXmlElementWrapper(localName = "extensions")
     @JacksonXmlProperty(localName = "extension")
-    private List<SpringBootExtension> extensions = new ArrayList<>();
+    private List<Extension> extensions = new ArrayList<>();
 
     private SpringBootProperties properties;
-
-    @JacksonXmlProperty(isAttribute = true)
-    private boolean use;
 
     @JsonIgnore
     private ProjectObjectModel projectObjectModel;
@@ -74,7 +71,7 @@ public class SpringBootModule implements com.mekcone.excrud.codegen.model.module
     }
 
     @Override
-    public String type() {
+    public String getType() {
         return ModuleType.SPRING_BOOT;
     }
 

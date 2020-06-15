@@ -13,6 +13,7 @@ import com.mekcone.excrud.codegen.controller.extmgr.springboot.LombokExtensionMa
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.Swagger2ExtensionManager;
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
+import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
 import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
@@ -20,7 +21,6 @@ import com.mekcone.excrud.codegen.model.module.impl.springboot.SpringBootModule;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.ProjectObjectModel;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootComponent;
 import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootDataClass;
-import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootExtension;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -69,7 +69,7 @@ public class SpringBootGenerator extends CommonGenerator {
         applicationPropertiesParser.addSeparator();
 
         // Remove disabled extensions
-        Iterator<SpringBootExtension> springBootExtensionIterator = ((SpringBootModule)module).getExtensions().iterator();
+        Iterator<Module.Extension> springBootExtensionIterator = ((SpringBootModule)module).getExtensions().iterator();
         while (springBootExtensionIterator.hasNext()) {
             if (!springBootExtensionIterator.next().isUse()) {
                 springBootExtensionIterator.remove();
@@ -79,7 +79,7 @@ public class SpringBootGenerator extends CommonGenerator {
         String extensionInfo = "Enable extensions: [";
         Iterator iterator = ((SpringBootModule)module).getExtensions().iterator();
         while (iterator.hasNext()) {
-            extensionInfo += ((SpringBootExtension)(iterator.next())).getId();
+            extensionInfo += ((Module.Extension)(iterator.next())).getId();
             extensionInfo += iterator.hasNext() ? ", " : "";
         }
         extensionInfo += "]";
@@ -88,10 +88,10 @@ public class SpringBootGenerator extends CommonGenerator {
         // Run extension manager
         ((SpringBootModule)module).setProjectObjectModel(new ProjectObjectModel(project));
 
-        for (SpringBootExtension springBootExtension : ((SpringBootModule)module).getExtensions()) {
-            log.info("Executing Spring Boot extension manager: {}", springBootExtension.getId());
+        for (Module.Extension extension : ((SpringBootModule)module).getExtensions()) {
+            log.info("Executing Spring Boot extension manager: {}", extension.getId());
 
-            switch (springBootExtension.getId()) {
+            switch (extension.getId()) {
                 case ModuleExtensionType.CROSS_ORIGIN:
                     new CrossOriginExtensionManager(this, project);
                     break;
@@ -105,7 +105,7 @@ public class SpringBootGenerator extends CommonGenerator {
                     new Swagger2ExtensionManager(this, project);
                     break;
                 default:
-                    log.warn("Unknown extension: {}", springBootExtension.getId());
+                    log.warn("Unknown extension: {}", extension.getId());
             }
         }
 

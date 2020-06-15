@@ -34,14 +34,17 @@ public class ProjectLoader {
             }
 
             // Print module type
-            log.info("MODULE :: [ {} ]", module.type());
+            log.info("MODULE :: [ {} ]", module.getType());
             long startTime = new Date().getTime();
 
             // Initialize generators
             CommonGenerator generator;
-            switch(module.type()) {
-                case ModuleType.API_DOCUMENT:
-                    generator = new ApiDocumentGenerator(project);
+            switch(module.getType()) {
+                case ModuleType.DOCUMENT:
+                    generator = new DocumentGenerator(project);
+                    break;
+                case ModuleType.DEPLOYMENT:
+                    generator = new DeploymentGenerator(project);
                     break;
                 case ModuleType.RELATIONAL_DATABASE:
                     generator = tableAmount > 0 ? new RelationalDatabaseGenerator(project) : null;
@@ -60,9 +63,9 @@ public class ProjectLoader {
             if (generator != null) {
                 generator.generate();
                 long endTime = new Date().getTime();
-                log.info("Generating module({}) complete in {} ms", module.type(), (endTime - startTime));
+                log.info("Generating module({}) complete in {} ms", module.getType(), (endTime - startTime));
             } else {
-                log.warn("Unsupported module type \"{}\"", module.type());
+                log.warn("Unsupported module type \"{}\"", module.getType());
             }
         }
     }

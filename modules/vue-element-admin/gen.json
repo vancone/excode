@@ -6,8 +6,19 @@
         "vue-element-admin": "4.3.0"
     },
     "initial": {
+        "dirs": [
+            "${VUE_ELEMENT_ADMIN_VERSION}/public"
+        ],
+        "files": [
+            "${VUE_ELEMENT_ADMIN_VERSION}/.eslintrc.js",
+            "${VUE_ELEMENT_ADMIN_VERSION}/.gitignore"
+        ],
         "paths": {
-            "srcPath": "src/"
+            "srcPath": "src/",
+            "publicPath": "public/",
+            "buildPath": "build/",
+            "plopTemplatesPath": "plop-templates/",
+            "testsPath": "tests/"
         }
     }
 }

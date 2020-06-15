@@ -13,6 +13,8 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,30 +71,19 @@ public abstract class CommonGenerator {
         String comparedString1 = callerClassName.substring(callerClassName.lastIndexOf('.') + 1)
                 .replace("Generator", "").toUpperCase();
 
-        /*for (Field field: ModuleType.class.getDeclaredFields()) {
-            try {
-                String comparedString2 = field.getName().replace("_", "");
-                if (comparedString1.equals(comparedString2)) {
-                    moduleType = field.get(null).toString();
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }*/
-
         for (Module module: project.getModuleSet().asList()) {
-            if (module.type().replace("-", "").toUpperCase().equals(comparedString1)) {
+            if (module.getType().replace("-", "").toUpperCase().equals(comparedString1)) {
                 this.module = module;
                 break;
             }
         }
 
         // Set template paths
-        templatePath = UrlPath.MODULE_PATH + module.type() + File.separator + "templates" + File.separator;
+        templatePath = UrlPath.MODULE_PATH + module.getType() + File.separator + "templates" + File.separator;
         componentTemplatePath = templatePath + "components/";
         outputPath = UrlPath.GEN_PATH + project.getGroupId() + "." +
                 project.getArtifactId() + "-" + project.getVersion() + File.separator +
-                module.type() + File.separator;
+                module.getType() + File.separator;
         FileUtil.createDirectoryIfNotExist(outputPath);
 
         copyInitialTemplates();
@@ -113,7 +104,27 @@ public abstract class CommonGenerator {
 
             log.info(moduleInfo.toString());
 
-            // Create directories
+            // Copy directories
+            for (String dir: moduleInfo.getInitial().getDirectories()) {
+                String destDir = dir;
+                if (dir.contains("${VUE_ELEMENT_ADMIN_VERSION}")) {
+                    dir = dir.replace("${VUE_ELEMENT_ADMIN_VERSION}", moduleInfo.getVersion().get(module.getType()));
+                    destDir = dir.replace(moduleInfo.getVersion().get(module.getType()) + "/", "");
+                }
+                FileUtil.copyDirectory(templatePath + dir, outputPath + destDir);
+            }
+
+            // Copy files
+            for (String file: moduleInfo.getInitial().getFiles()) {
+                String destFile = file;
+                if (file.contains("${VUE_ELEMENT_ADMIN_VERSION}")) {
+                    file = file.replace("${VUE_ELEMENT_ADMIN_VERSION}", moduleInfo.getVersion().get(module.getType()));
+                    destFile = file.replace(moduleInfo.getVersion().get(module.getType()) + "/", "");
+                }
+                FileUtil.copyFile(templatePath + file, outputPath + destFile);
+            }
+
+            // Register paths and create directories
             FileUtil.createDirectoryIfNotExist(outputPath);
             Map<String, String> paths = new HashMap<>();
             for (String key: moduleInfo.getInitial().getPaths().keySet()) {

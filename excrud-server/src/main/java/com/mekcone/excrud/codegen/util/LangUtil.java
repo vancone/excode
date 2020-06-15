@@ -16,7 +16,7 @@ public class LangUtil {
 
     private static void load() {
         File i18nPath = new File(UrlPath.EXCRUD_HOME +
-                "modules" + File.separator + ModuleType.API_DOCUMENT + File.separator +
+                "modules" + File.separator + ModuleType.DOCUMENT + File.separator +
                 "i18n" + File.separator);
         for (File file: i18nPath.listFiles()) {
             PropertiesParser propertiesParser = PropertiesParser.readFrom(file.getAbsolutePath());

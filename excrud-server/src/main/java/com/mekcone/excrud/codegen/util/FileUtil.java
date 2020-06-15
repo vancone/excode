@@ -75,19 +75,50 @@ public class FileUtil {
         createDirectoryIfNotExist(destDir);
 
         File srcDirFile = new File(srcDir);
+        if (!srcDirFile.exists()) {
+            log.error("srcDirFile is null: {}", srcDir);
+            return;
+        }
         for (File file : Objects.requireNonNull(srcDirFile.listFiles())) {
             if (file.isFile()) {
                 try {
-                    Files.copy(new File(srcDir + file.getName()).toPath(),
-                            new File(destDir + file.getName()).toPath());
-                } catch (FileAlreadyExistsException e) {
-                    continue;
+                    File destFile = new File(destDir + file.getName());
+                    if (destFile.exists()) {
+                        Files.delete(destFile.toPath());
+                    }
+                    Files.copy(file.toPath(), destFile.toPath());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } else if (file.isDirectory()) {
                 copyDirectory(srcDir + file.getName(), destDir + file.getName());
             }
+        }
+    }
+
+    public static void copyFile(String srcFile, String destFile) {
+        File srcDirFile = new File(srcFile);
+        if (!srcDirFile.isFile()) {
+            log.error("srcFile is not a file");
+        }
+        if (!srcDirFile.exists()) {
+            log.error("srcFile is null: {}", srcFile);
+            return;
+        }
+
+        File destDirFile = new File(destFile);
+        if (destDirFile.exists()) {
+            try {
+                Files.delete(destDirFile.toPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            Files.copy(srcDirFile.toPath(), destDirFile.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

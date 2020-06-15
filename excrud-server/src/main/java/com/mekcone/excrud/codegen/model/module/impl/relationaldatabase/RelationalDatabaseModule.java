@@ -9,17 +9,14 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class RelationalDatabaseModule implements com.mekcone.excrud.codegen.model.module.Module {
-
-    @JacksonXmlProperty(isAttribute = true)
-    private boolean use;
+public class RelationalDatabaseModule extends com.mekcone.excrud.codegen.model.module.Module {
 
     @JacksonXmlElementWrapper(localName = "databases")
     @JacksonXmlProperty(localName = "database")
     private List<Database> databases;
 
     @Override
-    public String type() {
+    public String getType() {
         return ModuleType.RELATIONAL_DATABASE;
     }
 }

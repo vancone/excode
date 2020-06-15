@@ -20,7 +20,7 @@
     </description>
     
     <modules>
-        <api-document use="false">
+        <document use="false">
             <keywords>
                 <keyword type="create">创建</keyword>
                 <keyword type="retrieve">获取</keyword>
@@ -28,7 +28,23 @@
                 <keyword type="update">更新</keyword>
                 <keyword type="delete">删除</keyword>
             </keywords>
-        </api-document>
+        </document>
+
+        <deployment>
+            <operating-systems>
+                <operating-system type="ubuntu" version="20.04" />
+                <operating-system type="centos" version="8" />
+            </operating-systems>
+
+            <enable-docker>true</enable-docker>
+
+            <extensions>
+                <extension id="mariadb" use="true" />
+                <extension id="mongodb" use="true" />
+                <extension id="nginx" use="true" />
+                <extension id="supervisor" use="true" />
+            </extensions>
+        </deployment>
 
         <relational-database use="false">
             <databases>
@@ -107,10 +123,13 @@
         </spring-boot>
 
         <vue-element-admin use="true">
+            <author>Tenton Lien</author>
+            <email>tentonlien@gmail.com</email>
+            <license>MIT</license>
         </vue-element-admin>
 
-        <website-page use="true">
-            <theme id="0" color="blue" />
+        <website-page use="false">
+            <theme type="login" id="0" color="blue" />
             <pages>
                 <page type="home">
                     <title default="Mall">

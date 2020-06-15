@@ -2,8 +2,10 @@ package com.mekcone.excrud.codegen.controller.parser.template.impl;
 
 import com.mekcone.excrud.codegen.controller.parser.template.Template;
 import com.mekcone.excrud.codegen.util.FileUtil;
+import lombok.Getter;
 
 public class UniversalTemplate implements Template {
+    @Getter
     private String template;
 
     public UniversalTemplate(String path) {

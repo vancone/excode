@@ -10,12 +10,10 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class WebsitePageModule implements Module {
-    @JacksonXmlProperty(isAttribute = true)
-    private boolean use;
+public class WebsitePageModule extends Module {
 
     @Override
-    public String type() {
+    public String getType() {
         return ModuleType.WEBSITE_PAGE;
     }
 
@@ -27,6 +25,9 @@ public class WebsitePageModule implements Module {
 
     @Data
     public class Theme {
+        @JacksonXmlProperty(isAttribute = true)
+        private String type;
+
         @JacksonXmlProperty(isAttribute = true)
         private String id;
 
@@ -46,5 +47,14 @@ public class WebsitePageModule implements Module {
         @JacksonXmlElementWrapper(localName = "images")
         @JacksonXmlProperty(localName = "image")
         private List<String> images;
+    }
+
+    public Page getPageByType(String type) {
+        for (Page page: pages) {
+            if (page.getType().equals(type)) {
+                return page;
+            }
+        }
+        return null;
     }
 }
