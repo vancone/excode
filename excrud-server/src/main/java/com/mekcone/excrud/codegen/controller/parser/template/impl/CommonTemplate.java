@@ -4,11 +4,11 @@ import com.mekcone.excrud.codegen.controller.parser.template.Template;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import lombok.Getter;
 
-public class UniversalTemplate implements Template {
+public class CommonTemplate implements Template {
     @Getter
     private String template;
 
-    public UniversalTemplate(String path) {
+    public CommonTemplate(String path) {
         this.template = FileUtil.read(path);
     }
 

@@ -1,13 +1,17 @@
-package com.mekcone.excrud.codegen.controller.generator;
+package com.mekcone.excrud.codegen.controller.generator.impl;
 
 import cn.hutool.core.date.DateUtil;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.constant.UrlPath;
+import com.mekcone.excrud.codegen.controller.extmgr.document.MarkdownExtensionManager;
+import com.mekcone.excrud.codegen.controller.extmgr.document.PdfExtensionManager;
+import com.mekcone.excrud.codegen.controller.generator.Generator;
 import com.mekcone.excrud.codegen.model.module.impl.DocumentModule;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.codegen.model.database.Column;
+import com.mekcone.excrud.codegen.model.database.Database;
+import com.mekcone.excrud.codegen.model.database.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.DataTypeConverter;
 import com.mekcone.excrud.codegen.util.LangUtil;
@@ -17,7 +21,7 @@ import java.io.FileOutputStream;
 import java.util.List;
 
 @Slf4j
-public class DocumentGenerator extends CommonGenerator {
+public class DocumentGenerator extends Generator {
 
     private BaseFont simSunBaseFont;
     private BaseFont simHeiBaseFont;
@@ -28,9 +32,22 @@ public class DocumentGenerator extends CommonGenerator {
     public DocumentGenerator(Project project) {
         super(project);
 
+        module.asDocumentModule().getExports().forEach(export -> {
+            switch (export) {
+                case ModuleConstant.DOCUMENT_EXPORT_FORMAT_MARKDOWN:
+                    new MarkdownExtensionManager(project);
+                    break;
+                case ModuleConstant.DOCUMENT_EXPORT_FORMAT_PDF:
+                    new PdfExtensionManager(project);
+                    break;
+                default:
+                    log.error("Unrecognized extension: {}", export);
+            }
+        });
+
         try {
             simSunBaseFont = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
-
+            // Windows only!!
             String fontPath = "C:\\Windows\\Fonts\\msyh.ttc,1";
             simHeiBaseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         } catch (Exception e) {
@@ -44,7 +61,7 @@ public class DocumentGenerator extends CommonGenerator {
         emphasisChineseFont.setSize(12);
 
         log.info("Start generating PDF document...");
-        for (String languageType: project.getLanguages()) {
+        for (String languageType : project.getLanguages()) {
             generatePdf(languageType);
         }
 
@@ -112,7 +129,7 @@ public class DocumentGenerator extends CommonGenerator {
             paragraph.setAlignment(1);
             Image image = Image.getInstance(UrlPath.EXCRUD_HOME + "/resources/logo/logo2.png");
             image.setAlignment(1);
-            image.scaleAbsolute(40,40);
+            image.scaleAbsolute(40, 40);
             paragraph.add(image);
             font = new Font(Font.FontFamily.TIMES_ROMAN);
             font.setSize(12);
@@ -124,7 +141,7 @@ public class DocumentGenerator extends CommonGenerator {
             document.newPage();
 
             Database database = project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0);
-            for (int i = 0; i < database.getTables().size(); i ++) {
+            for (int i = 0; i < database.getTables().size(); i++) {
                 Table table = database.getTables().get(i);
                 // Title
                 paragraph = new Paragraph();
@@ -138,7 +155,7 @@ public class DocumentGenerator extends CommonGenerator {
                 document.add(paragraph);
 
                 List<DocumentModule.Keyword> keywords = project.getModuleSet().getDocumentModule().getKeywords();
-                for (int k = 0; k < keywords.size(); k ++) {
+                for (int k = 0; k < keywords.size(); k++) {
                     // API title
                     paragraph = new Paragraph();
                     paragraph.setSpacingBefore(20);
@@ -198,7 +215,7 @@ public class DocumentGenerator extends CommonGenerator {
                     pdfPTable.addCell(tableHeaderCell(LangUtil.get(languageType, "param_type")));
                     pdfPTable.addCell(tableHeaderCell(LangUtil.get(languageType, "param_description")));
 
-                    for (Column column: table.getColumns()) {
+                    for (Column column : table.getColumns()) {
                         if (column.isPrimaryKey()) {
                             continue;
                         }
@@ -212,7 +229,7 @@ public class DocumentGenerator extends CommonGenerator {
                         } else {
                             String[] words = column.getName().split("_");
                             String generatedDescription = "";
-                            for (String word: words) {
+                            for (String word : words) {
                                 String result = LangUtil.get(languageType, word);
                                 if (result != null) {
                                     generatedDescription += result + LangUtil.separator(languageType);
@@ -255,7 +272,7 @@ public class DocumentGenerator extends CommonGenerator {
             PdfContentByte pdfContentByte = writer.getDirectContent();
 
             pdfContentByte.saveState();
-            String text ="www.mekcone.com      "+ writer.getPageNumber();
+            String text = "www.mekcone.com      " + writer.getPageNumber();
 
             float textSize = bfChinese.getWidthPoint(text, 12);
             pdfContentByte.beginText();

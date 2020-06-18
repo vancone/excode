@@ -1,4 +1,4 @@
-package com.mekcone.excrud.codegen.model.module.impl.springboot.component;
+package com.mekcone.excrud.codegen.model.file.springboot;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
@@ -10,8 +10,8 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.mekcone.excrud.codegen.constant.DataType;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.codegen.model.database.Column;
+import com.mekcone.excrud.codegen.model.database.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.Data;
 

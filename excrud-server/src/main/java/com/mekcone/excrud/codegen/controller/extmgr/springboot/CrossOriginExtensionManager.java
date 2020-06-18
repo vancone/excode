@@ -6,10 +6,9 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.Statement;
-import com.mekcone.excrud.codegen.constant.UrlPath;
-import com.mekcone.excrud.codegen.controller.generator.SpringBootGenerator;
+import com.mekcone.excrud.codegen.controller.generator.impl.SpringBootGenerator;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
-import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootProperties;
+import com.mekcone.excrud.codegen.model.module.impl.SpringBootModule;
 import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +36,7 @@ public class CrossOriginExtensionManager {
             MethodCallExpr addMappingExpr = statement.asExpressionStmt().getExpression().asMethodCallExpr();
 
             MethodCallExpr rootExpr = addMappingExpr;
-            SpringBootProperties springBootProperties = project.getModuleSet().getSpringBootModule().getProperties();
+            SpringBootModule.SpringBootProperties springBootProperties = project.getModuleSet().getSpringBootModule().getProperties();
 
             // Add allowed origins
             List<String> allowedOrigins = springBootProperties.getCrossOrigin().getAllowedOrigins();

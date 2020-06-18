@@ -7,6 +7,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.mekcone.excrud.codegen.constant.LanguageType;
+import com.mekcone.excrud.codegen.model.module.Module;
+import com.mekcone.excrud.codegen.model.module.impl.*;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -36,6 +38,37 @@ public class Project {
     @JacksonXmlProperty(localName = "modules")
     private ModuleSet moduleSet;
 
+    @Data
+    public class ModuleSet {
+        @JacksonXmlProperty(localName = "document")
+        private DocumentModule documentModule;
+
+        @JacksonXmlProperty(localName = "deployment")
+        private DeploymentModule deploymentModule;
+
+        @JacksonXmlProperty(localName = "relational-database")
+        private RelationalDatabaseModule relationalDatabaseModule;
+
+        @JacksonXmlProperty(localName = "spring-boot")
+        private SpringBootModule springBootModule;
+
+        @JacksonXmlProperty(localName = "vue-element-admin")
+        private VueElementAdminModule vueElementAdminModule;
+
+        @JacksonXmlProperty(localName = "website-page")
+        private WebsitePageModule websitePageModule;
+
+        public List<Module> asList() {
+            List<Module> modules = new ArrayList<>();
+            modules.add(documentModule);
+            modules.add(deploymentModule);
+            modules.add(relationalDatabaseModule);
+            modules.add(springBootModule);
+            modules.add(vueElementAdminModule);
+            modules.add(websitePageModule);
+            return modules;
+        }
+    }
 
     public String getDefaultLanguage() {
         return languages.isEmpty() ? LanguageType.ENGLISH_US : languages.get(0);

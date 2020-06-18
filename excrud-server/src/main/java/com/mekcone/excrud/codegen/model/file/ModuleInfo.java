@@ -1,4 +1,4 @@
-package com.mekcone.excrud.codegen.model.module;
+package com.mekcone.excrud.codegen.model.file;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

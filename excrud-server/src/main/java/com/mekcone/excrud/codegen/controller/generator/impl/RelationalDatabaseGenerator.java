@@ -1,13 +1,14 @@
-package com.mekcone.excrud.codegen.controller.generator;
+package com.mekcone.excrud.codegen.controller.generator.impl;
 
-import com.mekcone.excrud.codegen.constant.ApplicationParameter;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
+import com.mekcone.excrud.codegen.controller.generator.Generator;
+import com.mekcone.excrud.codegen.model.database.Database;
+import com.mekcone.excrud.codegen.model.database.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class RelationalDatabaseGenerator extends CommonGenerator {
+public class RelationalDatabaseGenerator extends Generator {
 
     public RelationalDatabaseGenerator(Project project) {
         super(project);
@@ -85,7 +86,8 @@ public class RelationalDatabaseGenerator extends CommonGenerator {
     @Override
     public void generate() {
         String code = "";
-        code += "-- " + ApplicationParameter.DESCRIPTION + "\n\n";
+        code += "-- " + ModuleConstant.DESCRIPTION + "\n\n";
+
         for (Database database: project.getModuleSet().getRelationalDatabaseModule().getDatabases()) {
             if (database != null && database.hasTable()) {
                 code += createDatabaseQuery(database) + "\n\n";

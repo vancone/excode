@@ -2,7 +2,7 @@ package com.mekcone.excrud.codegen.model.module.impl;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.model.module.Module;
 import lombok.Data;
 
@@ -16,13 +16,11 @@ public class DeploymentModule extends Module {
     @JacksonXmlProperty(localName = "operating-system")
     private List<OperatingSystem> operatingSystems = new ArrayList<>();
 
-    @JacksonXmlProperty(localName = "enable-docker")
-    private boolean enableDocker;
-
+    private String daemon;
 
     @Override
     public String getType() {
-        return ModuleType.DEPLOYMENT;
+        return ModuleConstant.MODULE_TYPE_DEPLOYMENT;
     }
 
     @Data

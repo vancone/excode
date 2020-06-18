@@ -2,7 +2,7 @@ package com.mekcone.excrud.codegen.model.module.impl;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.project.Internationalization;
 import lombok.Data;
@@ -14,7 +14,7 @@ public class WebsitePageModule extends Module {
 
     @Override
     public String getType() {
-        return ModuleType.WEBSITE_PAGE;
+        return ModuleConstant.MODULE_TYPE_WEBSITE_PAGE;
     }
 
     private Theme theme;

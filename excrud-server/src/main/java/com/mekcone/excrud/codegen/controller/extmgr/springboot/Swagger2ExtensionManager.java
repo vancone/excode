@@ -4,14 +4,13 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.ArrayInitializerExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.mekcone.excrud.codegen.constant.ModuleExtensionType;
-import com.mekcone.excrud.codegen.constant.UrlPath;
-import com.mekcone.excrud.codegen.controller.generator.SpringBootGenerator;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
+import com.mekcone.excrud.codegen.controller.generator.impl.SpringBootGenerator;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.RelationalDatabaseModule;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
-import com.mekcone.excrud.codegen.model.module.impl.springboot.SpringBootModule;
-import com.mekcone.excrud.codegen.model.module.impl.springboot.component.SpringBootComponent;
+import com.mekcone.excrud.codegen.model.module.impl.RelationalDatabaseModule;
+import com.mekcone.excrud.codegen.model.database.Table;
+import com.mekcone.excrud.codegen.model.module.impl.SpringBootModule;
+import com.mekcone.excrud.codegen.model.file.springboot.SpringBootComponent;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.LangUtil;
 
@@ -26,7 +25,7 @@ public class Swagger2ExtensionManager {
         this.project = project;
         this.callBackObject = callBackObject;
         SpringBootModule springBootModule = project.getModuleSet().getSpringBootModule();
-        springBootModule.getProjectObjectModel().addDependencies(ModuleExtensionType.SWAGGER2);
+        springBootModule.getProjectObjectModel().addDependencies(ModuleConstant.SPRING_BOOT_EXTENSION_SWAGGER2);
         addConfig();
         addAnnotation();
     }

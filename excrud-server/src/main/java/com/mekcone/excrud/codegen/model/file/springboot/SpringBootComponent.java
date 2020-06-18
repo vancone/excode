@@ -1,12 +1,12 @@
-package com.mekcone.excrud.codegen.model.module.impl.springboot.component;
+package com.mekcone.excrud.codegen.model.file.springboot;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.mekcone.excrud.codegen.constant.SpringBootComponentType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.codegen.model.database.Table;
 import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.Data;
 
@@ -27,13 +27,13 @@ public class SpringBootComponent {
         javaTemplate = new JavaTemplate(templatePath);
         javaTemplate.preprocessForSpringBootProject(project, table);
 
-        if (templatePath.toLowerCase().contains(SpringBootComponentType.CONTROLLER)) {
+        if (templatePath.toLowerCase().contains(ModuleConstant.SPRING_BOOT_COMPONENT_CONTROLLER)) {
             name = table.getUpperCamelCaseName() + "Controller";
-        } else if (templatePath.toLowerCase().contains(SpringBootComponentType.MAPPER)) {
+        } else if (templatePath.toLowerCase().contains(ModuleConstant.SPRING_BOOT_COMPONENT_MAPPER)) {
             name = table.getUpperCamelCaseName() + "Mapper";
-        } else if (templatePath.toLowerCase().contains(SpringBootComponentType.SERVICE_IMPL.toLowerCase())) {
+        } else if (templatePath.toLowerCase().contains(ModuleConstant.SPRING_BOOT_COMPONENT_SERVICE_IMPL.toLowerCase())) {
             name = table.getUpperCamelCaseName() + "ServiceImpl";
-        } else if (templatePath.toLowerCase().contains(SpringBootComponentType.SERVICE)) {
+        } else if (templatePath.toLowerCase().contains(ModuleConstant.SPRING_BOOT_COMPONENT_SERVICE)) {
             name = table.getUpperCamelCaseName() + "Service";
         }
     }

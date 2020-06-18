@@ -20,7 +20,7 @@
     </description>
     
     <modules>
-        <document use="false">
+        <document use="true">
             <keywords>
                 <keyword type="create">创建</keyword>
                 <keyword type="retrieve">获取</keyword>
@@ -28,6 +28,10 @@
                 <keyword type="update">更新</keyword>
                 <keyword type="delete">删除</keyword>
             </keywords>
+            <exports>
+                <export>pdf</export>
+                <export>md</export>
+            </exports>
         </document>
 
         <deployment>
@@ -36,7 +40,7 @@
                 <operating-system type="centos" version="8" />
             </operating-systems>
 
-            <enable-docker>true</enable-docker>
+            <daemon>docker</daemon>
 
             <extensions>
                 <extension id="mariadb" use="true" />
@@ -128,8 +132,8 @@
             <license>MIT</license>
         </vue-element-admin>
 
-        <website-page use="false">
-            <theme type="login" id="0" color="blue" />
+        <website-page use="true">
+            <theme type="home" id="0" color="blue" />
             <pages>
                 <page type="home">
                     <title default="Mall">

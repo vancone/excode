@@ -1,12 +1,10 @@
-package com.mekcone.excrud.codegen.model.module.impl.springboot.component;
+package com.mekcone.excrud.codegen.model.file.springboot;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.mekcone.excrud.codegen.constant.ApplicationParameter;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.constant.UrlPath;
-import com.mekcone.excrud.codegen.controller.generator.SpringBootGenerator;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import lombok.Data;
@@ -34,6 +32,24 @@ public class ProjectObjectModel {
     private String description;
     private List<Dependency> dependencies = new ArrayList<>();
 
+    @Data
+    public static class Dependency {
+        private String groupId;
+        private String artifactId;
+        private String version;
+        private String scope;
+        private List<Dependency> exclusions;
+
+        public Dependency() {}
+
+        public Dependency(String groupId, String artifactId, String version, String scope) {
+            this.groupId = groupId;
+            this.artifactId = artifactId;
+            this.version = version;
+            this.scope = scope;
+        }
+    }
+
     public ProjectObjectModel(Project project) {
         groupId = project.getGroupId();
         artifactId = project.getArtifactId();
@@ -46,7 +62,7 @@ public class ProjectObjectModel {
     }
 
     public void addDependencies(String pomFileName) {
-        String templatePath = UrlPath.MODULE_PATH + ModuleType.SPRING_BOOT + File.separator + "templates" + File.separator;
+        String templatePath = UrlPath.MODULE_PATH + ModuleConstant.MODULE_TYPE_SPRING_BOOT + File.separator + "templates" + File.separator;
         String pomDependenciesText = FileUtil.read(templatePath + "pom" + File.separator + pomFileName + ".xml");
         if (pomDependenciesText != null && !pomDependenciesText.isEmpty()) {
             XmlMapper xmlMapper = new XmlMapper();
@@ -68,7 +84,7 @@ public class ProjectObjectModel {
         // Root
         Element rootElement = new Element("project");
         Document document = new Document(rootElement);
-        rootElement.addContent(new Comment(ApplicationParameter.DESCRIPTION));
+        rootElement.addContent(new Comment(ModuleConstant.DESCRIPTION));
         Namespace xmlns = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
         rootElement.setNamespace(xmlns);
         Namespace xsi = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");

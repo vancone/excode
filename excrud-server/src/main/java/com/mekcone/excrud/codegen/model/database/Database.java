@@ -1,4 +1,4 @@
-package com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component;
+package com.mekcone.excrud.codegen.model.database;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -31,9 +31,6 @@ public class Database {
     private List<Table> tables;
 
     public boolean hasTable() {
-        if (tables.isEmpty()) {
-            return false;
-        }
-        return true;
+        return !tables.isEmpty();
     }
 }

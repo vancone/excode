@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.enums.ErrorEnum;
 import com.mekcone.excrud.codegen.model.module.Module;
-import com.mekcone.excrud.codegen.model.module.ModuleInfo;
+import com.mekcone.excrud.codegen.model.file.ModuleInfo;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import lombok.Data;
@@ -13,8 +13,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +20,7 @@ import java.util.Map;
 
 // Every generator should extends this base class
 @Slf4j
-public abstract class CommonGenerator {
+public abstract class Generator {
 
     protected String componentTemplatePath;
     protected Module module;
@@ -60,10 +58,7 @@ public abstract class CommonGenerator {
     }
 
     // Initialize data
-    public CommonGenerator(Project project) {
-        if (UrlPath.EXCRUD_HOME == null) {
-            log.error(ErrorEnum.EXCRUD_HOME_ENV_VARIABLE_NOT_SET.toString());
-        }
+    public Generator(Project project) {
         this.project = project;
 
         // Recognize module type

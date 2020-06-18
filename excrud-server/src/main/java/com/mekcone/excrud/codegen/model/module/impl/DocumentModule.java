@@ -3,9 +3,10 @@ package com.mekcone.excrud.codegen.model.module.impl;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.model.module.Module;
 import lombok.Data;
+import org.springframework.http.HttpMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,10 @@ public class DocumentModule extends Module {
     @JacksonXmlElementWrapper(localName = "keywords")
     @JacksonXmlProperty(localName = "keyword")
     private List<Keyword> keywords = new ArrayList<>();
+
+    @JacksonXmlElementWrapper(localName = "exports")
+    @JacksonXmlProperty(localName = "export")
+    private List<String> exports = new ArrayList<>();
 
     public String getKeywordByType(String type) {
         for (Keyword keyword: keywords) {
@@ -27,7 +32,7 @@ public class DocumentModule extends Module {
 
     @Override
     public String getType() {
-        return ModuleType.DOCUMENT;
+        return ModuleConstant.MODULE_TYPE_DOCUMENT;
     }
 
     @Data
@@ -41,15 +46,24 @@ public class DocumentModule extends Module {
         private String requestMethod;
 
         public String getRequestMethod() {
-            String requestMethod;
+            HttpMethod requestMethod;
             switch (type) {
-                case "create": requestMethod = "POST"; break;
-                case "retrieve": requestMethod = "GET"; break;
-                case "update": requestMethod = "PUT"; break;
-                case "delete": requestMethod = "DELETE"; break;
-                default: requestMethod = "";
-            };
-            return requestMethod;
+                case ModuleConstant.DOCUMENT_KEYWORD_CREATE:
+                    requestMethod = HttpMethod.POST;
+                    break;
+                case ModuleConstant.DOCUMENT_KEYWORD_RETRIEVE:
+                    requestMethod = HttpMethod.GET;
+                    break;
+                case ModuleConstant.DOCUMENT_KEYWORD_UPDATE:
+                    requestMethod = HttpMethod.PUT;
+                    break;
+                case ModuleConstant.DOCUMENT_KEYWORD_DELETE:
+                    requestMethod = HttpMethod.DELETE;
+                    break;
+                default:
+                    return "";
+            }
+            return requestMethod.toString();
         }
     }
 }

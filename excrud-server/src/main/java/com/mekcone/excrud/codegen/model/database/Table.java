@@ -1,4 +1,4 @@
-package com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component;
+package com.mekcone.excrud.codegen.model.database;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;

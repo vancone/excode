@@ -1,7 +1,7 @@
 package com.mekcone.excrud.codegen.util;
 
 import com.mekcone.excrud.codegen.constant.LanguageType;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ public class LangUtil {
 
     private static void load() {
         File i18nPath = new File(UrlPath.EXCRUD_HOME +
-                "modules" + File.separator + ModuleType.DOCUMENT + File.separator +
+                "modules" + File.separator + ModuleConstant.MODULE_TYPE_DOCUMENT + File.separator +
                 "i18n" + File.separator);
         for (File file: i18nPath.listFiles()) {
             PropertiesParser propertiesParser = PropertiesParser.readFrom(file.getAbsolutePath());

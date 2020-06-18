@@ -2,13 +2,14 @@ package com.mekcone.excrud.codegen.model.module;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.mekcone.excrud.codegen.model.module.impl.*;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Module {
+public abstract class Module {
     private String type;
 
     private boolean use;
@@ -24,5 +25,25 @@ public class Module {
 
         @JacksonXmlProperty(isAttribute = true)
         private boolean use;
+    }
+
+    public SpringBootModule asSpringBootModule() {
+        return (SpringBootModule)this;
+    }
+
+    public DeploymentModule asDeploymentModule() {
+        return (DeploymentModule)this;
+    }
+
+    public DocumentModule asDocumentModule() {
+        return (DocumentModule)this;
+    }
+
+    public VueElementAdminModule asVueElementAdminModule() {
+        return (VueElementAdminModule)this;
+    }
+
+    public WebsitePageModule asWebsitePageModule() {
+        return (WebsitePageModule)this;
     }
 }

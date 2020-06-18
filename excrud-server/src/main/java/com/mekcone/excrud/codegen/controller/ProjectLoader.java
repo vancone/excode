@@ -2,12 +2,14 @@ package com.mekcone.excrud.codegen.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.controller.generator.*;
+import com.mekcone.excrud.codegen.controller.generator.impl.*;
 import com.mekcone.excrud.codegen.enums.ErrorEnum;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Column;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Database;
-import com.mekcone.excrud.codegen.model.module.impl.relationaldatabase.component.Table;
+import com.mekcone.excrud.codegen.model.database.Column;
+import com.mekcone.excrud.codegen.model.database.Database;
+import com.mekcone.excrud.codegen.model.database.Table;
+import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,38 +30,38 @@ public class ProjectLoader {
             System.exit(0);
         }
 
-        for (com.mekcone.excrud.codegen.model.module.Module module : project.getModuleSet().asList()) {
-            if (!module.isUse()) {
-                continue;
-            }
+        for (Module module : project.getModuleSet().asList()) {
+            if (!module.isUse()) continue;
 
             // Print module type
             log.info("MODULE :: [ {} ]", module.getType());
             long startTime = new Date().getTime();
 
             // Initialize generators
-            CommonGenerator generator;
-            switch(module.getType()) {
-                case ModuleType.DOCUMENT:
+            Generator generator;
+            switch (module.getType()) {
+                case ModuleConstant.MODULE_TYPE_DOCUMENT:
                     generator = new DocumentGenerator(project);
                     break;
-                case ModuleType.DEPLOYMENT:
+                case ModuleConstant.MODULE_TYPE_DEPLOYMENT:
                     generator = new DeploymentGenerator(project);
                     break;
-                case ModuleType.RELATIONAL_DATABASE:
+                case ModuleConstant.MODULE_TYPE_RELATIONAL_DATABASE:
                     generator = tableAmount > 0 ? new RelationalDatabaseGenerator(project) : null;
                     break;
-                case ModuleType.SPRING_BOOT:
+                case ModuleConstant.MODULE_TYPE_SPRING_BOOT:
                     generator = new SpringBootGenerator(project);
                     break;
-                case ModuleType.VUE_ELEMENT_ADMIN:
+                case ModuleConstant.MODULE_TYPE_VUE_ELEMENT_ADMIN:
                     generator = new VueElementAdminGenerator(project);
                     break;
-                case ModuleType.WEBSITE_PAGE:
+                case ModuleConstant.MODULE_TYPE_WEBSITE_PAGE:
                     generator = new WebsitePageGenerator(project);
                     break;
-                default: generator = null;
-            };
+                default:
+                    generator = null;
+            }
+
             if (generator != null) {
                 generator.generate();
                 long endTime = new Date().getTime();
@@ -97,7 +99,7 @@ public class ProjectLoader {
         }
         if (tableAmount == 0) {
             log.error(ErrorEnum.TABLE_UNDEFINED.toString());
-            System.exit(-1);
+            System.exit(-1);  // DANGEROUS!
         } else {
             log.info("{} database(s), {} table(s) detected", databases.size(), tableAmount);
         }

@@ -1,6 +1,6 @@
 package com.mekcone.excrud.codegen.controller.packager;
 
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.constant.UrlPath;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,7 +18,7 @@ public class SpringBootPackager {
                 groupId + "." +
                 artifactId + "-" +
                 version + File.separator +
-                ModuleType.SPRING_BOOT + File.separator;
+                ModuleConstant.MODULE_TYPE_SPRING_BOOT + File.separator;
     }
 
     public boolean build() {

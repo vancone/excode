@@ -1,6 +1,6 @@
 package com.mekcone.excrud.codegen.model.module.impl;
 
-import com.mekcone.excrud.codegen.constant.ModuleType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.model.module.Module;
 import lombok.Data;
 
@@ -9,7 +9,7 @@ public class VueElementAdminModule extends Module {
 
     @Override
     public String getType() {
-        return ModuleType.VUE_ELEMENT_ADMIN;
+        return ModuleConstant.MODULE_TYPE_VUE_ELEMENT_ADMIN;
     }
 
     private String author;
