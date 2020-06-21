@@ -18,6 +18,7 @@ import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.database.Column;
 import com.mekcone.excrud.codegen.model.database.Database;
 import com.mekcone.excrud.codegen.model.database.Table;
+import com.mekcone.excrud.codegen.model.module.impl.DatasourceModule;
 import com.mekcone.excrud.codegen.model.module.impl.SpringBootModule;
 import com.mekcone.excrud.codegen.model.file.springboot.ProjectObjectModel;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootComponent;
@@ -35,11 +36,12 @@ public class SpringBootGenerator extends Generator {
         super(project);
         module.asSpringBootModule().setGroupId(project.getGroupId());
         module.asSpringBootModule().setArtifactId(project.getArtifactId());
+        module.asSpringBootModule().setProjectObjectModel(new ProjectObjectModel(project));
     }
 
     public void generate() {
         SpringBootModule springBootModule = module.asSpringBootModule();
-        for (Table table : project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0).getTables()) {
+        for (Table table : project.getModuleSet().getDatasourceModule().getRelationalDatabase().getDatabases().get(0).getTables()) {
             if (table.getCatalogueOf() != null && !table.getCatalogueOf().isEmpty()) {
                 continue;
             }
@@ -54,6 +56,7 @@ public class SpringBootGenerator extends Generator {
         createApplicationEntry();
 
         // Application properties
+        springBootModule.getProjectObjectModel().addDependencies("mybatis");
         PropertiesParser applicationPropertiesParser = springBootModule.getApplicationPropertiesParser();
 
         int serverPort = ((SpringBootModule)module).getProperties().getServerPort();
@@ -62,14 +65,30 @@ public class SpringBootGenerator extends Generator {
         }
         applicationPropertiesParser.addSeparator();
 
-
-        Database defaultDatabase = project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0);
+        // Add relational database source
+        Database defaultDatabase = project.getModuleSet().getDatasourceModule().getRelationalDatabase().getDatabases().get(0);
         String dataSourceUrl = "jdbc:" + defaultDatabase.getType() + "://" + defaultDatabase.getHost() + "/" + defaultDatabase.getName();
         dataSourceUrl += defaultDatabase.getTimezone() != null ? "?serverTimezone=" + defaultDatabase.getTimezone() : "";
         applicationPropertiesParser.add("spring.datasource.url", dataSourceUrl);
         applicationPropertiesParser.add("spring.datasource.username", defaultDatabase.getUsername());
         applicationPropertiesParser.add("spring.datasource.password", defaultDatabase.getPassword());
         applicationPropertiesParser.addSeparator();
+
+        // Add Redis source
+        DatasourceModule.Redis redis = project.getModuleSet().getDatasourceModule().getRedis();
+        if (!redis.getNodes().isEmpty()) {
+            springBootModule.getProjectObjectModel().addDependencies("redis");
+            applicationPropertiesParser.add("spring.redis.database", redis.getNodes().get(0).getDatabase());
+            applicationPropertiesParser.add("spring.redis.host", redis.getNodes().get(0).getHost());
+            applicationPropertiesParser.add("spring.redis.port", String.valueOf(redis.getNodes().get(0).getPort()));
+            if (!redis.getNodes().get(0).getPassword().isEmpty()) {
+                applicationPropertiesParser.add("spring.redis.password", redis.getNodes().get(0).getPassword());
+            }
+            applicationPropertiesParser.addSeparator();
+
+        } else {
+            log.warn("No available Redis instance");
+        }
 
         // Remove disabled extensions
         springBootModule.getExtensions().removeIf(extension -> !extension.isUse());
@@ -84,8 +103,6 @@ public class SpringBootGenerator extends Generator {
         log.info(extensionInfo);
 
         // Run extension manager
-        springBootModule.setProjectObjectModel(new ProjectObjectModel(project));
-
         springBootModule.getExtensions().forEach(extension -> {
             log.info("Executing Spring Boot extension manager: {}", extension.getId());
 
@@ -185,7 +202,7 @@ public class SpringBootGenerator extends Generator {
             for (AnnotationExpr annotationExpr : annotations) {
                 if (annotationExpr.getNameAsString().equals("Insert")) {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
-                            RelationalDatabaseGenerator.insertQuery(table, true)));
+                            DatasourceGenerator.insertQuery(table, true)));
                 } else if (annotationExpr.getNameAsString().equals("Results")) {
                     ArrayInitializerExpr array = new ArrayInitializerExpr();
                     for (Column column : table.getColumns()) {
@@ -203,7 +220,7 @@ public class SpringBootGenerator extends Generator {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(array);
                 } else if (annotationExpr.getNameAsString().equals("Update")) {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
-                            RelationalDatabaseGenerator.updateQuery(table)));
+                            DatasourceGenerator.updateQuery(table)));
                 }
             }
         }

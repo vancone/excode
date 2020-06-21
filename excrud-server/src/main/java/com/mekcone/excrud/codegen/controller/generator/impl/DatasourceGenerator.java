@@ -8,9 +8,9 @@ import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class RelationalDatabaseGenerator extends Generator {
+public class DatasourceGenerator extends Generator {
 
-    public RelationalDatabaseGenerator(Project project) {
+    public DatasourceGenerator(Project project) {
         super(project);
     }
 
@@ -88,7 +88,7 @@ public class RelationalDatabaseGenerator extends Generator {
         String code = "";
         code += "-- " + ModuleConstant.DESCRIPTION + "\n\n";
 
-        for (Database database: project.getModuleSet().getRelationalDatabaseModule().getDatabases()) {
+        for (Database database: project.getModuleSet().getDatasourceModule().getRelationalDatabase().getDatabases()) {
             if (database != null && database.hasTable()) {
                 code += createDatabaseQuery(database) + "\n\n";
                 for (Table table: database.getTables()) {

@@ -140,7 +140,7 @@ public class DocumentGenerator extends Generator {
 
             document.newPage();
 
-            Database database = project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0);
+            Database database = project.getModuleSet().getDatasourceModule().getRelationalDatabase().getDatabases().get(0);
             for (int i = 0; i < database.getTables().size(); i++) {
                 Table table = database.getTables().get(i);
                 // Title

@@ -7,7 +7,7 @@ import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.controller.generator.impl.SpringBootGenerator;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
-import com.mekcone.excrud.codegen.model.module.impl.RelationalDatabaseModule;
+import com.mekcone.excrud.codegen.model.module.impl.DatasourceModule;
 import com.mekcone.excrud.codegen.model.database.Table;
 import com.mekcone.excrud.codegen.model.module.impl.SpringBootModule;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootComponent;
@@ -31,7 +31,7 @@ public class Swagger2ExtensionManager {
     }
 
     private void addConfig() {
-        RelationalDatabaseModule relationalDatabaseModule = project.getModuleSet().getRelationalDatabaseModule();
+        DatasourceModule datasourceModule = project.getModuleSet().getDatasourceModule();
 
         JavaTemplate javaTemplate = new JavaTemplate(callBackObject.getTemplatePath() + "config/Swagger2Config.java");
         javaTemplate.preprocessForSpringBootProject(project, null);
@@ -49,7 +49,7 @@ public class Swagger2ExtensionManager {
         javaTemplate.insert("version", project.getVersion());
 
         String swaggerTags = "";
-        List<Table> tables = relationalDatabaseModule.getDatabases().get(0).getTables();
+        List<Table> tables = datasourceModule.getRelationalDatabase().getDatabases().get(0).getTables();
         for (int i = 0; i < tables.size(); i++) {
             swaggerTags += "new Tag(\"" + tables.get(i).getUpperCamelCaseName() + "\", " + "\"" + tables.get(i).getDescription() + "\")";
             if (i + 1 == tables.size()) {

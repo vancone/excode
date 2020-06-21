@@ -58,7 +58,6 @@ public class ProjectObjectModel {
         description = project.getDescription().getDefaultValue();
 
         addDependencies("default");
-        addDependencies("mybatis");
     }
 
     public void addDependencies(String pomFileName) {

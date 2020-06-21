@@ -46,8 +46,8 @@ public class ProjectLoader {
                 case ModuleConstant.MODULE_TYPE_DEPLOYMENT:
                     generator = new DeploymentGenerator(project);
                     break;
-                case ModuleConstant.MODULE_TYPE_RELATIONAL_DATABASE:
-                    generator = tableAmount > 0 ? new RelationalDatabaseGenerator(project) : null;
+                case ModuleConstant.MODULE_TYPE_DATASOURCE:
+                    generator = tableAmount > 0 ? new DatasourceGenerator(project) : null;
                     break;
                 case ModuleConstant.MODULE_TYPE_SPRING_BOOT:
                     generator = new SpringBootGenerator(project);
@@ -82,7 +82,7 @@ public class ProjectLoader {
             log.error("{}: {}", ErrorEnum.PARSE_XML_FAILED, e.getMessage());
         }
 
-        List<Database> databases = project.getModuleSet().getRelationalDatabaseModule().getDatabases();
+        List<Database> databases = project.getModuleSet().getDatasourceModule().getRelationalDatabase().getDatabases();
         if (databases == null || databases.isEmpty()) {
             log.error(ErrorEnum.DATABASE_UNDEFINED.toString());
         }
@@ -104,7 +104,7 @@ public class ProjectLoader {
             log.info("{} database(s), {} table(s) detected", databases.size(), tableAmount);
         }
 
-        for (Table table : project.getModuleSet().getRelationalDatabaseModule().getDatabases().get(0).getTables()) {
+        for (Table table : project.getModuleSet().getDatasourceModule().getRelationalDatabase().getDatabases().get(0).getTables()) {
             for (Column column : table.getColumns()) {
                 if (column.isPrimaryKey()) {
                     table.setPrimaryKey(column.getName());

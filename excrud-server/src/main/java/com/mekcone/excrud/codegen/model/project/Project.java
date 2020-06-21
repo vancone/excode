@@ -46,8 +46,8 @@ public class Project {
         @JacksonXmlProperty(localName = "deployment")
         private DeploymentModule deploymentModule;
 
-        @JacksonXmlProperty(localName = "relational-database")
-        private RelationalDatabaseModule relationalDatabaseModule;
+        @JacksonXmlProperty(localName = "datasource")
+        private DatasourceModule datasourceModule;
 
         @JacksonXmlProperty(localName = "spring-boot")
         private SpringBootModule springBootModule;
@@ -62,7 +62,7 @@ public class Project {
             List<Module> modules = new ArrayList<>();
             modules.add(documentModule);
             modules.add(deploymentModule);
-            modules.add(relationalDatabaseModule);
+            modules.add(datasourceModule);
             modules.add(springBootModule);
             modules.add(vueElementAdminModule);
             modules.add(websitePageModule);
