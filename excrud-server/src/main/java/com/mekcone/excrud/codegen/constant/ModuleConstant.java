@@ -51,6 +51,6 @@ public interface ModuleConstant {
 
     String SPRING_BOOT_EXTENSION_CROSS_ORIGIN = "cross-origin";
     String SPRING_BOOT_EXTENSION_LOMBOK = "lombok";
-    String SPRING_BOOT_EXTENSION_MEKCONE_WEB_PLATFORM_ACCOUNT = "mwp-account";
+    String SPRING_BOOT_EXTENSION_MEKCONE_CLOUD = "mekcone-cloud";
     String SPRING_BOOT_EXTENSION_SWAGGER2 = "swagger2";
 }

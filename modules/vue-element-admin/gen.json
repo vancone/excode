@@ -7,11 +7,30 @@
     },
     "initial": {
         "dirs": [
-            "${VUE_ELEMENT_ADMIN_VERSION}/public"
+            "${VUE_ELEMENT_ADMIN_VERSION}/build",
+            "${VUE_ELEMENT_ADMIN_VERSION}/public",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/api",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/assets",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/components",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/directive",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/filters",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/icons",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/layout",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/router",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/store",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/styles",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/utils",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/vendor",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/views"
         ],
         "files": [
             "${VUE_ELEMENT_ADMIN_VERSION}/.eslintrc.js",
-            "${VUE_ELEMENT_ADMIN_VERSION}/.gitignore"
+            "${VUE_ELEMENT_ADMIN_VERSION}/.gitignore",
+            "${VUE_ELEMENT_ADMIN_VERSION}/babel.config.js",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/main.js",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/App.vue",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/permission.js",
+            "${VUE_ELEMENT_ADMIN_VERSION}/src/settings.js"
         ],
         "paths": {
             "srcPath": "src/",

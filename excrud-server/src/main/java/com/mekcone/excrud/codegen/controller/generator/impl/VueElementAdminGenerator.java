@@ -2,7 +2,6 @@ package com.mekcone.excrud.codegen.controller.generator.impl;
 
 import com.mekcone.excrud.codegen.controller.generator.Generator;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.CommonTemplate;
-import com.mekcone.excrud.codegen.model.module.impl.VueElementAdminModule;
 import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
 

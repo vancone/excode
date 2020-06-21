@@ -9,6 +9,7 @@ import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.CrossOriginExtensionManager;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.LombokExtensionManager;
+import com.mekcone.excrud.codegen.controller.extmgr.springboot.MekConeCloudExtensionManager;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.Swagger2ExtensionManager;
 import com.mekcone.excrud.codegen.controller.generator.Generator;
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
@@ -48,6 +49,9 @@ public class SpringBootGenerator extends Generator {
             createServiceComponent(table);
             createServiceImplComponent(table);
         }
+
+        // Application entry class
+        createApplicationEntry();
 
         // Application properties
         PropertiesParser applicationPropertiesParser = springBootModule.getApplicationPropertiesParser();
@@ -90,10 +94,10 @@ public class SpringBootGenerator extends Generator {
                     new CrossOriginExtensionManager(this, project);
                     break;
                 case ModuleConstant.SPRING_BOOT_EXTENSION_LOMBOK:
-                    new LombokExtensionManager(((SpringBootModule)module));
+                    new LombokExtensionManager(springBootModule);
                     break;
-                case ModuleConstant.SPRING_BOOT_EXTENSION_MEKCONE_WEB_PLATFORM_ACCOUNT:
-                    log.info("MWPA");
+                case ModuleConstant.SPRING_BOOT_EXTENSION_MEKCONE_CLOUD:
+                    new MekConeCloudExtensionManager(project);
                     break;
                 case ModuleConstant.SPRING_BOOT_EXTENSION_SWAGGER2:
                     new Swagger2ExtensionManager(this, project);
@@ -113,10 +117,7 @@ public class SpringBootGenerator extends Generator {
         SpringBootModule springBootModule = module.asSpringBootModule();
 
         // Application entry
-        JavaTemplate javaTemplate = new JavaTemplate(getTemplatePath() + "Application.java");
-        javaTemplate.preprocessForSpringBootProject(project, null);
-        javaTemplate.insert("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
-        addOutputFile(getPath("srcPath") + StrUtil.upperCamelCase(project.getArtifactId()) + "Application.java", javaTemplate.toString());
+        addOutputFile(getPath("srcPath") + StrUtil.upperCamelCase(project.getArtifactId()) + "Application.java", springBootModule.getApplicationEntry().toString());
 
         // Application properties
         addOutputFile(getPath("resourcesPath") + "application.properties", springBootModule.getApplicationPropertiesParser().generate());
@@ -134,7 +135,7 @@ public class SpringBootGenerator extends Generator {
             addOutputFile(getPath("mapperPath") + mybatisMapperComponent.getName() + ".java", mybatisMapperComponent.toString()));
 
         // POM
-        addOutputFile("pom.xml", ((SpringBootModule)module).getProjectObjectModel().toString());
+        addOutputFile("pom.xml", springBootModule.getProjectObjectModel().toString());
 
         // Services
         springBootModule.getServices().forEach(serviceComponent ->
@@ -146,6 +147,13 @@ public class SpringBootGenerator extends Generator {
 
         // Write files
         super.write();
+    }
+
+    public void createApplicationEntry() {
+        JavaTemplate javaTemplate = new JavaTemplate(getTemplatePath() + "Application.java");
+        javaTemplate.preprocessForSpringBootProject(project, null);
+        javaTemplate.insert("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
+        module.asSpringBootModule().setApplicationEntry(javaTemplate);
     }
 
     public void createControllerComponent(Table table) {

@@ -20,7 +20,7 @@
     </description>
     
     <modules>
-        <document use="true">
+        <document use="false">
             <keywords>
                 <keyword type="create">创建</keyword>
                 <keyword type="retrieve">获取</keyword>
@@ -34,7 +34,7 @@
             </exports>
         </document>
 
-        <deployment>
+        <deployment use="false">
             <operating-systems>
                 <operating-system type="ubuntu" version="20.04" />
                 <operating-system type="centos" version="8" />
@@ -94,12 +94,12 @@
             </databases>
         </mongodb> -->
 
-        <spring-boot use="false">
+        <spring-boot use="true">
             <extensions>
-                <extension id="lombok" use="true"></extension>
-                <extension id="swagger2" use="true"></extension>
                 <extension id="cross-origin" use="true"></extension>
-                <extension id="mwp-account" use="true"></extension>
+                <extension id="lombok" use="true"></extension>
+                <extension id="mekcone-cloud" use="true"></extension>
+                <extension id="swagger2" use="true"></extension>
             </extensions>
 
             <properties>
@@ -120,19 +120,29 @@
                     </allowed-origins>
                 </cross-origin>
 
-                <mwp-account>
-                    <test-account username="admin" password="admin" role="admin" profile="" />
-                </mwp-account>
+                <mekcone-cloud mode="dev">
+                    <router>
+                        <nodes>
+                            <node mode="dev" address="localhost" />
+                            <node mode="prod" address="10.60.11.1" />
+                            <node mode="prod" address="10.60.11.2" />
+                        </nodes>
+                    </router>
+                    <account>
+                        <test-account username="admin" password="admin" role="admin" profile="" />
+                    </account>
+                    
+                </mekcone-cloud>
             </properties>
         </spring-boot>
 
-        <vue-element-admin use="true">
+        <vue-element-admin use="false">
             <author>Tenton Lien</author>
             <email>tentonlien@gmail.com</email>
             <license>MIT</license>
         </vue-element-admin>
 
-        <website-page use="true">
+        <website-page use="false">
             <theme type="home" id="0" color="blue" />
             <pages>
                 <page type="home">

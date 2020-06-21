@@ -5,9 +5,11 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
+import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.codegen.model.file.springboot.ProjectObjectModel;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootComponent;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootDataClass;
+import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class SpringBootModule extends com.mekcone.excrud.codegen.model.module.Mo
     private SpringBootProperties properties;
 
     @Data
-    public class SpringBootProperties {
+    public static class SpringBootProperties {
         // Basic properties
         @JacksonXmlProperty(localName = "application-name")
         private String applicationName;
@@ -44,11 +46,11 @@ public class SpringBootModule extends com.mekcone.excrud.codegen.model.module.Mo
         @JacksonXmlProperty(localName = "cross-origin")
         private SpringBootProperties.CrossOrigin crossOrigin;
 
-        @JacksonXmlProperty(localName = "mwp-account")
-        private SpringBootProperties.MekConeWebPlatformAccount mekConeWebPlatformAccount;
+        @JacksonXmlProperty(localName = "mekcone-cloud")
+        private MekConeCloud mekConeCloud;
 
         @Data
-        public class CrossOrigin {
+        public static class CrossOrigin {
 
             @JacksonXmlElementWrapper(localName = "allowed-headers")
             @JacksonXmlProperty(localName = "allowed-header")
@@ -64,27 +66,54 @@ public class SpringBootModule extends com.mekcone.excrud.codegen.model.module.Mo
         }
 
         @Data
-        public class MekConeWebPlatformAccount {
+        public static class MekConeCloud {
+            @JacksonXmlProperty(isAttribute = true)
+            private String mode;
+            private Router router = new Router();
+            private Account account =  new Account();
 
-            @JacksonXmlProperty(localName = "test-account")
-            private SpringBootProperties.MekConeWebPlatformAccount.TestAccount testAccount = new SpringBootProperties.MekConeWebPlatformAccount.TestAccount();
 
             @Data
-            public class TestAccount {
-                @JacksonXmlProperty(isAttribute = true)
-                private String username;
+            public static class Router {
+                @JacksonXmlElementWrapper(localName = "nodes")
+                @JacksonXmlProperty(localName = "node")
+                private List<Node> nodes;
 
-                @JacksonXmlProperty(isAttribute = true)
-                private String password;
+                @Data
+                public static class Node {
+                    @JacksonXmlProperty(isAttribute = true)
+                    private String mode;
 
-                @JacksonXmlProperty(isAttribute = true)
-                private String role;
+                    @JacksonXmlProperty(isAttribute = true)
+                    private String address;
+                }
+            }
 
-                @JacksonXmlProperty(isAttribute = true)
-                private String profile;
+            @Data
+            public static class Account {
+                @JacksonXmlProperty(localName = "test-account")
+                private TestAccount testAccount;
+
+                @Data
+                public static class TestAccount {
+                    @JacksonXmlProperty(isAttribute = true)
+                    private String username;
+
+                    @JacksonXmlProperty(isAttribute = true)
+                    private String password;
+
+                    @JacksonXmlProperty(isAttribute = true)
+                    private String role;
+
+                    @JacksonXmlProperty(isAttribute = true)
+                    private String profile;
+                }
             }
         }
     }
+
+    @JsonIgnore
+    private JavaTemplate applicationEntry;
 
     @JsonIgnore
     private ProjectObjectModel projectObjectModel;
