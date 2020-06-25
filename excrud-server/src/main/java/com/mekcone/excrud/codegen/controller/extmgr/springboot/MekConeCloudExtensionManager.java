@@ -52,6 +52,8 @@ public class MekConeCloudExtensionManager {
         for (int i = 0; i < nodes.size(); i ++) {
             if (nodes.get(i).getMode().equals(currentMode)) {
                 urlString += "http://" + nodes.get(i).getAddress() + ":6600/eureka";
+            } else {
+                continue;
             }
             if (i + 1 != nodes.size()) {
                 if (nodes.get(i + 1).getMode().equals(currentMode)) {

@@ -13,7 +13,23 @@ import java.util.List;
 @Data
 public class DatasourceModule extends Module {
 
-    // ATTRIBUTE REDIS
+    // ELEMENT ELASTICSEARCH
+    private Elasticsearch elasticsearch;
+
+    @Data
+    public static class Elasticsearch {
+
+    }
+
+    // ELEMENT MONGODB
+    private Mongodb mongodb;
+
+    @Data
+    public static class Mongodb {
+
+    }
+
+    // ELEMENT REDIS
     private Redis redis;
 
     @Data
@@ -42,7 +58,7 @@ public class DatasourceModule extends Module {
         }
     }
 
-    // ATTRIBUTE RELATIONAL_DATABASE
+    // ELEMENT RELATIONAL_DATABASE
     @JacksonXmlProperty(localName = "relational-database")
     private RelationalDatabase relationalDatabase;
 

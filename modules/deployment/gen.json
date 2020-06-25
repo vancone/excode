@@ -1,5 +1,9 @@
 {
     "name": "deployment",
+    "version": {
+        "nginx": "1.18.0",
+        "redis": "6.0.5"
+    },
     "initial": {
         "paths": {}
     }

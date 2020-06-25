@@ -26,6 +26,9 @@ public class FileUtil {
 
     public static boolean write(String url, String data) {
         try {
+            if (url.lastIndexOf(File.separator) > 0) {
+                createDirectoryIfNotExist(url.substring(0, url.lastIndexOf(File.separator)));
+            }
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(url));
             bufferedWriter.write(data);
             bufferedWriter.close();
@@ -120,5 +123,26 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<File> listAllFile(String path) {
+        List<File> files = new ArrayList<>();
+        File parentDir = new File(path);
+        if (parentDir.exists()) {
+            if (parentDir.isDirectory()) {
+                for (File file: Objects.requireNonNull(parentDir.listFiles())) {
+                    if (file.isDirectory()) {
+                        files.addAll(listAllFile(file.getPath()));
+                    } else {
+                        files.add(file);
+                    }
+                }
+            } else {
+                log.error("Path not a directory: {}", path);
+            }
+        } else {
+            log.error("Path not exist: {}", path);
+        }
+        return files;
     }
 }

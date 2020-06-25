@@ -13,8 +13,10 @@
         </el-table>
       </el-col>
       <el-col :span="4">
-        <div style="text-align: left">
-          <button class="button-create">New project</button>
+        <div style="text-align: left;padding-top: 40px;">
+          <el-button type="primary" style="height: 35px;width: 150px;padding-top:10px;margin-bottom:10px">New project</el-button><br>
+          <el-button style="height: 35px;width: 150px;padding-top:10px">Import</el-button>
+          <!-- <button class="button-create" @click="edit">New project</button> -->
         </div>
       </el-col>
     </el-row>
@@ -23,35 +25,39 @@
 
 <script>
 export default {
-  name: "HelloWorld",
-  data() {
+  name: 'InitialPage',
+  data () {
     return {
-      msg: "Welcome to Your Vue.js App",
       tableData: [
         {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "13:55, Jun. 22, 2020"
+          date: 'MekCone Mall',
+          name: 'Tenton Lien',
+          address: '13:55, Jun. 22, 2020'
         },
         {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "13:55, Jun. 22, 2020"
+          date: 'MekCone Blog',
+          name: '王小虎',
+          address: '13:55, Jun. 22, 2020'
         },
         {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "13:55, Jun. 22, 2020"
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '13:55, Jun. 22, 2020'
         },
         {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "13:55, Jun. 22, 2020"
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '13:55, Jun. 22, 2020'
         }
       ]
-    };
+    }
+  },
+  methods: {
+    edit() {
+      this.$router.push('/edit')
+    }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

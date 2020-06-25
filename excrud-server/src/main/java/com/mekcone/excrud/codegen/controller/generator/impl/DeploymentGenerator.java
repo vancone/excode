@@ -1,7 +1,9 @@
 package com.mekcone.excrud.codegen.controller.generator.impl;
 
 import com.mekcone.excrud.codegen.constant.ModuleConstant;
+import com.mekcone.excrud.codegen.controller.extmgr.deployment.NginxExtensionManager;
 import com.mekcone.excrud.codegen.controller.generator.Generator;
+import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.module.impl.DeploymentModule;
 import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,20 @@ public class DeploymentGenerator extends Generator {
         for (DeploymentModule.OperatingSystem operatingSystem: module.asDeploymentModule().getOperatingSystems()) {
             addDockerInstallScript(operatingSystem);
         }
+
+        for (Module.Extension extension: module.asDeploymentModule().getExtensions()) {
+            if (!extension.isUse()) {
+                continue;
+            }
+            switch (extension.getId()) {
+                case ModuleConstant.DEPLOYMENT_EXTENSION_MARIADB:
+                    break;
+                case ModuleConstant.DEPLOYMENT_EXTENSION_NGINX:
+                    NginxExtensionManager nginxExtensionManager = new NginxExtensionManager(this, project);
+                    break;
+            }
+        }
+        write();
     }
 
     private void addDockerInstallScript(DeploymentModule.OperatingSystem operatingSystem) {

@@ -34,7 +34,7 @@
             </exports>
         </document>
 
-        <deployment use="false">
+        <deployment use="true">
             <operating-systems>
                 <operating-system type="ubuntu" version="20.04" />
                 <operating-system type="centos" version="8" />
@@ -48,6 +48,20 @@
                 <extension id="nginx" use="true" />
                 <extension id="supervisor" use="true" />
             </extensions>
+
+            <properties>
+                <nginx>
+                    <http>
+                        <servers>
+                            <server>
+                                <type>http</type>
+                                <port>80</port>
+                                <home></home>
+                            </server>
+                        </servers>
+                    </http>
+                </nginx>
+            </properties>
         </deployment>
 
         <datasource>
@@ -90,8 +104,6 @@
             </relational-database>
         </datasource>
 
-        
-
         <!-- <mongodb>
             <databases>
                 <database>
@@ -104,12 +116,19 @@
             </databases>
         </mongodb> -->
 
+        <hybrid-mobile-app use="false">
+            <platforms>
+                <platform>android</platform>
+                <platform>ios</platform>
+            </platforms>
+        </hybrid-mobile-app>
+
         <spring-boot use="true">
             <extensions>
-                <extension id="cross-origin" use="true"></extension>
-                <extension id="lombok" use="true"></extension>
-                <extension id="mekcone-cloud" use="true"></extension>
-                <extension id="swagger2" use="true"></extension>
+                <extension id="cross-origin" use="true" />
+                <extension id="lombok" use="true" />
+                <extension id="mekcone-cloud" use="true" />
+                <extension id="swagger2" use="true" />
             </extensions>
 
             <properties>

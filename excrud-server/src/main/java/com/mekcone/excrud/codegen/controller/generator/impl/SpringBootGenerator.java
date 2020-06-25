@@ -7,6 +7,7 @@ import com.github.javaparser.ast.expr.ArrayInitializerExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.mekcone.excrud.codegen.constant.ModuleConstant;
+import com.mekcone.excrud.codegen.controller.extmgr.datasource.SqlExtensionManager;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.CrossOriginExtensionManager;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.LombokExtensionManager;
 import com.mekcone.excrud.codegen.controller.extmgr.springboot.MekConeCloudExtensionManager;
@@ -125,8 +126,6 @@ public class SpringBootGenerator extends Generator {
         });
 
         write();
-
-        log.info("Generate {} completed", ModuleConstant.MODULE_TYPE_SPRING_BOOT);
     }
 
     @Override
@@ -202,7 +201,7 @@ public class SpringBootGenerator extends Generator {
             for (AnnotationExpr annotationExpr : annotations) {
                 if (annotationExpr.getNameAsString().equals("Insert")) {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
-                            DatasourceGenerator.insertQuery(table, true)));
+                            SqlExtensionManager.insertQuery(table, true)));
                 } else if (annotationExpr.getNameAsString().equals("Results")) {
                     ArrayInitializerExpr array = new ArrayInitializerExpr();
                     for (Column column : table.getColumns()) {
@@ -220,7 +219,7 @@ public class SpringBootGenerator extends Generator {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(array);
                 } else if (annotationExpr.getNameAsString().equals("Update")) {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
-                            DatasourceGenerator.updateQuery(table)));
+                            SqlExtensionManager.updateQuery(table)));
                 }
             }
         }

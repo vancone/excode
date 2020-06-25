@@ -49,6 +49,9 @@ public class Project {
         @JacksonXmlProperty(localName = "datasource")
         private DatasourceModule datasourceModule;
 
+        @JacksonXmlProperty(localName = "hybrid-mobile-app")
+        private HybridMobileAppModule hybridMobileAppModule;
+
         @JacksonXmlProperty(localName = "spring-boot")
         private SpringBootModule springBootModule;
 

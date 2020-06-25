@@ -9,7 +9,6 @@ import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.excrud.codegen.model.file.springboot.ProjectObjectModel;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootComponent;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootDataClass;
-import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.Data;
 
 import java.util.ArrayList;

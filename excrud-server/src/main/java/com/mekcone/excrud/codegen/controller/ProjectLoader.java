@@ -65,7 +65,7 @@ public class ProjectLoader {
             if (generator != null) {
                 generator.generate();
                 long endTime = new Date().getTime();
-                log.info("Generating module({}) complete in {} ms", module.getType(), (endTime - startTime));
+                log.info("Generating module({}) completed in {} ms", module.getType(), (endTime - startTime));
             } else {
                 log.warn("Unsupported module type \"{}\"", module.getType());
             }
