@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +27,7 @@ public class ProjectServiceImpl implements ProjectService {
             OutputStream outputStream = response.getOutputStream();
             Project project = projectRepository.find(projectId);
             if (project != null) {
-                outputStream.write(project.toXMLString().getBytes("utf-8"));
+                outputStream.write(project.toXMLString().getBytes(StandardCharsets.UTF_8));
             }
             outputStream.close();
         } catch (Exception e) {
