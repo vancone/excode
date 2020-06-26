@@ -24,7 +24,7 @@ public class Project {
 
     private String id;
     private String status;
-    private String updatedTime;
+    private String modifiedTime;
 
     private String groupId;
     private String artifactId;

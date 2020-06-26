@@ -43,7 +43,7 @@ public class ProjectServiceImpl implements ProjectService {
     public void saveProject(Project project) {
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        project.setUpdatedTime(simpleDateFormat.format(date));
+        project.setModifiedTime(simpleDateFormat.format(date));
         projectRepository.saveProject(project);
     }
 

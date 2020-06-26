@@ -1,21 +1,23 @@
 <template>
   <div class="hello">
     <el-row :gutter="20">
-      <el-col :span="4">
-        <div>&nbsp;</div>
-      </el-col>
-      <el-col :span="16">
+      <el-col :span="19">
         <h2 class="projects-title">Projects</h2>
-        <el-table :data="tableData" class="project-table">
-          <el-table-column prop="date" label="Project name" ></el-table-column>
-          <el-table-column prop="name" label="Creator" width="200"></el-table-column>
-          <el-table-column prop="address" label="Modified time" width="200"></el-table-column>
+        <el-table :data="projectList" class="project-table"
+          :header-cell-style="{background:'transparent'}"
+          :row-style="{cursor:'pointer'}"
+          @row-click="openProject">
+          <!-- <el-table-column prop="id" label="ID" ></el-table-column> -->
+          <el-table-column prop="name" label="Project name" ></el-table-column>
+          <el-table-column prop="group" label="Group" width="200"></el-table-column>
+          <el-table-column prop="modifiedTime" label="Modified time" width="200"></el-table-column>
         </el-table>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="5">
         <div style="text-align: left;padding-top: 40px;">
+          <input ref="file" type="file" accept=".xml,.json" style="display:none" @change="importProject($event)">
           <el-button type="primary" style="height: 35px;width: 150px;padding-top:10px;margin-bottom:10px">New project</el-button><br>
-          <el-button style="height: 35px;width: 150px;padding-top:10px">Import</el-button>
+          <el-button @click="$refs.file.click()" style="height: 35px;width: 150px;padding-top:10px">Import</el-button>
           <!-- <button class="button-create" @click="edit">New project</button> -->
         </div>
       </el-col>
@@ -28,34 +30,74 @@ export default {
   name: 'InitialPage',
   data () {
     return {
-      tableData: [
-        {
-          date: 'MekCone Mall',
-          name: 'Tenton Lien',
-          address: '13:55, Jun. 22, 2020'
-        },
-        {
-          date: 'MekCone Blog',
-          name: '王小虎',
-          address: '13:55, Jun. 22, 2020'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '13:55, Jun. 22, 2020'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '13:55, Jun. 22, 2020'
-        }
-      ]
+      projectList: []
     }
   },
   methods: {
-    edit() {
-      this.$router.push('/edit')
+    edit () {
+      // this.$router.push('/edit')
+    },
+    getList () {
+      this.projectList = []
+      this.axios.get('/api/excrud/project').then(res => {
+        if (res.data.code === 0) {
+          res.data.data.map(item => {
+            this.projectList.push({
+              id: item.id,
+              name: item.name.defaultValue,
+              group: item.groupId,
+              modifiedTime: item.modifiedTime
+            })
+          })
+        } else {
+          this.$notify.error({
+            title: 'Error',
+            message: 'Fetch list failed. Invalid response data from server.'
+          })
+        }
+      }).catch(res => {
+        this.$notify.error({
+          title: 'Error',
+          message: 'Fetch list failed'
+        })
+      })
+    },
+    importProject (event) {
+      var file = event.target.files[0]
+      var formData = new FormData()
+      formData.append('file', file)
+      var config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+      this.axios.post('/api/excrud/project/import', formData, config).then(res => {
+        if (res.data.code === 0) {
+          this.$notify({
+            title: 'Success',
+            message: 'Import project successfully',
+            type: 'success'
+          })
+          this.getList()
+        } else {
+          this.$notify.error({
+            title: 'Error',
+            message: 'Import project failed'
+          })
+        }
+      }).catch(res => {
+        this.$notify.error({
+          title: 'Error',
+          message: 'Upload file failed'
+        })
+      })
+    },
+    openProject (row) {
+      this.$router.push('/edit?id=' + row.id)
     }
+  },
+  mounted: function () {
+    this.getList()
   }
 }
 </script>
@@ -111,6 +153,7 @@ a {
 
 .el-table tr {
     background-color: transparent!important;
+    cursor: pointer;
 }
 .el-table--enable-row-transition .el-table__body td, .el-table .cell{
     background-color: transparent;

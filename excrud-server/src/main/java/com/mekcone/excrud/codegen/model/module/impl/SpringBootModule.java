@@ -23,9 +23,9 @@ public class SpringBootModule extends com.mekcone.excrud.codegen.model.module.Mo
     @JsonIgnore
     private String artifactId;
 
-    @JacksonXmlElementWrapper(localName = "extensions")
-    @JacksonXmlProperty(localName = "extension")
-    private List<Extension> extensions = new ArrayList<>();
+//    @JacksonXmlElementWrapper(localName = "extensions")
+//    @JacksonXmlProperty(localName = "extension")
+//    private List<Extension> extensions = new ArrayList<>();
 
     private SpringBootProperties properties;
 

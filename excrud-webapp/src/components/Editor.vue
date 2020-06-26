@@ -1,6 +1,14 @@
 <template>
   <div class="hello">
     <el-row :gutter="20">
+      <el-col :span="20">
+        <h2 class="projects-title">Projects2</h2>
+        <el-table :data="tableData" class="project-table">
+          <el-table-column prop="date" label="Project name"></el-table-column>
+          <el-table-column prop="name" label="Creator" width="200"></el-table-column>
+          <el-table-column prop="address" label="Modified time" width="200"></el-table-column>
+        </el-table>
+      </el-col>
       <el-col :span="4">
         <div>
           <el-tree
@@ -11,107 +19,94 @@
           ></el-tree>
         </div>
       </el-col>
-      <el-col :span="16">
-        <h2 class="projects-title">Projects2</h2>
-        <el-table :data="tableData" class="project-table">
-          <el-table-column prop="date" label="Project name"></el-table-column>
-          <el-table-column prop="name" label="Creator" width="200"></el-table-column>
-          <el-table-column prop="address" label="Modified time" width="200"></el-table-column>
-        </el-table>
-      </el-col>
-      <el-col :span="4">
-        <div style="text-align: left">
-          <button class="button-create">New project</button>
-        </div>
-      </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
 export default {
-  name: "EditorPage",
-  data() {
+  name: 'EditorPage',
+  data () {
     return {
       project: {
-        _id: { $oid: "5ee241f858797a338da4f3fa" },
-        languages: ["en-US", "zh-CN"],
-        updatedTime: "2020-06-11 22:38:48",
-        groupId: "com.mekcone",
-        artifactId: "mall",
-        version: "0.0.1",
+        _id: { $oid: '5ee241f858797a338da4f3fa' },
+        languages: ['en-US', 'zh-CN'],
+        updatedTime: '2020-06-11 22:38:48',
+        groupId: 'com.mekcone',
+        artifactId: 'mall',
+        version: '0.0.1',
         name: {
-          defaultValue: "MekCone Mall",
+          defaultValue: 'MekCone Mall',
           words: [
-            { lang: "zh-CN", value: "锥云商城" },
-            { lang: "zh-TW", value: "錐雲商城" },
-            { lang: "jp", value: "MekCone デパート" },
-            { lang: "th", value: "MekCone มอลล์" }
+            { lang: 'zh-CN', value: '锥云商城' },
+            { lang: 'zh-TW', value: '錐雲商城' },
+            { lang: 'jp', value: 'MekCone デパート' },
+            { lang: 'th', value: 'MekCone มอลล์' }
           ]
         },
         description: {
-          defaultValue: "MekCone Mall Project",
-          words: [{ lang: "zh-CN", value: "锥云商城后台项目" }]
+          defaultValue: 'MekCone Mall Project',
+          words: [{ lang: 'zh-CN', value: '锥云商城后台项目' }]
         },
         moduleSet: {
           apiDocumentModule: {
             use: true,
             keywords: [
-              { type: "create", value: "创建" },
-              { type: "retrieve", value: "获取" },
-              { type: "retrieveList", value: "获取所有" },
-              { type: "update", value: "更新" },
-              { type: "delete", value: "删除" }
+              { type: 'create', value: '创建' },
+              { type: 'retrieve', value: '获取' },
+              { type: 'retrieveList', value: '获取所有' },
+              { type: 'update', value: '更新' },
+              { type: 'delete', value: '删除' }
             ]
           },
           relationalDatabaseModule: {
             use: false,
             databases: [
               {
-                type: "mysql",
-                timezone: "GMT%2B8",
-                host: "localhost:3306",
-                name: "mekcone_mall",
-                username: "root",
-                password: "123456",
+                type: 'mysql',
+                timezone: 'GMT%2B8',
+                host: 'localhost:3306',
+                name: 'mekcone_mall',
+                username: 'root',
+                password: '123456',
                 tables: [
                   {
-                    name: "goods",
-                    description: "商品对象",
+                    name: 'goods',
+                    description: '商品对象',
                     columns: [
                       {
-                        name: "goods_id",
-                        type: "int",
+                        name: 'goods_id',
+                        type: 'int',
                         primaryKey: true,
                         filter: false,
                         detail: false
                       },
                       {
-                        name: "goods_name",
-                        type: "varchar",
+                        name: 'goods_name',
+                        type: 'varchar',
                         length: 50,
                         primaryKey: false,
                         filter: false,
                         detail: false
                       },
                       {
-                        name: "catalogue_id",
-                        type: "varchar",
+                        name: 'catalogue_id',
+                        type: 'varchar',
                         length: 50,
                         primaryKey: false,
                         filter: true,
                         detail: false
                       },
                       {
-                        name: "goods_price",
-                        type: "double",
+                        name: 'goods_price',
+                        type: 'double',
                         primaryKey: false,
                         filter: false,
                         detail: false
                       },
                       {
-                        name: "goods_description",
-                        type: "varchar",
+                        name: 'goods_description',
+                        type: 'varchar',
                         length: 50,
                         primaryKey: false,
                         filter: false,
@@ -120,36 +115,36 @@ export default {
                     ]
                   },
                   {
-                    name: "cart",
-                    description: "购物车对象",
+                    name: 'cart',
+                    description: '购物车对象',
                     columns: [
                       {
-                        name: "item_id",
-                        type: "varchar",
+                        name: 'item_id',
+                        type: 'varchar',
                         length: 50,
                         primaryKey: true,
                         filter: false,
                         detail: false
                       },
                       {
-                        name: "goods_id",
-                        type: "varchar",
+                        name: 'goods_id',
+                        type: 'varchar',
                         length: 50,
                         primaryKey: false,
                         filter: false,
                         detail: false
                       },
                       {
-                        name: "user_id",
-                        type: "varchar",
+                        name: 'user_id',
+                        type: 'varchar',
                         length: 20,
                         primaryKey: false,
                         filter: false,
                         detail: false
                       },
                       {
-                        name: "amount",
-                        type: "int",
+                        name: 'amount',
+                        type: 'int',
                         primaryKey: false,
                         filter: false,
                         detail: false
@@ -157,25 +152,25 @@ export default {
                     ]
                   },
                   {
-                    name: "catalogue",
-                    description: "商品门类",
+                    name: 'catalogue',
+                    description: '商品门类',
                     columns: [
                       {
-                        name: "catalogue_id",
-                        type: "varchar(50)",
+                        name: 'catalogue_id',
+                        type: 'varchar(50)',
                         primaryKey: true,
                         filter: false,
                         detail: false
                       },
                       {
-                        name: "catalogue_name",
-                        type: "varchar(50)",
+                        name: 'catalogue_name',
+                        type: 'varchar(50)',
                         primaryKey: false,
                         filter: false,
                         detail: false
                       }
                     ],
-                    catalogueOf: "goods"
+                    catalogueOf: 'goods'
                   }
                 ]
               }
@@ -183,18 +178,18 @@ export default {
           },
           springBootModule: {
             extensions: [
-              { _id: "lombok", use: true },
-              { _id: "swagger2", use: true },
-              { _id: "cross-origin", use: true }
+              { _id: 'lombok', use: true },
+              { _id: 'swagger2', use: true },
+              { _id: 'cross-origin', use: true }
             ],
             properties: {
-              applicationName: "Mall",
+              applicationName: 'Mall',
               pageSize: 15,
               serverPort: 9090,
               crossOrigin: {
                 allowedHeaders: [],
                 allowedMethods: [],
-                allowedOrigins: ["*"]
+                allowedOrigins: ['*']
               }
             },
             use: false,
@@ -207,81 +202,81 @@ export default {
             serviceImpls: []
           }
         },
-        _class: "com.mekcone.excrud.codegen.model.project.Project"
+        _class: 'com.mekcone.excrud.codegen.model.project.Project'
       },
       tableData: [
         {
-          date: "MekCone Mall",
-          name: "Tenton Lien",
-          address: "13:55, Jun. 22, 2020"
+          date: 'MekCone Mall',
+          name: 'Tenton Lien',
+          address: '13:55, Jun. 22, 2020'
         },
         {
-          date: "MekCone Blog",
-          name: "王小虎",
-          address: "13:55, Jun. 22, 2020"
+          date: 'MekCone Blog',
+          name: '王小虎',
+          address: '13:55, Jun. 22, 2020'
         },
         {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "13:55, Jun. 22, 2020"
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '13:55, Jun. 22, 2020'
         },
         {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "13:55, Jun. 22, 2020"
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '13:55, Jun. 22, 2020'
         }
       ],
       data: [
         {
-          label: "一级 1",
+          label: '一级 1',
           children: [
             {
-              label: "二级 1-1",
+              label: '二级 1-1',
               children: [
                 {
-                  label: "三级 1-1-1"
+                  label: '三级 1-1-1'
                 }
               ]
             }
           ]
         },
         {
-          label: "一级 2",
+          label: '一级 2',
           children: [
             {
-              label: "二级 2-1",
+              label: '二级 2-1',
               children: [
                 {
-                  label: "三级 2-1-1"
+                  label: '三级 2-1-1'
                 }
               ]
             },
             {
-              label: "二级 2-2",
+              label: '二级 2-2',
               children: [
                 {
-                  label: "三级 2-2-1"
+                  label: '三级 2-2-1'
                 }
               ]
             }
           ]
         },
         {
-          label: "一级 3",
+          label: '一级 3',
           children: [
             {
-              label: "二级 3-1",
+              label: '二级 3-1',
               children: [
                 {
-                  label: "三级 3-1-1"
+                  label: '三级 3-1-1'
                 }
               ]
             },
             {
-              label: "二级 3-2",
+              label: '二级 3-2',
               children: [
                 {
-                  label: "三级 3-2-1"
+                  label: '三级 3-2-1'
                 }
               ]
             }
@@ -289,17 +284,16 @@ export default {
         }
       ],
       defaultProps: {
-        children: "children",
-        label: "label"
+        children: 'children',
+        label: 'label'
       }
-    };
+    }
   },
   methods: {
-    handleNodeClick(data) {
-      console.log(data);
+    handleNodeClick (data) {
+      console.log(data)
     },
-    reloadModuleTree() {
-      var that = this
+    reloadModuleTree () {
       this.data = []
       for (var module in this.project.moduleSet) {
         var item = {}
@@ -318,7 +312,7 @@ export default {
           }
         }
         item.label = moduleName
-        if (this.project.moduleSet[module].extensions != undefined) {
+        if (this.project.moduleSet[module].extensions !== undefined) {
           item.children = []
           for (var extension in this.project.moduleSet[module].extensions) {
             item.children.push({label: this.project.moduleSet[module].extensions[extension]._id})
@@ -330,16 +324,16 @@ export default {
     }
   },
   computed: {
-    newVersion() {
+    newVersion () {
       return this.project.version
     }
   },
-  mounted: function() {
+  mounted: function () {
     this.project.version = '20'
     this.reloadModuleTree()
   },
   watch: {
-    newVersion(val) {
+    newVersion (val) {
       /* this.data = [
         {
           label: 'hahaha'
@@ -347,7 +341,7 @@ export default {
       ] */
     }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
