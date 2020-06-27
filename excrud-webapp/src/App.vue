@@ -4,35 +4,38 @@
       <h1 class="app-title">ExCRUD</h1>
     </div>
     <el-row class="tac">
-      <el-col :span="3" style="height:100%">
+      <el-col :span="3" style="height:100%;min-width:180px">
         <div class="left-pane">
-        <el-menu
-          style="background:transparent"
-          default-active="2"
-          router=true
-          @open="handleOpen"
-          @close="handleClose"
-        >
-         <el-menu-item index="projects">
-            <i class="el-icon-menu"></i>
-            <span slot="title">Projects</span>
-          </el-menu-item>
-          <el-menu-item index="hosts">
-            <i class="el-icon-menu"></i>
-            <span slot="title">Hosts</span>
-          </el-menu-item>
-          <el-menu-item index="3" disabled>
-            <i class="el-icon-document"></i>
-            <span slot="title">Documents</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <i class="el-icon-setting"></i>
-            <span slot="title">Settings</span>
-          </el-menu-item>
-        </el-menu>
+          <el-menu
+            style="background:transparent;border-right:none"
+            default-active="projects"
+            :router=true
+            @open="handleOpen"
+            @close="handleClose"
+          >
+            <el-menu-item index="/projects">
+              <i class="el-icon-menu"></i>
+              <span slot="title">Projects</span>
+            </el-menu-item>
+            <el-menu-item index="/hosts">
+              <i class="el-icon-menu"></i>
+              <span slot="title">Hosts</span>
+            </el-menu-item>
+            <!-- <el-menu-item index="3" disabled>
+              <i class="el-icon-document"></i>
+              <span slot="title">Documents</span>
+            </el-menu-item> -->
+            <el-menu-item index="/settings">
+              <i class="el-icon-setting"></i>
+              <span slot="title">Settings</span>
+            </el-menu-item>
+          </el-menu>
+          <div style="position:fixed;left: 0px;bottom: 0px">
+            <p class="copyright">v0.0.1</p>
+          </div>
         </div>
       </el-col>
-      <el-col :span="21">
+      <el-col :span="21" style="height:100%">
         <router-view />
       </el-col>
     </el-row>
@@ -93,5 +96,12 @@ body {
 }
 .tac {
   height: calc(100% - 51px);
+}
+.copyright {
+  font-size: 10px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #aaa;
 }
 </style>

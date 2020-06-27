@@ -1,32 +1,23 @@
 <template>
   <div class="hello">
     <el-row :gutter="20">
-      <el-col :span="19">
-        <router-view/>
-        <h2 class="projects-title">Hosts</h2>
+      <el-col :span="19" style>
+        <h2 class="projects-title">Settings</h2>
         <div class="card-container">
-          <el-card class="box-card" @click.native="enterPane">
-            <div slot="header" class="clearfix">
-              <span>Default (root)</span>
-              <el-button style="float: right; padding: 3px 0" type="text">Edit</el-button>
-            </div>
-            <div class="text item">
-              <p>IP Address  127.0.0.1</p>
-            </div>
-          </el-card>
           <el-card class="box-card">
             <div slot="header" class="clearfix">
-              <span>mekcone-server-1 (mekcone)</span>
-              <el-button style="float: right; padding: 3px 0" type="text">Edit</el-button>
+              <span>About</span>
             </div>
-            <div class="text item">
-              <p>IP 127.0.0.1</p>
+            <div class="text item" style="font-size:14px">
+              <p>MekCone ExCRUD (v0.0.1)</p>
+              <p>&copy; 2020 MekCone. All rights reserved.</p>
+              <el-link href="https://www.mekcone.com/tos" target="_blank" type="primary">Terms of service</el-link>
             </div>
           </el-card>
         </div>
       </el-col>
       <el-col :span="5">
-        <div style="text-align: left;padding-top: 40px;">
+        <!-- <div style="text-align: left;padding-top: 40px;">
           <input
             ref="file"
             type="file"
@@ -43,8 +34,7 @@
             @click="$refs.file.click()"
             style="height: 35px;width: 150px;padding-top:10px"
           >Import</el-button>
-          <!-- <button class="button-create" @click="edit">New project</button> -->
-        </div>
+        </div> -->
       </el-col>
     </el-row>
   </div>
@@ -61,9 +51,6 @@ export default {
   methods: {
     edit () {
       // this.$router.push('/edit')
-    },
-    enterPane () {
-      this.$router.push('/hosts/pane')
     },
     getList () {
       this.projectList = []
@@ -152,12 +139,12 @@ h2 {
 .box-card {
   margin-left: 20px;
   min-width: 200px;
-  width: 28%;
+  width: 100%;
   box-shadow: none;
   display: inline-block;
   text-align: left;
   min-height: 150px;
-  cursor: pointer;
+  margin-bottom: 15px;
 }
 .button-create {
   background-color: #195f71;
@@ -172,5 +159,6 @@ h2 {
 }
 .card-container {
   text-align: left;
+  padding-right: 20px;
 }
 </style>

@@ -1,10 +1,10 @@
-package com.mekcone.excrud.hostkeeper.controller;
+package com.mekcone.excrud.host.controller;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.mekcone.excrud.codegen.constant.ModuleConstant;
-import com.mekcone.excrud.hostkeeper.entity.Host;
+import com.mekcone.excrud.host.entity.Host;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 

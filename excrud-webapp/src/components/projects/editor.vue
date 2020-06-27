@@ -1,6 +1,37 @@
 <template>
-  <div class="hello">
-    <el-row :gutter="20">
+  <div class="editor-container">
+    <el-row style="height:100%">
+       <el-col :span="4" style="height:100%;min-width:180px">
+        <div class="second-left-pane">
+          <el-menu
+            style="background:transparent;border-right:none;width:100%"
+            default-active="projects"
+            :router=true
+            @open="handleOpen"
+            @close="handleClose"
+          >
+            <el-menu-item index="/projects">
+              <i class="el-icon-menu"></i>
+              <span slot="title">mod::deployment</span>
+            </el-menu-item>
+            <el-menu-item index="/hosts">
+              <i class="el-icon-menu"></i>
+              <span slot="title">mod::spring-boot</span>
+            </el-menu-item>
+            <el-menu-item index="3">
+              <i class="el-icon-menu"></i>
+              <span slot="title">mod::vue-element-admin</span>
+            </el-menu-item>
+            <el-menu-item index="/settings">
+              <i class="el-icon-menu"></i>
+              <span slot="title">mod::website-template</span>
+            </el-menu-item>
+          </el-menu>
+          <div style="position:fixed;left: 0px;bottom: 0px">
+            <p class="copyright">v0.0.1</p>
+          </div>
+        </div>
+      </el-col>
       <el-col :span="20">
         <h2 class="projects-title">Projects2</h2>
         <el-table :data="tableData" class="project-table">
@@ -9,16 +40,7 @@
           <el-table-column prop="address" label="Modified time" width="200"></el-table-column>
         </el-table>
       </el-col>
-      <el-col :span="4">
-        <div>
-          <el-tree
-            :data="data"
-            style="width:100%;margin-top:20px;"
-            :props="defaultProps"
-            @node-click="handleNodeClick"
-          ></el-tree>
-        </div>
-      </el-col>
+
     </el-row>
   </div>
 </template>
@@ -113,64 +135,6 @@ export default {
                         detail: true
                       }
                     ]
-                  },
-                  {
-                    name: 'cart',
-                    description: '购物车对象',
-                    columns: [
-                      {
-                        name: 'item_id',
-                        type: 'varchar',
-                        length: 50,
-                        primaryKey: true,
-                        filter: false,
-                        detail: false
-                      },
-                      {
-                        name: 'goods_id',
-                        type: 'varchar',
-                        length: 50,
-                        primaryKey: false,
-                        filter: false,
-                        detail: false
-                      },
-                      {
-                        name: 'user_id',
-                        type: 'varchar',
-                        length: 20,
-                        primaryKey: false,
-                        filter: false,
-                        detail: false
-                      },
-                      {
-                        name: 'amount',
-                        type: 'int',
-                        primaryKey: false,
-                        filter: false,
-                        detail: false
-                      }
-                    ]
-                  },
-                  {
-                    name: 'catalogue',
-                    description: '商品门类',
-                    columns: [
-                      {
-                        name: 'catalogue_id',
-                        type: 'varchar(50)',
-                        primaryKey: true,
-                        filter: false,
-                        detail: false
-                      },
-                      {
-                        name: 'catalogue_name',
-                        type: 'varchar(50)',
-                        primaryKey: false,
-                        filter: false,
-                        detail: false
-                      }
-                    ],
-                    catalogueOf: 'goods'
                   }
                 ]
               }
@@ -226,63 +190,7 @@ export default {
           address: '13:55, Jun. 22, 2020'
         }
       ],
-      data: [
-        {
-          label: '一级 1',
-          children: [
-            {
-              label: '二级 1-1',
-              children: [
-                {
-                  label: '三级 1-1-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 2',
-          children: [
-            {
-              label: '二级 2-1',
-              children: [
-                {
-                  label: '三级 2-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 2-2',
-              children: [
-                {
-                  label: '三级 2-2-1'
-                }
-              ]
-            }
-          ]
-        },
-        {
-          label: '一级 3',
-          children: [
-            {
-              label: '二级 3-1',
-              children: [
-                {
-                  label: '三级 3-1-1'
-                }
-              ]
-            },
-            {
-              label: '二级 3-2',
-              children: [
-                {
-                  label: '三级 3-2-1'
-                }
-              ]
-            }
-          ]
-        }
-      ],
+      data: [],
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -350,16 +258,8 @@ h1,
 h2 {
   font-weight: normal;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.editor-container {
+  height: 100%;
 }
 .projects-title {
   text-align: left;
@@ -370,7 +270,7 @@ a {
 }
 .project-table {
   margin-left: 20px;
-  width: calc(100% - 40px);
+  width: calc(100% - 140px);
   background: none;
 }
 .button-create {
@@ -386,5 +286,13 @@ a {
 }
 .el-tree {
   background: transparent;
+}
+.second-left-pane {
+  border-right: solid 1px #e5e5e5;
+  background: #f5f5f5;
+  height: 100%;
+  text-align: left;
+  display: inline-block;
+  width: 100%;
 }
 </style>

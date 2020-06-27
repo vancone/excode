@@ -1,4 +1,4 @@
-package com.mekcone.excrud.hostkeeper.entity;
+package com.mekcone.excrud.host.entity;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

@@ -93,7 +93,7 @@ export default {
       })
     },
     openProject (row) {
-      this.$router.push('/edit?id=' + row.id)
+      this.$router.push('/projects/editor?id=' + row.id)
     }
   },
   mounted: function () {

@@ -1,7 +1,7 @@
 package com.mekcone.excrud.host;
 
-import com.mekcone.excrud.hostkeeper.entity.Host;
-import com.mekcone.excrud.hostkeeper.controller.SessionManager;
+import com.mekcone.excrud.host.entity.Host;
+import com.mekcone.excrud.host.controller.SessionManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 

@@ -9,11 +9,13 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import '@/styles/element-variables.scss'
 import locale from 'element-ui/lib/locale/lang/en'
+import Icon from 'vue2-svg-icon/Icon'
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI, { locale })
 Vue.use(VueAxios, axios)
+Vue.component('icon', Icon)
 
 /* eslint-disable no-new */
 new Vue({

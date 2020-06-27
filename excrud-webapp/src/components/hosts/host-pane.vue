@@ -1,26 +1,29 @@
 <template>
-  <div class="hello">
+  <div class="host-pane">
     <el-row :gutter="20">
       <el-col :span="19">
-        <router-view/>
-        <h2 class="projects-title">Hosts</h2>
+        <h2 class="projects-title">Host</h2>
         <div class="card-container">
-          <el-card class="box-card" @click.native="enterPane">
-            <div slot="header" class="clearfix">
-              <span>Default (root)</span>
-              <el-button style="float: right; padding: 3px 0" type="text">Edit</el-button>
-            </div>
-            <div class="text item">
-              <p>IP Address  127.0.0.1</p>
-            </div>
-          </el-card>
           <el-card class="box-card">
             <div slot="header" class="clearfix">
-              <span>mekcone-server-1 (mekcone)</span>
+              <span>Basic Info</span>
               <el-button style="float: right; padding: 3px 0" type="text">Edit</el-button>
             </div>
             <div class="text item">
-              <p>IP 127.0.0.1</p>
+              <p>IP Address 127.0.0.1</p>
+              <p>Status Running</p>
+              <el-tooltip class="item" effect="dark" content="Docker" placement="top">
+                <icon class="software-logo" name="docker" />
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="MySQL" placement="top">
+                <icon class="software-logo" name="mysql" />
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="Nginx" placement="top">
+                <icon class="software-logo" name="nginx" />
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="Redis" placement="top">
+                <icon class="software-logo" name="redis" />
+              </el-tooltip>
             </div>
           </el-card>
         </div>
@@ -61,9 +64,6 @@ export default {
   methods: {
     edit () {
       // this.$router.push('/edit')
-    },
-    enterPane () {
-      this.$router.push('/hosts/pane')
     },
     getList () {
       this.projectList = []
@@ -152,12 +152,11 @@ h2 {
 .box-card {
   margin-left: 20px;
   min-width: 200px;
-  width: 28%;
+  width: 100%;
   box-shadow: none;
   display: inline-block;
   text-align: left;
   min-height: 150px;
-  cursor: pointer;
 }
 .button-create {
   background-color: #195f71;
@@ -172,5 +171,16 @@ h2 {
 }
 .card-container {
   text-align: left;
+  padding-right: 20px;
+}
+.software-logo {
+  height: 25px;
+  width: 25px;
+  margin-right: 5px;
+  color: #bfbfbf;
+  cursor: pointer;
+}
+.software-logo:hover {
+  color: #195f71;
 }
 </style>
