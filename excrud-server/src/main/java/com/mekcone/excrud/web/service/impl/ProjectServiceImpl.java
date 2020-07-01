@@ -36,6 +36,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public Project retrieve(String projectId) {
+        return projectRepository.find(projectId);
+    }
+
+    @Override
     public List<Project> retrieveList() {
         return projectRepository.findAll();
     }

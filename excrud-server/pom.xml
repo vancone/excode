@@ -53,6 +53,9 @@
     </repositories>
 
     <dependencies>
+
+        <!-- Codegen -->
+
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom2</artifactId>
@@ -132,23 +135,15 @@
             <version>5.2.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-            <version>2.3.0.RELEASE</version>
-        </dependency>
+        <!-- Database -->
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-amqp</artifactId>-->
-<!--            <version>2.2.6.RELEASE</version>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>ch.qos.logback</groupId>-->
-<!--                    <artifactId>logback-classic</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
+        <!--<dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.12.5</version>
+        </dependency>-->
+
+        <!-- Host -->
 
         <dependency>
             <groupId>com.jcraft</groupId>
@@ -161,6 +156,8 @@
             <artifactId>commons-io</artifactId>
             <version>1.3.2</version>
         </dependency>
+
+        <!-- Web -->
 
         <dependency>
             <groupId>com.mekcone</groupId>
@@ -183,6 +180,12 @@
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+            <version>2.3.0.RELEASE</version>
         </dependency>
 
     </dependencies>

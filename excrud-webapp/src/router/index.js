@@ -5,6 +5,7 @@ import ProjectEditor from '@/components/projects/editor'
 import Hosts from '@/components/hosts/index'
 import HostPane from '@/components/hosts/host-pane'
 import Settings from '@/components/settings/index'
+import SpringBootModule from '@/components/projects/modules/spring-boot'
 // import { component } from 'vue/types/umd'
 
 Vue.use(Router)
@@ -14,7 +15,13 @@ export default new Router({
     {
       path: '/projects/editor',
       name: 'ProjectEditor',
-      component: ProjectEditor
+      component: ProjectEditor,
+      children: [
+        {
+          path: 'spring-boot',
+          component: SpringBootModule
+        }
+      ]
     },
     {
       path: '/projects',

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.mekcone.excrud.codegen.constant.LanguageType;
+import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.module.impl.*;
 import lombok.Data;
@@ -40,32 +41,33 @@ public class Project {
 
     @Data
     public class ModuleSet {
-        @JacksonXmlProperty(localName = "document")
+        @JacksonXmlProperty(localName = ModuleConstant.MODULE_TYPE_DOCUMENT)
         private DocumentModule documentModule;
 
-        @JacksonXmlProperty(localName = "deployment")
+        @JacksonXmlProperty(localName = ModuleConstant.MODULE_TYPE_DEPLOYMENT)
         private DeploymentModule deploymentModule;
 
-        @JacksonXmlProperty(localName = "datasource")
+        @JacksonXmlProperty(localName = ModuleConstant.MODULE_TYPE_DATASOURCE)
         private DatasourceModule datasourceModule;
 
-        @JacksonXmlProperty(localName = "hybrid-mobile-app")
+        @JacksonXmlProperty(localName = ModuleConstant.MODULE_TYPE_HYBRID_MOBILE_APP)
         private HybridMobileAppModule hybridMobileAppModule;
 
-        @JacksonXmlProperty(localName = "spring-boot")
+        @JacksonXmlProperty(localName = ModuleConstant.MODULE_TYPE_SPRING_BOOT)
         private SpringBootModule springBootModule;
 
-        @JacksonXmlProperty(localName = "vue-element-admin")
+        @JacksonXmlProperty(localName = ModuleConstant.MODULE_TYPE_VUE_ELEMENT_ADMIN)
         private VueElementAdminModule vueElementAdminModule;
 
-        @JacksonXmlProperty(localName = "website-page")
+        @JacksonXmlProperty(localName = ModuleConstant.MODULE_TYPE_WEBSITE_PAGE)
         private WebsitePageModule websitePageModule;
 
         public List<Module> asList() {
             List<Module> modules = new ArrayList<>();
-            modules.add(documentModule);
-            modules.add(deploymentModule);
             modules.add(datasourceModule);
+            modules.add(deploymentModule);
+            modules.add(documentModule);
+            modules.add(hybridMobileAppModule);
             modules.add(springBootModule);
             modules.add(vueElementAdminModule);
             modules.add(websitePageModule);

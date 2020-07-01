@@ -71,9 +71,4 @@ public class DatasourceModule extends Module {
         @JacksonXmlProperty(localName = "database")
         private List<Database> databases;
     }
-
-    @Override
-    public String getType() {
-        return ModuleConstant.MODULE_TYPE_DATASOURCE;
-    }
 }

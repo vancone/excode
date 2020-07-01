@@ -11,12 +11,6 @@ import java.util.List;
 
 @Data
 public class WebsitePageModule extends Module {
-
-    @Override
-    public String getType() {
-        return ModuleConstant.MODULE_TYPE_WEBSITE_PAGE;
-    }
-
     private Theme theme;
 
     @JacksonXmlElementWrapper(localName = "pages")

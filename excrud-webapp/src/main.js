@@ -11,6 +11,10 @@ import '@/styles/element-variables.scss'
 import locale from 'element-ui/lib/locale/lang/en'
 import Icon from 'vue2-svg-icon/Icon'
 
+import utils from './utils'
+
+Vue.prototype.$utils = utils
+
 Vue.config.productionTip = false
 
 Vue.use(ElementUI, { locale })

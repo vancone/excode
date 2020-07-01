@@ -30,11 +30,6 @@ public class DocumentModule extends Module {
         return null;
     }
 
-    @Override
-    public String getType() {
-        return ModuleConstant.MODULE_TYPE_DOCUMENT;
-    }
-
     @Data
     public static class Keyword {
         @JacksonXmlProperty(isAttribute = true)

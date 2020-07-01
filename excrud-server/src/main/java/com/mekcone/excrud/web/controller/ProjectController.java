@@ -26,7 +26,9 @@ public class ProjectController {
 
     @GetMapping("/{projectId}")
     public Response retrieve(@PathVariable String projectId) {
-        return Response.success();
+        Project project = projectService.retrieve(projectId);
+        log.info("Retrieve project: {}", project.toJSONString());
+        return Response.success(project);
     }
 
     @GetMapping
@@ -50,6 +52,7 @@ public class ProjectController {
             XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             Project project = xmlMapper.readValue(new String(file.getBytes()), Project.class);
+            log.info("Save imported project: {}", project.toJSONString());
             projectService.saveProject(project);
             return Response.success();
         } catch (Exception e) {

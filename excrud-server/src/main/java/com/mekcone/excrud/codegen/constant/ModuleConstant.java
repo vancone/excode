@@ -6,6 +6,7 @@ public interface ModuleConstant {
     String MODULE_TYPE_DOCUMENT = "document";
     String MODULE_TYPE_DEPLOYMENT = "deployment";
     String MODULE_TYPE_DATASOURCE = "datasource";
+    String MODULE_TYPE_HYBRID_MOBILE_APP = "hybrid-mobile-app";
     String MODULE_TYPE_SPRING_BOOT = "spring-boot";
     String MODULE_TYPE_VUE_ELEMENT_ADMIN = "vue-element-admin";
     String MODULE_TYPE_WEBSITE_PAGE = "website-page";

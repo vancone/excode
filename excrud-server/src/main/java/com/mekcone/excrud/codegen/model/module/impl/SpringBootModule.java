@@ -157,10 +157,4 @@ public class SpringBootModule extends com.mekcone.excrud.codegen.model.module.Mo
     public void addServiceImpl(SpringBootComponent springBootComponent) {
         serviceImpls.add(springBootComponent);
     }
-
-    @Override
-    public String getType() {
-        return ModuleConstant.MODULE_TYPE_SPRING_BOOT;
-    }
-
 }

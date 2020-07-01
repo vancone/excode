@@ -20,11 +20,6 @@ public class DeploymentModule extends Module {
 
     private String daemon;
 
-    @Override
-    public String getType() {
-        return ModuleConstant.MODULE_TYPE_DEPLOYMENT;
-    }
-
     @Data
     public static class OperatingSystem {
         private String type;
