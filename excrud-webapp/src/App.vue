@@ -97,7 +97,7 @@ html,body {
 }
 .left-pane {
   border-right: solid 1px #e5e5e5;
-  background: #f5f5f5;
+  background: #f4f4f4;
   height: inherit;
   text-align: left;
   overflow: hidden;

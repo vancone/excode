@@ -10,7 +10,6 @@ import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Slf4j
@@ -22,7 +21,7 @@ public class MekConeCloudExtensionManager {
     public MekConeCloudExtensionManager(Project project) {
         this.project = project;
         this.springBootModule = project.getModuleSet().getSpringBootModule();
-        project.getModuleSet().getSpringBootModule().getProjectObjectModel().addDependencies(ModuleConstant.SPRING_BOOT_EXTENSION_MEKCONE_CLOUD);
+        project.getModuleSet().getSpringBootModule().getMavenProjectObjectModel().addDependencies(ModuleConstant.SPRING_BOOT_EXTENSION_MEKCONE_CLOUD);
         modifyApplicationEntry();
         addProperties();
     }

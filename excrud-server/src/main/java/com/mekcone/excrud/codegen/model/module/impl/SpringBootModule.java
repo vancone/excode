@@ -3,10 +3,9 @@ package com.mekcone.excrud.codegen.model.module.impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.controller.parser.PropertiesParser;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.JavaTemplate;
-import com.mekcone.excrud.codegen.model.file.springboot.ProjectObjectModel;
+import com.mekcone.excrud.codegen.model.file.springboot.MavenProjectObjectModel;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootComponent;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootDataClass;
 import lombok.Data;
@@ -115,7 +114,7 @@ public class SpringBootModule extends com.mekcone.excrud.codegen.model.module.Mo
     private JavaTemplate applicationEntry;
 
     @JsonIgnore
-    private ProjectObjectModel projectObjectModel;
+    private MavenProjectObjectModel mavenProjectObjectModel;
 
     @JsonIgnore
     private PropertiesParser applicationPropertiesParser = new PropertiesParser();

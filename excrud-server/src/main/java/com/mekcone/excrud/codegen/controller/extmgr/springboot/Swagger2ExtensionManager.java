@@ -25,7 +25,7 @@ public class Swagger2ExtensionManager {
         this.project = project;
         this.callBackObject = callBackObject;
         SpringBootModule springBootModule = project.getModuleSet().getSpringBootModule();
-        springBootModule.getProjectObjectModel().addDependencies(ModuleConstant.SPRING_BOOT_EXTENSION_SWAGGER2);
+        springBootModule.getMavenProjectObjectModel().addDependencies(ModuleConstant.SPRING_BOOT_EXTENSION_SWAGGER2);
         addConfig();
         addAnnotation();
     }

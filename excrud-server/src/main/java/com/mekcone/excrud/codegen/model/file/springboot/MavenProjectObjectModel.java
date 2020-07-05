@@ -24,7 +24,7 @@ import java.util.List;
 
 @Data
 @Slf4j
-public class ProjectObjectModel {
+public class MavenProjectObjectModel {
     private String groupId;
     private String artifactId;
     private String version;
@@ -50,7 +50,7 @@ public class ProjectObjectModel {
         }
     }
 
-    public ProjectObjectModel(Project project) {
+    public MavenProjectObjectModel(Project project) {
         groupId = project.getGroupId();
         artifactId = project.getArtifactId();
         version = project.getVersion();

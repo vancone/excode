@@ -32,16 +32,16 @@ public abstract class Module {
         type = StrUtil.snakeCase(callerClassName.substring(callerClassName.lastIndexOf('.') + 1, callerClassName.length() - 6));
     }
 
-    public SpringBootModule asSpringBootModule() {
-        return (SpringBootModule)this;
-    }
-
     public DeploymentModule asDeploymentModule() {
         return (DeploymentModule)this;
     }
 
     public DocumentModule asDocumentModule() {
         return (DocumentModule)this;
+    }
+
+    public SpringBootModule asSpringBootModule() {
+        return (SpringBootModule)this;
     }
 
     public VueElementAdminModule asVueElementAdminModule() {

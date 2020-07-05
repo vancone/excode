@@ -12,7 +12,7 @@ public class LombokExtensionManager {
     private Project project;
 
     public LombokExtensionManager(SpringBootModule springBootModule) {
-        springBootModule.getProjectObjectModel().addDependencies(ModuleConstant.SPRING_BOOT_EXTENSION_LOMBOK);
+        springBootModule.getMavenProjectObjectModel().addDependencies(ModuleConstant.SPRING_BOOT_EXTENSION_LOMBOK);
 
         // Remove getters and setters of the data class
         for (SpringBootDataClass entity: springBootModule.getEntities()) {

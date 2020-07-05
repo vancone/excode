@@ -21,7 +21,7 @@ import com.mekcone.excrud.codegen.model.database.Database;
 import com.mekcone.excrud.codegen.model.database.Table;
 import com.mekcone.excrud.codegen.model.module.impl.DatasourceModule;
 import com.mekcone.excrud.codegen.model.module.impl.SpringBootModule;
-import com.mekcone.excrud.codegen.model.file.springboot.ProjectObjectModel;
+import com.mekcone.excrud.codegen.model.file.springboot.MavenProjectObjectModel;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootComponent;
 import com.mekcone.excrud.codegen.model.file.springboot.SpringBootDataClass;
 import com.mekcone.excrud.codegen.model.project.Project;
@@ -37,7 +37,7 @@ public class SpringBootGenerator extends Generator {
         super(project);
         module.asSpringBootModule().setGroupId(project.getGroupId());
         module.asSpringBootModule().setArtifactId(project.getArtifactId());
-        module.asSpringBootModule().setProjectObjectModel(new ProjectObjectModel(project));
+        module.asSpringBootModule().setMavenProjectObjectModel(new MavenProjectObjectModel(project));
     }
 
     public void generate() {
@@ -57,7 +57,7 @@ public class SpringBootGenerator extends Generator {
         createApplicationEntry();
 
         // Application properties
-        springBootModule.getProjectObjectModel().addDependencies("mybatis");
+        springBootModule.getMavenProjectObjectModel().addDependencies("mybatis");
         PropertiesParser applicationPropertiesParser = springBootModule.getApplicationPropertiesParser();
 
         int serverPort = ((SpringBootModule)module).getProperties().getServerPort();
@@ -78,7 +78,7 @@ public class SpringBootGenerator extends Generator {
         // Add Redis source
         DatasourceModule.Redis redis = project.getModuleSet().getDatasourceModule().getRedis();
         if (!redis.getNodes().isEmpty()) {
-            springBootModule.getProjectObjectModel().addDependencies("redis");
+            springBootModule.getMavenProjectObjectModel().addDependencies("redis");
             applicationPropertiesParser.add("spring.redis.database", redis.getNodes().get(0).getDatabase());
             applicationPropertiesParser.add("spring.redis.host", redis.getNodes().get(0).getHost());
             applicationPropertiesParser.add("spring.redis.port", String.valueOf(redis.getNodes().get(0).getPort()));
@@ -151,7 +151,7 @@ public class SpringBootGenerator extends Generator {
             addOutputFile(getPath("mapperPath") + mybatisMapperComponent.getName() + ".java", mybatisMapperComponent.toString()));
 
         // POM
-        addOutputFile("pom.xml", springBootModule.getProjectObjectModel().toString());
+        addOutputFile("pom.xml", springBootModule.getMavenProjectObjectModel().toString());
 
         // Services
         springBootModule.getServices().forEach(serviceComponent ->
