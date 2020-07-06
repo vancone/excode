@@ -18,7 +18,7 @@ public class ModuleInfo {
     private Initial initial = new Initial();
 
     @Data
-    public class Initial {
+    public static class Initial {
         @JsonProperty("dirs")
         private List<String> directories = new ArrayList<>();
 

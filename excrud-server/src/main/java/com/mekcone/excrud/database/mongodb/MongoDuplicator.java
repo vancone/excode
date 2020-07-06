@@ -1,13 +1,11 @@
 package com.mekcone.excrud.database.mongodb;
 
-import com.mongodb.ClientSessionOptions;
 import com.mongodb.client.*;
-import com.mongodb.connection.ClusterDescription;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
-import org.bson.conversions.Bson;
+import org.bson.json.JsonWriterSettings;
 
-import java.util.List;
-
+@Slf4j
 public class MongoDuplicator {
 
     private String url;
@@ -16,110 +14,50 @@ public class MongoDuplicator {
 
     private String collection;
 
-    public MongoDuplicator() {
-        MongoClient mongoClient = new MongoClient() {
-            @Override
-            public MongoDatabase getDatabase(String s) {
-                return null;
-            }
+    private MongoClient mongoClient;
 
-            @Override
-            public ClientSession startSession() {
-                return null;
-            }
+    private int limitOfEachCollection = 0;  // value 0 means no limits
 
-            @Override
-            public ClientSession startSession(ClientSessionOptions clientSessionOptions) {
-                return null;
-            }
-
-            @Override
-            public void close() {
-
-            }
-
-            @Override
-            public MongoIterable<String> listDatabaseNames() {
-                return null;
-            }
-
-            @Override
-            public MongoIterable<String> listDatabaseNames(ClientSession clientSession) {
-                return null;
-            }
-
-            @Override
-            public ListDatabasesIterable<Document> listDatabases() {
-                return null;
-            }
-
-            @Override
-            public ListDatabasesIterable<Document> listDatabases(ClientSession clientSession) {
-                return null;
-            }
-
-            @Override
-            public <TResult> ListDatabasesIterable<TResult> listDatabases(Class<TResult> aClass) {
-                return null;
-            }
-
-            @Override
-            public <TResult> ListDatabasesIterable<TResult> listDatabases(ClientSession clientSession, Class<TResult> aClass) {
-                return null;
-            }
-
-            @Override
-            public ChangeStreamIterable<Document> watch() {
-                return null;
-            }
-
-            @Override
-            public <TResult> ChangeStreamIterable<TResult> watch(Class<TResult> aClass) {
-                return null;
-            }
-
-            @Override
-            public ChangeStreamIterable<Document> watch(List<? extends Bson> list) {
-                return null;
-            }
-
-            @Override
-            public <TResult> ChangeStreamIterable<TResult> watch(List<? extends Bson> list, Class<TResult> aClass) {
-                return null;
-            }
-
-            @Override
-            public ChangeStreamIterable<Document> watch(ClientSession clientSession) {
-                return null;
-            }
-
-            @Override
-            public <TResult> ChangeStreamIterable<TResult> watch(ClientSession clientSession, Class<TResult> aClass) {
-                return null;
-            }
-
-            @Override
-            public ChangeStreamIterable<Document> watch(ClientSession clientSession, List<? extends Bson> list) {
-                return null;
-            }
-
-            @Override
-            public <TResult> ChangeStreamIterable<TResult> watch(ClientSession clientSession, List<? extends Bson> list, Class<TResult> aClass) {
-                return null;
-            }
-
-            @Override
-            public ClusterDescription getClusterDescription() {
-                return null;
-            }
-        };
+    // No authentication
+    public MongoDuplicator(String url, int port) {
+        mongoClient = MongoClients.create("mongodb://" + url + ":" + port);
     }
 
-    public void copy() {
+    public void setLimit(int limit) {
+        limitOfEachCollection = limit > 0 ? limit : limit;
+    }
+
+    public void exportDatabase(String databaseName) {
+        MongoDatabase mongoDatabase = mongoClient.getDatabase(databaseName);
+        for (String collectionName: mongoDatabase.listCollectionNames()) {
+            exportCollection(databaseName, collectionName);
+        }
+    }
+
+    private final String tempOutputPath = "D:\\";
+
+    public void exportCollection(String databaseName, String collectionName) {
+        MongoDatabase mongoDatabase = mongoClient.getDatabase(databaseName);
+        MongoCollection mongoCollection = mongoDatabase.getCollection(collectionName);
+        FindIterable<Document> findIterable;
+        if (limitOfEachCollection > 0) {
+            findIterable = mongoCollection.find().limit(limitOfEachCollection);
+        } else {
+            findIterable = mongoCollection.find();
+        }
+        StringBuilder content = new StringBuilder("[");
+        for (Document document: findIterable) {
+            content.append(document.toJson()).append(",");
+        }
+        content.setCharAt(content.length() - 1, ']');
+        log.info("Output: {}", content.toString());
+    }
+
+    public void importDatabase() {
 
     }
 
-    public void paste() {
+    public void importCollection() {
 
     }
 }

@@ -85,6 +85,7 @@ public class ProjectLoader {
         List<Database> databases = project.getModuleSet().getDatasourceModule().getRelationalDatabase().getDatabases();
         if (databases == null || databases.isEmpty()) {
             log.error(ErrorEnum.DATABASE_UNDEFINED.toString());
+            return false;
         }
 
         for (Database database : databases) {
@@ -99,7 +100,7 @@ public class ProjectLoader {
         }
         if (tableAmount == 0) {
             log.error(ErrorEnum.TABLE_UNDEFINED.toString());
-            System.exit(-1);  // DANGEROUS!
+            return false;
         } else {
             log.info("{} database(s), {} table(s) detected", databases.size(), tableAmount);
         }

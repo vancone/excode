@@ -2,7 +2,6 @@ package com.mekcone.excrud.codegen.model.module.impl;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.codegen.constant.ModuleConstant;
 import com.mekcone.excrud.codegen.model.database.Database;
 import com.mekcone.excrud.codegen.model.module.Module;
 import lombok.Data;

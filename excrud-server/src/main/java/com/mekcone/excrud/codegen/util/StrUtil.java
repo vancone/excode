@@ -14,10 +14,12 @@ public class StrUtil {
         if (stringArray.length > 1) {
             data = stringArray[0];
             int i = 1;
+            StringBuilder dataBuilder = new StringBuilder(data);
             while (i < stringArray.length) {
-                data += (stringArray[i].substring(0, 1).toUpperCase() + stringArray[i].substring(1));
+                dataBuilder.append(stringArray[i].substring(0, 1).toUpperCase()).append(stringArray[i].substring(1));
                 i ++;
             }
+            data = dataBuilder.toString();
         }
         return data;
     }
