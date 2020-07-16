@@ -27,8 +27,11 @@ import com.mekcone.excrud.codegen.model.file.springboot.SpringBootDataClass;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 @Slf4j
 public class SpringBootGenerator extends Generator {
@@ -94,18 +97,16 @@ public class SpringBootGenerator extends Generator {
         // Remove disabled extensions
         springBootModule.getExtensions().removeIf(extension -> !extension.isUse());
 
-        String extensionInfo = "Enable extensions: [";
-        Iterator iterator = springBootModule.getExtensions().iterator();
-        while (iterator.hasNext()) {
-            extensionInfo += ((Module.Extension)(iterator.next())).getId();
-            extensionInfo += iterator.hasNext() ? ", " : "";
+        List<String> enableExtensionNames = new ArrayList<>();
+        for (Module.Extension extension: springBootModule.getExtensions()) {
+            enableExtensionNames.add(extension.getId());
         }
-        extensionInfo += "]";
-        log.info(extensionInfo);
+
+        log.info("Enable extensions: {}", StringUtils.join(enableExtensionNames));
 
         // Run extension manager
         springBootModule.getExtensions().forEach(extension -> {
-            log.info("Executing Spring Boot extension manager: {}", extension.getId());
+            log.info(StringUtils.center("ext::" + extension.getId(), 100, "-"));
 
             switch (extension.getId()) {
                 case ModuleConstant.SPRING_BOOT_EXTENSION_CROSS_ORIGIN:
@@ -123,6 +124,8 @@ public class SpringBootGenerator extends Generator {
                 default:
                     log.warn("Unknown extension: {}", extension.getId());
             }
+
+            log.info("Execute extension {} complete", extension.getId());
         });
 
         write();

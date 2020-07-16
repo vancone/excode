@@ -9,6 +9,8 @@ import com.mekcone.excrud.codegen.model.module.impl.SpringBootModule.SpringBootP
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class MekConeCloudExtensionManager {
 
         // Set application name
         String applicationName = springBootModule.getProperties().getApplicationName();
-        if (applicationName != null && !applicationName.isEmpty()) {
+        if (StringUtils.isNotBlank(applicationName)) {
             propertiesParser.add("spring.application.name", applicationName);
         } else {
             propertiesParser.add("spring.application.name", project.getArtifactId());

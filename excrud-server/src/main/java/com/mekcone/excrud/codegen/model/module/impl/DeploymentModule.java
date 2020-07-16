@@ -2,10 +2,10 @@ package com.mekcone.excrud.codegen.model.module.impl;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.codegen.constant.ModuleConstant;
+import com.mekcone.excrud.codegen.annotation.ExtensionClass;
+import com.mekcone.excrud.codegen.annotation.Validator;
 import com.mekcone.excrud.codegen.model.module.Module;
 import lombok.Data;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnJava;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,11 +18,14 @@ public class DeploymentModule extends Module {
     @JacksonXmlProperty(localName = "operating-system")
     private List<OperatingSystem> operatingSystems = new ArrayList<>();
 
+    @Validator({"docker", "supervisor", "systemd"})
     private String daemon;
 
     @Data
     public static class OperatingSystem {
+        @Validator({"centos", "ubuntu"})
         private String type;
+
         private String version;
     }
 
@@ -35,6 +38,7 @@ public class DeploymentModule extends Module {
         private Redis redis;
 
         @Data
+        @ExtensionClass
         public static class Nginx {
             private String user = "www-data";
 
@@ -133,6 +137,7 @@ public class DeploymentModule extends Module {
         }
 
         @Data
+        @ExtensionClass
         public static class Redis {
             private int bind;
             private boolean protectedMode;

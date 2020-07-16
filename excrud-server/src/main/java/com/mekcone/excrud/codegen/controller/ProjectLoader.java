@@ -13,6 +13,7 @@ import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -34,7 +35,7 @@ public class ProjectLoader {
             if (!module.isUse()) continue;
 
             // Print module type
-            log.info("MODULE :: [ {} ]", module.getType());
+            log.info(StringUtils.center("mod::" + module.getType(), 100, "="));
             long startTime = new Date().getTime();
 
             // Initialize generators

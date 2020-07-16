@@ -2,6 +2,7 @@ package com.mekcone.excrud.codegen.model.module.impl;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.mekcone.excrud.codegen.annotation.Validator;
 import com.mekcone.excrud.codegen.model.database.Database;
 import com.mekcone.excrud.codegen.model.module.Module;
 import lombok.Data;
@@ -34,7 +35,8 @@ public class DatasourceModule extends Module {
     @Data
     public static class Redis {
         @JacksonXmlProperty(isAttribute = true)
-        private String mode = "single";
+        @Validator({"cluster", "master-slave", "standalone"})
+        private String mode = "standalone";
 
         private List<Node> nodes = new ArrayList<>();
 

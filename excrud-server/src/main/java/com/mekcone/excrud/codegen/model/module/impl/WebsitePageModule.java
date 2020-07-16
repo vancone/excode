@@ -2,7 +2,7 @@ package com.mekcone.excrud.codegen.model.module.impl;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.mekcone.excrud.codegen.constant.ModuleConstant;
+import com.mekcone.excrud.codegen.annotation.Validator;
 import com.mekcone.excrud.codegen.model.module.Module;
 import com.mekcone.excrud.codegen.model.project.Internationalization;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class WebsitePageModule extends Module {
     private List<Page> pages;
 
     @Data
-    public class Theme {
+    public static class Theme {
         @JacksonXmlProperty(isAttribute = true)
         private String type;
 
@@ -32,6 +32,7 @@ public class WebsitePageModule extends Module {
     @Data
     public static class Page {
         @JacksonXmlProperty(isAttribute = true)
+        @Validator({"about", "home"})
         private String type;
 
         private Internationalization title;

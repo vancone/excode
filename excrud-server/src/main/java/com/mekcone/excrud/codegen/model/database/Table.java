@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.mekcone.excrud.codegen.util.StrUtil;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class Table {
 
     @JsonIgnore
     public boolean hasPrimaryKey() {
-        return !(primaryKey == null || primaryKey.isEmpty());
+        return StringUtils.isNotBlank(primaryKey);
     }
 
     public void addColumn(Column column) {

@@ -4,6 +4,7 @@ import com.mekcone.excrud.codegen.controller.generator.Generator;
 import com.mekcone.excrud.codegen.controller.parser.template.impl.CommonTemplate;
 import com.mekcone.excrud.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
@@ -24,8 +25,8 @@ public class VueElementAdminGenerator extends Generator {
         // Add author
         String author = module.asVueElementAdminModule().getAuthor();
         String email = module.asVueElementAdminModule().getEmail();
-        if (author != null && !author.isEmpty()) {
-            if (email != null && !email.isEmpty()) {
+        if (StringUtils.isNotBlank(author)) {
+            if (StringUtils.isNotBlank(email)) {
                 author += " <" + email + ">";
             }
             packageJsonTemplate.insert("author", author);

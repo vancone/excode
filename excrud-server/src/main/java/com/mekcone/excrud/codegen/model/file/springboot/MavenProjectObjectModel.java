@@ -9,6 +9,7 @@ import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.FileUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jdom2.Comment;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -63,7 +64,7 @@ public class MavenProjectObjectModel {
     public void addDependencies(String pomFileName) {
         String templatePath = UrlPath.MODULE_PATH + ModuleConstant.MODULE_TYPE_SPRING_BOOT + File.separator + "templates" + File.separator;
         String pomDependenciesText = FileUtil.read(templatePath + "pom" + File.separator + pomFileName + ".xml");
-        if (pomDependenciesText != null && !pomDependenciesText.isEmpty()) {
+        if (StringUtils.isNotBlank(pomDependenciesText)) {
             XmlMapper xmlMapper = new XmlMapper();
 
             try {

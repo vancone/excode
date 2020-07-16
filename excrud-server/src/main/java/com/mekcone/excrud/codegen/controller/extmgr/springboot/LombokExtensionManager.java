@@ -20,7 +20,5 @@ public class LombokExtensionManager {
             entity.getCompilationUnit().addImport("lombok.Data");
             entity.getEntityClassDeclaration().addMarkerAnnotation("Data");
         }
-
-        log.info("Execute extension Lombok complete");
     }
 }

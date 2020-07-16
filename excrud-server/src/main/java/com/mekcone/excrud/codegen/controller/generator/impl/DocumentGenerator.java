@@ -8,14 +8,15 @@ import com.mekcone.excrud.codegen.constant.UrlPath;
 import com.mekcone.excrud.codegen.controller.extmgr.document.MarkdownExtensionManager;
 import com.mekcone.excrud.codegen.controller.extmgr.document.PdfExtensionManager;
 import com.mekcone.excrud.codegen.controller.generator.Generator;
-import com.mekcone.excrud.codegen.model.module.impl.DocumentModule;
 import com.mekcone.excrud.codegen.model.database.Column;
 import com.mekcone.excrud.codegen.model.database.Database;
 import com.mekcone.excrud.codegen.model.database.Table;
+import com.mekcone.excrud.codegen.model.module.impl.DocumentModule;
 import com.mekcone.excrud.codegen.model.project.Project;
 import com.mekcone.excrud.codegen.util.DataTypeConverter;
 import com.mekcone.excrud.codegen.util.LangUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileOutputStream;
 import java.util.List;
@@ -224,7 +225,7 @@ public class DocumentGenerator extends Generator {
 
                         pdfPTable.addCell(tableCell(DataTypeConverter.convertToJavaDataType(column.getType())));
 
-                        if (column.getDescription() != null && !column.getDescription().isEmpty()) {
+                        if (StringUtils.isNotBlank(column.getDescription())) {
                             pdfPTable.addCell(tableCell(column.getDescription()));
                         } else {
                             String[] words = column.getName().split("_");

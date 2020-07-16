@@ -5,6 +5,7 @@ import com.mekcone.excrud.codegen.util.FileUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -89,7 +90,7 @@ public class PropertiesParser {
 
     public static PropertiesParser readFrom(String url) {
         String content = FileUtil.read(url);
-        if (content != null && !content.isEmpty()) {
+        if (StringUtils.isNotBlank(content)) {
             String fileName = new File(url).toPath().getFileName().toString();
             PropertiesParser propertiesParser = PropertiesParser.parse(content);
             propertiesParser.setName(fileName.substring(0, fileName.lastIndexOf(".")));

@@ -29,7 +29,7 @@ public abstract class Module {
 
     public Module() {
         String callerClassName = Thread.currentThread().getStackTrace()[2].getClassName();
-        type = StrUtil.snakeCase(callerClassName.substring(callerClassName.lastIndexOf('.') + 1, callerClassName.length() - 6));
+        type = StrUtil.kebabCase(callerClassName.substring(callerClassName.lastIndexOf('.') + 1, callerClassName.length() - 6));
     }
 
     public DeploymentModule asDeploymentModule() {
