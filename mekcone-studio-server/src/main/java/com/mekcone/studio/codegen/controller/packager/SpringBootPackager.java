@@ -14,7 +14,7 @@ public class SpringBootPackager {
     private String projectPath;
 
     public SpringBootPackager(String groupId, String artifactId, String version) {
-        projectPath = UrlPath.EXCRUD_HOME + "gen" + File.separator +
+        projectPath = UrlPath.MEKCONE_STUDIO_HOME + "gen" + File.separator +
                 groupId + "." +
                 artifactId + "-" +
                 version + File.separator +

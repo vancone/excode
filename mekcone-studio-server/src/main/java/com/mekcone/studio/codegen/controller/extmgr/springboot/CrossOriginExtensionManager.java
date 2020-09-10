@@ -36,10 +36,10 @@ public class CrossOriginExtensionManager {
             MethodCallExpr addMappingExpr = statement.asExpressionStmt().getExpression().asMethodCallExpr();
 
             MethodCallExpr rootExpr = addMappingExpr;
-            SpringBootModule.SpringBootProperties springBootProperties = project.getModuleSet().getSpringBootModule().getProperties();
+            SpringBootModule.SpringBootExtensions springBootExtensions = project.getModuleSet().getSpringBootModule().getExtensions();
 
             // Add allowed origins
-            List<String> allowedOrigins = springBootProperties.getCrossOrigin().getAllowedOrigins();
+            List<String> allowedOrigins = springBootExtensions.getCrossOrigin().getAllowedOrigins();
             if (!allowedOrigins.isEmpty()) {
                 MethodCallExpr allowedOriginsExpr = new MethodCallExpr();
                 NodeList allowedOriginsNodeList = new NodeList();
@@ -54,7 +54,7 @@ public class CrossOriginExtensionManager {
             }
 
             // Add allowed methods
-            List<String> allowedMethods = springBootProperties.getCrossOrigin().getAllowedMethods();
+            List<String> allowedMethods = springBootExtensions.getCrossOrigin().getAllowedMethods();
             if (!allowedMethods.isEmpty()) {
                 MethodCallExpr allowedMethodsExpr = new MethodCallExpr();
                 NodeList allowedMethodsNodeList = new NodeList();
@@ -69,7 +69,7 @@ public class CrossOriginExtensionManager {
             }
 
             // Add allowed headers
-            List<String> allowedHeaders = springBootProperties.getCrossOrigin().getAllowedHeaders();
+            List<String> allowedHeaders = springBootExtensions.getCrossOrigin().getAllowedHeaders();
             if (!allowedHeaders.isEmpty()) {
                 MethodCallExpr allowedHeadersExpr = new MethodCallExpr();
                 NodeList allowedHeadersNodeList = new NodeList();

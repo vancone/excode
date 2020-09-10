@@ -1,6 +1,7 @@
 package com.mekcone.studio.web.service;
 
-import com.mekcone.studio.codegen.model.project.Project;
+
+import com.mekcone.studio.web.entity.Project;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

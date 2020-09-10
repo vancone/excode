@@ -1,6 +1,6 @@
 package com.mekcone.studio.web.repository;
 
-import com.mekcone.studio.codegen.model.project.Project;
+import com.mekcone.studio.web.entity.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

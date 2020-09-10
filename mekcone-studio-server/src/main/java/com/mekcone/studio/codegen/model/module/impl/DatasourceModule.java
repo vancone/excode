@@ -1,7 +1,5 @@
 package com.mekcone.studio.codegen.model.module.impl;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.mekcone.studio.codegen.annotation.Validator;
 import com.mekcone.studio.codegen.model.database.Database;
 import com.mekcone.studio.codegen.model.module.Module;
@@ -34,7 +32,6 @@ public class DatasourceModule extends Module {
 
     @Data
     public static class Redis {
-        @JacksonXmlProperty(isAttribute = true)
         @Validator({"cluster", "master-slave", "standalone"})
         private String mode = "standalone";
 
@@ -42,34 +39,25 @@ public class DatasourceModule extends Module {
 
         @Data
         public static class Node {
-            @JacksonXmlProperty(isAttribute = true)
             private String database;
 
-            @JacksonXmlProperty(isAttribute = true)
             private String host;
 
-            @JacksonXmlProperty(isAttribute = true)
             private int port = 6379;
 
-            @JacksonXmlProperty(isAttribute = true)
             private String password;
 
-            @JacksonXmlProperty(isAttribute = true)
             private long timeout;
         }
     }
 
     // ELEMENT RELATIONAL_DATABASE
-    @JacksonXmlProperty(localName = "relational-database")
     private RelationalDatabase relationalDatabase;
 
     @Data
     public static class RelationalDatabase {
-        @JacksonXmlProperty(isAttribute = true, localName = "sql-gen")
         private boolean sqlGen = true;
 
-        @JacksonXmlElementWrapper(localName = "databases")
-        @JacksonXmlProperty(localName = "database")
         private List<Database> databases;
     }
 }

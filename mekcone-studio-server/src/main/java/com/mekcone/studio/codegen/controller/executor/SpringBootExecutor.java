@@ -15,7 +15,7 @@ public class SpringBootExecutor {
     private String jarFilePath;
 
     public SpringBootExecutor(String groupId, String artifactId, String version) {
-        jarFilePath = UrlPath.EXCRUD_HOME + "gen" + File.separator +
+        jarFilePath = UrlPath.MEKCONE_STUDIO_HOME + "gen" + File.separator +
                 groupId + "." +
                 artifactId + "-" +
                 version + File.separator +

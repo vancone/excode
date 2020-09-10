@@ -2,6 +2,7 @@ package com.mekcone.studio.codegen.controller.extmgr.deployment;
 
 import com.mekcone.studio.codegen.controller.extmgr.ExtensionManager;
 import com.mekcone.studio.codegen.controller.generator.impl.DeploymentGenerator;
+import com.mekcone.studio.codegen.model.module.Module;
 import com.mekcone.studio.codegen.model.project.Project;
 import com.mekcone.studio.codegen.model.module.impl.DeploymentModule;
 
@@ -20,7 +21,7 @@ public class NginxExtensionManager extends ExtensionManager {
     }
 
     public void addConf() {
-        DeploymentModule.Properties.Nginx nginx = project.getModuleSet().getDeploymentModule().getProperties().getNginx();
+        DeploymentModule.DeploymentExtensions.Nginx nginx = project.getModuleSet().getDeploymentModule().getExtensions().getNginx();
         deploymentGenerator.addOutputFile("nginx" + File.separator + "nginx.conf", nginx.toString());
     }
 

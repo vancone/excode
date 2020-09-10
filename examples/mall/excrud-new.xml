@@ -118,6 +118,21 @@
 
         <spring-boot use="true">
             <extensions>
+                <extension type="cross-origin" use="true">
+                    <configs>
+                        <config type="allowed-headers">
+                            <item>X-Custom-Header</item>
+                        </config>
+                        <config type="allowed-origins">
+                            <item>*</item>
+                        </config>
+                        <config type="allowed-methods">
+                            <item>GET</item>
+                            <item>POST</item>
+                        </config>
+                    </configs>
+
+                </extension>
                 <cross-origin id="cross-origin" use="true">
                     <!-- 
                         <allowed-headers>
@@ -128,9 +143,6 @@
                             <allowed-method>POST</allowed-method>
                         </allowed-methods>
                     -->
-                    <allowed-origins>
-                        <allowed-origin>*</allowed-origin>
-                    </allowed-origins>
                 </cross-origin>
 
                 <mekcone-cloud use="true" mode="dev">

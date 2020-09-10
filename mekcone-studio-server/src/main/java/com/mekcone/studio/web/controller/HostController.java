@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/excrud/host")
+@RequestMapping("/api/studio/host")
 public class HostController {
     @Autowired
     private HostRepository hostRepository;

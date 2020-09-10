@@ -1,10 +1,9 @@
 package com.mekcone.studio.codegen.model.module.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.mekcone.studio.codegen.annotation.ExtensionClass;
 import com.mekcone.studio.codegen.annotation.Validator;
+import com.mekcone.studio.codegen.constant.ModuleConstant;
 import com.mekcone.studio.codegen.controller.parser.PropertiesParser;
 import com.mekcone.studio.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.studio.codegen.model.file.springboot.MavenProjectObjectModel;
@@ -25,60 +24,56 @@ public class SpringBootModule extends Module {
     @JsonIgnore
     private String artifactId;
 
-    private SpringBootProperties properties;
+    private SpringBootExtensions extensions;
 
     @Data
-    public static class SpringBootProperties {
-        // Basic properties
-        @JacksonXmlProperty(localName = "application-name")
-        private String applicationName;
+    public static class SpringBootExtensions {
 
-        @JacksonXmlProperty(localName = "page-size")
-        @Validator(min = 1)
-        private int pageSize;
+        private CrossOrigin crossOrigin;
 
-        @JacksonXmlProperty(localName = "server-port")
-        @Validator(min = 0, max = 65535)
-        private int serverPort;
-
-        // Extended properties
-        @JacksonXmlProperty(localName = "cross-origin")
-        private SpringBootProperties.CrossOrigin crossOrigin;
-
-        @JacksonXmlProperty(localName = "mekcone-cloud")
         private MekConeCloud mekConeCloud;
 
+        private Swagger2 swagger2;
 
-        // Properties of extensions
+
+        public List<Extension> asList() {
+            List<Extension> extensionList = new ArrayList<>();
+            extensionList.add(crossOrigin);
+            extensionList.add(mekConeCloud);
+            extensionList.add(swagger2);
+            return extensionList;
+        }
 
         @Data
         @ExtensionClass
-        public static class CrossOrigin {
+        public static class CrossOrigin extends Extension {
 
-            @JacksonXmlElementWrapper(localName = "allowed-headers")
-            @JacksonXmlProperty(localName = "allowed-header")
+            public CrossOrigin() {
+                setId(ModuleConstant.SPRING_BOOT_EXTENSION_CROSS_ORIGIN);
+            }
+
             private List<String> allowedHeaders = new ArrayList<>();
 
-            @JacksonXmlElementWrapper(localName = "allowed-methods")
-            @JacksonXmlProperty(localName = "allowed-method")
             @Validator(value = {"*", "GET", "POST", "PUT", "DELETE"}, defaultValue = "*")
             private List<String> allowedMethods = new ArrayList<>();
 
-            @JacksonXmlElementWrapper(localName = "allowed-origins")
-            @JacksonXmlProperty(localName = "allowed-origin")
             private List<String> allowedOrigins = new ArrayList<>();
         }
 
         @Data
         @ExtensionClass
-        public static class Lombok {
+        public static class Lombok extends Extension {
 
         }
 
         @Data
         @ExtensionClass
-        public static class MekConeCloud {
-            @JacksonXmlProperty(isAttribute = true)
+        public static class MekConeCloud extends Extension {
+
+            public MekConeCloud() {
+                setId(ModuleConstant.SPRING_BOOT_EXTENSION_MEKCONE_CLOUD);
+            }
+
             @Validator({"dev", "prod"})
             private String mode;
 
@@ -88,17 +83,13 @@ public class SpringBootModule extends Module {
             @Data
             @ExtensionClass
             public static class Router {
-                @JacksonXmlElementWrapper(localName = "nodes")
-                @JacksonXmlProperty(localName = "node")
                 private List<Node> nodes;
 
                 @Data
                 public static class Node {
-                    @JacksonXmlProperty(isAttribute = true)
                     @Validator({"dev", "prod"})
                     private String mode;
 
-                    @JacksonXmlProperty(isAttribute = true)
                     private String address;
                 }
             }
@@ -106,22 +97,17 @@ public class SpringBootModule extends Module {
             @Data
             @ExtensionClass
             public static class Account {
-                @JacksonXmlProperty(localName = "test-account")
                 private TestAccount testAccount;
 
                 @Data
                 public static class TestAccount {
-                    @JacksonXmlProperty(isAttribute = true)
                     private String username;
 
-                    @JacksonXmlProperty(isAttribute = true)
                     private String password;
 
-                    @JacksonXmlProperty(isAttribute = true)
                     @Validator({"admin"})
                     private String role;
 
-                    @JacksonXmlProperty(isAttribute = true)
                     private String profile;
                 }
             }
@@ -129,8 +115,11 @@ public class SpringBootModule extends Module {
 
         @Data
         @ExtensionClass
-        public static class Swagger2 {
+        public static class Swagger2 extends Extension {
 
+            public Swagger2() {
+                setId(ModuleConstant.SPRING_BOOT_EXTENSION_SWAGGER2);
+            }
         }
     }
 

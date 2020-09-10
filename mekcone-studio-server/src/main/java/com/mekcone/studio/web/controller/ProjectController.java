@@ -1,13 +1,14 @@
 package com.mekcone.studio.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mekcone.studio.codegen.constant.DataType;
-import com.mekcone.studio.codegen.model.project.Project;
+import com.mekcone.studio.web.entity.Project;
+import com.mekcone.studio.web.mapper.ProjectMapper;
 import com.mekcone.studio.web.service.ProjectService;
 import com.mekcone.webplatform.common.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,16 +19,24 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/excrud/project")
+@RequestMapping(value = "/api/studio/project", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProjectController {
+
+    @Autowired
+    private ProjectMapper projectMapper;
 
     @Autowired
     private ProjectService projectService;
 
+    @GetMapping("/test")
+    public Response test() {
+        return Response.success(projectMapper.retrieveTest());
+    }
+
     @GetMapping("/{projectId}")
     public Response retrieve(@PathVariable String projectId) {
         Project project = projectService.retrieve(projectId);
-        log.info("Retrieve project: {}", project.toJSONString());
+        log.info("Retrieve project: {}", project.toString());
         return Response.success(project);
     }
 
@@ -49,11 +58,11 @@ public class ProjectController {
         }
 
         try {
-            XmlMapper xmlMapper = new XmlMapper();
+            /*XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             Project project = xmlMapper.readValue(new String(file.getBytes()), Project.class);
-            log.info("Save imported project: {}", project.toJSONString());
-            projectService.saveProject(project);
+            log.info("Save imported project: {}", project.toString());
+            projectService.saveProject(project);*/
             return Response.success();
         } catch (Exception e) {
             e.printStackTrace();

@@ -28,7 +28,7 @@ public class SpringBootDataClass {
     private boolean getterAndSetterAvailable = true;
 
     @Data
-    class MemberVariable {
+    static class MemberVariable {
         String type;
         String name;
     }
@@ -56,10 +56,15 @@ public class SpringBootDataClass {
 
     private void addGetterAndSetter() {
         for (Column column : table.getColumns()) {
+            String type = column.getType();
+            if (!type.equals(DataType.JAVA_INT)) {
+                type = DataType.JAVA_STRING;
+            }
+
             // Getter
             MethodDeclaration getterMethodDeclaration =
                     entityClassDeclaration.addMethod("get" + column.getUpperCamelCaseName(table.getName()), Modifier.Keyword.PUBLIC);
-            getterMethodDeclaration.setType(DataType.JAVA_STRING);
+            getterMethodDeclaration.setType(type);
             BlockStmt getterMethodBody = new BlockStmt();
             getterMethodBody.addAndGetStatement(new ReturnStmt(column.getCamelCaseName(table.getName())));
             getterMethodDeclaration.setBody(getterMethodBody);
@@ -68,7 +73,8 @@ public class SpringBootDataClass {
             MethodDeclaration setterMethodDeclaration =
                     entityClassDeclaration.addMethod("set" + column.getUpperCamelCaseName(table.getName()), Modifier.Keyword.PUBLIC);
             setterMethodDeclaration.setType(DataType.JAVA_VOID);
-            setterMethodDeclaration.addParameter(DataType.JAVA_STRING, column.getCamelCaseName(table.getName()));
+
+            setterMethodDeclaration.addParameter(type, column.getCamelCaseName(table.getName()));
             BlockStmt setterMethodBody = new BlockStmt();
             AssignExpr assignExpr = new AssignExpr();
             assignExpr.setOperator(AssignExpr.Operator.ASSIGN);

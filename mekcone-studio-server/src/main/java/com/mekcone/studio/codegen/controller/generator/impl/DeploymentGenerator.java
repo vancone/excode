@@ -5,6 +5,7 @@ import com.mekcone.studio.codegen.controller.extmgr.deployment.NginxExtensionMan
 import com.mekcone.studio.codegen.controller.generator.Generator;
 import com.mekcone.studio.codegen.model.module.Module;
 import com.mekcone.studio.codegen.model.module.impl.DeploymentModule;
+import com.mekcone.studio.codegen.model.module.impl.SpringBootModule;
 import com.mekcone.studio.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,18 +21,27 @@ public class DeploymentGenerator extends Generator {
             addDockerInstallScript(operatingSystem);
         }
 
-        for (Module.Extension extension: module.asDeploymentModule().getExtensions()) {
-            if (!extension.isUse()) {
+        /*DeploymentModule.DeploymentExtensions deploymentExtensions = module.asDeploymentModule().getExtensions();
+        if (deploymentExtensions.getNginx() != null && deploymentExtensions.getNginx().isUse()) {
+            NginxExtensionManager nginxExtensionManager = new NginxExtensionManager(this, project);
+        }*/
+
+        for (Module.Extension extension: module.asDeploymentModule().getExtensions().asList()) {
+            if (extension == null || !extension.isUse()) {
                 continue;
             }
-            switch (extension.getId()) {
-                case ModuleConstant.DEPLOYMENT_EXTENSION_MARIADB:
-                    break;
-                case ModuleConstant.DEPLOYMENT_EXTENSION_NGINX:
-                    NginxExtensionManager nginxExtensionManager = new NginxExtensionManager(this, project);
-                    break;
+
+            if (extension instanceof DeploymentModule.DeploymentExtensions.Nginx) {
+                NginxExtensionManager nginxExtensionManager = new NginxExtensionManager(this, project);
             }
+
+            // Processing other extensions
         }
+
+
+
+
+
         write();
     }
 

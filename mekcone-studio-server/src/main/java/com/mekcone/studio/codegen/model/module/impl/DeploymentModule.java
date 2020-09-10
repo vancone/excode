@@ -1,7 +1,5 @@
 package com.mekcone.studio.codegen.model.module.impl;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.mekcone.studio.codegen.annotation.ExtensionClass;
 import com.mekcone.studio.codegen.annotation.Validator;
 import com.mekcone.studio.codegen.model.module.Module;
@@ -14,8 +12,6 @@ import java.util.List;
 @Data
 public class DeploymentModule extends Module {
 
-    @JacksonXmlElementWrapper(localName = "operating-systems")
-    @JacksonXmlProperty(localName = "operating-system")
     private List<OperatingSystem> operatingSystems = new ArrayList<>();
 
     @Validator({"docker", "supervisor", "systemd"})
@@ -29,20 +25,26 @@ public class DeploymentModule extends Module {
         private String version;
     }
 
-    private Properties properties;
+    private DeploymentExtensions extensions;
 
     @Data
-    public static class Properties {
+    public static class DeploymentExtensions {
 
         private Nginx nginx;
         private Redis redis;
 
+        public List<Extension> asList() {
+            List<Extension> extensionList = new ArrayList<>();
+            extensionList.add(nginx);
+            extensionList.add(redis);
+            return extensionList;
+        }
+
         @Data
         @ExtensionClass
-        public static class Nginx {
+        public static class Nginx extends Extension {
             private String user = "www-data";
 
-            @JacksonXmlProperty(localName = "worker-processes")
             private String workerProcesses = "auto";
 
             private String pid = "/run/nginx.pid";
@@ -50,56 +52,41 @@ public class DeploymentModule extends Module {
             private String include = "/etc/nginx/modules-enabled/*.conf";
 
             // Events
-            @JacksonXmlProperty(localName = "worker-connections")
             private int workerConnections = 768;
 
             private Http http;
 
             @Data
             public static class Http {
-                @JacksonXmlProperty(localName = "send-file")
                 private boolean sendfile = true;
 
-                @JacksonXmlProperty(localName = "tcp-nopush")
                 private boolean tcpNopush = true;
 
-                @JacksonXmlProperty(localName = "tcp-nodelay")
                 private boolean tcpNodelay = true;
 
-                @JacksonXmlProperty(localName = "keepalive-timeout")
                 private int keepaliveTimeout = 65;
 
-                @JacksonXmlProperty(localName = "types-hash-max-size")
                 private int typesHashMaxSize = 2048;
 
-                @JacksonXmlProperty(localName = "http-include")
                 private String httpInclude = "/etc/nginx/mime.types";
 
-                @JacksonXmlProperty(localName = "default-type")
                 private String defaultType = "application/octet-stream";
 
-                @JacksonXmlProperty(localName = "ssl-protocols")
                 private String sslProtocols = "TLSv1 TLSv1.1 TLSv1.2 TLSv1.3";
 
-                @JacksonXmlProperty(localName = "ssl-prefer-server-ciphers")
                 private boolean sslPreferServerCiphers = true;
 
-                @JacksonXmlProperty(localName = "access-log")
                 private String accessLog = "/var/log/nginx/access.log";
 
-                @JacksonXmlProperty(localName = "error-log")
                 private String errorLog = "/var/log/nginx/error.log";
 
                 private boolean gzip = true;
 
-                @JacksonXmlProperty(localName = "virtual-host-configs-include")
                 private List<String> virtualHostConfigsInclude = new ArrayList<>(Arrays.asList(
                         "include /etc/nginx/conf.d/*.conf",
                         "include /etc/nginx/sites-enabled/*"
                 ));
 
-                @JacksonXmlElementWrapper(localName = "servers")
-                @JacksonXmlProperty(localName = "server")
                 private List<Server> servers = new ArrayList<>();
 
                 @Data
@@ -138,7 +125,7 @@ public class DeploymentModule extends Module {
 
         @Data
         @ExtensionClass
-        public static class Redis {
+        public static class Redis extends Extension {
             private int bind;
             private boolean protectedMode;
             private int port;

@@ -61,4 +61,7 @@ public interface ModuleConstant {
     String SPRING_BOOT_EXTENSION_LOMBOK = "lombok";
     String SPRING_BOOT_EXTENSION_MEKCONE_CLOUD = "mekcone-cloud";
     String SPRING_BOOT_EXTENSION_SWAGGER2 = "swagger2";
+
+    String SPRING_BOOT_PROPERTY_APPLICATION_NAME = "application-name";
+    String SPRING_BOOT_PROPERTY_SERVER_PORT = "server-port";
 }

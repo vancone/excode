@@ -1,6 +1,7 @@
 package com.mekcone.studio.web.service.impl;
 
-import com.mekcone.studio.codegen.model.project.Project;
+import com.mekcone.studio.web.entity.Project;
+import com.mekcone.studio.web.mapper.ProjectMapper;
 import com.mekcone.studio.web.repository.ProjectRepository;
 import com.mekcone.studio.web.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private ProjectMapper projectMapper;
+
     @Override
     public void exportProject(HttpServletResponse response, String fileType, String projectId) {
         response.setContentType("application/force-download");
@@ -27,7 +31,7 @@ public class ProjectServiceImpl implements ProjectService {
             OutputStream outputStream = response.getOutputStream();
             Project project = projectRepository.find(projectId);
             if (project != null) {
-                outputStream.write(project.toXMLString().getBytes(StandardCharsets.UTF_8));
+                outputStream.write(project.toString().getBytes(StandardCharsets.UTF_8));
             }
             outputStream.close();
         } catch (Exception e) {
@@ -42,7 +46,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<Project> retrieveList() {
-        return projectRepository.findAll();
+//        return projectRepository.findAll();
+        return projectMapper.retrieveList();
     }
 
     @Override

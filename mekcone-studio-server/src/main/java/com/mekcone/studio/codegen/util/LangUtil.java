@@ -15,7 +15,7 @@ public class LangUtil {
     private static List<PropertiesParser> propertiesParsers = new ArrayList<>();
 
     private static void load() {
-        File i18nPath = new File(UrlPath.EXCRUD_HOME +
+        File i18nPath = new File(UrlPath.MEKCONE_STUDIO_HOME +
                 "modules" + File.separator + ModuleConstant.MODULE_TYPE_DOCUMENT + File.separator +
                 "i18n" + File.separator);
         for (File file: i18nPath.listFiles()) {

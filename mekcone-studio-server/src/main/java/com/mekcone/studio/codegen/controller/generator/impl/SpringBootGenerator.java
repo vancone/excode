@@ -62,7 +62,7 @@ public class SpringBootGenerator extends Generator {
         springBootModule.getMavenProjectObjectModel().addDependencies("mybatis");
         PropertiesParser applicationPropertiesParser = springBootModule.getApplicationPropertiesParser();
 
-        int serverPort = ((SpringBootModule)module).getProperties().getServerPort();
+        int serverPort = Integer.parseInt(((SpringBootModule)module).getProperties().get(ModuleConstant.SPRING_BOOT_PROPERTY_SERVER_PORT));
         if (serverPort > -1 && serverPort < 65536) {
             applicationPropertiesParser.add("server.port", Integer.toString(serverPort));
         }
@@ -94,17 +94,20 @@ public class SpringBootGenerator extends Generator {
         }
 
         // Remove disabled extensions
-        springBootModule.getExtensions().removeIf(extension -> !extension.isUse());
+        springBootModule.getExtensions().asList().removeIf(extension -> extension == null || !extension.isUse());
 
         List<String> enableExtensionNames = new ArrayList<>();
-        for (Module.Extension extension: springBootModule.getExtensions()) {
-            enableExtensionNames.add(extension.getId());
+        for (Module.Extension extension: springBootModule.getExtensions().asList()) {
+            if (extension != null) {
+                enableExtensionNames.add(extension.getId());
+            }
         }
 
         log.info("Enable extensions: {}", StringUtils.join(enableExtensionNames));
 
         // Run extension manager
-        springBootModule.getExtensions().forEach(extension -> {
+        springBootModule.getExtensions().asList().forEach(extension -> {
+            if (extension == null) return;
             log.info(StringUtils.center("ext::" + extension.getId(), 100, "-"));
 
             switch (extension.getId()) {

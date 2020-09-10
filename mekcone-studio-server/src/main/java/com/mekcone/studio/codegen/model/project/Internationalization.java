@@ -1,7 +1,5 @@
 package com.mekcone.studio.codegen.model.project;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -10,19 +8,14 @@ import java.util.List;
 @Data
 public class Internationalization {
 
-    @JacksonXmlProperty(isAttribute = true, localName = "default")
     private String defaultValue;
 
-    @JacksonXmlElementWrapper(useWrapping = false)
-    @JacksonXmlProperty(localName = "word")
     private List<Word> words = new ArrayList<>();
 
     @Data
     static class Word {
-        @JacksonXmlProperty(isAttribute = true)
         private String lang;
 
-        @JacksonXmlProperty(isAttribute = true)
         private String value;
     }
 

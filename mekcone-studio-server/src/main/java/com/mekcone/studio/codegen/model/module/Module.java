@@ -1,29 +1,33 @@
 package com.mekcone.studio.codegen.model.module;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mekcone.studio.codegen.model.module.impl.*;
 import com.mekcone.studio.codegen.util.StrUtil;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public abstract class Module {
     private String type;
     private boolean use;
 
-    @JacksonXmlElementWrapper(localName = "extensions")
+    private Map<String, String> properties = new HashMap<>();
+
+    /*@JacksonXmlElementWrapper(localName = "extensions")
     @JacksonXmlProperty(localName = "extension")
     private List<Extension> extensions = new ArrayList<>();
+    */
 
     @Data
     public static class Extension {
-        @JacksonXmlProperty(isAttribute = true)
+//        @JacksonXmlProperty(isAttribute = true)
+        @JsonIgnore
         private String id;
 
-        @JacksonXmlProperty(isAttribute = true)
         private boolean use;
     }
 

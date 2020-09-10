@@ -9,9 +9,9 @@
               <span>About</span>
             </div>
             <div class="text item" style="font-size:14px">
-              <p>MekCone ExCRUD (v0.0.1)</p>
+              <p>MekCone Studio (v0.0.1)</p>
               <p>&copy; 2020 MekCone. All rights reserved.</p>
-              <el-link href="https://www.mekcone.com/tos" target="_blank" type="primary">Terms of service</el-link>
+              <el-link href="https://studio.mekcone.com/tos" target="_blank" type="primary">Terms of service</el-link>
             </div>
           </el-card>
         </div>

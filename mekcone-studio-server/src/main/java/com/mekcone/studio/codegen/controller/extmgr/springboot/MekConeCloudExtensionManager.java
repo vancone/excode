@@ -37,7 +37,7 @@ public class MekConeCloudExtensionManager {
         PropertiesParser propertiesParser = springBootModule.getApplicationPropertiesParser();
 
         // Set application name
-        String applicationName = springBootModule.getProperties().getApplicationName();
+        String applicationName = springBootModule.getProperties().get(ModuleConstant.SPRING_BOOT_PROPERTY_APPLICATION_NAME);
         if (StringUtils.isNotBlank(applicationName)) {
             propertiesParser.add("spring.application.name", applicationName);
         } else {
@@ -45,9 +45,9 @@ public class MekConeCloudExtensionManager {
         }
 
         // Set Eureka URL
-        String currentMode = springBootModule.getProperties().getMekConeCloud().getMode();
+        String currentMode = springBootModule.getExtensions().getMekConeCloud().getMode();
         String urlString = "";
-        List<SpringBootModule.SpringBootProperties.MekConeCloud.Router.Node> nodes = springBootModule.getProperties().getMekConeCloud().getRouter().getNodes();
+        List<SpringBootModule.SpringBootExtensions.MekConeCloud.Router.Node> nodes = springBootModule.getExtensions().getMekConeCloud().getRouter().getNodes();
         for (int i = 0; i < nodes.size(); i ++) {
             if (nodes.get(i).getMode().equals(currentMode)) {
                 urlString += "http://" + nodes.get(i).getAddress() + ":6600/eureka";

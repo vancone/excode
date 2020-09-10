@@ -2,7 +2,7 @@
   <div id="app">
     <div class="top-bar">
       <img src="./assets/png/logo.png" class="app-logo" />
-      <h1 class="app-title">CRUD</h1>
+      <h1 class="app-title">Studio</h1>
     </div>
     <div class="left-pane">
       <el-menu

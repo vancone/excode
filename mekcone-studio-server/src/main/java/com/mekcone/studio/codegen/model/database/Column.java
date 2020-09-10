@@ -1,34 +1,25 @@
 package com.mekcone.studio.codegen.model.database;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.mekcone.studio.codegen.util.StrUtil;
 import lombok.Data;
 
 @Data
 public class Column {
-    @JacksonXmlProperty(isAttribute = true)
     private String name;
 
-    @JacksonXmlProperty(isAttribute = true)
     private String type;
 
-    @JacksonXmlProperty(isAttribute = true)
     private Integer length;
 
-    @JacksonXmlProperty(isAttribute = true)
     private boolean primaryKey;
 
-    @JacksonXmlProperty(isAttribute = true)
     private String bind;
 
-    @JacksonXmlProperty(isAttribute = true)
     private boolean filter;
 
-    @JacksonXmlProperty(isAttribute = true)
     private boolean detail;
 
-    @JacksonXmlProperty(isAttribute = true)
     private String description;
 
     @JsonIgnore
