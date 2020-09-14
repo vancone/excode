@@ -4,6 +4,11 @@ import com.mongodb.client.*;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 
+/*
+ * Author: Tenton Lien
+ * Date: 7/1/2020
+ */
+
 @Slf4j
 public class MongoDuplicator {
 

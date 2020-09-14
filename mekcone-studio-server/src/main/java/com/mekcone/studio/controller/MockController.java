@@ -1,8 +1,5 @@
 package com.mekcone.studio.controller;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mekcone.webplatform.common.model.Response;
 import lombok.Data;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/*
+ * Author: Tenton Lien
+ * Date: 9/12/2020
+ */
 
 @RestController
 @RequestMapping("/api/studio/user")

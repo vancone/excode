@@ -17,12 +17,13 @@ import java.util.List;
 
 /*
  * Author: Tenton Lien
+ * Date: 9/14/2020
  */
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/studio/project", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ProjectController {
+@RequestMapping(value = "/api/studio/extension", produces = MediaType.APPLICATION_JSON_VALUE)
+public class ExtensionController {
 
     @Autowired
     private ProjectService projectService;

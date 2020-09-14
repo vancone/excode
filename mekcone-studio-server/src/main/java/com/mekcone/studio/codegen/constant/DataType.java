@@ -1,5 +1,9 @@
 package com.mekcone.studio.codegen.constant;
 
+/*
+ * Author: Tenton Lien
+ */
+
 public interface DataType {
     // Java basic types
     String JAVA_BYTE = "byte";

@@ -8,6 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 
+/*
+ * Author: Tenton Lien
+ */
+
 @Slf4j
 public class VueElementAdminGenerator extends Generator {
 

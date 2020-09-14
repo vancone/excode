@@ -1,5 +1,9 @@
 package com.mekcone.studio.codegen.enums;
 
+/*
+ * Author: Tenton Lien
+ */
+
 public enum ErrorEnum {
     // General errors (E000000 ~ E000999)
     UNKNOWN_ERROR("E000000", "Unknown error"),

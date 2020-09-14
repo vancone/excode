@@ -6,17 +6,22 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/*
+ * Author: Tenton Lien
+ * Date: 9/12/2020
+ */
+
 @Configuration
 public class CrossOriginConfig {
     private CorsConfiguration buildConfig(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedHeader("*"); // 允许任何的head头部
+        corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedOrigin("*");
-        corsConfiguration.addAllowedOrigin("*"); // 允许任何域名使用
-        corsConfiguration.addAllowedMethod("*"); // 允许任何的请求方法
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod("*");
         corsConfiguration.setAllowCredentials(true);
         return corsConfiguration;
-    } // 添加CorsFilter拦截器，对任意的请求使用
+    }
 
     @Bean
     public CorsFilter corsFilter() {

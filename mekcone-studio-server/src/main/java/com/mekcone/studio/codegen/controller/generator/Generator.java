@@ -18,6 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+ * Author: Tenton Lien
+ */
+
 // Every generator should extends this base class
 @Slf4j
 public abstract class Generator {

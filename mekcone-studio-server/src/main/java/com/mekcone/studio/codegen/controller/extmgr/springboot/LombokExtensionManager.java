@@ -6,6 +6,10 @@ import com.mekcone.studio.codegen.model.file.springboot.SpringBootDataClass;
 import com.mekcone.studio.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
 
+/*
+ * Author: Tenton Lien
+ */
+
 @Slf4j
 public class LombokExtensionManager {
 

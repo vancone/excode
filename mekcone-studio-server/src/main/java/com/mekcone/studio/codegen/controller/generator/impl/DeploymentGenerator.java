@@ -9,6 +9,11 @@ import com.mekcone.studio.codegen.model.module.impl.SpringBootModule;
 import com.mekcone.studio.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
 
+/*
+ * Author: Tenton Lien
+ * Date: 6/15/2020
+ */
+
 @Slf4j
 public class DeploymentGenerator extends Generator {
     public DeploymentGenerator(Project project) {

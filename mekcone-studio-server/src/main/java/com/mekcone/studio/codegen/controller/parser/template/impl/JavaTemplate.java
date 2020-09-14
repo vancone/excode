@@ -16,6 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+/*
+ * Author: Tenton Lien
+ */
+
 @Data
 @Slf4j
 public class JavaTemplate implements Template {

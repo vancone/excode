@@ -11,6 +11,11 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 
+/*
+ * Author: Tenton Lien
+ * Date: 6/27/2020
+ */
+
 @Slf4j
 public class SessionManager {
 

@@ -32,6 +32,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Author: Tenton Lien
+ */
+
 @Slf4j
 public class SpringBootGenerator extends Generator {
 

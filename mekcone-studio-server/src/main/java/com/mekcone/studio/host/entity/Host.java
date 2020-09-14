@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetAddress;
 
+/*
+ * Author: Tenton Lien
+ */
+
 @Slf4j
 @Data
 public class Host implements Serializable {

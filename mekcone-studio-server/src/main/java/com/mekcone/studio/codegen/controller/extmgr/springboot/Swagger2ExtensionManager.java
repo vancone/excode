@@ -16,6 +16,10 @@ import com.mekcone.studio.codegen.util.LangUtil;
 
 import java.util.List;
 
+/*
+ * Author: Tenton Lien
+ */
+
 public class Swagger2ExtensionManager {
 
     private Project project;

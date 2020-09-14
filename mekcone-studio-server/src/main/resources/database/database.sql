@@ -1,3 +1,6 @@
+-- Author: Tenton Lien
+-- Date: 9/10/2020
+
 CREATE TABLE database (
     `id` VARCHAR(50),
     `type` VARCHAR(50),

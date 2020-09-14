@@ -1,5 +1,9 @@
 package com.mekcone.studio.codegen.util;
 
+/*
+ * Author: Tenton Lien
+ */
+
 public class StrUtil {
     public static String camelCase(String data) {
         String[] stringArray;

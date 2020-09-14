@@ -16,6 +16,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Optional;
 
+/*
+ * Author: Tenton Lien
+ */
+
 @Service
 public class ProjectServiceImpl implements ProjectService {
 

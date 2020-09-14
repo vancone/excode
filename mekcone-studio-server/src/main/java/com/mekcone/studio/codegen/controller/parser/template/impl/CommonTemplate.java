@@ -4,6 +4,10 @@ import com.mekcone.studio.codegen.controller.parser.template.Template;
 import com.mekcone.studio.codegen.util.FileUtil;
 import lombok.Getter;
 
+/*
+ * Author: Tenton Lien
+ */
+
 public class CommonTemplate implements Template {
     @Getter
     private String template;

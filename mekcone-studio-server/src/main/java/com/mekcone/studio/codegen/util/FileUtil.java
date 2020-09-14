@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/*
+ * Author: Tenton Lien
+ */
+
 @Slf4j
 public class FileUtil {
     public static String read(String path) {

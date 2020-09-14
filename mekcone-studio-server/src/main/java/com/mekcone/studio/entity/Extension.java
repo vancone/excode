@@ -9,15 +9,15 @@ import java.util.List;
 
 /*
  * Author: Tenton Lien
- * Date: 9/12/2020
+ * Date: 9/14/2020
  */
 
 @Data
 @Entity
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Table(name = "module")
-public class Module {
+@Table(name = "extension")
+public class Extension {
 
     @Id
     @GeneratedValue(generator = "jpa-uuid")
@@ -27,8 +27,8 @@ public class Module {
 
     private String name;
 
-    private String projectId;
+    @ManyToOne
+    private Module module;
 
-    @OneToMany(mappedBy = "module")
-    private List<Extension> extensions;
+
 }

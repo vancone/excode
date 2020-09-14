@@ -4,6 +4,10 @@ import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import lombok.extern.slf4j.Slf4j;
 
+/*
+ * Author: Tenton Lien
+ */
+
 @Slf4j
 public class CodeFormatter {
     public static String formatJavaCode(String code) {

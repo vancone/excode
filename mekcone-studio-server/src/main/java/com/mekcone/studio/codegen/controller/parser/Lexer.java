@@ -3,6 +3,11 @@ package com.mekcone.studio.codegen.controller.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Author: Tenton Lien
+ * Date: 7/6/2020
+ */
+
 public class Lexer {
 
     private List<String> keywords = new ArrayList<>();

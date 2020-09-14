@@ -1,5 +1,9 @@
 package com.mekcone.studio.codegen.constant;
 
+/*
+ * Author: Tenton Lien
+ */
+
 public interface LanguageType {
     String AFAR = "aa";
     String ABKHAZIAN = "ab";
