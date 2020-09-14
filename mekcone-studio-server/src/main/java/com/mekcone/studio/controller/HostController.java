@@ -1,6 +1,5 @@
-package com.mekcone.studio.web.controller;
+package com.mekcone.studio.controller;
 
-import com.mekcone.studio.web.repository.HostRepository;
 import com.mekcone.webplatform.common.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,16 +10,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/studio/host")
 public class HostController {
-    @Autowired
-    private HostRepository hostRepository;
-
-    @GetMapping("/{hostId}")
-    public Response retrieve(@PathVariable String hostId) {
-        return Response.success(hostRepository.findAll());
-    }
-
-    @GetMapping
-    public Response retrieveList() {
-        return Response.success(hostRepository.findAll());
-    }
 }

@@ -39,12 +39,12 @@ export default {
     },
     getList () {
       this.projectList = []
-      this.axios.get('/api/excrud/project').then(res => {
+      this.axios.get('/api/studio/project').then(res => {
         if (res.data.code === 0) {
           res.data.data.map(item => {
             this.projectList.push({
               id: item.id,
-              name: item.name.defaultValue,
+              name: item.name,
               group: item.groupId,
               modifiedTime: item.modifiedTime
             })

@@ -80,7 +80,7 @@ export default {
     },
     loadProject () {
       this.axios
-        .get('/api/excrud/project/' + this.$utils.getUrlKey('id'))
+        .get('/api/studio/project/' + this.$utils.getUrlKey('id'))
         .then(res => {
           if (res.data.code === 0) {
             this.$notify({

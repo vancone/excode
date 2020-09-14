@@ -1,10 +1,8 @@
-package com.mekcone.studio.web.controller;
+package com.mekcone.studio.controller;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mekcone.studio.codegen.constant.DataType;
-import com.mekcone.studio.web.entity.Project;
-import com.mekcone.studio.web.mapper.ProjectMapper;
-import com.mekcone.studio.web.service.ProjectService;
+import com.mekcone.studio.entity.Project;
+import com.mekcone.studio.service.ProjectService;
 import com.mekcone.webplatform.common.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,31 +21,36 @@ import java.util.List;
 public class ProjectController {
 
     @Autowired
-    private ProjectMapper projectMapper;
-
-    @Autowired
     private ProjectService projectService;
 
-    @GetMapping("/test")
-    public Response test() {
-        return Response.success(projectMapper.retrieveTest());
+    @PostMapping
+    public Response create(@RequestBody Project project) {
+        projectService.create(project);
+        return Response.success();
     }
 
     @GetMapping("/{projectId}")
-    public Response retrieve(@PathVariable String projectId) {
-        Project project = projectService.retrieve(projectId);
+    public Response findById(@PathVariable String projectId) {
+        Project project = projectService.findById(projectId);
         log.info("Retrieve project: {}", project.toString());
         return Response.success(project);
     }
 
     @GetMapping
-    public Response retrieveList() {
-        return Response.success(projectService.retrieveList());
+    public Response findAll(@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+                                 @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+        return Response.success(projectService.findAll(pageNo, pageSize));
     }
 
     @PutMapping
     public Response update(@RequestBody Project project) {
-        projectService.saveProject(project);
+        projectService.save(project);
+        return Response.success();
+    }
+
+    @DeleteMapping("/{projectId}")
+    public Response delete(@PathVariable String projectId) {
+        projectService.delete(projectId);
         return Response.success();
     }
 
@@ -72,13 +75,7 @@ public class ProjectController {
 
     @GetMapping("/download/{fileType}/{projectId}")
     public void downloadFile(HttpServletResponse response, @PathVariable String fileType, @PathVariable String projectId) {
-        projectService.exportProject(response, fileType, projectId);
-    }
-
-    @DeleteMapping("/{projectId}")
-    public Response deleteProject(@PathVariable String projectId) {
-        projectService.deleteProject(projectId);
-        return Response.success();
+        projectService.export(response, fileType, projectId);
     }
 
     @GetMapping("/dbTypeList")

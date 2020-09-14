@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 1000 1000" style="enable-background:new 0 0 1000 1000;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#0499FD;}
 	.st1{display:none;fill:#EC5362;}
 	.st2{fill:none;}
-	.st3{fill:#FFFFFF;}
+	.st3{display:none;fill:#FFFFFF;enable-background:new    ;}
 	.st4{font-family:'Consolas';}
 	.st5{font-size:800px;}
-	.st6{fill:#CDEBFF;}
+	.st6{fill:#FFFFFF;}
 </style>
 <circle class="st0" cx="500" cy="500" r="500"/>
 <rect x="233" y="298" class="st1" width="292" height="405"/>
 <rect x="366" y="410" class="st1" width="219" height="183"/>
 <rect x="91.1" y="205" class="st2" width="442.9" height="675"/>
 <rect x="402.5" y="205" class="st2" width="547.5" height="577"/>
-<text transform="matrix(1 0 0 1 91.1113 756.9902)" class="st3 st4 st5">E</text>
-<text transform="matrix(1 0 0 1 400.4761 756.9902)" class="st3 st4 st5">X</text>
-<polygon class="st6" points="661.5,492.6 577.4,493.9 737.9,245.5 818,245.5 "/>
-<polygon class="st6" points="743,757 830.9,757 661.5,492.6 577.4,493.9 "/>
+<text transform="matrix(1 0 0 1 330 716.9902)" class="st3 st4 st5">E</text>
+<g>
+	<polygon class="st6" points="270.1,255.1 411.5,500 341.5,500 200.1,255.1 	"/>
+	<polygon class="st6" points="411.5,500 270.1,744.9 200.1,744.9 341.5,500 	"/>
+</g>
+<g>
+	<polygon class="st6" points="589.8,255.1 731.2,500 661.1,500 519.8,255.1 	"/>
+	<polygon class="st6" points="731.2,500 589.8,744.9 519.8,744.9 661.1,500 	"/>
+</g>
+<g>
+	<polygon class="st6" points="687.5,255.1 828.9,500 758.9,500 617.5,255.1 	"/>
+	<polygon class="st6" points="828.9,500 687.5,744.9 617.5,744.9 758.9,500 	"/>
+</g>
+<rect x="489.5" y="255.1" class="st6" width="198" height="51"/>
+<rect x="509.5" y="693.9" class="st6" width="178" height="51"/>
+<g>
+	<polygon class="st6" points="482.9,255.1 341.5,500 411.5,500 552.9,255.1 	"/>
+	<polygon class="st6" points="341.5,500 482.9,744.9 552.9,744.9 411.5,500 	"/>
+</g>
 </svg>
