@@ -38,7 +38,7 @@ public class ProjectController {
 
     @GetMapping
     public Response findAll(@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-                                 @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
+                            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
         return Response.success(projectService.findAll(pageNo, pageSize));
     }
 
@@ -89,18 +89,5 @@ public class ProjectController {
             }
         }
         return Response.success(dbTypes);
-    }
-
-    @PostMapping("/login")
-    public String fakeLogin() {
-        return "{\"code\":0,\"data\":{\"token\":\"admin-token\"}}";
-    }
-
-    @GetMapping("/info")
-    public String fakeUserInfo(@RequestParam String token) {
-        if (token.equals("admin-token")) {
-            return "{\"code\":0,\"data\":{\"roles\":[\"admin\"],\"introduction\":\"I am a super administrator\",\"avatar\":\"https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif\",\"name\":\"Super Admin\"}}";
-        }
-        return "{\"websocket\":true,\"origins\":[\"*:*\"],\"cookie_needed\":false,\"entropy\":191921556}";
     }
 }

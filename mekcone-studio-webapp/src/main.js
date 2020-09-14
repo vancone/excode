@@ -1,30 +1,39 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+// with polyfills
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+
 import Vue from 'vue'
-import App from './App'
+import App from './App.vue'
 import router from './router'
-import ElementUI from 'element-ui'
-// import 'element-ui/lib/theme-chalk/index.css'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
-import '@/styles/element-variables.scss'
-import locale from 'element-ui/lib/locale/lang/en'
-import Icon from 'vue2-svg-icon/Icon'
+import store from './store/'
+import i18n from './locales'
+import { VueAxios } from './utils/request'
+import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
+import themePluginConfig from '../config/themePluginConfig'
 
-import utils from './utils'
+// mock
+// WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
+import './mock'
 
-Vue.prototype.$utils = utils
+import bootstrap from './core/bootstrap'
+import './core/lazy_use'
+import './permission' // permission control
+import './utils/filter' // global filter
+import './global.less'
 
 Vue.config.productionTip = false
 
-Vue.use(ElementUI, { locale })
-Vue.use(VueAxios, axios)
-Vue.component('icon', Icon)
+// mount axios to `Vue.$http` and `this.$http`
+Vue.use(VueAxios)
+Vue.component('pro-layout', ProLayout)
+Vue.component('page-header-wrapper', PageHeaderWrapper)
 
-/* eslint-disable no-new */
+window.umi_plugin_ant_themeVar = themePluginConfig.theme
+
 new Vue({
-  el: '#app',
   router,
-  components: { App },
-  template: '<App/>'
-})
+  store,
+  i18n,
+  created: bootstrap,
+  render: h => h(App)
+}).$mount('#app')
