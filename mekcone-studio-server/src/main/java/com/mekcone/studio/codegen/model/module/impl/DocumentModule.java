@@ -1,7 +1,7 @@
 package com.mekcone.studio.codegen.model.module.impl;
 
 import com.mekcone.studio.codegen.annotation.Validator;
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.ModuleConstant;
 import com.mekcone.studio.codegen.model.module.Module;
 import lombok.Data;
 import org.springframework.http.HttpMethod;

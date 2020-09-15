@@ -4,7 +4,7 @@
 DROP TABLE IF EXISTS `module`;
 
 CREATE TABLE module (
-    `id` VARCHAR(50),
+    `id` CHAR(32) PRIMARY KEY,
     `type` VARCHAR(50),
     `name` VARCHAR(50),
     `project_id` VARCHAR(50)

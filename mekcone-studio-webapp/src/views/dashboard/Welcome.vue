@@ -36,9 +36,16 @@
           :md="24"
           :sm="24"
           :xs="24">
+          <a-card
+            title="Projects"
+            style="margin-bottom: 24px;padding:10px;border-radius: 5px;"
+            :bordered="false"
+            :body-style="{padding: 0}"
+          >
           <a-table :columns="columns" :data-source="data" style="background:white">
             <a slot="name" slot-scope="text">{{ text }}</a>
           </a-table>
+          </a-card>
         </a-col>
         <a-col
           style="padding: 0 12px"
@@ -48,7 +55,7 @@
           :sm="24"
           :xs="24">
           <a-card
-            title="快速开始 / 便捷导航"
+            title="Quick Start"
             style="margin-bottom: 24px"
             :bordered="false"
             :body-style="{padding: 0}"
@@ -57,22 +64,7 @@
               <a>操作一</a>
               <a>操作二</a>
               <a>操作三</a>
-              <a>操作四</a>
-              <a>操作五</a>
-              <a>操作六</a>
               <a-button size="small" type="primary" ghost icon="plus">添加</a-button>
-            </div>
-          </a-card>
-          <a-card
-            title="XX 指数"
-            style="margin-bottom: 24px"
-            :loading="radarLoading"
-            :bordered="false"
-            :body-style="{ padding: 0 }"
-          >
-            <div style="min-height: 400px;">
-              <!-- :scale="scale" :axis1Opts="axis1Opts" :axis2Opts="axis2Opts"  -->
-              <radar :data="radarData" />
             </div>
           </a-card>
           <a-card :loading="loading" title="团队" :bordered="false">
@@ -146,13 +138,13 @@ export default {
           dataIndex: 'modifiedTime',
           key: 'modifiedTime',
           width: 200
-        },
-        {
+        }
+        /* {
           title: 'Address',
           dataIndex: 'address',
           key: 'address 1',
           ellipsis: true
-        }
+        } */
       ],
 
       data: [],

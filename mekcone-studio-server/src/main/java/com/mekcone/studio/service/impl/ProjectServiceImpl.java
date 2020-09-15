@@ -60,6 +60,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public void generate(Project project) {
+
+    }
+
+    @Override
     public void export(HttpServletResponse response, String fileType, String projectId) {
         response.setContentType("application/force-download");
         response.addHeader("Content-Disposition", "attachment;fileName=" + projectId + ".xml");

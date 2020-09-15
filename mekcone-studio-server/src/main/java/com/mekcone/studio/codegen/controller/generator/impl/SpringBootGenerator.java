@@ -6,7 +6,7 @@ import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.ArrayInitializerExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.ModuleConstant;
 import com.mekcone.studio.codegen.controller.extmgr.datasource.SqlExtensionManager;
 import com.mekcone.studio.codegen.controller.extmgr.springboot.CrossOriginExtensionManager;
 import com.mekcone.studio.codegen.controller.extmgr.springboot.LombokExtensionManager;

@@ -1,4 +1,4 @@
-package com.mekcone.studio.codegen.constant;
+package com.mekcone.studio.constant;
 
 import java.io.File;
 

@@ -1,11 +1,11 @@
 package com.mekcone.studio.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
 
 /*
  * Author: Tenton Lien
@@ -27,8 +27,9 @@ public class Extension {
 
     private String name;
 
-    @ManyToOne
+    @JsonBackReference
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
+    @JoinColumn(name = "module_id")
     private Module module;
-
 
 }

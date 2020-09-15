@@ -1,6 +1,6 @@
 package com.mekcone.studio.codegen.controller.extmgr.springboot;
 
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.ModuleConstant;
 import com.mekcone.studio.codegen.model.module.impl.SpringBootModule;
 import com.mekcone.studio.codegen.model.file.springboot.SpringBootDataClass;
 import com.mekcone.studio.codegen.model.project.Project;

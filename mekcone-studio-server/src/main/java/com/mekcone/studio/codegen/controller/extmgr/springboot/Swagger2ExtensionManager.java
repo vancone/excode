@@ -4,7 +4,7 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.ArrayInitializerExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.ModuleConstant;
 import com.mekcone.studio.codegen.controller.generator.impl.SpringBootGenerator;
 import com.mekcone.studio.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.studio.codegen.model.module.impl.DatasourceModule;

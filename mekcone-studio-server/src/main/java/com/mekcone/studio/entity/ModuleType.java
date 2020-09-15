@@ -21,4 +21,8 @@ public class ModuleType {
 
     private String name;
 
+    private String description;
+
+    private String publisher;
+
 }

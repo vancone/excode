@@ -2,7 +2,7 @@ package com.mekcone.studio.codegen.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.ModuleConstant;
 import com.mekcone.studio.codegen.controller.generator.impl.*;
 import com.mekcone.studio.codegen.enums.ErrorEnum;
 import com.mekcone.studio.codegen.model.database.Column;

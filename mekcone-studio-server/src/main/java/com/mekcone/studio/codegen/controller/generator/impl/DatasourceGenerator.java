@@ -1,6 +1,6 @@
 package com.mekcone.studio.codegen.controller.generator.impl;
 
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.ModuleConstant;
 import com.mekcone.studio.codegen.controller.extmgr.datasource.SqlExtensionManager;
 import com.mekcone.studio.codegen.controller.generator.Generator;
 import com.mekcone.studio.codegen.model.database.Database;

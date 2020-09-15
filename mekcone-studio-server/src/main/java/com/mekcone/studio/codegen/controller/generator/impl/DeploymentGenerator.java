@@ -1,11 +1,10 @@
 package com.mekcone.studio.codegen.controller.generator.impl;
 
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.ModuleConstant;
 import com.mekcone.studio.codegen.controller.extmgr.deployment.NginxExtensionManager;
 import com.mekcone.studio.codegen.controller.generator.Generator;
 import com.mekcone.studio.codegen.model.module.Module;
 import com.mekcone.studio.codegen.model.module.impl.DeploymentModule;
-import com.mekcone.studio.codegen.model.module.impl.SpringBootModule;
 import com.mekcone.studio.codegen.model.project.Project;
 import lombok.extern.slf4j.Slf4j;
 

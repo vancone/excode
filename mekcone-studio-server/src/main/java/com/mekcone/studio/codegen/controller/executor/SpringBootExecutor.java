@@ -1,7 +1,7 @@
 package com.mekcone.studio.codegen.controller.executor;
 
-import com.mekcone.studio.codegen.constant.ModuleConstant;
-import com.mekcone.studio.codegen.constant.UrlPath;
+import com.mekcone.studio.constant.ModuleConstant;
+import com.mekcone.studio.constant.UrlPath;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;

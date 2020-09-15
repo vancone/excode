@@ -2,7 +2,7 @@
 -- Date: 9/10/2020
 
 CREATE TABLE `project` (
-    `id` VARCHAR(50),
+    `id` CHAR(32) PRIMARY KEY,
     `name` VARCHAR(50),
     `description` TEXT,
     `created_time` TIMESTAMP,

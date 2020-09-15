@@ -1,7 +1,7 @@
 package com.mekcone.studio.codegen.controller.extmgr.springboot;
 
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.ModuleConstant;
 import com.mekcone.studio.codegen.controller.parser.PropertiesParser;
 import com.mekcone.studio.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.studio.codegen.model.module.impl.SpringBootModule;

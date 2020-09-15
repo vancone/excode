@@ -2,8 +2,7 @@ package com.mekcone.studio.codegen.model.project;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mekcone.studio.codegen.constant.LanguageType;
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.LanguageType;
 import com.mekcone.studio.codegen.model.module.Module;
 import com.mekcone.studio.codegen.model.module.impl.*;
 import lombok.Data;

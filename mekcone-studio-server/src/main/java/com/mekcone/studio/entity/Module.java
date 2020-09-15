@@ -1,11 +1,16 @@
 package com.mekcone.studio.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
  * Author: Tenton Lien
@@ -27,8 +32,18 @@ public class Module {
 
     private String name;
 
-    private String projectId;
-
-    @OneToMany(mappedBy = "module")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Extension> extensions;
+
+    @JsonBackReference
+    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.REFRESH }, optional = false)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    @JsonIgnore
+    private String propertiesJson;
+
+    @Transient
+    private Map<String, String> properties = new HashMap<>();
 }

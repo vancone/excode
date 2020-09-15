@@ -2,7 +2,7 @@ package com.mekcone.studio.codegen.controller.generator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mekcone.studio.codegen.constant.UrlPath;
+import com.mekcone.studio.constant.UrlPath;
 import com.mekcone.studio.codegen.enums.ErrorEnum;
 import com.mekcone.studio.codegen.model.module.Module;
 import com.mekcone.studio.codegen.model.file.ModuleInfo;

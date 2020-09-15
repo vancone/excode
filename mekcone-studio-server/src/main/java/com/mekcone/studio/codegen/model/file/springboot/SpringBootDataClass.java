@@ -9,7 +9,7 @@ import com.github.javaparser.ast.expr.FieldAccessExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
-import com.mekcone.studio.codegen.constant.DataType;
+import com.mekcone.studio.constant.DataType;
 import com.mekcone.studio.codegen.model.database.Column;
 import com.mekcone.studio.codegen.model.database.Table;
 import com.mekcone.studio.codegen.model.project.Project;

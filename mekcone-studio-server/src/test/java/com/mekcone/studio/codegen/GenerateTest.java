@@ -1,6 +1,6 @@
 package com.mekcone.studio.codegen;
 
-import com.mekcone.studio.codegen.constant.UrlPath;
+import com.mekcone.studio.constant.UrlPath;
 import com.mekcone.studio.codegen.controller.ProjectLoader;
 import com.mekcone.studio.codegen.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;

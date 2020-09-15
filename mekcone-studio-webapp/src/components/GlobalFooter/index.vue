@@ -1,12 +1,10 @@
 <template>
   <global-footer class="footer custom-render">
     <template v-slot:links>
-      <a href="https://www.github.com/vueComponent/pro-layout" target="_blank">MekCone Studio</a>
-      <a href="https://www.github.com/vueComponent/ant-design-vue-pro" target="_blank">Github</a>
-      <a href="https://www.github.com/sendya/" target="_blank">@Tenton Lien</a>
+      <a href="https://studio.mekcone.com" target="_blank">MekCone Studio v0.0.1</a>
     </template>
     <template v-slot:copyright>
-      <a href="https://github.com/vueComponent" target="_blank">Copyright &nbsp; 2020 MekCone. All rights reserved.</a>
+      <a href="https://www.mekcone.com" target="_blank">Copyright &nbsp; 2020 MekCone. All rights reserved.</a>
     </template>
   </global-footer>
 </template>

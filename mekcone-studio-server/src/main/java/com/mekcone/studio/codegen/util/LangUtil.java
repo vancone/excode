@@ -1,8 +1,8 @@
 package com.mekcone.studio.codegen.util;
 
-import com.mekcone.studio.codegen.constant.LanguageType;
-import com.mekcone.studio.codegen.constant.ModuleConstant;
-import com.mekcone.studio.codegen.constant.UrlPath;
+import com.mekcone.studio.constant.LanguageType;
+import com.mekcone.studio.constant.ModuleConstant;
+import com.mekcone.studio.constant.UrlPath;
 import com.mekcone.studio.codegen.controller.parser.PropertiesParser;
 import lombok.extern.slf4j.Slf4j;
 

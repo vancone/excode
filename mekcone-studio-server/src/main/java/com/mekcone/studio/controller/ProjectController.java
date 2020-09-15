@@ -1,6 +1,6 @@
 package com.mekcone.studio.controller;
 
-import com.mekcone.studio.codegen.constant.DataType;
+import com.mekcone.studio.constant.DataType;
 import com.mekcone.studio.entity.Project;
 import com.mekcone.studio.service.ProjectService;
 import com.mekcone.webplatform.common.model.Response;

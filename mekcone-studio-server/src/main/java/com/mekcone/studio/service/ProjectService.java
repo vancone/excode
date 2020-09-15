@@ -16,5 +16,6 @@ public interface ProjectService {
     Page<Project> findAll(int pageNo, int pageSize);
     void save(Project project);
     void delete(String projectId);
+    void generate(Project project);
     void export(HttpServletResponse response, String fileType, String projectId);
 }

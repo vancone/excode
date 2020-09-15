@@ -1,6 +1,6 @@
 package com.mekcone.studio.codegen.util;
 
-import com.mekcone.studio.codegen.constant.DataType;
+import com.mekcone.studio.constant.DataType;
 import lombok.extern.slf4j.Slf4j;
 
 /*

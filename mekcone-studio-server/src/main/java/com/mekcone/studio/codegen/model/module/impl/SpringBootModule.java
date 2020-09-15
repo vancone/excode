@@ -3,7 +3,7 @@ package com.mekcone.studio.codegen.model.module.impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mekcone.studio.codegen.annotation.ExtensionClass;
 import com.mekcone.studio.codegen.annotation.Validator;
-import com.mekcone.studio.codegen.constant.ModuleConstant;
+import com.mekcone.studio.constant.ModuleConstant;
 import com.mekcone.studio.codegen.controller.parser.PropertiesParser;
 import com.mekcone.studio.codegen.controller.parser.template.impl.JavaTemplate;
 import com.mekcone.studio.codegen.model.file.springboot.MavenProjectObjectModel;
