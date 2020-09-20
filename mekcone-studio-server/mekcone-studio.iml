@@ -160,5 +160,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:5.2.6.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.xmlunit:xmlunit-core:2.7.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: mysql:mysql-connector-java:8.0.20" level="project" />
+    <orderEntry type="library" name="Maven: com.vladmihalcea:hibernate-types-52:2.9.13" level="project" />
   </component>
 </module>

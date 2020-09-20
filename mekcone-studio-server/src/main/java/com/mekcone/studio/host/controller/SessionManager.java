@@ -4,7 +4,7 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.mekcone.studio.constant.ModuleConstant;
-import com.mekcone.studio.host.entity.Host;
+import com.mekcone.studio.entity.Host;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 

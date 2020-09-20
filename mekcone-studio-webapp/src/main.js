@@ -1,39 +1,30 @@
-// with polyfills
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App.vue'
+import App from './App'
 import router from './router'
-import store from './store/'
-import i18n from './locales'
-import { VueAxios } from './utils/request'
-import ProLayout, { PageHeaderWrapper } from '@ant-design-vue/pro-layout'
-import themePluginConfig from '../config/themePluginConfig'
 
-// mock
-// WARNING: `mockjs` NOT SUPPORT `IE` PLEASE DO NOT USE IN `production` ENV.
-import './mock'
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
 
-import bootstrap from './core/bootstrap'
-import './core/lazy_use'
-import './permission' // permission control
-import './utils/filter' // global filter
-import './global.less'
+import VueAxios from './utils/request'
+
+import store from './store'
 
 Vue.config.productionTip = false
 
-// mount axios to `Vue.$http` and `this.$http`
-Vue.use(VueAxios)
-Vue.component('pro-layout', ProLayout)
-Vue.component('page-header-wrapper', PageHeaderWrapper)
+Vue.use(Antd, VueAxios)
 
-window.umi_plugin_ant_themeVar = themePluginConfig.theme
-
+/* eslint-disable no-new */
+/* new Vue({
+  el: '#app',
+  router,
+  store,
+  components: { App },
+  template: '<App/>'
+}) */
 new Vue({
   router,
   store,
-  i18n,
-  created: bootstrap,
   render: h => h(App)
 }).$mount('#app')

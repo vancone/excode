@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.Optional;
 
 /*
@@ -28,9 +27,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void create(Project project) {
-        Date date = new Date();
-        project.setCreatedTime(date);
-        project.setModifiedTime(date);
         projectRepository.save(project);
     }
 
@@ -49,8 +45,6 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void save(Project project) {
-        Date date = new Date();
-        project.setModifiedTime(date);
         projectRepository.save(project);
     }
 

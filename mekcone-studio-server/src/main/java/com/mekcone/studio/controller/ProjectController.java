@@ -6,7 +6,6 @@ import com.mekcone.studio.service.ProjectService;
 import com.mekcone.webplatform.common.model.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/studio/project", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/studio/project")
 public class ProjectController {
 
     @Autowired

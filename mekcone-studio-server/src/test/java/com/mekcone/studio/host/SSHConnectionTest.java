@@ -1,6 +1,6 @@
 package com.mekcone.studio.host;
 
-import com.mekcone.studio.host.entity.Host;
+import com.mekcone.studio.entity.Host;
 import com.mekcone.studio.host.controller.SessionManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
