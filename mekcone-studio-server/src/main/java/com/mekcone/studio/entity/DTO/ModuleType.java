@@ -1,4 +1,4 @@
-package com.mekcone.studio.entity;
+package com.mekcone.studio.entity.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;

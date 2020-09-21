@@ -1,6 +1,6 @@
 package com.mekcone.studio.database;
 
-import com.mekcone.studio.database.mongodb.MongoDuplicator;
+import com.mekcone.studio.util.MongoDuplicator;
 import org.junit.jupiter.api.Test;
 
 public class MongoTest {

@@ -1,8 +1,10 @@
-package com.mekcone.studio.service.impl;
+package com.mekcone.studio.service.web.impl;
 
-import com.mekcone.studio.entity.Project;
+import com.mekcone.studio.entity.DTO.Project;
+import com.mekcone.studio.enums.ProjectEnum;
+import com.mekcone.studio.exception.ResponseException;
 import com.mekcone.studio.repository.ProjectRepository;
-import com.mekcone.studio.service.ProjectService;
+import com.mekcone.studio.service.web.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +35,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project findById(String projectId) {
         Optional<Project> project = projectRepository.findById(projectId);
-        return project.orElse(null);
+        if (!project.isPresent()) {
+            throw new ResponseException(ProjectEnum.PROJECT_NOT_EXIST);
+        }
+        return project.get();
     }
 
     @Override

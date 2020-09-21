@@ -1,7 +1,7 @@
-package com.mekcone.studio.service;
+package com.mekcone.studio.service.web;
 
 
-import com.mekcone.studio.entity.Project;
+import com.mekcone.studio.entity.DTO.Project;
 import org.springframework.data.domain.Page;
 
 import javax.servlet.http.HttpServletResponse;

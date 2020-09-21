@@ -1,8 +1,8 @@
 package com.mekcone.studio.controller;
 
-import com.mekcone.studio.entity.Module;
-import com.mekcone.studio.service.ModuleService;
-import com.mekcone.webplatform.common.model.Response;
+import com.mekcone.studio.entity.DTO.Module;
+import com.mekcone.studio.entity.VO.Response;
+import com.mekcone.studio.service.web.ModuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

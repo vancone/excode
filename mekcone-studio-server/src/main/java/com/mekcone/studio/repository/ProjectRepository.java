@@ -1,6 +1,6 @@
 package com.mekcone.studio.repository;
 
-import com.mekcone.studio.entity.Project;
+import com.mekcone.studio.entity.DTO.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /*

@@ -1,4 +1,4 @@
-package com.mekcone.studio.entity;
+package com.mekcone.studio.entity.DTO;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

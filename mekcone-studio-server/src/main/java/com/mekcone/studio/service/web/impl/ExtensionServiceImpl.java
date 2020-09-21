@@ -1,8 +1,8 @@
-package com.mekcone.studio.service.impl;
+package com.mekcone.studio.service.web.impl;
 
-import com.mekcone.studio.entity.Extension;
+import com.mekcone.studio.entity.DTO.Extension;
 import com.mekcone.studio.repository.ExtensionRepository;
-import com.mekcone.studio.service.ExtensionService;
+import com.mekcone.studio.service.web.ExtensionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

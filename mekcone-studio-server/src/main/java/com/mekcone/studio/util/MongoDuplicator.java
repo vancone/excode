@@ -1,4 +1,4 @@
-package com.mekcone.studio.database.mongodb;
+package com.mekcone.studio.util;
 
 import com.mongodb.client.*;
 import lombok.extern.slf4j.Slf4j;

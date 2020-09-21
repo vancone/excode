@@ -1,7 +1,7 @@
-package com.mekcone.studio.service;
+package com.mekcone.studio.service.web;
 
 
-import com.mekcone.studio.entity.Extension;
+import com.mekcone.studio.entity.DTO.Extension;
 import org.springframework.data.domain.Page;
 
 /*

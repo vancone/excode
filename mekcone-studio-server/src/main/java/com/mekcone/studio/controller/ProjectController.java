@@ -1,9 +1,9 @@
 package com.mekcone.studio.controller;
 
 import com.mekcone.studio.constant.DataType;
-import com.mekcone.studio.entity.Project;
-import com.mekcone.studio.service.ProjectService;
-import com.mekcone.webplatform.common.model.Response;
+import com.mekcone.studio.entity.DTO.Project;
+import com.mekcone.studio.entity.VO.Response;
+import com.mekcone.studio.service.web.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,7 @@
 package com.mekcone.studio.codegen.ast.examples;
 
-import com.mekcone.webplatform.account.entity.User;
-import com.mekcone.webplatform.account.service.LoginService;
+import com.mekcone.webplatform.user.entity.User;
+import com.mekcone.webplatform.user.service.LoginService;
 import com.mekcone.webplatform.common.model.Response;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
