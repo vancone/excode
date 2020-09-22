@@ -24,7 +24,7 @@ public class UserController {
     @GetMapping
     public Response getLoginStatus(HttpServletRequest httpServletRequest) {
         userService.getLoginStatus(httpServletRequest);
-        return Response.success("already login", null);
+        return Response.success("already login");
     }
 
     @PostMapping

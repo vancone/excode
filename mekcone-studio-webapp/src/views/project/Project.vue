@@ -1,8 +1,15 @@
 <template>
   <div class="welcome-page">
-    <GlobalHeader style="position:relative;z-index:2000;"/>
-    <a-row style="height:calc(100% - 50px);">
-      <a-col :span="4" style="text-align:left;height:100%;">
+    <!-- <GlobalHeader style="position:relative;z-index:2000;"/> -->
+    <a-page-header
+      style="border: 1px solid rgb(235, 237, 240);background:white;"
+      :title="projectName"
+      sub-title="1.0.0"
+      @back="() => $router.go(-1)"
+    >
+    </a-page-header>
+    <a-row style="height:calc(100% - 65px);">
+      <a-col :span="5" style="text-align:left;height:100%;">
         <a-tree
           show-line
           style="background:white;height:inherit;padding:10px;"
@@ -24,7 +31,7 @@
 
 <script>
 import GlobalHeader from '@/components/GlobalHeader'
-import { getProjectList } from '@/api/project'
+// import { getProjectList } from '@/api/project'
 
 export default {
   name: 'Project',
@@ -33,6 +40,7 @@ export default {
   },
   data () {
     return {
+      projectName: '',
       treeData: [{
         title: '',
         key: 'parent',
@@ -45,17 +53,17 @@ export default {
     }
   },
   created () {
-    getProjectList().then((res) => {
+    /* getProjectList().then((res) => {
       this.data = res.data.content
-    })
+    }) */
   },
   methods: {
-    loadProject (project) {
+    /* loadProject (project) {
       this.$store.commit('id', project.id)
       this.$store.commit('name', project.name)
       this.$store.commit('modules', project.modules)
       this.$router.push('/project')
-    },
+    }, */
     onSelect (selectedKeys, info) {
       console.log('selected', selectedKeys, info)
       alert(JSON.stringify(selectedKeys))
@@ -79,6 +87,7 @@ export default {
   mounted () {
     if (this.$store.getters.id !== '') {
       this.loadTree()
+      this.projectName = this.$store.getters.name
     } else {
       this.$router.push('/')
     }
