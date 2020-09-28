@@ -6,11 +6,12 @@ package com.mekcone.studio.service.web;
  */
 
 import com.mekcone.studio.entity.DTO.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     boolean login(HttpServletResponse httpServletResponse, User user);
     boolean logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse);
     boolean getLoginStatus(HttpServletRequest httpServletRequest);

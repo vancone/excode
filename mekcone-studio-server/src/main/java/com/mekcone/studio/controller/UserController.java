@@ -29,8 +29,8 @@ public class UserController {
 
     @PostMapping
     public Response login(HttpServletResponse httpServletResponse, @RequestBody User user) {
-        userService.login(httpServletResponse, user);
-        return Response.success();
+//        userService.login(httpServletResponse, user);
+        return Response.success(userService.loadUserByUsername(user.getUsername()));
     }
 
     @DeleteMapping
