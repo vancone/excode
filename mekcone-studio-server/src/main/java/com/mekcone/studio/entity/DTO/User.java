@@ -26,6 +26,10 @@ public class User implements UserDetails {
 
     private String type;
 
+    private Integer role;
+
+    private Integer status;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -49,5 +53,12 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    public User() {}
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 }

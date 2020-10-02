@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "studio.system.securityIgnoreUrls",
+      "type": "java.lang.String",
+      "description": "Description for studio.system.securityIgnoreUrls."
+  }
+] }

@@ -18,4 +18,5 @@ public interface UserService extends UserDetailsService {
     void createAccount(User user);
     User getAccount(String accountId);
     void updateAccount();
+    User findUserByUsername(String username);
 }
