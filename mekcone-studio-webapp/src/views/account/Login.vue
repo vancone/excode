@@ -1,12 +1,12 @@
 <template>
-  <div class="welcome-page">
+  <div class="login-page">
     <a-row>
       <!-- <a-col :span="6" style="padding: 20px;"> -->
       <a-layout-content style="text-align:center;">
         <a-card style="border-radius:5px;width:400px;margin:0 auto;vertical-align:middle;margin-top:calc(50% - 500px);">
           <h1>MekCone Studio</h1>
-          <a-input style="margin-bottom:15px;"/>
-          <a-input-password placeholder="Password" />
+          <a-input style="margin-bottom:15px;" v-model="username"/>
+          <a-input-password placeholder="Password" v-model="password" />
           <a-button type="primary" style="width:100%;margin-top:15px;" @click="login">
             Sign in
           </a-button>
@@ -21,15 +21,17 @@
 </template>
 
 <script>
-import GlobalHeader from '@/components/GlobalHeader'
-import { getProjectList } from '@/api/project'
+// import GlobalHeader from '@/components/GlobalHeader'
+import { login } from '@/api/user'
 export default {
   name: 'Login',
   components: {
-    GlobalHeader
+    // GlobalHeader
   },
   data () {
     return {
+      username: '',
+      password: '',
       columns: [
         {
           title: 'Name',
@@ -48,13 +50,16 @@ export default {
     }
   },
   created () {
-    getProjectList().then((res) => {
-      this.data = res.data.content
-    })
+    // getProjectList().then((res) => {
+    //   this.data = res.data.content
+    // })
   },
   methods: {
     login () {
-      this.$router.push('/')
+      login({ username: this.username, password: this.password }).then((res) => {
+        // console.log(res)
+        this.$router.push('/')
+      })
     }
   }
 }

@@ -2,7 +2,7 @@ package com.mekcone.studio.config.security;
 
 import com.mekcone.studio.config.property.CookieConfig;
 import com.mekcone.studio.util.JsonUtil;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -21,8 +21,8 @@ import java.io.InputStream;
  * Date: 10/1/2020
  */
 
+@Slf4j
 public class CustomAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
-    private final org.slf4j.Logger logger = LoggerFactory.getLogger(CustomAuthenticationProcessingFilter.class);
 
     public CustomAuthenticationProcessingFilter() {
         super(new AntPathRequestMatcher("/api/user/login", "POST"));
@@ -36,7 +36,7 @@ public class CustomAuthenticationProcessingFilter extends AbstractAuthentication
             request.setAttribute(TokenBasedRememberMeServices.DEFAULT_PARAMETER, authenticationBean.isRemember());
             authRequest = new UsernamePasswordAuthenticationToken(authenticationBean.getUsername(), authenticationBean.getPassword());
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             authRequest = new UsernamePasswordAuthenticationToken("", "");
         }
         setDetails(request, authRequest);

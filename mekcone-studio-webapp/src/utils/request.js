@@ -8,7 +8,8 @@ import { ACCESS_TOKEN } from '@/store/constant'
 // 创建 axios 实例
 const request = axios.create({
   // API 请求的默认前缀
-  baseURL: process.env.VUE_APP_API_BASE_URL,
+  // baseURL: process.env.VUE_APP_API_BASE_URL,
+  // baseURL: 'http://localhost:9901',
   timeout: 6000 // 请求超时时间
 })
 
@@ -29,6 +30,7 @@ const errorHandler = (error) => {
         message: 'Unauthorized',
         description: 'Authorization verification failed'
       })
+      window.location.href = '/#/login'
       if (token) {
         store.dispatch('Logout').then(() => {
           setTimeout(() => {
