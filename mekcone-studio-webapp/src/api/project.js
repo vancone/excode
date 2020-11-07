@@ -19,6 +19,14 @@ export function getProjectList (parameter) {
   })
 }
 
+export function saveProject (data) {
+  return request({
+    url: api.project,
+    method: 'post',
+    data: data
+  })
+}
+
 export function getRoleList (parameter) {
   return request({
     url: api.role,
