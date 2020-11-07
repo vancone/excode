@@ -1,38 +1,59 @@
 <template>
-  <div class="project-page">
-    <!-- <GlobalHeader style="position:relative;z-index:2000;"/> -->
-    <a-page-header
-      class="page-header"
-      :title="projectName"
-      @back="() => $router.go(-1)"
+  <div class="right-panel">
+    <a-tabs
+      default-active-key="mod"
+      tab-position="right"
+      class="tabs"
+      @prevClick="callback"
+      @nextClick="callback"
     >
-    </a-page-header>
-    <a-row style="height:calc(100% - 65px);">
-      <a-col :xs="14" :sm="18" :lg="20" style="text-align:left;height:100%;">
-        <a-tabs v-model="activeKey" hide-add type="editable-card" @edit="onEdit" style="height:100%">
-          <a-tab-pane key="projectProperties" tab="Project" closable="closable">
-            <project-properties />
-          </a-tab-pane>
-        </a-tabs>
-      </a-col>
-
-      <a-col :xs="10" :sm="6" :lg="4" style="text-align:left;height:100%;">
-        <right-panel></right-panel>
-      </a-col>
-    </a-row>
+      <a-tab-pane tab="Module" key="mod">
+        <div class="right-panel-header">
+          <h1>Modules</h1>
+        </div>
+        <div class="right-panel-toolbar">
+          <a-dropdown :trigger="['hover']">
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+              &nbsp;+&nbsp;<a-icon type="down" />
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item key="0">
+                <a href="http://www.alipay.com/">Front-End</a>
+              </a-menu-item>
+              <a-menu-item key="1">
+                <a href="http://www.taobao.com/">Back-End</a>
+              </a-menu-item>
+              <a-menu-divider />
+              <a-menu-item key="3">
+                More...
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </div>
+        <a-tree
+          show-line
+          style="background:#3c3f41;height:inherit;padding:10px;color:#bbb;"
+          :tree-data="treeData"
+          :default-expanded-keys="['0-0-0', '0-0-1']"
+          :default-selected-keys="['0-0-0', '0-0-1']"
+          :default-checked-keys="['0-0-0', '0-0-1']"
+          @select="onSelect"
+        >
+          <a-icon slot="switcherIcon" type="down" />
+          <span slot="title0010" style="color: #1890ff">sss</span>
+        </a-tree>
+      </a-tab-pane>
+      <a-tab-pane tab="Data Source" key="ds"></a-tab-pane>
+    </a-tabs>
   </div>
 </template>
 
 <script>
-import GlobalHeader from '@/components/GlobalHeader'
-import RightPanel from '@/components/RightPanel'
-import ProjectProperties from '@/components/ProjectProperties'
 // import { getProjectList } from '@/api/project'
 
 export default {
   name: 'Project',
   components: {
-    GlobalHeader, ProjectProperties, RightPanel
   },
   data () {
     const panes = [
@@ -136,64 +157,62 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.project-page {
-  height:100%;
-  margin-bottom:0;
-}
-.page-header {
-  border: 1px solid #515151;
-  background:#3c3f41;
+.tabs {
+  height: 100% !important;
+  width: 100%;
 }
 .ant-tabs-content {
   height: 100%;
+  width: 100%;
   overflow: scroll;
-  background-color: white;
-}
-/deep/ .ant-page-header-heading-title {
-  color: #bbb;
-}
-/deep/ .ant-page-header-heading-sub-title {
-  color: #bbb;
-}
-/deep/ .anticon-arrow-left {
-  color: #bbb;
-}
-/deep/ .ant-page-header {
-  height: 50px;
-  padding: 8px 16px;
-}
-/deep/ .ant-page-header-heading-title {
-  font-weight: 400;
-  font-size: 16px;
 }
 /************** Tab **************/
 /deep/ .ant-tabs-tab {
-  background: #1f2022;
-}
-/deep/ .ant-tabs-bar {
-  border-bottom: solid 1px #323232;
-  background: #3c3f41;
-  height: 30px;
-}
-/deep/ .ant-tabs.ant-tabs-card {
-  background: #2b2b2b;
-}
-/deep/ .ant-tabs-tab {
+  /* background: #1f2022; */
+  height: 30px !important;
+  width: 90px !important;
+  /* position: relative;
+  top: 10px; */
+  transform: rotate(90deg);
   background-color: #4e5254;
   border-radius: 0 !important;
   border: none !important;
   color: #bbb !important;
-  height: 30px !important;
   font-size: 12px !important;
+  padding-top: 45px !important;
+  padding-bottom: 45px !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  position: relative;
+  left: -20px;
+  margin: 0 !important;
+}
+/deep/ .ant-tabs-tab:hover {
+  background: #2d2f30;
+}
+/deep/ .ant-tabs-nav {
+  /* height: 100px; */
+}
+/deep/ .ant-tabs-bar {
+  border-left: solid 1px #323232;
+  background: #3c3f41;
+  height: 100%;
+  width: 30px;
+  /* overflow: hidden; */
+}
+/deep/ .ant-tabs.ant-tabs-card {
+  background: #2b2b2b;
 }
 /deep/ .ant-tabs-tab div {
-  margin-top: -5px !important;
+  /* width: 102px; */
+  /* margin-top: -5px !important; */
 }
 /deep/ .ant-tabs-tab-active {
-  background: #4e5254 !important;
-  border: none;
-  border-bottom: solid 3px #4a88c7 !important;
+  background: #333537 !important;
+  /* border: none !important; */
+  /* border-bottom: solid 3px #4a88c7 !important; */
   color: #bbb;
+  /* height: 200px; */
 }
 /deep/ .ant-tabs-tab-active:hover {
   background: #333537 !important;
@@ -212,13 +231,18 @@ export default {
   border-radius: 15px !important;
   background-color: #535a5e !important;
 }
+/deep/ .ant-tabs-right-content {
+  padding-right: 0;
+}
 /************** Tree **************/
 .right-panel {
   height: 100%;
   background: #3c3f41;
   border-left: solid 1px #323232;
-  position: relative;
-  /* z-index: 10000; */
+  /* position: relative; */
+  height:100%;
+  width: 100%;
+  margin-bottom:0;
 }
 .right-panel-header {
   text-align: left;
@@ -237,11 +261,12 @@ export default {
   text-align: left;
   background: transparent;
   border-bottom: solid 1px #323232;
-  height: 330px;
+  height: 30px;
   padding-top: 7px;
 }
 /deep/ .ant-tree {
   padding: 0 !important;
+  width: 100%;
   /* border-left: solid 1px #323232; */
 }
 /deep/ .ant-tree-title {
