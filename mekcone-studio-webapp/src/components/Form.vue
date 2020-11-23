@@ -1,51 +1,29 @@
 <template>
-  <div class="project-page">
-    <!-- <GlobalHeader style="position:relative;z-index:2000;"/> -->
-    <a-page-header
-      class="page-header"
-      :title="projectName"
-      @back="() => $router.go(-1)"
-    >
-    </a-page-header>
-
-    <tool-bar></tool-bar>
-
-    <a-row style="height:calc(100% - 65px);">
-      <a-col :xs="10" :sm="6" :lg="5" style="text-align:left;height:100%;">
-        <left-panel></left-panel>
-      </a-col>
-      <a-col :xs="14" :sm="18" :lg="19" style="text-align:left;height:100%;">
-        <a-tabs v-model="activeKey" hide-add type="editable-card" @edit="onEdit" style="height:100%">
-          <a-tab-pane key="projectProperties" tab="Project" closable="closable">
-            <project-properties></project-properties>
-          </a-tab-pane>
-          <a-tab-pane key="propertyForm" tab="Properties" closable="closable">
-            <property-form></property-form>
-          </a-tab-pane>
-        </a-tabs>
-      </a-col>
-    </a-row>
+  <div class="property-form">
+    <a-form-model :layout="form.layout" :model="form" v-bind="formItemLayout">
+    <a-form-model-item label="Field A">
+      <a-input v-model="form.fieldA" placeholder="input placeholder" />
+    </a-form-model-item>
+    <a-form-model-item label="Field B">
+      <a-input v-model="form.fieldB" placeholder="input placeholder" />
+    </a-form-model-item>
+    <a-form-model-item :wrapper-col="buttonItemLayout.wrapperCol">
+      <a-button type="primary">
+        Submit
+      </a-button>
+    </a-form-model-item>
+  </a-form-model>
   </div>
 </template>
 
 <script>
-import GlobalHeader from '@/components/GlobalHeader'
-import ToolBar from '@/components/ToolBar'
-import LeftPanel from '@/components/LeftPanel'
-import PropertyForm from '@/components/Form'
-import ProjectProperties from '@/components/ProjectProperties'
 // import { getProjectList } from '@/api/project'
 
 export default {
   name: 'Project',
   components: {
-    GlobalHeader, ProjectProperties, LeftPanel, PropertyForm, ToolBar
   },
   data () {
-    const panes = [
-      { title: 'Tab 1', content: 'Content of Tab 1', key: '1' },
-      { title: 'Tab 2', content: 'Content of Tab 2', key: '2' }
-    ]
     return {
       projectName: '',
       treeData: [{
@@ -58,9 +36,32 @@ export default {
         ]
       }],
       activeKey: 'projectProperties',
-      panes,
-      newTabIndex: 0
+      newTabIndex: 0,
+      form: {
+        layout: 'vertical',
+        fieldA: '',
+        fieldB: ''
+      }
     }
+  },
+  computed: {
+    /* formItemLayout() {
+      const { layout } = this.form;
+      return layout === 'horizontal'
+        ? {
+            labelCol: { span: 4 },
+            wrapperCol: { span: 14 },
+          }
+        : {};
+    },
+    buttonItemLayout() {
+      const { layout } = this.form;
+      return layout === 'horizontal'
+        ? {
+            wrapperCol: { span: 14, offset: 4 },
+          }
+        : {};
+    }, */
   },
   created () {
     /* getProjectList().then((res) => {
@@ -143,70 +144,57 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.project-page {
-  height:100%;
-  margin-bottom:0;
-  overflow: hidden;
+.property-form {
+  color: #bbb;
 }
-.page-header {
-  border: 1px solid #515151;
-  background:#3c3f41;
+.property-form table {
+  margin-left: 15px;
+  border: solid 1px #373737;
+}
+/deep/ .ant-input {
+  background: #3c3f41;
+  border-radius: 0;
+  border: none;
+  height: 30px;
+  margin: 5px;
+  color: #bbb;
 }
 .ant-tabs-content {
   height: 100%;
+  width: 100%;
   overflow: scroll;
-  background-color: white;
 }
-/deep/ .ant-page-header-heading-title {
-  color: #bbb;
-}
-/deep/ .ant-page-header-heading-sub-title {
-  color: #bbb;
-}
-/deep/ .anticon-arrow-left {
-  color: #bbb;
-}
-/deep/ .ant-page-header {
-  height: 50px;
-  padding: 8px 16px;
-}
-/deep/ .ant-page-header-heading-title {
-  font-weight: 400;
-  font-size: 16px;
+tr th {
+  background: #3b3b3b;
 }
 /************** Tab **************/
-/deep/ .ant-tabs-left-content {
-  padding-left: 0 !important;
+/deep/ .ant-tabs-tab {
+  height: 30px !important;
+  width: 90px !important;
+  background-color: #4e5254;
+  border-radius: 0 !important;
+  border: none !important;
+  color: #bbb !important;
+  font-size: 12px !important;
+  margin: 0 !important;
+  text-align: left !important;
+  padding-left: 12px !important;
+  padding-top: 6px !important;
+}
+/deep/ .ant-tabs-tab:hover {
+  background: #2d2f30;
 }
 /deep/ .ant-tabs-bar {
-  border-bottom: solid 1px #323232;
+  border-right: solid 1px #323232;
   background: #3c3f41;
-  height: 30px;
+  height: 100%;
 }
 /deep/ .ant-tabs.ant-tabs-card {
   background: #2b2b2b;
 }
-/deep/ .ant-tabs-tab {
-  padding: 0 !important;
-  background-color: #3c3f41 !important;
-  border-radius: 0 !important;
-  border: none !important;
-  color: #bbb !important;
-  height: 30px !important;
-  font-size: 12px !important;
-  padding-left: 10px !important;
-  padding-right: 15px !important;
-}
-/deep/ .ant-tabs-tab:hover {
-  background: #27292a !important;
-}
-/deep/ .ant-tabs-tab div {
-  margin-top: -5px !important;
-}
 /deep/ .ant-tabs-tab-active {
-  background: #4e5254 !important;
-  border: none;
-  border-bottom: solid 3px #4a88c7 !important;
+  background: #333537 !important;
+  border-bottom: none !important;
   color: #bbb;
 }
 /deep/ .ant-tabs-tab-active:hover {
@@ -220,43 +208,52 @@ export default {
   padding-top: 1px !important;
 }
 /deep/ .ant-tabs-close-x:hover {
-  color: #222 !important;
+  color: #222;
   height: 15px !important;
   width: 15px !important;
-  border-radius: 15px !important;
-  background-color: #535a5e !important;
+  border-radius: 15px;
+  background-color: #535a5e;
+}
+/deep/ .ant-tabs-right-content {
+  padding-right: 0;
 }
 /************** Tree **************/
-.right-panel {
+.left-panel {
   height: 100%;
   background: #3c3f41;
-  border-left: solid 1px #323232;
-  position: relative;
-  /* z-index: 10000; */
+  border-right: solid 1px #323232;
+  /* position: relative; */
+  height:100%;
+  width: 100%;
+  margin-bottom:0;
 }
-.right-panel-header {
+.left-panel-header {
   text-align: left;
   background: #3b4754;
   border-bottom: solid 1px #323232;
   height: 30px;
   padding-top: 7px;
 }
-.right-panel-header h1 {
+.left-panel-header h1 {
   position: relative;
   left: 10px;
   font-size: 12px;
   color: #bbb;
 }
-.right-panel-toolbar {
+.left-panel-toolbar {
   text-align: left;
   background: transparent;
   border-bottom: solid 1px #323232;
-  height: 330px;
+  height: 30px;
   padding-top: 7px;
 }
 /deep/ .ant-tree {
   padding: 0 !important;
+  width: 100%;
   /* border-left: solid 1px #323232; */
+}
+/deep/ .module-tree .ant-tree-title {
+  color: #bbb;
 }
 /deep/ .ant-tree-switcher {
   background: transparent !important;
@@ -271,5 +268,39 @@ export default {
 /deep/ .ant-tree-node-selected {
   background: #4b6eaf !important;
 }
-
+/deep/ .ant-dropdown-link {
+  position: relative;
+  top: -13px;
+  height: 25px !important;
+  width: 30px !important;
+}
+/deep/ .ant-dropdown ul {
+  background: yellow !important;
+}
+/deep/ .ant-dropdown-link:hover {
+  background: #4c5052 !important;
+}
+/deep/ .ant-dropdown-menu-vertical {
+  background: tomato !important;
+}
+/deep/ .ant-dropdown-menu {
+  background: tomato !important;
+}
+/deep/ .ant-dropdown-menu-root {
+  background: tomato !important;
+}
+/deep/ .ant-dropdown-content {
+  background: tomato !important;
+}
+/deep/ .ant-dropdown-menu-item {
+  background: #3c3f41;
+  color: #bbb;
+}
+/deep/ .ant-dropdown-menu-item:hover {
+  background: #4b6eaf;
+  color: #bbb;
+}
+/deep/ .ant-dropdown-menu-item-divider {
+  background: #515151;
+}
 </style>

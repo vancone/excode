@@ -1,20 +1,20 @@
 <template>
-  <div class="right-panel">
+  <div class="left-panel">
     <a-tabs
       default-active-key="mod"
-      tab-position="right"
+      tab-position="left"
       class="tabs"
       @prevClick="callback"
       @nextClick="callback"
     >
       <a-tab-pane tab="Module" key="mod">
-        <div class="right-panel-header">
+        <div class="left-panel-header">
           <h1>Modules</h1>
         </div>
-        <div class="right-panel-toolbar">
+        <div class="left-panel-toolbar">
           <a-dropdown :trigger="['hover']">
-            <a class="ant-dropdown-link" @click="e => e.preventDefault()">
-              &nbsp;+&nbsp;<a-icon type="down" />
+            <a class="ant-dropdown-link" style="color:#bbb;font-size:26px;" @click="e => e.preventDefault()">
+              &nbsp;+&nbsp;<a-icon type="caret-down" style="font-size:9px;position:relative;left:-14px;top:4px;"/>
             </a>
             <a-menu slot="overlay">
               <a-menu-item key="0">
@@ -32,7 +32,8 @@
         </div>
         <a-tree
           show-line
-          style="background:#3c3f41;height:inherit;padding:10px;color:#bbb;"
+          class="module-tree"
+          style="background:#3c3f41;height:inherit;padding:10px;color:#bbb;font-size:12px;"
           :tree-data="treeData"
           :default-expanded-keys="['0-0-0', '0-0-1']"
           :default-selected-keys="['0-0-0', '0-0-1']"
@@ -44,6 +45,7 @@
         </a-tree>
       </a-tab-pane>
       <a-tab-pane tab="Data Source" key="ds"></a-tab-pane>
+      <a-tab-pane tab="Code" key="code"></a-tab-pane>
     </a-tabs>
   </div>
 </template>
@@ -168,51 +170,33 @@ export default {
 }
 /************** Tab **************/
 /deep/ .ant-tabs-tab {
-  /* background: #1f2022; */
   height: 30px !important;
   width: 90px !important;
-  /* position: relative;
-  top: 10px; */
-  transform: rotate(90deg);
   background-color: #4e5254;
   border-radius: 0 !important;
   border: none !important;
   color: #bbb !important;
   font-size: 12px !important;
-  padding-top: 45px !important;
-  padding-bottom: 45px !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
-  position: relative;
-  left: -20px;
   margin: 0 !important;
+  text-align: left !important;
+  padding-left: 12px !important;
+  padding-top: 6px !important;
 }
 /deep/ .ant-tabs-tab:hover {
   background: #2d2f30;
 }
-/deep/ .ant-tabs-nav {
-  /* height: 100px; */
-}
 /deep/ .ant-tabs-bar {
-  border-left: solid 1px #323232;
+  border-right: solid 1px #323232;
   background: #3c3f41;
   height: 100%;
-  width: 30px;
-  /* overflow: hidden; */
 }
 /deep/ .ant-tabs.ant-tabs-card {
   background: #2b2b2b;
 }
-/deep/ .ant-tabs-tab div {
-  /* width: 102px; */
-  /* margin-top: -5px !important; */
-}
 /deep/ .ant-tabs-tab-active {
   background: #333537 !important;
-  /* border: none !important; */
-  /* border-bottom: solid 3px #4a88c7 !important; */
+  border-bottom: none !important;
   color: #bbb;
-  /* height: 200px; */
 }
 /deep/ .ant-tabs-tab-active:hover {
   background: #333537 !important;
@@ -225,39 +209,39 @@ export default {
   padding-top: 1px !important;
 }
 /deep/ .ant-tabs-close-x:hover {
-  color: #222 !important;
+  color: #222;
   height: 15px !important;
   width: 15px !important;
-  border-radius: 15px !important;
-  background-color: #535a5e !important;
+  border-radius: 15px;
+  background-color: #535a5e;
 }
 /deep/ .ant-tabs-right-content {
   padding-right: 0;
 }
 /************** Tree **************/
-.right-panel {
+.left-panel {
   height: 100%;
   background: #3c3f41;
-  border-left: solid 1px #323232;
+  border-right: solid 1px #323232;
   /* position: relative; */
   height:100%;
   width: 100%;
   margin-bottom:0;
 }
-.right-panel-header {
+.left-panel-header {
   text-align: left;
   background: #3b4754;
   border-bottom: solid 1px #323232;
   height: 30px;
   padding-top: 7px;
 }
-.right-panel-header h1 {
+.left-panel-header h1 {
   position: relative;
   left: 10px;
   font-size: 12px;
   color: #bbb;
 }
-.right-panel-toolbar {
+.left-panel-toolbar {
   text-align: left;
   background: transparent;
   border-bottom: solid 1px #323232;
@@ -269,7 +253,7 @@ export default {
   width: 100%;
   /* border-left: solid 1px #323232; */
 }
-/deep/ .ant-tree-title {
+/deep/ .module-tree .ant-tree-title {
   color: #bbb;
 }
 /deep/ .ant-tree-switcher {
@@ -285,5 +269,48 @@ export default {
 /deep/ .ant-tree-node-selected {
   background: #4b6eaf !important;
 }
-
+/deep/ .ant-dropdown-link {
+  position: relative;
+  top: -13px;
+  height: 25px !important;
+  width: 30px !important;
+}
+/deep/ .ant-dropdown ul {
+  background: yellow !important;
+}
+/deep/ .ant-dropdown-link:hover {
+  background: #4c5052 !important;
+}
+/deep/ .ant-dropdown-menu-vertical {
+  background: tomato !important;
+}
+/deep/ .ant-dropdown-menu {
+  background: tomato !important;
+}
+/deep/ .ant-dropdown-menu-root {
+  background: tomato !important;
+}
+/deep/ .ant-dropdown-content {
+  background: tomato !important;
+}
+/deep/ .ant-dropdown-menu-item {
+  background: #3c3f41;
+  color: #bbb;
+}
+/deep/ .ant-dropdown-menu-item:hover {
+  background: #4b6eaf;
+  color: #bbb;
+}
+/deep/ .ant-dropdown-menu-item-divider {
+  background: #515151;
+}
+.ant-dropdown-menu-item > a {
+  color: #bbb;
+}
+/deep/ .ant-dropdown-placement-bottomLeft {
+  background: red !important;
+}
+.ant-dropdown-menu {
+  background-color:transparent !important;
+}
 </style>
