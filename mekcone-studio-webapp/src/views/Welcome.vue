@@ -12,7 +12,7 @@
             <h1 style="color:#bbb;">Projects</h1>
           </a-col>
           <a-col :span="12" style="text-align:right">
-            <a-button class="panel-button" @click="showModal">Create</a-button>
+            <a-button type="primary" class="panel-button" @click="showModal">Create</a-button>
           </a-col>
         </a-row>
         <a-table :columns="columns" :data-source="data" style="border-radius:5px;overflow:hidden;" :body-style="{padding:10}" :row-key="data => data.id">
@@ -91,8 +91,6 @@ a {
 .welcome-header {
   height: 70px;
   width: 100%;
-  /* background-color: #3c3f41; */
-  /* box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.1); */
   z-index: 2133333;
   text-align: left;
 }
@@ -117,20 +115,7 @@ a {
   background:#323232;
   border: solid 1px #373737;
 }
-/deep/ .ant-table-thead tr th {
-  background: #3b3b3b;
-  color: #bbb;
-  border-bottom: solid 1px #333;
-}
-/deep/ .ant-table-row td {
-  border-bottom: solid 1px #444;
-  color: #bbb;
-}
-/* /deep/ .ant-table-row:hover {
-  background: #666;
-} */
 /deep/ .ant-table .ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
-  background: #214283;
   cursor: pointer;
 }
 /deep/ .ant-pagination-item {
@@ -141,9 +126,7 @@ a {
   color: #bbb;
 }
 /deep/ .ant-pagination-item-link {
-  background: #2b2b2b;
   border: solid 1px #666;
-  color: #bbb;
 }
 /deep/ .ant-pagination {
   padding-right: 10px;
@@ -151,24 +134,18 @@ a {
 .project-manager {
   height: 100px;
   margin-bottom: 20px;
-  /* width: calc(100% - 20px); */
   border-radius: 5px;
-  background: #3c3f41;
   border: none;
 }
 /deep/ .ant-card-body {
   padding: 10px;
 }
 .panel-button {
-  background: #313335;
   border-radius: 5px;
   height: 30px;
-  /* width: 50px; */
-  background: #4b6eaf;
   border: solid 1px #365880;
   color: #bbb;
   text-align: center;
-  /* line-height: 80px; */
   margin-top: 10px;
   cursor: pointer;
 }

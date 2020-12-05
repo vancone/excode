@@ -21,6 +21,7 @@
           </a-tab-pane>
           <a-tab-pane key="propertyForm" tab="Properties" closable="closable">
             <property-form></property-form>
+            <relational-database></relational-database>
           </a-tab-pane>
         </a-tabs>
       </a-col>
@@ -34,12 +35,13 @@ import ToolBar from '@/components/ToolBar'
 import LeftPanel from '@/components/LeftPanel'
 import PropertyForm from '@/components/Form'
 import ProjectProperties from '@/components/ProjectProperties'
+import RelationalDatabase from '@/components/RelationalDatabase'
 // import { getProjectList } from '@/api/project'
 
 export default {
   name: 'Project',
   components: {
-    GlobalHeader, ProjectProperties, LeftPanel, PropertyForm, ToolBar
+    GlobalHeader, ProjectProperties, LeftPanel, PropertyForm, ToolBar, RelationalDatabase
   },
   data () {
     const panes = [
@@ -157,13 +159,7 @@ export default {
   overflow: scroll;
   background-color: white;
 }
-/deep/ .ant-page-header-heading-title {
-  color: #bbb;
-}
 /deep/ .ant-page-header-heading-sub-title {
-  color: #bbb;
-}
-/deep/ .anticon-arrow-left {
   color: #bbb;
 }
 /deep/ .ant-page-header {

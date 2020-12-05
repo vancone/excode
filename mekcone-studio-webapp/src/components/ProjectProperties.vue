@@ -141,21 +141,14 @@ export default {
 /deep/ label {
   color: #bbb;
 }
-/deep/ .ant-input {
-  background: #45494a;
-  border: solid 1px #646464;
-  color: #bbb;
-}
 .button-ok {
   background: #365880;
   border: solid 1px #4c708c;
-  color: #bbb;
   width: 80px;
 }
 .button-cancel {
   background: #4c5052;
   border: solid 1px #5e6060;
-  color: #bbb;
   width: 80px;
 }
 /deep/ .ant-modal-header {

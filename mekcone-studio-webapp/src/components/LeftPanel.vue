@@ -44,7 +44,50 @@
           <span slot="title0010" style="color: #1890ff">sss</span>
         </a-tree>
       </a-tab-pane>
-      <a-tab-pane tab="Data Source" key="ds"></a-tab-pane>
+      <a-tab-pane tab="Data Source" key="ds">
+        <div class="left-panel-header">
+          <h1>Data Source</h1>
+        </div>
+        <div class="left-panel-toolbar">
+          <a-dropdown :trigger="['hover']">
+            <a class="ant-dropdown-link" style="color:#bbb;font-size:26px;" @click="e => e.preventDefault()">
+              &nbsp;+&nbsp;<a-icon type="caret-down" style="font-size:9px;position:relative;left:-14px;top:4px;"/>
+            </a>
+            <a-menu slot="overlay">
+              <a-menu-item key="0">
+                <img class="data-source-logo" src="../assets/mysql.svg">
+                <a style="display:inline-block" @click="createDataSource('mysql')">MySQL</a>
+              </a-menu-item>
+              <a-menu-divider />
+              <a-menu-item key="1">
+                <img class="data-source-logo" src="../assets/mongodb.svg">
+                <a style="display:inline-block" @click="createDataSource('mongodb')">MongoDB</a>
+              </a-menu-item>
+              <a-menu-item key="2">
+                <img class="data-source-logo" src="../assets/redis.svg">
+                <a style="display:inline-block" @click="createDataSource('redis')">Redis</a>
+              </a-menu-item>
+              <a-menu-divider />
+              <a-menu-item key="3">
+                More...
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </div>
+        <a-tree
+          show-line
+          class="module-tree"
+          style="background:#3c3f41;height:inherit;padding:10px;color:#bbb;font-size:12px;"
+          :tree-data="treeData2"
+          :default-expanded-keys="['0-0-0', '0-0-1']"
+          :default-selected-keys="['0-0-0', '0-0-1']"
+          :default-checked-keys="['0-0-0', '0-0-1']"
+          @select="onSelect"
+        >
+          <a-icon slot="switcherIcon" type="down" />
+          <span slot="title0010" style="color: #1890ff">sss</span>
+        </a-tree>
+      </a-tab-pane>
       <a-tab-pane tab="Code" key="code"></a-tab-pane>
     </a-tabs>
   </div>
@@ -73,6 +116,25 @@ export default {
           }
         ]
       }],
+      treeData2: [
+        {
+          title: 'MongoDB',
+          key: 'mongodb'
+        },
+        {
+          title: 'MySQL',
+          key: 'parent',
+          children: [
+            {
+
+            }
+          ]
+        },
+        {
+          title: 'Redis',
+          key: 'redis'
+        }
+      ],
       activeKey: 'projectProperties',
       panes,
       newTabIndex: 0
@@ -144,6 +206,9 @@ export default {
       }
       this.panes = panes
       this.activeKey = activeKey
+    },
+    createDataSource (type) {
+      alert(type)
     }
   },
   mounted () {
@@ -312,5 +377,12 @@ export default {
 }
 .ant-dropdown-menu {
   background-color:transparent !important;
+}
+.data-source-logo {
+  height: 15px;
+  width: 15px;
+}
+.ant-dropdown-menu-item {
+  font-size: 12px;
 }
 </style>
