@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping(value = "/api/devops/project")
+@RequestMapping("/api/devops/project")
 public class ProjectController {
 
     @Autowired
@@ -27,7 +27,7 @@ public class ProjectController {
 
     @PostMapping
     public Response create(@RequestBody Project project) {
-        projectService.create(project);
+        projectService.save(project);
         return Response.success();
     }
 
@@ -39,9 +39,9 @@ public class ProjectController {
     }
 
     @GetMapping
-    public Response findAll(@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
-                            @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
-        return Response.success(projectService.findAll(pageNo, pageSize));
+    public Response query(@RequestParam(defaultValue = "1") int pageNo,
+                            @RequestParam(defaultValue = "5") int pageSize) {
+        return Response.success(projectService.query(pageNo, pageSize));
     }
 
     @PutMapping

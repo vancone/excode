@@ -16,25 +16,13 @@ import java.util.Map;
  * @date 9/14/2020
  */
 @Data
-@Entity
-@Table(name = "module_type")
-@TypeDef(name = "json", typeClass = JsonStringType.class)
 public class ModuleType {
 
-    @Id
     private String id;
 
-    @Type(type = "json")
-    @Column(columnDefinition = "LONGTEXT")
     private Map<String, String> name;
 
-    @Column(columnDefinition = "TEXT")
     private String description;
 
     private String publisher;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "type", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Module> module;
-
 }

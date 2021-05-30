@@ -1,4 +1,4 @@
-package com.vancone.devops.service.basic.impl;
+package com.vancone.devops.service.basic;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
  * @date 3/13/2021
  */
 @Slf4j
-public class DocumentServiceImpl {
+public class DocumentService {
 
     private BaseFont simSunBaseFont;
     private BaseFont simHeiBaseFont;
@@ -24,7 +24,7 @@ public class DocumentServiceImpl {
 //        DocumentServiceImpl documentService = new DocumentServiceImpl();
 //    }
 
-    public DocumentServiceImpl() {
+    public DocumentService() {
         try {
             simSunBaseFont = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
             // Windows only!!
