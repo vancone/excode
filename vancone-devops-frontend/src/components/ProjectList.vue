@@ -1,7 +1,16 @@
 <template>
   <div class="hello">
     <div class="toolbar">
-      <el-button type="primary" @click="create"><i class="el-icon-plus" style="margin-right:10px;"></i>Create project</el-button>
+      <h1 style="float:left;">Projects</h1>
+      <div class="tool-buttons" style="float:right;">
+        <el-input placeholder="Search..." v-model="searchText" style="display:inline-block;width:300px;margin-right:10px;">
+          <template #suffix>
+            <i class="el-icon-search el-input__icon" @click="refresh"></i>
+          </template>
+        </el-input>
+        <el-button type="primary" style="display:inline-block;" @click="create"><i class="el-icon-plus" style="margin-right:10px;"></i>Create</el-button>
+        <el-button @click="refresh" style="display:inline-block;"><i class="el-icon-refresh" style="margin-right:10px;"></i>Refresh</el-button>
+      </div>
     </div>
     <el-table :data="tableData" style="width:calc(100% - 40px);margin:20px">
       <el-table-column label="Project Name" width="180">
@@ -41,8 +50,21 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- Pagition -->
+    <el-pagination
+      background
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      v-model:currentPage="pageNo"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="10"
+      layout="total, sizes, prev, pager, next"
+      :total="totalElements">
+    </el-pagination>
+
     <!-- Create Project Dialog -->
-    <el-dialog title="Create Project" v-model="dialogVisible" width="50%" :before-close="handleClose">
+    <el-dialog :title="dialogTitle" v-model="dialogVisible" width="50%" :before-close="handleClose">
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="Project name">
           <el-input v-model="form.name"></el-input>
@@ -91,7 +113,7 @@
       </template>
     </el-dialog>
     <div class="footer">
-      <p>ExCRUD Low-Code Project Build Platform</p>
+      <p>ExCode Low-Code Development Platform</p>
       <p>&copy; 2020-2021 VanCone. All rights reserved.</p>
     </div>
   </div>
@@ -100,7 +122,7 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'HelloWorld',
+  name: 'ProjectList',
   props: {
     msg: String
   },
@@ -108,6 +130,11 @@ export default {
     return {
       tableData: [],
       dialogVisible: false,
+      dialogTitle: '',
+      searchText: '',
+      pageSize: 10,
+      pageNo: 1,
+      totalElements: 0,
       form: {
         name: '',
         region: '',
@@ -123,10 +150,14 @@ export default {
   methods: {
     refresh () {
       const _this = this
-      axios.get('/api/devops/project')
+      let searchParam = ''
+      if (this.searchText !== '') {
+        searchParam = '&search=' + this.searchText
+      }
+      axios.get('/api/devops/project?pageSize=' + this.pageSize + '&pageNo=' + (this.pageNo - 1) + searchParam)
         .then((res) => {
-          _this.tableData = res.data.data
-          console.log(res.data)
+          _this.tableData = res.data.data.content
+          _this.totalElements = res.data.data.totalElements
         })
         .catch((err) => {
           console.log(err)
@@ -134,17 +165,20 @@ export default {
     },
     create () {
       this.form = {}
+      this.dialogTitle = 'Create Project'
       this.dialogVisible = true
     },
     save () {
       const _this = this
       axios.post('/api/devops/project', this.form)
         .then((res) => {
-          _this.$message('Save project success')
+          _this.$message({
+            message: 'Project saved.',
+            type: 'success'
+          })
           _this.dialogVisible = false
           _this.form = {}
           _this.refresh()
-          console.log(res.data)
         })
         .catch((err) => {
           console.log(err)
@@ -153,6 +187,7 @@ export default {
     handleEdit (index, row) {
       console.log(index, row)
       this.form = row
+      this.dialogTitle = 'Configure Project'
       this.dialogVisible = true
     },
     handleDelete (index, row) {
@@ -173,6 +208,16 @@ export default {
           this.dialogVisible = false
         })
         .catch(_ => {})
+    },
+    handleSizeChange (val) {
+      console.log(`${val} items per page`)
+      this.pageSize = val
+      this.refresh()
+    },
+    handleCurrentChange (val) {
+      console.log(`current page: ${val}`)
+      this.pageNo = val
+      this.refresh()
     }
   },
   mounted: function () {
@@ -200,11 +245,12 @@ a {
 .toolbar {
   margin-top: 20px;
   margin-left: 20px;
+  margin-right: 20px;
   text-align: left;
 }
 .footer {
   color: #999;
-  position: fixed;
+  position: absolute;
   font-size: 14px;
   bottom: 0;
   width: 100%;

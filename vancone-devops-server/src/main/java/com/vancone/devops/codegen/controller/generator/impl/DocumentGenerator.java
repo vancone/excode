@@ -132,7 +132,7 @@ public class DocumentGenerator extends Generator {
             paragraph = new Paragraph();
             paragraph.setSpacingBefore(100);
             paragraph.setAlignment(1);
-            Image image = Image.getInstance(UrlPath.MEKCONE_STUDIO_HOME + "/resources/logo/logo2.png");
+            Image image = Image.getInstance(UrlPath.VANCONE_STUDIO_HOME + "/resources/logo/logo2.png");
             image.setAlignment(1);
             image.scaleAbsolute(40, 40);
             paragraph.add(image);

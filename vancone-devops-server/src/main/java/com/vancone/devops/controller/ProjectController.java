@@ -31,7 +31,7 @@ public class ProjectController {
         return Response.success();
     }
 
-    @GetMapping("/{projectId}")
+    @GetMapping("{projectId}")
     public Response findById(@PathVariable String projectId) {
         Project project = projectService.findById(projectId);
         log.info("Retrieve project: {}", project.toString());
@@ -39,24 +39,19 @@ public class ProjectController {
     }
 
     @GetMapping
-    public Response query(@RequestParam(defaultValue = "1") int pageNo,
-                            @RequestParam(defaultValue = "5") int pageSize) {
-        return Response.success(projectService.query(pageNo, pageSize));
+    public Response query(@RequestParam(defaultValue = "0") int pageNo,
+                            @RequestParam(defaultValue = "5") int pageSize,
+                            @RequestParam(defaultValue = "") String search) {
+        return Response.success(projectService.query(pageNo, pageSize, search));
     }
 
-    @PutMapping
-    public Response update(@RequestBody Project project) {
-        projectService.save(project);
-        return Response.success();
-    }
-
-    @DeleteMapping("/{projectId}")
+    @DeleteMapping("{projectId}")
     public Response delete(@PathVariable String projectId) {
         projectService.delete(projectId);
         return Response.success();
     }
 
-    @PostMapping("/import")
+    @PostMapping("import")
     public Response importProject(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return Response.fail(1, "File is empty");
@@ -75,12 +70,12 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/download/{fileType}/{projectId}")
+    @GetMapping("download/{fileType}/{projectId}")
     public void downloadFile(HttpServletResponse response, @PathVariable String fileType, @PathVariable String projectId) {
         projectService.export(response, fileType, projectId);
     }
 
-    @GetMapping("/dbTypeList")
+    @GetMapping("dbTypeList")
     public Response retrieveDatabaseTypeList() throws IllegalAccessException {
         // Todo: The list should be cached in Redis to optimize performance
         List<String> dbTypes = new ArrayList<>();

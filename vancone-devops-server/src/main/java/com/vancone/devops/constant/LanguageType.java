@@ -1,9 +1,8 @@
 package com.vancone.devops.constant;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 public interface LanguageType {
     String AFAR = "aa";
     String ABKHAZIAN = "ab";

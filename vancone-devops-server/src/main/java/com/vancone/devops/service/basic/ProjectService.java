@@ -3,6 +3,7 @@ package com.vancone.devops.service.basic;
 import com.vancone.devops.enums.ProjectEnum;
 import com.vancone.devops.exception.ResponseException;
 import com.vancone.devops.entity.DTO.Project;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -40,10 +41,13 @@ public class ProjectService {
         return project;
     }
 
-    public Page<Project> query(int pageNo, int pageSize) {
+    public Page<Project> query(int pageNo, int pageSize, String search) {
         Sort sort = Sort.by(Sort.Direction.DESC, "modifiedTime");
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Query query = Query.query(Criteria.where("deleted").is(false));
+        if (StringUtils.isNotBlank(search)) {
+            query.addCriteria(Criteria.where("name").regex(search));
+        }
         long count = mongoTemplate.count(query, Project.class);
         List<Project> projects = mongoTemplate.find(query.with(pageable), Project.class);
         return new PageImpl<>(projects, pageable, count);

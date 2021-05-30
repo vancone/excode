@@ -1,9 +1,18 @@
 <template>
-  <div class="header">
-    <h1>ExCRUD</h1>
-  </div>
+  <Header/>
   <router-view/>
 </template>
+
+<script>
+import Header from '@/components/Header.vue'
+
+export default {
+  name: 'Home',
+  components: {
+    Header
+  }
+}
+</script>
 
 <style>
 #app {
@@ -31,14 +40,23 @@
   color: white;
   height: 54px;
   text-align: left;
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
 h1 {
   margin-top: 0;
+  margin-left: 10px;
   font-size: 22px;
-  line-height: 54px;
+  line-height: 55px;
   font-weight: 100;
   cursor: default;
+  display: inline-block;
+}
+.logo {
+  height: 35px;
+  line-height: 55px;
+  vertical-align: top;
+  margin-top: 9px;
+  display: inline-block;
 }
 </style>

@@ -1,9 +1,8 @@
 package com.vancone.devops.constant;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 public interface DataType {
     // Java basic types
     String JAVA_BYTE = "byte";

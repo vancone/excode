@@ -1,8 +1,8 @@
 package com.vancone.devops.constant;
 
-/*
- * Author: Tenton Lien
- * Date: 9/21/2020
+/**
+ * @author Tenton Lien
+ * @date 9/21/2020
  */
 
 public interface Constant {
