@@ -1,73 +1,14 @@
 <template>
   <div class="hello">
-    <div class="toolbar">
-      <h1 style="float:left;">Projects</h1>
-      <div class="tool-buttons" style="float:right;">
-        <el-input placeholder="Search..." v-model="searchText" style="display:inline-block;width:300px;margin-right:10px;">
-          <template #suffix>
-            <i class="el-icon-search el-input__icon" @click="refresh"></i>
-          </template>
-        </el-input>
-        <el-button type="primary" style="display:inline-block;" @click="create"><i class="el-icon-plus" style="margin-right:10px;"></i>Create</el-button>
-        <el-button @click="refresh" style="display:inline-block;"><i class="el-icon-refresh" style="margin-right:10px;"></i>Refresh</el-button>
-      </div>
-    </div>
-    <el-table :data="tableData" style="width:calc(100% - 40px);margin:20px">
-      <el-table-column label="Project Name" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Name" width="180">
-        <template #default="scope">
-          <el-popover effect="light" trigger="hover" placement="top">
-            <template #default>
-              <!-- <p>姓名: {{ scope.row.name }}</p>
-              <p>住址: {{ scope.row.address }}</p> -->
-            </template>
-            <template #reference>
-              <div class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
-              </div>
-            </template>
-          </el-popover>
-        </template>
-      </el-table-column>
-      <el-table-column label="Last Modified" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.modifiedTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Operations">
-        <template #default="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit"></i>&nbsp;Edit</el-button>
-          <el-button size="mini" @click="handleConfigure(scope.$index, scope.row)"><i class="el-icon-setting"></i>&nbsp;Configure</el-button>
-          <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
-            <template #reference>
-              <el-button size="mini" type="danger"><i class="el-icon-delete"></i>&nbsp;Delete</el-button>
-            </template>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <!-- Pagition -->
-    <el-pagination
-      background
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      v-model:currentPage="pageNo"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="10"
-      layout="total, sizes, prev, pager, next"
-      :total="totalElements">
-    </el-pagination>
-
     <!-- Create Project Dialog -->
     <el-dialog :title="dialogTitle" v-model="dialogVisible" width="50%" :before-close="handleClose">
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="Project name">
           <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-checkbox label="Spring Boot" name="type"></el-checkbox>
+          <el-checkbox label="Vue.js" name="type"></el-checkbox>
         </el-form-item>
         <!-- <el-form-item label="Activity zone">
           <el-select v-model="form.region" placeholder="please select your zone">
@@ -112,24 +53,20 @@
         </span>
       </template>
     </el-dialog>
-    <div class="footer">
-      <p>ExCode Low-Code Development Platform</p>
-      <p>&copy; 2020-2021 VanCone. All rights reserved.</p>
-    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-  name: 'ProjectList',
+  name: 'ExportDialog',
   props: {
     msg: String
   },
   data () {
     return {
       tableData: [],
-      dialogVisible: false,
+      dialogVisible: true,
       dialogTitle: '',
       searchText: '',
       pageSize: 10,
