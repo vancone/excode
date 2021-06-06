@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 22.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1000 1000" style="enable-background:new 0 0 1000 1000;" xml:space="preserve">
+	 viewBox="0 0 1965 520" style="enable-background:new 0 0 1965 520;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#4FC0E8;}
-	.st1{fill:#EC5362;}
-	.st2{fill:none;}
-	.st3{fill:#FFFFFF;}
-	.st4{font-family:'Consolas';}
-	.st5{font-size:800px;}
+	.st0{fill:none;}
+	.st1{stroke:#000000;stroke-width:0.25;stroke-miterlimit:10;}
+	.st2{font-family:'Antipasto';}
+	.st3{font-size:360px;}
+	.st4{letter-spacing:18;}
+	.st5{fill:#0499FD;}
+	.st6{fill:#FFFFFF;}
 </style>
+<rect x="560.1" y="138" class="st0" width="1304.9" height="408"/>
+<text transform="matrix(1 0 0 1 592.8047 368.0371)" class="st1 st2 st3 st4">ExCode</text>
+<circle class="st5" cx="261" cy="259" r="249"/>
+<rect x="57.4" y="112.1" class="st0" width="220.6" height="336.1"/>
+<rect x="212.4" y="112.1" class="st0" width="272.7" height="287.3"/>
 <g>
-	<rect x="1" class="st0" width="1000" height="1000"/>
+	<polygon class="st6" points="146.5,137 216.9,259 182.1,259 111.6,137 	"/>
+	<polygon class="st6" points="216.9,259 146.5,381 111.6,381 182.1,259 	"/>
 </g>
-<rect x="233" y="298" class="st1" width="292" height="405"/>
-<rect x="366" y="410" class="st1" width="219" height="183"/>
-<rect x="91.1" y="205" class="st2" width="442.9" height="675"/>
-<text transform="matrix(1 0 0 1 91.1113 756.9902)" class="st3 st4 st5">E</text>
-<rect x="402.5" y="205" class="st2" width="547.5" height="577"/>
-<text transform="matrix(1 0 0 1 400.4761 756.9902)" class="st3 st4 st5">X</text>
+<g>
+	<polygon class="st6" points="305.7,137 376.1,259 341.2,259 270.9,137 	"/>
+	<polygon class="st6" points="376.1,259 305.7,381 270.9,381 341.2,259 	"/>
+</g>
+<g>
+	<polygon class="st6" points="354.4,137 424.8,259 389.9,259 319.5,137 	"/>
+	<polygon class="st6" points="424.8,259 354.4,381 319.5,381 389.9,259 	"/>
+</g>
+<rect x="255.8" y="137" class="st6" width="98.6" height="25.4"/>
+<rect x="265.7" y="355.6" class="st6" width="88.6" height="25.4"/>
+<g>
+	<polygon class="st6" points="252.5,137 182.1,259 216.9,259 287.3,137 	"/>
+	<polygon class="st6" points="182.1,259 252.5,381 287.3,381 216.9,259 	"/>
+</g>
 </svg>

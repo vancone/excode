@@ -1,9 +1,8 @@
 package com.vancone.excode.codegen.enums;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 public enum ErrorEnum {
     // General errors (E000000 ~ E000999)
     UNKNOWN_ERROR("E000000", "Unknown error"),

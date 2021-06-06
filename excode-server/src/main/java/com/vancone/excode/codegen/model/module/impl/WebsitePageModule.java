@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author Tenton Lien
+ */
 @Data
 public class WebsitePageModule extends Module {
     private Theme theme;

@@ -10,11 +10,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Author: Tenton Lien
- * Date: 6/11/2020
- */
 
+/**
+ * @author Tenton Lien
+ */
 @Slf4j
 public class LangUtil {
     private static List<PropertiesParser> propertiesParsers = new ArrayList<>();

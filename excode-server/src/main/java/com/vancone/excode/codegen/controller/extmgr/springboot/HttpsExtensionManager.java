@@ -1,10 +1,9 @@
 package com.vancone.excode.codegen.controller.extmgr.springboot;
 
-/*
- * Author: Tenton Lien
- * Date: 6/23/2020
+/**
+ * @author Tenton Lien
+ * @date 6/23/2020
  */
-
 public class HttpsExtensionManager {
 
 }

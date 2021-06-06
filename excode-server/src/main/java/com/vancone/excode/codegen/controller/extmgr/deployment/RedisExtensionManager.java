@@ -3,6 +3,9 @@ package com.vancone.excode.codegen.controller.extmgr.deployment;
 import com.vancone.excode.codegen.controller.generator.impl.DeploymentGenerator;
 import com.vancone.excode.codegen.model.project.Project;
 
+/**
+ * @author Tenton Lien
+ */
 public class RedisExtensionManager {
     private final DeploymentGenerator deploymentGenerator;
     private final Project project;

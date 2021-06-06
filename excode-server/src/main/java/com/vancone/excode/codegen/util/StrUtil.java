@@ -1,9 +1,8 @@
 package com.vancone.excode.codegen.util;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 public class StrUtil {
     public static String camelCase(String data) {
         String[] stringArray;

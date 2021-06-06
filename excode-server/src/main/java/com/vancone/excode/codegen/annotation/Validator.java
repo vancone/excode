@@ -5,11 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/*
- * Author: Tenton Lien
- * Date: 7/7/2020
+/**
+ * @author Tenton Lien
+ * @date 7/7/2020
  */
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Validator {

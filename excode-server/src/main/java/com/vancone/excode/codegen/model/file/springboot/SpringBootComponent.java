@@ -10,6 +10,9 @@ import com.vancone.excode.codegen.model.project.Project;
 import com.vancone.excode.constant.ModuleConstant;
 import lombok.Data;
 
+/**
+ * @author Tenton Lien
+ */
 @Data
 public class SpringBootComponent {
 

@@ -6,11 +6,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-/*
- * Author: Tenton Lien
- * Date: 9/12/2020
+/**
+ * @author Tenton Lien
+ * @date 9/12/2020
  */
-
 @Configuration
 public class CrossOriginConfig {
     private CorsConfiguration buildConfig(){

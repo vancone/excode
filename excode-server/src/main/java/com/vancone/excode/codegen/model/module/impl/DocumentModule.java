@@ -9,6 +9,9 @@ import org.springframework.http.HttpMethod;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Tenton Lien
+ */
 @Data
 public class DocumentModule extends Module {
     private List<Keyword> keywords = new ArrayList<>();

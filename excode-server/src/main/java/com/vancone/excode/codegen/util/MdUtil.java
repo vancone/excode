@@ -5,11 +5,10 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Author: Tenton Lien
- * Date: 6/18/2020
+/**
+ * @author Tenton Lien
+ * @date 6/18/2020
  */
-
 public class MdUtil {
     public static String codeBlock(String content) {
         return "```\n" + content + "\n```";

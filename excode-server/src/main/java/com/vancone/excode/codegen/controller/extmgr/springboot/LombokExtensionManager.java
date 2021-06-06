@@ -6,10 +6,9 @@ import com.vancone.excode.codegen.model.module.impl.SpringBootModule;
 import com.vancone.excode.codegen.model.file.springboot.SpringBootDataClass;
 import lombok.extern.slf4j.Slf4j;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 @Slf4j
 public class LombokExtensionManager {
 

@@ -4,11 +4,10 @@ import com.vancone.cloud.common.model.Response;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/*
- * Author: Tenton Lien
- * Date: 9/20/2020
+/**
+ * @author Tenton Lien
+ * @date 9/20/2020
  */
-
 @RestControllerAdvice
 public class ResponseExceptionHandler {
     @ExceptionHandler(value = ResponseException.class)

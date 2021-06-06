@@ -8,10 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 @Slf4j
 public class SpringBootPackager {
 

@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Tenton Lien
+ */
 @Data
 public class ModuleInfo {
 

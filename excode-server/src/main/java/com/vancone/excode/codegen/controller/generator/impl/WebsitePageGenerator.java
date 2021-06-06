@@ -8,10 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 @Slf4j
 public class WebsitePageGenerator extends Generator {
 

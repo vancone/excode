@@ -8,10 +8,9 @@ import com.vancone.excode.constant.ModuleConstant;
 import com.vancone.excode.codegen.controller.extmgr.datasource.SqlExtensionManager;
 import lombok.extern.slf4j.Slf4j;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 @Slf4j
 public class DatasourceGenerator extends Generator {
 

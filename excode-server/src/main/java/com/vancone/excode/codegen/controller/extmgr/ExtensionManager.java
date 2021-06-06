@@ -2,11 +2,10 @@ package com.vancone.excode.codegen.controller.extmgr;
 
 import com.vancone.excode.codegen.controller.generator.Generator;
 
-/*
- * Author: Tenton Lien
- * Date: 6/25/2020
+/**
+ * @author Tenton Lien
+ * @date 6/25/2020
  */
-
 public class ExtensionManager {
     private Generator generator;
 

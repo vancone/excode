@@ -3,10 +3,9 @@ package com.vancone.excode.codegen.util;
 import com.vancone.excode.constant.DataType;
 import lombok.extern.slf4j.Slf4j;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 @Slf4j
 public class DataTypeConverter {
     public static String convertToJavaDataType(String dataType) {

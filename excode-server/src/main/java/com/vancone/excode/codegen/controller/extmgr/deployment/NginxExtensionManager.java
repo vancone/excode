@@ -7,6 +7,9 @@ import com.vancone.excode.codegen.model.module.impl.DeploymentModule;
 
 import java.io.File;
 
+/**
+ * @author Tenton Lien
+ */
 public class NginxExtensionManager extends ExtensionManager {
 
     private final DeploymentGenerator deploymentGenerator;

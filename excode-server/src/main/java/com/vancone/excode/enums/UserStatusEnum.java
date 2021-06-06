@@ -4,9 +4,9 @@ package com.vancone.excode.enums;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
- * Author: Tenton Lien
- * Date: 10/1/2020
+/**
+ * @author Tenton Lien
+ * @date 10/1/2020
  */
 
 public enum UserStatusEnum {

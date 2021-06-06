@@ -16,7 +16,7 @@ import com.vancone.excode.codegen.controller.generator.Generator;
 import com.vancone.excode.codegen.controller.extmgr.datasource.SqlExtensionManager;
 import com.vancone.excode.codegen.controller.extmgr.springboot.CrossOriginExtensionManager;
 import com.vancone.excode.codegen.controller.extmgr.springboot.LombokExtensionManager;
-import com.vancone.excode.codegen.controller.extmgr.springboot.MekConeCloudExtensionManager;
+import com.vancone.excode.codegen.controller.extmgr.springboot.VanConeCloudExtensionManager;
 import com.vancone.excode.codegen.controller.extmgr.springboot.Swagger2ExtensionManager;
 import com.vancone.excode.codegen.controller.parser.PropertiesParser;
 import com.vancone.excode.codegen.controller.parser.template.impl.JavaTemplate;
@@ -32,10 +32,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 @Slf4j
 public class SpringBootGenerator extends Generator {
 
@@ -122,7 +121,7 @@ public class SpringBootGenerator extends Generator {
                     new LombokExtensionManager(springBootModule);
                     break;
                 case ModuleConstant.SPRING_BOOT_EXTENSION_MEKCONE_CLOUD:
-                    new MekConeCloudExtensionManager(project);
+                    new VanConeCloudExtensionManager(project);
                     break;
                 case ModuleConstant.SPRING_BOOT_EXTENSION_SWAGGER2:
                     new Swagger2ExtensionManager(this, project);

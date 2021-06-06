@@ -1,10 +1,9 @@
 package com.vancone.excode.config.property;
 
-/*
- * Author: Tenton Lien
- * Date: 10/1/2020
+/**
+ * @author Tenton Lien
+ * @date 10/1/2020
  */
-
 public class CookieConfig {
 
     public static String getName() {

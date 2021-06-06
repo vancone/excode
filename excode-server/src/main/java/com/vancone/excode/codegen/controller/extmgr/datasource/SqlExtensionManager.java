@@ -3,6 +3,9 @@ package com.vancone.excode.codegen.controller.extmgr.datasource;
 import com.vancone.excode.codegen.model.database.Database;
 import com.vancone.excode.codegen.model.database.Table;
 
+/**
+ * @author Tenton Lien
+ */
 public class SqlExtensionManager {
 
     public static String createDatabaseQuery(Database database) {

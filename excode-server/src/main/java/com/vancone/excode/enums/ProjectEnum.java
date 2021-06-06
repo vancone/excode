@@ -4,11 +4,10 @@ import com.vancone.excode.exception.BaseEnum;
 import lombok.Getter;
 import lombok.Setter;
 
-/*
- * Author: Tenton Lien
- * Date: 9/20/2020
+/**
+ * @author Tenton Lien
+ * @ate 9/20/2020
  */
-
 public enum ProjectEnum implements BaseEnum {
     PROJECT_NOT_EXIST(1001, "The project is not found");
     @Getter @Setter

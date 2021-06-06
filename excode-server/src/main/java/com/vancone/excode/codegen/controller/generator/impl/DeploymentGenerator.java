@@ -8,11 +8,10 @@ import com.vancone.excode.codegen.controller.generator.Generator;
 import com.vancone.excode.codegen.model.module.impl.DeploymentModule;
 import lombok.extern.slf4j.Slf4j;
 
-/*
- * Author: Tenton Lien
- * Date: 6/15/2020
+/**
+ * @author Tenton Lien
+ * @date 6/15/2020
  */
-
 @Slf4j
 public class DeploymentGenerator extends Generator {
     public DeploymentGenerator(Project project) {

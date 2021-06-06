@@ -8,6 +8,9 @@ import lombok.Data;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Tenton Lien
+ */
 @Data
 public abstract class Module {
     private String type;

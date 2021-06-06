@@ -8,6 +8,9 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Tenton Lien
+ */
 @Data
 public class DatasourceModule extends Module {
 

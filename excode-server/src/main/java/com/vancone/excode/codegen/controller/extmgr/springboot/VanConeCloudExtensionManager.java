@@ -12,18 +12,17 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
-/*
- * Author: Tenton Lien
- * Date: 6/21/2020
+/**
+ * @author Tenton Lien
+ * @date 6/21/2020
  */
-
 @Slf4j
-public class MekConeCloudExtensionManager {
+public class VanConeCloudExtensionManager {
 
     private Project project;
     private SpringBootModule springBootModule;
 
-    public MekConeCloudExtensionManager(Project project) {
+    public VanConeCloudExtensionManager(Project project) {
         this.project = project;
         this.springBootModule = project.getModuleSet().getSpringBootModule();
         project.getModuleSet().getSpringBootModule().getMavenProjectObjectModel().addDependencies(ModuleConstant.SPRING_BOOT_EXTENSION_MEKCONE_CLOUD);

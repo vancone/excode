@@ -2,11 +2,10 @@ package com.vancone.excode.exception;
 
 import lombok.Data;
 
-/*
- * Author: Tenton Lien
- * Date: 9/20/2020
+/**
+ * @author Tenton Lien
+ * @date 9/20/2020
  */
-
 @Data
 public class ResponseException extends RuntimeException {
     private int code;

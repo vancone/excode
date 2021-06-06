@@ -4,9 +4,9 @@ import com.vancone.excode.exception.BaseEnum;
 import lombok.Getter;
 import lombok.Setter;
 
-/*
- * Author: Tenton Lien
- * Date: 9/21/2020
+/**
+ * @author Tenton Lien
+ * @date 9/21/2020
  */
 
 public enum UserEnum implements BaseEnum {

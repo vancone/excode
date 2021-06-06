@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Tenton Lien
+ */
 @Data
 @Slf4j
 public class MavenProjectObjectModel {

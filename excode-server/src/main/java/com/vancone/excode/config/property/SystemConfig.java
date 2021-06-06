@@ -7,11 +7,10 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Author: Tenton Lien
- * Date: 10/1/2020
+/**
+ * @author Tenton Lien
+ * @date 10/1/2020
  */
-
 @Data
 @Component
 @ConfigurationProperties(prefix = "system")

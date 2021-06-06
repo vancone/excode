@@ -4,10 +4,9 @@ import com.vancone.excode.codegen.controller.parser.template.Template;
 import com.vancone.excode.codegen.util.FileUtil;
 import lombok.Getter;
 
-/*
- * Author: Tenton Lien
+/**
+ * @author Tenton Lien
  */
-
 public class CommonTemplate implements Template {
     @Getter
     private String template;
