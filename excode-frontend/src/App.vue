@@ -24,7 +24,7 @@ export default {
   height: 100%;
 }
 
-#nav {
+/* #nav {
   padding: 30px;
 }
 
@@ -35,7 +35,7 @@ export default {
 
 #nav a.router-link-exact-active {
   color: #42b983;
-}
+} */
 .header {
   background: black;
   color: white;
@@ -43,7 +43,6 @@ export default {
   text-align: left;
   padding-left: 10px;
 }
-
 h1 {
   margin-top: 0;
   margin-left: 10px;

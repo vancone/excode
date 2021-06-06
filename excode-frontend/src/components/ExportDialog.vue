@@ -66,7 +66,7 @@ export default {
   data () {
     return {
       tableData: [],
-      dialogVisible: true,
+      dialogVisible: false,
       dialogTitle: '',
       searchText: '',
       pageSize: 10,

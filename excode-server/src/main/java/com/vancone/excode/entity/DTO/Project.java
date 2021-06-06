@@ -2,12 +2,15 @@ package com.vancone.excode.entity.DTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vancone.excode.entity.DTO.module.Module;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Tenton Lien
@@ -37,5 +40,5 @@ public class Project {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifiedTime;
 
-    private List<Module> modules;
+    private Map<String, Module> modules = new HashMap<>();
 }

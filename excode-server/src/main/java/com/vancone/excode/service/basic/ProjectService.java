@@ -1,8 +1,10 @@
 package com.vancone.excode.service.basic;
 
+import com.vancone.excode.entity.DTO.Project;
+import com.vancone.excode.entity.DTO.module.Module;
+import com.vancone.excode.entity.DTO.module.SpringBootModule;
 import com.vancone.excode.enums.ProjectEnum;
 import com.vancone.excode.exception.ResponseException;
-import com.vancone.excode.entity.DTO.Project;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Tenton Lien
@@ -28,6 +32,17 @@ public class ProjectService {
         LocalDateTime time = LocalDateTime.now();
         if (project.getId() == null) {
             project.setCreatedTime(time);
+
+            // Initial modules and extensions
+            Map<String, Module> modules = new HashMap<>();
+            SpringBootModule springBootModule = new SpringBootModule();
+            modules.put("spring_boot", springBootModule);
+            project.setModules(modules);
+
+            // Spring Boot Module
+            springBootModule.setGroupId("com.vancone");
+            springBootModule.setArtifactId(project.getName());
+            springBootModule.setVersion("0.1.0");
         }
         project.setModifiedTime(time);
         mongoTemplate.save(project);

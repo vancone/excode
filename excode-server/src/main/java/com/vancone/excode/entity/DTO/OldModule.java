@@ -12,7 +12,7 @@ import java.util.Map;
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Module {
+public class OldModule {
 
     private String id;
 

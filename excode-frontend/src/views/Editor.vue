@@ -1,11 +1,22 @@
 <template>
   <div class="editor">
     <div class="toolbar">
-      <el-button type="primary" size="mini" style="margin-top: 4px;float:right;">Export</el-button>
+      <div class="button-save" @click="save"><img src="../assets/save.svg"/></div>
+      <el-button type="primary" size="mini" class="button-export">Export</el-button>
     </div>
     <el-row style="height:calc(100% - 35px);">
-      <el-col :span="5" style="background:#fff;height:100%;">
-        <div style="height:30px;width:100%;border-bottom: solid 1px #ddd;text-align:left;">
+      <el-col :span="19" style="height: 100%">
+        <el-tabs tab-position="left" class="tabs">
+          <el-tab-pane label="Spring Boot" style="height: 100%;">
+            <SpringBootPanel/>
+          </el-tab-pane>
+          <el-tab-pane label="Vue.js">Config</el-tab-pane>
+          <el-tab-pane label="Document">Role</el-tab-pane>
+        </el-tabs>
+      </el-col>
+
+      <el-col :span="5" style="background: #fff; height: 100%;">
+        <div style="height: 30px;width:100%; border-bottom: solid 1px #ddd;text-align: left;">
           <span style="line-height:30px;margin-left:10px;font-weight:bold">Data Object</span>
           <i class="el-icon-plus" style="float:right;margin-right:8px;margin-top:7px;cursor:pointer;"/>
         </div>
@@ -27,11 +38,14 @@
 </template>
 
 <script>
+import axios from 'axios'
 import ExportDialog from '@/components/ExportDialog.vue'
+import SpringBootPanel from '@/components/SpringBootPanel.vue'
+import Project from '@/global_variable.js'
 let id = 1000
 export default {
   name: 'Editor',
-  components: { ExportDialog },
+  components: { ExportDialog, SpringBootPanel },
   data () {
     return {
       data: [{
@@ -56,27 +70,34 @@ export default {
           label: 'publishTime'
         }
         ]
-      }, {
-        label: 'Level one 3',
-        children: [{
-          label: 'Level two 3-1',
-          children: [{
-            label: 'Level three 3-1-1'
-          }]
-        }, {
-          label: 'Level two 3-2',
-          children: [{
-            label: 'Level three 3-2-1'
-          }]
-        }]
       }],
       defaultProps: {
         children: 'children',
         label: 'label'
-      }
+      },
+      project: Project
     }
   },
   methods: {
+    save () {
+      alert(JSON.stringify(this.project))
+    },
+    getUrlParam (name) {
+      var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+      var r = window.location.search.substr(1).match(reg)
+      if (r != null) return unescape(r[2])
+      return null
+    },
+    load () {
+      const _this = this
+      axios.get('/api/excode/project/' + this.getUrlParam('id'))
+        .then((res) => {
+          _this.project = res.data.data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
     append (data) {
       const newChild = { id: id++, label: 'testtest', children: [] }
       if (!data.children) {
@@ -102,6 +123,9 @@ export default {
         onClick: () => this.remove(node, data)
       }, 'Delete')))
     }
+  },
+  mounted: function () {
+    this.load()
   }
 }
 </script>
@@ -109,6 +133,7 @@ export default {
 <style scoped>
 .editor {
   height: calc(100% - 55px);
+  width: 100%;
   background: #f5f5f5;
 }
 .toolbar {
@@ -117,15 +142,42 @@ export default {
   background: white;
   border-bottom: solid 1px #ddd;
 }
+.button-save {
+  height: 35px;
+  width: 35px;
+  cursor: pointer;
+  margin-top: 0px;
+  margin-left: 10px;
+  float: left;
+}
+.button-save:hover {
+  background: #eee;
+}
+.button-save img {
+  margin-top: 7px;
+  height: 20px;
+}
+.button-export {
+  margin-top: 3px;
+  margin-right: 5px;
+  float: right;
+}
+.tabs {
+  height: 100%;
+  text-align: left;
+}
+/deep/ .el-tabs__content {
+  height: 100%;
+}
 .tree {
   background: #fff;
 }
-  .custom-tree-node {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 14px;
-    padding-right: 8px;
-  }
+.custom-tree-node {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-right: 8px;
+}
 </style>
