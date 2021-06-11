@@ -41,7 +41,6 @@
 import axios from 'axios'
 import ExportDialog from '@/components/ExportDialog.vue'
 import SpringBootPanel from '@/components/SpringBootPanel.vue'
-import Project from '@/global_variable.js'
 let id = 1000
 export default {
   name: 'Editor',
@@ -75,7 +74,7 @@ export default {
         children: 'children',
         label: 'label'
       },
-      project: Project
+      project: {}
     }
   },
   methods: {
@@ -93,6 +92,7 @@ export default {
       axios.get('/api/excode/project/' + this.getUrlParam('id'))
         .then((res) => {
           _this.project = res.data.data
+          localStorage.setItem('project', JSON.stringify(res.data.data))
         })
         .catch((err) => {
           console.log(err)

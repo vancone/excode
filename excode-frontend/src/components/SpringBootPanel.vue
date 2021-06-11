@@ -46,7 +46,6 @@
 
 <script>
 import axios from 'axios'
-import Project from '@/global_variable.js'
 export default {
   name: 'SpringBootPanel',
   data () {
@@ -58,8 +57,18 @@ export default {
       pageSize: 10,
       pageNo: 1,
       totalElements: 0,
-      project: Project,
-      groupId: this.project.modules.spring_boot.groupId,
+      project: {
+        modules: {
+          spring_boot: {
+            groupId: ''
+          }
+        },
+        extensions: {
+          lombok: {},
+          swagger: {},
+          jasypt: {}
+        }
+      },
       form: {
         groupId: 'com.vancone',
         artifactId: 'excode-demo',
@@ -170,6 +179,8 @@ export default {
   mounted: function () {
     console.log('Project', this.project)
     // this.refresh()
+    console.log('Loading project', localStorage.getItem('project'))
+    this.project = localStorage.getItem('project')
   }
 }
 </script>
