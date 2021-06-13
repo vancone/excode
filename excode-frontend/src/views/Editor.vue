@@ -3,7 +3,7 @@
     <div class="toolbar">
       <div class="button-save" @click="back"><img src="../assets/back.svg"/></div>
       <div class="button-save" @click="save"><img src="../assets/save.svg"/></div>
-      <div class="button-save" @click="save"><img src="../assets/database.svg"/></div>
+      <div class="button-save" @click="openDataSourceDialog"><img src="../assets/database.svg"/></div>
       <el-button type="primary" size="mini" class="button-export">Export</el-button>
     </div>
     <el-row style="height:calc(100% - 35px);">
@@ -56,19 +56,25 @@
         </span>
       </template>
     </el-dialog>
+    <!-- Data source dialog -->
+    <el-dialog title="Data Source" v-model="dataSourceDialogVisible" width="70%" :before-close="handleClose">
+      <data-source-panel/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import DataSourcePanel from '@/components/DataSourcePanel'
 import ExportDialog from '@/components/ExportDialog.vue'
 // import SpringBootPanel from '@/components/SpringBootPanel.vue'
 export default {
   name: 'Editor',
-  components: { ExportDialog/* , SpringBootPanel */ },
+  components: { DataSourcePanel, ExportDialog/* , SpringBootPanel */ },
   data () {
     return {
       dataObjectDialogVisible: false,
+      dataSourceDialogVisible: false,
       defaultProps: {
         children: 'nodes',
         label: 'value'
@@ -123,6 +129,9 @@ export default {
     },
     openDataObjectDialog () {
       this.dataObjectDialogVisible = true
+    },
+    openDataSourceDialog () {
+      this.dataSourceDialogVisible = true
     },
     load () {
       const _this = this
