@@ -10,6 +10,6 @@ import lombok.Data;
  */
 @Data
 @ExtensionClass(module = ModuleConstant.SPRING_BOOT)
-public class Jasypt extends Extension {
-    private String password;
+public class SwaggerExtension extends BaseExtension {
+    private String title = "API Document";
 }

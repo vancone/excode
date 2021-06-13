@@ -10,6 +10,6 @@ import lombok.Data;
  */
 @Data
 @ExtensionClass(module = ModuleConstant.SPRING_BOOT)
-public class Swagger extends Extension {
-    private String title = "API Document";
+public class LombokExtension extends BaseExtension {
+
 }

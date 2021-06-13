@@ -26,7 +26,7 @@ public class Host implements Serializable {
     private String osVersion;
 
     public boolean testConnection() {
-        int  timeOut = 3000;  // Timeout after 3 seconds
+        int timeOut = 3000;  // Timeout after 3 seconds
         try {
             log.info("ping " + ipAddress);
             return InetAddress.getByName(ipAddress).isReachable(timeOut);

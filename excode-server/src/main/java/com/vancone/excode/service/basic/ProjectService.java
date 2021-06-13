@@ -15,9 +15,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Tenton Lien
@@ -34,9 +33,9 @@ public class ProjectService {
             project.setCreatedTime(time);
 
             // Initial modules and extensions
-            Map<String, Module> modules = new HashMap<>();
+            List<Module> modules = new ArrayList<>();
             SpringBootModule springBootModule = new SpringBootModule();
-            modules.put("spring_boot", springBootModule);
+            modules.add(springBootModule);
             project.setModules(modules);
 
             // Spring Boot Module

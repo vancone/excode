@@ -9,7 +9,9 @@ import lombok.Setter;
  * @ate 9/20/2020
  */
 public enum ProjectEnum implements BaseEnum {
-    PROJECT_NOT_EXIST(1001, "The project is not found");
+    PROJECT_NOT_EXIST(1001, "The project is not found"),
+    DATA_SOURCE_NOT_EXIST(1002, "The data source is not found");
+
     @Getter @Setter
     private int code;
 

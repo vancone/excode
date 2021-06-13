@@ -102,19 +102,7 @@ export default {
   },
   methods: {
     refresh () {
-      const _this = this
-      let searchParam = ''
-      if (this.searchText !== '') {
-        searchParam = '&search=' + this.searchText
-      }
-      axios.get('/api/excode/project?pageSize=' + this.pageSize + '&pageNo=' + (this.pageNo - 1) + searchParam)
-        .then((res) => {
-          _this.tableData = res.data.data.content
-          _this.totalElements = res.data.data.totalElements
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      this.project = localStorage.getItem('project')
     },
     create () {
       this.form = {}

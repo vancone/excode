@@ -1,18 +1,15 @@
-package com.vancone.excode.entity.DTO;
+package com.vancone.excode.entity.DTO.extension;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
  * @author Tenton Lien
- * @date 9/14/2020
+ * @date 6/6/2021
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Extension {
-    private String id;
-
-    private String type;
-
+public class BaseExtension {
     private String name;
+    private Boolean enable = true;
 }

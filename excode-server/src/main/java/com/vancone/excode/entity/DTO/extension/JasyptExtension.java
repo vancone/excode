@@ -10,6 +10,6 @@ import lombok.Data;
  */
 @Data
 @ExtensionClass(module = ModuleConstant.SPRING_BOOT)
-public class Lombok extends Extension {
-
+public class JasyptExtension extends BaseExtension {
+    private String password;
 }

@@ -26,7 +26,7 @@ public class ProjectTest {
         project.setVersion("1.2.0");
         project.setOrganization("VanCone Corp");
         project.setDescription("Demo only");
-        project.setModules(new HashMap<>());
+        project.setModules(new ArrayList<>());
         projectService.save(project);
     }
 }

@@ -1,80 +1,110 @@
 <template>
   <div class="editor">
     <div class="toolbar">
+      <div class="button-save" @click="back"><img src="../assets/back.svg"/></div>
       <div class="button-save" @click="save"><img src="../assets/save.svg"/></div>
+      <div class="button-save" @click="save"><img src="../assets/database.svg"/></div>
       <el-button type="primary" size="mini" class="button-export">Export</el-button>
     </div>
     <el-row style="height:calc(100% - 35px);">
       <el-col :span="19" style="height: 100%">
         <el-tabs tab-position="left" class="tabs">
           <el-tab-pane label="Spring Boot" style="height: 100%;">
-            <SpringBootPanel/>
+            <!-- <SpringBootPanel/> -->
           </el-tab-pane>
           <el-tab-pane label="Vue.js">Config</el-tab-pane>
           <el-tab-pane label="Document">Role</el-tab-pane>
         </el-tabs>
       </el-col>
 
-      <el-col :span="5" style="background: #fff; height: 100%;">
-        <div style="height: 30px;width:100%; border-bottom: solid 1px #ddd;text-align: left;">
-          <span style="line-height:30px;margin-left:10px;font-weight:bold">Data Object</span>
-          <i class="el-icon-plus" style="float:right;margin-right:8px;margin-top:7px;cursor:pointer;"/>
+      <el-col :span="5" style="background: #fff; height: 100%;border-left:solid 1px #ddd;">
+        <div style="height: 30px;width:100%; border-bottom: solid 1px #ddd;text-align: left;background:#f9f9fa;">
+          <span style="line-height:30px;margin-left:10px;font-weight:400;font-size:14px;">Data Object</span>
+          <i class="el-icon-plus" @click="openDataObjectDialog" style="float:right;margin-right:8px;margin-top:7px;cursor:pointer;"/>
         </div>
         <el-tree :data="project.data" :props="defaultProps" @node-click="handleNodeClick" default-expand-all :expand-on-click-node="false" class="tree">
           <template #default="{ node, data }">
-        <span class="custom-tree-node">
-          <span>{{ node.label }}</span>
-          <span>
-            <a @click="append(data)" style="margin-right:10px;"><i class="el-icon-plus"/></a>
-            <a @click="remove(node, data)"><i class="el-icon-delete"/></a>
-          </span>
-        </span>
-      </template>
+            <span class="custom-tree-node">
+              <span><img src="../assets/key.svg" style="height:14px;width:14px;vertical-align:middle;margin-right:5px;"/>{{ node.label }}</span>
+              <span>
+                <a @click="append(data)" style="margin-right:10px;"><i class="el-icon-plus"/></a>
+                <a @click="remove(node, data)"><i class="el-icon-delete"/></a>
+              </span>
+            </span>
+          </template>
         </el-tree>
       </el-col>
     </el-row>
     <ExportDialog/>
+    <el-dialog title="Data Object" v-model="dataObjectDialogVisible" width="50%" :before-close="handleClose">
+      <el-form ref="form" :model="dataObject" label-width="120px">
+        <el-form-item label="Table Name">
+          <el-input v-model="dataObject.value"></el-input>
+        </el-form-item>
+        <el-form-item label="Data Source Type">
+          <el-select v-model="dataObject.type" placeholder="please select ORM framework">
+            <el-option label="Elasticsearch" value="elasticsearch"></el-option>
+            <el-option label="MariaDB / MySQL" value="mysql"></el-option>
+            <el-option label="MongoDB" value="mongodb"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="save">Save</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import ExportDialog from '@/components/ExportDialog.vue'
-import SpringBootPanel from '@/components/SpringBootPanel.vue'
-let id = 1000
+// import SpringBootPanel from '@/components/SpringBootPanel.vue'
 export default {
   name: 'Editor',
-  components: { ExportDialog, SpringBootPanel },
+  components: { ExportDialog/* , SpringBootPanel */ },
   data () {
     return {
+      dataObjectDialogVisible: false,
       defaultProps: {
-        children: 'children',
-        label: 'label'
+        children: 'nodes',
+        label: 'value'
+      },
+      dataObject: {
+        value: '',
+        type: 'mysql'
       },
       project: {
-        data: [{
-          id: 1,
-          label: 'Account',
-          children: [{
-            id: 11,
-            label: 'username'
-          }, {
-            id: 12,
-            label: 'password'
-          }]
-        }, {
-          label: 'Article',
-          children: [{
-            label: 'title'
-          }, {
-            label: 'author'
-          }, {
-            label: 'content'
-          }, {
-            label: 'publishTime'
+        modules: {
+          spring_boot: {}
+        },
+        data: [
+          {
+            value: 'heyhe',
+            nodes: [{
+              value: 'Account',
+              nodes: [{
+                value: 'username'
+              }, {
+                value: 'password'
+              }]
+            }, {
+              key: 'Article',
+              value: [{
+                value: 'title'
+              }, {
+                value: 'author'
+              }, {
+                value: 'content'
+              }, {
+                value: 'publishTime'
+              }]
+            }]
           }
-          ]
-        }]
+        ]
       }
     }
   },
@@ -82,11 +112,17 @@ export default {
     save () {
       alert(JSON.stringify(this.project))
     },
+    back () {
+      this.$router.push('/')
+    },
     getUrlParam (name) {
       var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
       var r = window.location.search.substr(1).match(reg)
       if (r != null) return unescape(r[2])
       return null
+    },
+    openDataObjectDialog () {
+      this.dataObjectDialogVisible = true
     },
     load () {
       const _this = this
@@ -100,7 +136,7 @@ export default {
         })
     },
     append (data) {
-      const newChild = { id: id++, label: 'testtest', children: [] }
+      const newChild = { label: 'testtest', children: [] }
       if (!data.children) {
         data.children = []
       }
@@ -148,7 +184,7 @@ export default {
   width: 35px;
   cursor: pointer;
   margin-top: 0px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   float: left;
 }
 .button-save:hover {
@@ -180,5 +216,11 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+}
+/deep/ .el-tree-node__content:hover {}
+
+/deep/ .el-tree-node:focus>.el-tree-node__content{
+  background-color: #0074e8;
+  color: white;
 }
 </style>

@@ -58,11 +58,6 @@ public class ProjectController {
         }
 
         try {
-            /*XmlMapper xmlMapper = new XmlMapper();
-            xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            Project project = xmlMapper.readValue(new String(file.getBytes()), Project.class);
-            log.info("Save imported project: {}", project.toString());
-            projectService.saveProject(project);*/
             return Response.success();
         } catch (Exception e) {
             e.printStackTrace();
