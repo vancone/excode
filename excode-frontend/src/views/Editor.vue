@@ -20,7 +20,7 @@
           <span style="line-height:30px;margin-left:10px;font-weight:bold">Data Object</span>
           <i class="el-icon-plus" style="float:right;margin-right:8px;margin-top:7px;cursor:pointer;"/>
         </div>
-        <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" default-expand-all :expand-on-click-node="false" class="tree">
+        <el-tree :data="project.data" :props="defaultProps" @node-click="handleNodeClick" default-expand-all :expand-on-click-node="false" class="tree">
           <template #default="{ node, data }">
         <span class="custom-tree-node">
           <span>{{ node.label }}</span>
@@ -47,34 +47,35 @@ export default {
   components: { ExportDialog, SpringBootPanel },
   data () {
     return {
-      data: [{
-        id: 1,
-        label: 'Account',
-        children: [{
-          id: 11,
-          label: 'username'
-        }, {
-          id: 12,
-          label: 'password'
-        }]
-      }, {
-        label: 'Article',
-        children: [{
-          label: 'title'
-        }, {
-          label: 'author'
-        }, {
-          label: 'content'
-        }, {
-          label: 'publishTime'
-        }
-        ]
-      }],
       defaultProps: {
         children: 'children',
         label: 'label'
       },
-      project: {}
+      project: {
+        data: [{
+          id: 1,
+          label: 'Account',
+          children: [{
+            id: 11,
+            label: 'username'
+          }, {
+            id: 12,
+            label: 'password'
+          }]
+        }, {
+          label: 'Article',
+          children: [{
+            label: 'title'
+          }, {
+            label: 'author'
+          }, {
+            label: 'content'
+          }, {
+            label: 'publishTime'
+          }
+          ]
+        }]
+      }
     }
   },
   methods: {
