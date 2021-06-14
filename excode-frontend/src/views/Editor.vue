@@ -10,13 +10,14 @@
       <el-col :span="19" style="height: 100%">
         <el-tabs tab-position="left" class="tabs">
           <el-tab-pane label="Spring Boot" style="height: 100%;">
-            <!-- <SpringBootPanel/> -->
+            <SpringBootPanel/>
           </el-tab-pane>
           <el-tab-pane label="Vue.js">Config</el-tab-pane>
           <el-tab-pane label="Document">Role</el-tab-pane>
         </el-tabs>
       </el-col>
 
+      <!-- Data table -->
       <el-col :span="5" style="background: #fff; height: 100%;border-left:solid 1px #ddd;">
         <div style="height: 30px;width:100%; border-bottom: solid 1px #ddd;text-align: left;background:#f9f9fa;">
           <span style="line-height:30px;margin-left:10px;font-weight:400;font-size:14px;">Data Object</span>
@@ -25,7 +26,7 @@
         <el-tree :data="project.data" :props="defaultProps" @node-click="handleNodeClick" default-expand-all :expand-on-click-node="false" class="tree">
           <template #default="{ node, data }">
             <span class="custom-tree-node">
-              <span><img src="../assets/key.svg" style="height:14px;width:14px;vertical-align:middle;margin-right:5px;"/>{{ node.label }}</span>
+              <span @dblclick="editDataTableKey(data)"><img src="../assets/key.svg" style="height:14px;width:14px;vertical-align:middle;margin-right:5px;"/>{{ node.label }} <span style="color:#aaa;" v-text="data.root===true? data.dataSource.type + ':' + data.dataSource.database: data.type"></span></span>
               <span>
                 <a @click="append(data)" style="margin-right:10px;"><i class="el-icon-plus"/></a>
                 <a @click="remove(node, data)"><i class="el-icon-delete"/></a>
@@ -56,9 +57,39 @@
         </span>
       </template>
     </el-dialog>
+
     <!-- Data source dialog -->
     <el-dialog title="Data Source" v-model="dataSourceDialogVisible" width="70%" :before-close="handleClose">
       <data-source-panel/>
+    </el-dialog>
+
+    <!-- Data table key dialog -->
+    <el-dialog title="Data Table Key" v-model="dataTableKeyDialogVisible" width="40%" :before-close="handleClose">
+      <el-form ref="dataTableKey" :model="dataObject" label-width="80px" style="text-align:left;">
+        <el-form-item label="Value">
+          <el-input v-model="dataTableKey.value"></el-input>
+        </el-form-item>
+        <el-form-item label="Type">
+          <el-select v-model="dataTableKey.type" placeholder="">
+            <el-option label="Elasticsearch" value="elasticsearch"></el-option>
+            <el-option label="MariaDB / MySQL" value="mysql"></el-option>
+            <el-option label="MongoDB" value="mongodb"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Data Source" v-if="dataTableKey.root">
+          <el-select v-model="dataTableKey.type" placeholder="">
+            <el-option label="Elasticsearch" value="elasticsearch"></el-option>
+            <el-option label="MariaDB / MySQL" value="mysql"></el-option>
+            <el-option label="MongoDB" value="mongodb"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dataTableKeyDialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="saveDataTableKey">Save</el-button>
+        </span>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -67,14 +98,15 @@
 import axios from 'axios'
 import DataSourcePanel from '@/components/DataSourcePanel'
 import ExportDialog from '@/components/ExportDialog.vue'
-// import SpringBootPanel from '@/components/SpringBootPanel.vue'
+import SpringBootPanel from '@/components/SpringBootPanel.vue'
 export default {
   name: 'Editor',
-  components: { DataSourcePanel, ExportDialog/* , SpringBootPanel */ },
+  components: { DataSourcePanel, ExportDialog, SpringBootPanel },
   data () {
     return {
       dataObjectDialogVisible: false,
       dataSourceDialogVisible: false,
+      dataTableKeyDialogVisible: false,
       defaultProps: {
         children: 'nodes',
         label: 'value'
@@ -83,34 +115,12 @@ export default {
         value: '',
         type: 'mysql'
       },
+      dataTableKey: {},
       project: {
         modules: {
           spring_boot: {}
         },
-        data: [
-          {
-            value: 'heyhe',
-            nodes: [{
-              value: 'Account',
-              nodes: [{
-                value: 'username'
-              }, {
-                value: 'password'
-              }]
-            }, {
-              key: 'Article',
-              value: [{
-                value: 'title'
-              }, {
-                value: 'author'
-              }, {
-                value: 'content'
-              }, {
-                value: 'publishTime'
-              }]
-            }]
-          }
-        ]
+        data: []
       }
     }
   },
@@ -133,6 +143,13 @@ export default {
     openDataSourceDialog () {
       this.dataSourceDialogVisible = true
     },
+    editDataTableKey (data) {
+      this.dataTableKey = data
+      if (this.dataTableKey.root === true) {
+        this.dataTableKey.type = this.dataTableKey.dataSource.type
+      }
+      this.dataTableKeyDialogVisible = true
+    },
     load () {
       const _this = this
       axios.get('/api/excode/project/' + this.getUrlParam('id'))
@@ -152,7 +169,6 @@ export default {
       data.children.push(newChild)
       this.data = [...this.data]
     },
-
     remove (node, data) {
       const parent = node.parent
       const children = parent.data.children || parent.data

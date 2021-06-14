@@ -1,6 +1,8 @@
 package com.vancone.excode.service.basic;
 
 import com.vancone.excode.entity.DTO.Project;
+import com.vancone.excode.entity.DTO.data.RootDataNode;
+import com.vancone.excode.entity.DTO.data.source.DataSource;
 import com.vancone.excode.entity.DTO.module.Module;
 import com.vancone.excode.entity.DTO.module.SpringBootModule;
 import com.vancone.excode.enums.ProjectEnum;
@@ -47,15 +49,22 @@ public class ProjectService {
         mongoTemplate.save(project);
     }
 
-    public Project findById(String projectId) {
+    public Project query(String projectId) {
         Project project = mongoTemplate.findById(projectId, Project.class);
         if (project == null || project.getDeleted()) {
             throw new ResponseException(ProjectEnum.PROJECT_NOT_EXIST);
         }
+
+        // Write data source
+        for (RootDataNode rootDataNode: project.getData()) {
+            String dataSourceId = rootDataNode.getDataSourceId();
+            DataSource dataSource = mongoTemplate.findById(dataSourceId, DataSource.class);
+            rootDataNode.setDataSource(dataSource);
+        }
         return project;
     }
 
-    public Page<Project> query(int pageNo, int pageSize, String search) {
+    public Page<Project> queryPage(int pageNo, int pageSize, String search) {
         Sort sort = Sort.by(Sort.Direction.DESC, "modifiedTime");
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Query query = Query.query(Criteria.where("deleted").is(false));

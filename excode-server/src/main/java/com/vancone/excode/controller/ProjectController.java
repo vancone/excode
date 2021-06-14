@@ -33,7 +33,7 @@ public class ProjectController {
 
     @GetMapping("{projectId}")
     public Response findById(@PathVariable String projectId) {
-        Project project = projectService.findById(projectId);
+        Project project = projectService.query(projectId);
         log.info("Retrieve project: {}", project.toString());
         return Response.success(project);
     }
@@ -42,7 +42,7 @@ public class ProjectController {
     public Response query(@RequestParam(defaultValue = "0") int pageNo,
                             @RequestParam(defaultValue = "5") int pageSize,
                             @RequestParam(defaultValue = "") String search) {
-        return Response.success(projectService.query(pageNo, pageSize, search));
+        return Response.success(projectService.queryPage(pageNo, pageSize, search));
     }
 
     @DeleteMapping("{projectId}")

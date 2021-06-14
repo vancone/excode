@@ -32,6 +32,12 @@ public class DataSourceController {
     public Response queryList(@RequestParam(defaultValue = "0") int pageNo,
                               @RequestParam(defaultValue = "5") int pageSize,
                               @RequestParam(defaultValue = "") String search) {
-        return Response.success(dataSourceService.queryList(pageNo, pageSize, search));
+        return Response.success(dataSourceService.queryPage(pageNo, pageSize, search));
+    }
+
+    @GetMapping("test/{dataSourceId}")
+    public Response testConnection(@PathVariable String dataSourceId) {
+        dataSourceService.testConnection(dataSourceId);
+        return Response.success("Test data source connection success", null);
     }
 }

@@ -1,7 +1,6 @@
 <template>
   <div class="hello">
     <div class="toolbar">
-      <!-- <h1 style="float:left;">Projects</h1> -->
       <div class="tool-buttons" style="float:right;">
         <el-input placeholder="Search..." v-model="searchText" style="display:inline-block;width:300px;margin-right:10px;">
           <template #suffix>
@@ -20,13 +19,7 @@
       </el-table-column>
       <el-table-column label="Type">
         <template #default="scope">
-          <el-popover effect="light" trigger="hover" placement="top">
-            <template #reference>
-              <div class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.type }}</el-tag>
-              </div>
-            </template>
-          </el-popover>
+          <el-tag size="medium">{{ scope.row.type }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="Host">
@@ -84,6 +77,7 @@
             <el-option label="Elasticsearch" value="ELASTICSEARCH"></el-option>
             <el-option label="MariaDB / MySQL" value="MYSQL"></el-option>
             <el-option label="MongoDB" value="MONGODB"></el-option>
+            <el-option label="Redis" value="REDIS"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="Host">
@@ -92,7 +86,10 @@
         <el-form-item label="Port">
           <el-input-number :min="1" :max="65535" v-model="form.port"></el-input-number>
         </el-form-item>
-        <el-form-item label="Username">
+        <el-form-item label="Database" v-if="form.type !== 'REDIS'">
+          <el-input v-model="form.database"></el-input>
+        </el-form-item>
+        <el-form-item label="Username" v-if="form.type !== 'REDIS'">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="Password">
@@ -100,7 +97,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button style="float:left">Test Connection</el-button>
+        <el-button style="float:left" @click="testConnection">{{ testButtonText }}</el-button>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="save">Save</el-button>
@@ -123,16 +120,8 @@ export default {
       pageSize: 10,
       pageNo: 1,
       totalElements: 0,
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
+      form: {},
+      testButtonText: 'Test Connection'
     }
   },
   methods: {
@@ -206,6 +195,29 @@ export default {
       console.log(`current page: ${val}`)
       this.pageNo = val
       this.refresh()
+    },
+    testConnection () {
+      const _this = this
+      this.testButtonText = 'Testing...'
+      axios.get('/api/excode/data-source/test/' + this.form.id)
+        .then((res) => {
+          if (res.data.code === 0) {
+            _this.$message({
+              message: res.data.message,
+              type: 'success'
+            })
+          } else {
+            _this.$message({
+              message: res.data.message,
+              type: 'error'
+            })
+          }
+          _this.testButtonText = 'Test Connection'
+        })
+        .catch((err) => {
+          console.log(err)
+          _this.testButtonText = 'Test Connection'
+        })
     }
   },
   mounted: function () {
@@ -214,7 +226,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .toolbar {
   margin-top: 20px;

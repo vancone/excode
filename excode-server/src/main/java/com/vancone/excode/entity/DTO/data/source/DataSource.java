@@ -22,6 +22,7 @@ public class DataSource {
     private String username;
     private String password;
     private Boolean auth;
+    private String database;
     private Boolean deleted = false;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

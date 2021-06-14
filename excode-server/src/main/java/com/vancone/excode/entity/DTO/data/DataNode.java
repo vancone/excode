@@ -13,4 +13,5 @@ public class DataNode {
     private String value;
     private String type;
     private List<DataNode> nodes;
+    protected Boolean root = false;
 }

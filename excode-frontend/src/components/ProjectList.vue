@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div>
     <div class="toolbar">
       <h1 style="float:left;">Projects</h1>
       <div class="tool-buttons" style="float:right;">
@@ -16,17 +16,6 @@
       <el-table-column label="Project Name" width="180">
         <template #default="scope">
           <span>{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Name" width="180">
-        <template #default="scope">
-          <el-popover effect="light" trigger="hover" placement="top">
-            <template #reference>
-              <div class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.name }}</el-tag>
-              </div>
-            </template>
-          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="Last Modified" width="180">
@@ -93,16 +82,7 @@ export default {
       pageSize: 10,
       pageNo: 1,
       totalElements: 0,
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
+      form: {}
     }
   },
   methods: {
@@ -187,22 +167,7 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 .toolbar {
   margin-top: 20px;
   margin-left: 20px;
