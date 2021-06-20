@@ -31,8 +31,9 @@ public class DataSourceController {
     @GetMapping
     public Response queryList(@RequestParam(defaultValue = "0") int pageNo,
                               @RequestParam(defaultValue = "5") int pageSize,
-                              @RequestParam(defaultValue = "") String search) {
-        return Response.success(dataSourceService.queryPage(pageNo, pageSize, search));
+                              @RequestParam(defaultValue = "") String search,
+                              @RequestParam(defaultValue = "") String type) {
+        return Response.success(dataSourceService.queryPage(pageNo, pageSize, search, type));
     }
 
     @GetMapping("test/{dataSourceId}")

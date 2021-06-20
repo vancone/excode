@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div>
     <div class="toolbar">
       <div class="tool-buttons" style="float:right;">
         <el-input placeholder="Search..." v-model="searchText" style="display:inline-block;width:300px;margin-right:10px;">
@@ -11,7 +11,8 @@
         <el-button @click="refresh" style="display:inline-block;"><i class="el-icon-refresh"></i></el-button>
       </div>
     </div>
-    <el-table :data="tableData" style="width:calc(100% - 40px);margin:20px">
+    <el-table :data="tableData" @selection-change="handleSelectionChange" style="width:calc(100% - 40px);margin:20px">
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column label="Name">
         <template #default="scope">
           <span class="data-source-name" @click="handleEdit(scope.$index, scope.row)">{{ scope.row.name }}</span>
@@ -73,7 +74,7 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="Type" style="text-align:left;">
-          <el-select v-model="form.type" placeholder="Please select data source type">
+          <el-select v-model="form.type" placeholder="Please select data source type" style="width:100%">
             <el-option label="Elasticsearch" value="ELASTICSEARCH"></el-option>
             <el-option label="MariaDB / MySQL" value="MYSQL"></el-option>
             <el-option label="MongoDB" value="MONGODB"></el-option>
@@ -121,7 +122,8 @@ export default {
       pageNo: 1,
       totalElements: 0,
       form: {},
-      testButtonText: 'Test Connection'
+      testButtonText: 'Test Connection',
+      selection: []
     }
   },
   methods: {
@@ -177,6 +179,12 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+    },
+    handleSelectionChange (val) {
+      this.selection = val
+    },
+    getSelection (val) {
+      return this.selection
     },
     handleClose (done) {
       this.$confirm('Are you sure to close this dialog?')
@@ -239,7 +247,7 @@ export default {
 .data-source-name:hover {
   text-decoration: underline;
 }
-/deep/ .el-dialog__body {
+:deep(.el-dialog__body) {
   padding-top: 10px;
 }
 </style>

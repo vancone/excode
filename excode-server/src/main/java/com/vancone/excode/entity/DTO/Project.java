@@ -46,7 +46,7 @@ public class Project {
 
     private List<Module> modules = new ArrayList<>();
 
-    private List<RootDataNode> data = new ArrayList<>();
+    private List<RootDataNode> dataTables = new ArrayList<>();
 
     public Map<String, Module> getModules() {
         Map<String, Module> moduleMap = new HashMap<>(modules.size());

@@ -56,7 +56,7 @@ public class ProjectService {
         }
 
         // Write data source
-        for (RootDataNode rootDataNode: project.getData()) {
+        for (RootDataNode rootDataNode: project.getDataTables()) {
             String dataSourceId = rootDataNode.getDataSourceId();
             DataSource dataSource = mongoTemplate.findById(dataSourceId, DataSource.class);
             rootDataNode.setDataSource(dataSource);

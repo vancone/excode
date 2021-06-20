@@ -10,23 +10,29 @@
       <el-col :span="19" style="height: 100%">
         <el-tabs tab-position="left" class="tabs">
           <el-tab-pane label="Spring Boot" style="height: 100%;">
-            <SpringBootPanel/>
+            <!-- <SpringBootPanel/> -->
           </el-tab-pane>
-          <el-tab-pane label="Vue.js">Config</el-tab-pane>
-          <el-tab-pane label="Document">Role</el-tab-pane>
+          <el-tab-pane label="Vue.js">Vue.js</el-tab-pane>
+          <el-tab-pane label="Document">Document</el-tab-pane>
         </el-tabs>
       </el-col>
 
       <!-- Data table -->
-      <el-col :span="5" style="background: #fff; height: 100%;border-left:solid 1px #ddd;">
-        <div style="height: 30px;width:100%; border-bottom: solid 1px #ddd;text-align: left;background:#f9f9fa;">
-          <span style="line-height:30px;margin-left:10px;font-weight:400;font-size:14px;">Data Object</span>
-          <i class="el-icon-plus" @click="openDataObjectDialog" style="float:right;margin-right:8px;margin-top:7px;cursor:pointer;"/>
+      <el-col :span="5" class="data-table-panel">
+        <!-- Data table header -->
+        <div class="data-table-panel-header">
+          <span style="">Data Table</span>
+          <i class="el-icon-plus" @click="openDataTableDialog"/>
         </div>
-        <el-tree :data="project.data" :props="defaultProps" @node-click="handleNodeClick" default-expand-all :expand-on-click-node="false" class="tree">
+        <!-- Data table tree -->
+        <el-tree :data="project.dataTables" :props="defaultProps" @node-click="handleNodeClick" default-expand-all :expand-on-click-node="false" class="tree">
           <template #default="{ node, data }">
             <span class="custom-tree-node">
-              <span @dblclick="editDataTableKey(data)"><img src="../assets/key.svg" style="height:14px;width:14px;vertical-align:middle;margin-right:5px;"/>{{ node.label }} <span style="color:#aaa;" v-text="data.root===true? data.dataSource.type + ':' + data.dataSource.database: data.type"></span></span>
+              <span @dblclick="editDataTableKey(data)">
+                <img src="@/assets/table.svg" v-if="data.root == true" class="data-table-key-icon" />
+                <img src="@/assets/key.svg" v-if="data.root != true" class="data-table-key-icon" />
+                {{ node.label }} <span style="color:#aaa;" v-text="data.root===true? data.dataSource.type + ':' + data.dataSource.database: data.type"></span>
+              </span>
               <span>
                 <a @click="append(data)" style="margin-right:10px;"><i class="el-icon-plus"/></a>
                 <a @click="remove(node, data)"><i class="el-icon-delete"/></a>
@@ -36,23 +42,31 @@
         </el-tree>
       </el-col>
     </el-row>
+
     <ExportDialog/>
-    <el-dialog title="Data Object" v-model="dataObjectDialogVisible" width="50%" :before-close="handleClose">
-      <el-form ref="form" :model="dataObject" label-width="120px">
+
+    <!-- Create data table dialog -->
+    <el-dialog title="Data Table" v-model="dataTableDialogVisible" width="50%" :before-close="handleClose">
+      <el-form ref="form" :model="dataObject" label-width="140px" style="text-align:left;">
         <el-form-item label="Table Name">
-          <el-input v-model="dataObject.value"></el-input>
+          <el-input v-model="dataObject.value" maxlength="20" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="Data Source Type">
-          <el-select v-model="dataObject.type" placeholder="please select ORM framework">
-            <el-option label="Elasticsearch" value="elasticsearch"></el-option>
-            <el-option label="MariaDB / MySQL" value="mysql"></el-option>
-            <el-option label="MongoDB" value="mongodb"></el-option>
+          <el-select v-model="dataObject.type" @change="toggleDataSourceType" style="width:100%">
+            <el-option label="Elasticsearch" value="ELASTICSEARCH"></el-option>
+            <el-option label="MariaDB / MySQL" value="MYSQL"></el-option>
+            <el-option label="MongoDB" value="MONGODB"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Data Source">
+          <el-select v-model="dataObject.name" style="width:100%">
+            <el-option v-for="item in dataSourceOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">Cancel</el-button>
+          <el-button @click="dataTableDialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="save">Save</el-button>
         </span>
       </template>
@@ -70,20 +84,26 @@
           <el-input v-model="dataTableKey.value"></el-input>
         </el-form-item>
         <el-form-item label="Type">
-          <el-select v-model="dataTableKey.type" placeholder="">
-            <el-option label="Elasticsearch" value="elasticsearch"></el-option>
-            <el-option label="MariaDB / MySQL" value="mysql"></el-option>
-            <el-option label="MongoDB" value="mongodb"></el-option>
+          <el-select v-model="dataTableKey.type" placeholder="" @change="toggleDataSourceType">
+            <el-option label="Elasticsearch" value="ELASTICSEARCH"></el-option>
+            <el-option label="MariaDB / MySQL" value="MYSQL"></el-option>
+            <el-option label="MongoDB" value="MONGODB"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="Data Source" v-if="dataTableKey.root">
-          <el-select v-model="dataTableKey.type" placeholder="">
-            <el-option label="Elasticsearch" value="elasticsearch"></el-option>
-            <el-option label="MariaDB / MySQL" value="mysql"></el-option>
-            <el-option label="MongoDB" value="mongodb"></el-option>
-          </el-select>
+        <el-form-item label="Source" v-if="dataTableKey.root">
+          <span v-text="dataTableKey.source"></span>
+          <el-button type="primary" style="float:right;" size="small" @click="openSelectDataSourceDialog">Select</el-button>
         </el-form-item>
       </el-form>
+      <el-dialog title="Select..." v-model="dataTableKeySelectDataSourceDialogVisible">
+        <data-source-panel />
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dataTableKeySelectDataSourceDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="saveDataTableKey">OK</el-button>
+          </span>
+        </template>
+      </el-dialog>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dataTableKeyDialogVisible = false">Cancel</el-button>
@@ -97,24 +117,27 @@
 <script>
 import axios from 'axios'
 import DataSourcePanel from '@/components/DataSourcePanel'
-import ExportDialog from '@/components/ExportDialog.vue'
-import SpringBootPanel from '@/components/SpringBootPanel.vue'
+import ExportDialog from '@/components/ExportDialog'
+// import SpringBootPanel from '@/components/SpringBootPanel.vue'
 export default {
   name: 'Editor',
-  components: { DataSourcePanel, ExportDialog, SpringBootPanel },
+  components: { DataSourcePanel, ExportDialog/* , SpringBootPanel */ },
   data () {
     return {
-      dataObjectDialogVisible: false,
+      dataTableDialogVisible: false,
       dataSourceDialogVisible: false,
       dataTableKeyDialogVisible: false,
+      dataTableKeySelectDataSourceDialogVisible: false,
       defaultProps: {
         children: 'nodes',
         label: 'value'
       },
       dataObject: {
         value: '',
-        type: 'mysql'
+        type: 'MYSQL',
+        name: ''
       },
+      dataSourceOptions: [],
       dataTableKey: {},
       project: {
         modules: {
@@ -137,16 +160,35 @@ export default {
       if (r != null) return unescape(r[2])
       return null
     },
-    openDataObjectDialog () {
-      this.dataObjectDialogVisible = true
+    toggleDataSourceType () {
+      console.log('toggle data source type')
+      const _this = this
+      axios.get('/api/excode/data-source?type=' + this.dataObject.type)
+        .then((res) => {
+          _this.dataSourceOptions = res.data.data.content
+          _this.dataObject.name = ''
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    },
+    openDataTableDialog () {
+      this.toggleDataSourceType()
+      this.dataTableDialogVisible = true
     },
     openDataSourceDialog () {
       this.dataSourceDialogVisible = true
+    },
+    openSelectDataSourceDialog () {
+      this.dataTableKeySelectDataSourceDialogVisible = true
     },
     editDataTableKey (data) {
       this.dataTableKey = data
       if (this.dataTableKey.root === true) {
         this.dataTableKey.type = this.dataTableKey.dataSource.type
+        if (this.dataTableKey.type === 'MYSQL') {
+          this.dataTableKey.source = 'mysql://' + this.dataTableKey.dataSource.host + ':' + this.dataTableKey.dataSource.port + '/' + this.dataTableKey.dataSource.database + '?username=' + this.dataTableKey.dataSource.username
+        }
       }
       this.dataTableKeyDialogVisible = true
     },
@@ -228,7 +270,7 @@ export default {
   height: 100%;
   text-align: left;
 }
-/deep/ .el-tabs__content {
+:deep(.el-tabs__content) {
   height: 100%;
 }
 .tree {
@@ -242,10 +284,38 @@ export default {
   font-size: 14px;
   padding-right: 8px;
 }
-/deep/ .el-tree-node__content:hover {}
-
-/deep/ .el-tree-node:focus>.el-tree-node__content{
+:deep(.el-tree-node:focus>.el-tree-node__content) {
   background-color: #0074e8;
   color: white;
+}
+.data-table-panel {
+  background: #fff;
+  height: 100%;
+  text-align: left;
+  border-left: solid 1px #ddd;
+}
+.data-table-panel-header {
+  height: 30px;width:100%;
+  border-bottom: solid 1px #ddd;
+  text-align: left;
+  background: #f9f9fa;
+}
+.data-table-panel-header span {
+  line-height: 30px;
+  margin-left: 10px;
+  font-weight: 400;
+  font-size: 14px;
+}
+.data-table-panel-header i {
+  float: right;
+  margin-right: 8px;
+  margin-top: 7px;
+  cursor: pointer;
+}
+.data-table-key-icon {
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
+  margin-right: 3px;
 }
 </style>

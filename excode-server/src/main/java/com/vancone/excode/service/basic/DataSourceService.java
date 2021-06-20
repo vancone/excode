@@ -47,13 +47,18 @@ public class DataSourceService {
         return dataSource;
     }
 
-    public Page<DataSource> queryPage(int pageNo, int pageSize, String search) {
+    public Page<DataSource> queryPage(int pageNo, int pageSize, String search, String type) {
         Sort sort = Sort.by(Sort.Direction.DESC, "modifiedTime");
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Query query = Query.query(Criteria.where("deleted").is(false));
         if (StringUtils.isNotBlank(search)) {
             query.addCriteria(Criteria.where("name").regex(search));
         }
+
+        if (StringUtils.isNotBlank(type)) {
+            query.addCriteria(Criteria.where("type").is(type));
+        }
+
         long count = mongoTemplate.count(query, DataSource.class);
         List<DataSource> dataSources = mongoTemplate.find(query.with(pageable), DataSource.class);
         return new PageImpl<>(dataSources, pageable, count);
