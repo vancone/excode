@@ -8,6 +8,7 @@
           </template>
         </el-input>
         <el-button type="primary" style="display:inline-block;" @click="create"><i class="el-icon-plus"></i></el-button>
+        <el-button type="danger"><i class="el-icon-delete"></i></el-button>
         <el-button @click="refresh" style="display:inline-block;"><i class="el-icon-refresh"></i></el-button>
       </div>
     </div>
@@ -36,11 +37,6 @@
       <el-table-column label="Username">
         <template #default="scope">
           <span>{{ scope.row.username }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Last Modified">
-        <template #default="scope">
-          <span>{{ scope.row.modifiedTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Operations">
