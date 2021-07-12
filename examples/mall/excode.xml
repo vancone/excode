@@ -34,7 +34,7 @@
             </exports>
         </document>
 
-        <deployment use="true">
+        <!-- <deployment use="true">
             <operating-systems>
                 <operating-system type="ubuntu" version="20.04" />
                 <operating-system type="centos" version="8" />
@@ -55,7 +55,7 @@
                     </http>
                 </nginx>
             </extensions>
-        </deployment>
+        </deployment> -->
 
         <datasource>
             <redis mode="single">
@@ -128,36 +128,20 @@
                             <allowed-method>POST</allowed-method>
                         </allowed-methods>
                     -->
-                    <allowed-origins>
+                    <!-- <allowed-origins>
                         <allowed-origin>*</allowed-origin>
-                    </allowed-origins>
+                    </allowed-origins> -->
                 </cross-origin>
 
-                <mekcone-cloud use="true" mode="dev">
-                    <router>
-                        <nodes>
-                            <node mode="dev" address="localhost" />
-                            <node mode="prod" address="10.10.10.1" />
-                            <node mode="prod" address="10.10.10.2" />
-                            <node mode="prod" address="10.10.10.3" />
-                            <node mode="prod" address="10.10.10.4" />
-                            <node mode="prod" address="10.10.10.5" />
-                            <node mode="prod" address="10.10.10.6" />
-                        </nodes>
-                    </router>
-                    <account>
-                        <test-account username="admin" password="admin" role="admin" profile="" />
-                    </account>
-                </mekcone-cloud>
                 <swagger2 use="true"></swagger2>
             </extensions>
 
             <properties>
                 <application-name>Mall</application-name>
-                <config-format>properties</config-format>
+                <!-- <config-format>properties</config-format> -->
                 <server-port>9090</server-port>
                 <page-size>15</page-size>
-                <mybatis-pattern>annotation</mybatis-pattern>
+                <!-- <mybatis-pattern>annotation</mybatis-pattern> -->
             </properties>
         </spring-boot>
 

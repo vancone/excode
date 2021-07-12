@@ -1,0 +1,6 @@
+.idea/
+target/
+excrud.iml
+.classpath
+.project
+*.iml
