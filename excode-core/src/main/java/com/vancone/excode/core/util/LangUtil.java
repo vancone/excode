@@ -1,9 +1,9 @@
 package com.vancone.excode.core.util;
 
-import com.vancone.excode.core.constant.UrlPath;
-import com.vancone.excode.core.constant.LanguageType;
-import com.vancone.excode.core.constant.ModuleConstant;
-import com.vancone.excode.core.controller.parser.PropertiesParser;
+import com.vancone.excode.core.old.constant.UrlPath;
+import com.vancone.excode.core.old.constant.LanguageType;
+import com.vancone.excode.core.old.constant.ModuleConstant;
+import com.vancone.excode.core.PropertiesParser;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;

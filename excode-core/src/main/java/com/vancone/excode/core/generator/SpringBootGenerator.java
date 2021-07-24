@@ -1,0 +1,184 @@
+package com.vancone.excode.core.generator;
+
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.AnnotationExpr;
+import com.github.javaparser.ast.expr.ArrayInitializerExpr;
+import com.github.javaparser.ast.expr.NormalAnnotationExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.vancone.excode.core.ProjectWriter;
+import com.vancone.excode.core.PropertiesParser;
+import com.vancone.excode.core.TemplateFactory;
+import com.vancone.excode.core.enums.OrmType;
+import com.vancone.excode.core.enums.TemplateName;
+import com.vancone.excode.core.model.*;
+import com.vancone.excode.core.model.datasource.MysqlDataSource;
+import com.vancone.excode.core.old.controller.extmgr.datasource.SqlExtensionManager;
+import com.vancone.excode.core.util.StrUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+/**
+ * @author Tenton Lien
+ * @date 7/24/2021
+ */
+@Slf4j
+public class SpringBootGenerator extends BaseGenerator {
+
+    private String packagePath;
+    private ProjectWriter writer;
+    private Project project;
+    private Module module;
+
+    private SpringBootGenerator(Module module, ProjectWriter writer) {
+        this.module = module;
+        this.writer = writer;
+        this.project = writer.getProject();
+        this.packagePath = "src" + File.separator + "main" + File.separator + "java" + File.separator +
+                project.getGroupId().replace(".", File.separator) + File.separator +
+                project.getArtifactId().replace(".", File.separator) + File.separator;
+    }
+
+    public static void generate(Module module, ProjectWriter writer) {
+        SpringBootGenerator generator = new SpringBootGenerator(module, writer);
+        generator.createPom();
+        generator.createProperty();
+        generator.createApplicationEntry();
+
+        for (MysqlDataSource.Table table : generator.project.getDatasource().getMysql().getTables()) {
+            generator.createController(table);
+            generator.createEntity(table);
+            generator.createService(table);
+            generator.createServiceImpl(table);
+            generator.createMybatisMapper(table);
+        }
+    }
+
+    private void preProcess(Template template) {
+        template.replace("groupId", project.getGroupId());
+        template.replace("artifactId", project.getArtifactId());
+        template.replace("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+        template.replace("date", formatter.format(LocalDateTime.now()));
+    }
+
+    public void createPom() {
+        MavenPom pom = new MavenPom(project);
+        pom.addDependencyByLabel("default");
+        if (module.getProperty("ormType").equals(OrmType.MYBATIS_ANNOTATION.toString())) {
+            pom.addDependencyByLabel("mybatis");
+        }
+        writer.output("pom.xml", pom.toString());
+    }
+
+    public void createProperty() {
+        PropertiesParser parser = new PropertiesParser();
+        parser.add("spring.application.name", project.getArtifactId());
+
+        String port = (module.getProperty("port") == null) ? "8080" : module.getProperty("port");
+        parser.add("server.port", port);
+        parser.addSeparator();
+
+        // MySQL
+        if (project.getDatasource().getMysql() != null) {
+            MysqlDataSource.Connection connection = project.getDatasource().getMysql().getConnection();
+            String datasourceUrl = "jdbc:mysql://" + connection.getHost() + ":" + connection.getPort() + "/" + connection.getDatabase();
+            datasourceUrl += connection.getTimezone() != null ? "?serverTimezone=" + connection.getTimezone() : "";
+            parser.add("spring.datasource.url", datasourceUrl);
+            parser.add("spring.datasource.username", connection.getUsername());
+            parser.add("spring.datasource.password", connection.getPassword());
+        }
+
+        writer.output("src" + File.separator + "main" + File.separator + "resources" + File.separator + "application.properties", parser.generate());
+    }
+
+    public void createApplicationEntry() {
+        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_APPLICATION_ENTRY);
+        preProcess(template);
+        writer.output(packagePath + StrUtil.capitalize(project.getArtifactId()) + "Application.java", template.getContent());
+        log.info("template: {}", template.toString());
+    }
+
+    public void createController(MysqlDataSource.Table table) {
+        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_CONTROLLER);
+        preProcess(template);
+        template.replace("Table", StrUtil.upperCamelCase(table.getName()));
+        template.replace("table", StrUtil.camelCase(table.getName()));
+        template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+        writer.output(packagePath + "controller" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Controller.java", template.getContent());
+
+    }
+
+    public void createService(MysqlDataSource.Table table) {
+        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_SERVICE);
+        preProcess(template);
+        template.replace("Table", StrUtil.upperCamelCase(table.getName()));
+        template.replace("table", StrUtil.camelCase(table.getName()));
+        template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+        writer.output(packagePath + "service" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Service.java", template.getContent());
+    }
+
+    public void createServiceImpl(MysqlDataSource.Table table) {
+        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_SERVICE_IMPL);
+        preProcess(template);
+        template.replace("Table", StrUtil.upperCamelCase(table.getName()));
+        template.replace("table", StrUtil.camelCase(table.getName()));
+        template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+        writer.output(packagePath + "service" + File.separator + "impl" + File.separator + StrUtil.upperCamelCase(table.getName()) + "ServiceImpl.java", template.getContent());
+    }
+
+    public void createEntity(MysqlDataSource.Table table) {
+        SpringBootDataClass entity = new SpringBootDataClass(project, table);
+        writer.output(packagePath + "entity" + File.separator + StrUtil.upperCamelCase(table.getName()) + ".java", entity.toString());
+    }
+
+    public void createMybatisMapper(MysqlDataSource.Table table) {
+        if (StringUtils.isBlank(table.getPrimaryKeyName())) {
+            log.error("Mapper interface cannot be generated from a table without a primary key");
+            return;
+        }
+
+        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER);
+        preProcess(template);
+        template.replace("Table", StrUtil.upperCamelCase(table.getName()));
+        template.replace("table", StrUtil.camelCase(table.getName()));
+        template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+        template.replace("primary_key", StrUtil.snakeCase(table.getPrimaryKeyName()));
+
+        CompilationUnit unit = template.parseJavaSource();
+        for (MethodDeclaration methodDeclaration : unit.getInterfaceByName(table.getUpperCamelCaseName() + "Mapper").get().getMethods()) {
+            NodeList<AnnotationExpr> annotations = methodDeclaration.getAnnotations();
+            for (AnnotationExpr annotationExpr : annotations) {
+                if (annotationExpr.getNameAsString().equals("Insert")) {
+                    annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
+                            SqlExtensionManager.insertQuery(table, true)));
+                } else if (annotationExpr.getNameAsString().equals("Results")) {
+                    ArrayInitializerExpr array = new ArrayInitializerExpr();
+                    for (MysqlDataSource.Table.Column column : table.getColumns()) {
+                        if (methodDeclaration.getNameAsString().equals("retrieveList")) {
+//                            if (column.isDetail()) {
+//                                continue;
+//                            }
+                        }
+                        NormalAnnotationExpr resultAnnotation = new NormalAnnotationExpr();
+                        resultAnnotation.setName("Result");
+                        resultAnnotation.addPair("property", new StringLiteralExpr(column.getCamelCaseName(table.getName())));
+                        resultAnnotation.addPair("column", new StringLiteralExpr(column.getName()));
+                        array.getValues().add(resultAnnotation);
+                    }
+                    annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(array);
+                } else if (annotationExpr.getNameAsString().equals("Update")) {
+                    annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
+                            SqlExtensionManager.updateQuery(table)));
+                }
+            }
+        }
+        template.updateJavaSource(unit);
+        writer.output(packagePath + "mapper" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Mapper.java", template.getContent());
+    }
+}

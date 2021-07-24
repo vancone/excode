@@ -1,0 +1,58 @@
+package com.vancone.excode.core.old.model.module;
+
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.vancone.excode.core.old.model.module.impl.*;
+import com.vancone.excode.core.util.StrUtil;
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * @author Tenton Lien
+ */
+@Data
+public abstract class ModuleOld {
+    private String type;
+    private boolean use;
+
+    @JacksonXmlElementWrapper(localName = "extensions")
+    @JacksonXmlProperty(localName = "extension")
+    private List<Extension> extensions = new ArrayList<>();
+
+    @Data
+    public static class Extension {
+        @JacksonXmlProperty(isAttribute = true)
+        private String id;
+
+        @JacksonXmlProperty(isAttribute = true)
+        private boolean use;
+    }
+
+    public ModuleOld() {
+        String callerClassName = Thread.currentThread().getStackTrace()[2].getClassName();
+        type = StrUtil.kebabCase(callerClassName.substring(callerClassName.lastIndexOf('.') + 1, callerClassName.length() - 6));
+    }
+
+    public DeploymentModule asDeploymentModule() {
+        return (DeploymentModule)this;
+    }
+
+    public DocumentModule asDocumentModule() {
+        return (DocumentModule)this;
+    }
+
+    public SpringBootModule asSpringBootModule() {
+        return (SpringBootModule)this;
+    }
+
+    public VueElementAdminModule asVueElementAdminModule() {
+        return (VueElementAdminModule)this;
+    }
+
+    public WebsitePageModule asWebsitePageModule() {
+        return (WebsitePageModule)this;
+    }
+}
