@@ -1,6 +1,6 @@
 package com.vancone.excode.core.model;
 
-import com.vancone.excode.core.model.datasource.DataSource;
+import com.vancone.excode.core.model.datasource.MysqlDataSource;
 import lombok.Data;
 
 import java.util.List;
@@ -20,4 +20,9 @@ public class Project {
     private Map<String, String> description;
     private List<Module> modules;
     private DataSource datasource;
+
+    @Data
+    public static class DataSource {
+        private MysqlDataSource mysql;
+    }
 }

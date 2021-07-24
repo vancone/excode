@@ -1,9 +1,8 @@
-package com.vancone.excode.core.old.enums;
+package com.vancone.excode.core.enums;
 
 /**
  * @author Tenton Lien
  */
-
 public enum ErrorEnum {
     // General errors (E000000 ~ E000999)
     UNKNOWN_ERROR("E000000", "Unknown error"),

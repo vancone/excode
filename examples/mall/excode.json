@@ -35,7 +35,8 @@
                 }
             ],
             "properties": {
-                "ormType": "MYBATIS_ANNOTATION"
+                "ormType": "MYBATIS_ANNOTATION",
+                "port": 8081
             }
         }
     ],
@@ -64,6 +65,10 @@
                             "name": "name",
                             "type": "varchar",
                             "length": 200
+                        },
+                        {
+                            "name": "amount",
+                            "type": "int"
                         }
                     ]
                 }

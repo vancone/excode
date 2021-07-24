@@ -2,7 +2,9 @@ package com.vancone.excode.core.generator;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.ArrayInitializerExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
@@ -10,11 +12,14 @@ import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.vancone.excode.core.ProjectWriter;
 import com.vancone.excode.core.PropertiesParser;
 import com.vancone.excode.core.TemplateFactory;
+import com.vancone.excode.core.constant.ExtensionType;
 import com.vancone.excode.core.enums.OrmType;
-import com.vancone.excode.core.enums.TemplateName;
+import com.vancone.excode.core.enums.TemplateType;
+import com.vancone.excode.core.extension.SpringBootExtensionHandler;
 import com.vancone.excode.core.model.*;
 import com.vancone.excode.core.model.datasource.MysqlDataSource;
-import com.vancone.excode.core.old.controller.extmgr.datasource.SqlExtensionManager;
+import com.vancone.excode.core.util.CompilationUnitUtil;
+import com.vancone.excode.core.util.SqlUtil;
 import com.vancone.excode.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +62,20 @@ public class SpringBootGenerator extends BaseGenerator {
             generator.createServiceImpl(table);
             generator.createMybatisMapper(table);
         }
+
+        // Load extensions
+        for (Module extension : module.getExtensions()) {
+            if (!extension.isEnable()) {
+                continue;
+            }
+            switch (extension.getType()) {
+                case ExtensionType.SPRING_BOOT_LOMBOK:
+                    SpringBootExtensionHandler.lombok(writer);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void preProcess(Template template) {
@@ -73,7 +92,10 @@ public class SpringBootGenerator extends BaseGenerator {
         if (module.getProperty("ormType").equals(OrmType.MYBATIS_ANNOTATION.toString())) {
             pom.addDependencyByLabel("mybatis");
         }
-        writer.output("pom.xml", pom.toString());
+        for (Module extension: module.getExtensions()) {
+            pom.addDependencyByLabel(extension.getType());
+        }
+        writer.addOutput(TemplateType.SPRING_BOOT_POM, "pom.xml", pom.toString());
     }
 
     public void createProperty() {
@@ -94,47 +116,66 @@ public class SpringBootGenerator extends BaseGenerator {
             parser.add("spring.datasource.password", connection.getPassword());
         }
 
-        writer.output("src" + File.separator + "main" + File.separator + "resources" + File.separator + "application.properties", parser.generate());
+        writer.addOutput(TemplateType.SPRING_BOOT_PROPERTIES,
+                "src" + File.separator + "main" + File.separator + "resources" + File.separator + "application.properties",
+                parser.generate());
     }
 
     public void createApplicationEntry() {
-        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_APPLICATION_ENTRY);
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_APPLICATION_ENTRY);
         preProcess(template);
-        writer.output(packagePath + StrUtil.capitalize(project.getArtifactId()) + "Application.java", template.getContent());
+        writer.addOutput(TemplateType.SPRING_BOOT_APPLICATION_ENTRY,
+                packagePath + StrUtil.capitalize(project.getArtifactId()) + "Application.java",
+                template);
         log.info("template: {}", template.toString());
     }
 
     public void createController(MysqlDataSource.Table table) {
-        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_CONTROLLER);
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_CONTROLLER);
         preProcess(template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
-        writer.output(packagePath + "controller" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Controller.java", template.getContent());
+        writer.addOutput(TemplateType.SPRING_BOOT_CONTROLLER,
+                packagePath + "controller" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Controller.java",
+                template);
 
     }
 
     public void createService(MysqlDataSource.Table table) {
-        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_SERVICE);
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE);
         preProcess(template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
-        writer.output(packagePath + "service" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Service.java", template.getContent());
+        writer.addOutput(TemplateType.SPRING_BOOT_SERVICE,
+                packagePath + "service" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Service.java",
+                template);
     }
 
     public void createServiceImpl(MysqlDataSource.Table table) {
-        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_SERVICE_IMPL);
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE_IMPL);
         preProcess(template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
-        writer.output(packagePath + "service" + File.separator + "impl" + File.separator + StrUtil.upperCamelCase(table.getName()) + "ServiceImpl.java", template.getContent());
+        writer.addOutput(TemplateType.SPRING_BOOT_SERVICE_IMPL,
+                packagePath + "service" + File.separator + "impl" + File.separator + StrUtil.upperCamelCase(table.getName()) + "ServiceImpl.java",
+                template);
     }
 
     public void createEntity(MysqlDataSource.Table table) {
         SpringBootDataClass entity = new SpringBootDataClass(project, table);
-        writer.output(packagePath + "entity" + File.separator + StrUtil.upperCamelCase(table.getName()) + ".java", entity.toString());
+
+        // Attention: Adding Javadoc comment not works
+        ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(entity.getCompilationUnit());
+        if (clazz != null) {
+            clazz.addOrphanComment(new JavadocComment("\r\n * @Author ExCode\r\n"));
+            System.out.println(clazz);
+        }
+        writer.addOutput(TemplateType.SPRING_BOOT_ENTITY,
+                packagePath + "entity" + File.separator + StrUtil.upperCamelCase(table.getName()) + ".java",
+                entity.toString());
     }
 
     public void createMybatisMapper(MysqlDataSource.Table table) {
@@ -143,7 +184,7 @@ public class SpringBootGenerator extends BaseGenerator {
             return;
         }
 
-        Template template = TemplateFactory.getTemplate(TemplateName.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER);
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER);
         preProcess(template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
@@ -156,7 +197,7 @@ public class SpringBootGenerator extends BaseGenerator {
             for (AnnotationExpr annotationExpr : annotations) {
                 if (annotationExpr.getNameAsString().equals("Insert")) {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
-                            SqlExtensionManager.insertQuery(table, true)));
+                            SqlUtil.insertQuery(table, true)));
                 } else if (annotationExpr.getNameAsString().equals("Results")) {
                     ArrayInitializerExpr array = new ArrayInitializerExpr();
                     for (MysqlDataSource.Table.Column column : table.getColumns()) {
@@ -174,11 +215,13 @@ public class SpringBootGenerator extends BaseGenerator {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(array);
                 } else if (annotationExpr.getNameAsString().equals("Update")) {
                     annotationExpr.asSingleMemberAnnotationExpr().setMemberValue(new StringLiteralExpr(
-                            SqlExtensionManager.updateQuery(table)));
+                            SqlUtil.updateQuery(table)));
                 }
             }
         }
         template.updateJavaSource(unit);
-        writer.output(packagePath + "mapper" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Mapper.java", template.getContent());
+        writer.addOutput(TemplateType.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER,
+                packagePath + "mapper" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Mapper.java",
+                template);
     }
 }

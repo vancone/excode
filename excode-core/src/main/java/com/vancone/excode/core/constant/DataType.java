@@ -1,4 +1,4 @@
-package com.vancone.excode.core.old.constant;
+package com.vancone.excode.core.constant;
 
 public interface DataType {
     // Java basic types

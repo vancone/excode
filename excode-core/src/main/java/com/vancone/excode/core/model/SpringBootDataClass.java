@@ -10,10 +10,7 @@ import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.vancone.excode.core.model.datasource.MysqlDataSource;
-import com.vancone.excode.core.old.constant.DataType;
-import com.vancone.excode.core.old.model.database.Column;
-import com.vancone.excode.core.old.model.database.Table;
-import com.vancone.excode.core.old.model.project.ProjectOld;
+import com.vancone.excode.core.constant.DataType;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -26,7 +23,6 @@ import java.util.List;
 public class SpringBootDataClass {
     private CompilationUnit compilationUnit;
     private ClassOrInterfaceDeclaration entityClassDeclaration;
-    private Table tableOld;
     private MysqlDataSource.Table table;
     private String name;
     private List<MemberVariable> memberVariables = new ArrayList<>();
@@ -36,27 +32,6 @@ public class SpringBootDataClass {
     class MemberVariable {
         String type;
         String name;
-    }
-
-    public SpringBootDataClass(ProjectOld projectOld, Table table) {
-        this.tableOld = table;
-        name = table.getUpperCamelCaseName();
-
-        String groupId = projectOld.getGroupId();
-        String artifactId = projectOld.getArtifactId();
-
-        compilationUnit = new CompilationUnit();
-        compilationUnit.setPackageDeclaration(groupId + "." + artifactId + "." + "entity");
-        entityClassDeclaration =
-                compilationUnit.addClass(table.getUpperCamelCaseName(), Modifier.Keyword.PUBLIC);
-
-        for (Column column : table.getColumns()) {
-            String type = column.getType();
-            if (!type.equals(DataType.JAVA_INT)) {
-                type = DataType.JAVA_STRING;
-            }
-            entityClassDeclaration.addField(type, column.getCamelCaseName(table.getName()), Modifier.Keyword.PRIVATE);
-        }
     }
 
     public SpringBootDataClass(Project project, MysqlDataSource.Table table) {
@@ -77,31 +52,6 @@ public class SpringBootDataClass {
                 type = DataType.JAVA_STRING;
             }
             entityClassDeclaration.addField(type, column.getCamelCaseName(table.getName()), Modifier.Keyword.PRIVATE);
-        }
-    }
-
-    private void addGetterAndSetterOld() {
-        for (Column column : tableOld.getColumns()) {
-            // Getter
-            MethodDeclaration getterMethodDeclaration =
-                    entityClassDeclaration.addMethod("get" + column.getUpperCamelCaseName(tableOld.getName()), Modifier.Keyword.PUBLIC);
-            getterMethodDeclaration.setType(DataType.JAVA_STRING);
-            BlockStmt getterMethodBody = new BlockStmt();
-            getterMethodBody.addAndGetStatement(new ReturnStmt(column.getCamelCaseName(tableOld.getName())));
-            getterMethodDeclaration.setBody(getterMethodBody);
-
-            // Setter
-            MethodDeclaration setterMethodDeclaration =
-                    entityClassDeclaration.addMethod("set" + column.getUpperCamelCaseName(tableOld.getName()), Modifier.Keyword.PUBLIC);
-            setterMethodDeclaration.setType(DataType.JAVA_VOID);
-            setterMethodDeclaration.addParameter(DataType.JAVA_STRING, column.getCamelCaseName(tableOld.getName()));
-            BlockStmt setterMethodBody = new BlockStmt();
-            AssignExpr assignExpr = new AssignExpr();
-            assignExpr.setOperator(AssignExpr.Operator.ASSIGN);
-            assignExpr.setTarget(new FieldAccessExpr(new NameExpr("this"), column.getCamelCaseName(tableOld.getName())));
-            assignExpr.setValue(new NameExpr(column.getCamelCaseName(tableOld.getName())));
-            setterMethodBody.addAndGetStatement(assignExpr);
-            setterMethodDeclaration.setBody(setterMethodBody);
         }
     }
 
@@ -134,13 +84,6 @@ public class SpringBootDataClass {
     public String toString() {
         if (getterAndSetterAvailable) {
             addGetterAndSetter();
-        }
-        return compilationUnit.toString();
-    }
-
-    public String toStringOld() {
-        if (getterAndSetterAvailable) {
-            addGetterAndSetterOld();
         }
         return compilationUnit.toString();
     }

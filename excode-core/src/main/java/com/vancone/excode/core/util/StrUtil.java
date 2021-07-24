@@ -27,7 +27,11 @@ public class StrUtil {
         return data;
     }
 
-    // Transform camel case into snake case
+    /**
+     * Transform camel case into snake case
+     * @param data
+     * @return
+     */
     public static String snakeCase(String data) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < data.length(); i ++) {
@@ -44,7 +48,11 @@ public class StrUtil {
         return stringBuilder.toString().toLowerCase();
     }
 
-    // Transform kebab case into snake case
+    /**
+     * Transform kebab case into snake case
+     * @param data
+     * @return
+     */
     public static String kebabCase(String data) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < data.length(); i ++) {

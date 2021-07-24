@@ -1,6 +1,6 @@
 package com.vancone.excode.core.util;
 
-import com.vancone.excode.core.old.constant.DataType;
+import com.vancone.excode.core.constant.DataType;
 import lombok.extern.slf4j.Slf4j;
 
 /**

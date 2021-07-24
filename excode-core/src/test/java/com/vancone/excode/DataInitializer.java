@@ -21,7 +21,7 @@ import java.util.List;
  * @date 7/24/2021
  */
 @Slf4j
-public class TemplateImporter {
+public class DataInitializer {
 
     private MongoTemplate mongoTemplate = TemplateFactory.getMongoTemplate();
 

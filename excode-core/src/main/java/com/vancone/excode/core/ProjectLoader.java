@@ -2,10 +2,9 @@ package com.vancone.excode.core;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vancone.excode.core.enums.ErrorEnum;
 import com.vancone.excode.core.model.Project;
-import com.vancone.excode.core.model.datasource.DataSource;
 import com.vancone.excode.core.model.datasource.MysqlDataSource;
-import com.vancone.excode.core.old.enums.ErrorEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,7 +31,7 @@ public class ProjectLoader {
 
         // Verify
         boolean result = verifyDataSource(project);
-        if (result == false) {
+        if (!result) {
             return null;
         }
 
@@ -48,7 +47,7 @@ public class ProjectLoader {
     }
 
     private static boolean verifyDataSource(Project project) {
-        DataSource dataSource = project.getDatasource();
+        Project.DataSource dataSource = project.getDatasource();
         if (dataSource == null) {
             log.error("Data source not configured.");
             return false;

@@ -12,7 +12,7 @@ import java.util.List;
  * @date 7/24/2021
  */
 @Data
-public class MysqlDataSource extends DataSource {
+public class MysqlDataSource {
     private boolean sqlGen;
     private Connection connection;
     private List<Table> tables;
@@ -47,6 +47,7 @@ public class MysqlDataSource extends DataSource {
             private String type;
             private int length;
             private boolean primaryKey;
+            private String comment;
 
             @JsonIgnore
             public String getCamelCaseName(String tableName) {

@@ -1,4 +1,4 @@
-package com.vancone.excode.core.old.constant;
+package com.vancone.excode.core.constant;
 
 /**
  * @author Tenton Lien

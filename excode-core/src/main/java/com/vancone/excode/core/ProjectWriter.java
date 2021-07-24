@@ -1,14 +1,19 @@
 package com.vancone.excode.core;
 
 import com.vancone.excode.core.constant.ModuleType;
+import com.vancone.excode.core.enums.TemplateType;
 import com.vancone.excode.core.generator.SpringBootGenerator;
 import com.vancone.excode.core.model.Module;
 import com.vancone.excode.core.model.Project;
+import com.vancone.excode.core.model.Template;
 import com.vancone.excode.core.util.FileUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,7 +29,7 @@ public class ProjectWriter {
 
     private String rootDirectory;
 
-    private Map<String, String> outputs = new HashMap<>();
+    private List<Output> outputs = new ArrayList<>();
 
     public ProjectWriter(Project project) {
         this.project = project;
@@ -36,8 +41,22 @@ public class ProjectWriter {
         return project;
     }
 
-    public void output(String target, String content) {
-        outputs.put(target, content);
+    public void addOutput(TemplateType type, String target, String content) {
+        outputs.add(new Output(type, target, content));
+    }
+
+    public void addOutput(TemplateType type, String target, Template template) {
+        outputs.add(new Output(type, target, template));
+    }
+
+    public List<Output> getOutputsByType(TemplateType type) {
+        List<Output> results = new ArrayList<>();
+        for (Output output: outputs) {
+            if (output.getType().equals(type)) {
+                results.add(output);
+            }
+        }
+        return results;
     }
 
     public void write() {
@@ -53,12 +72,30 @@ public class ProjectWriter {
             }
         }
 
-        /**
-         * Output to disk
-         */
-        for (String target: outputs.keySet()) {
-            String content = outputs.get(target);
-            FileUtil.write(rootDirectory + target, content);
+        // Write to disk
+        for (Output output: outputs) {
+            String content = output.getTemplate() == null ? output.getContent() : output.getTemplate().getContent();
+            FileUtil.write(rootDirectory + output.getPath(), content);
+        }
+    }
+
+    @Data
+    public static class Output {
+        private TemplateType type;
+        private String path;
+        private Template template;
+        private String content;
+
+        public Output(TemplateType type, String path, Template template) {
+            this.type = type;
+            this.path = path;
+            this.template = template;
+        }
+
+        public Output(TemplateType type, String path, String content) {
+            this.type = type;
+            this.path = path;
+            this.content = content;
         }
     }
 }

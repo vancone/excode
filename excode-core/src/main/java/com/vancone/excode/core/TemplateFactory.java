@@ -1,6 +1,6 @@
 package com.vancone.excode.core;
 
-import com.vancone.excode.core.enums.TemplateName;
+import com.vancone.excode.core.enums.TemplateType;
 import com.vancone.excode.core.model.Template;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
@@ -20,7 +20,7 @@ public class TemplateFactory {
         return mongoTemplate;
     }
 
-    public static Template getTemplate(TemplateName name) {
+    public static Template getTemplate(TemplateType name) {
         return mongoTemplate.findOne(Query.query(Criteria.where("name").is(name)), Template.class);
     }
 }
