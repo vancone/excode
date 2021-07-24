@@ -5,7 +5,7 @@ import com.vancone.excode.core.constant.ModuleConstant;
 import com.vancone.excode.core.controller.parser.PropertiesParser;
 import com.vancone.excode.core.controller.parser.template.impl.JavaTemplate;
 import com.vancone.excode.core.model.module.impl.SpringBootModule;
-import com.vancone.excode.core.model.module.impl.SpringBootModule.SpringBootProperties.MekConeCloud.Router.Node;
+import com.vancone.excode.core.model.module.impl.SpringBootModule.SpringBootProperties.VanConeCloud.Router.Node;
 import com.vancone.excode.core.model.project.Project;
 import com.vancone.excode.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -49,9 +49,9 @@ public class VanConeCloudExtensionManager {
         }
 
         // Set Eureka URL
-        String currentMode = springBootModule.getProperties().getMekConeCloud().getMode();
+        String currentMode = springBootModule.getProperties().getVanConeCloud().getMode();
         String urlString = "";
-        List<Node> nodes = springBootModule.getProperties().getMekConeCloud().getRouter().getNodes();
+        List<Node> nodes = springBootModule.getProperties().getVanConeCloud().getRouter().getNodes();
         for (int i = 0; i < nodes.size(); i ++) {
             if (nodes.get(i).getMode().equals(currentMode)) {
                 urlString += "http://" + nodes.get(i).getAddress() + ":6600/eureka";

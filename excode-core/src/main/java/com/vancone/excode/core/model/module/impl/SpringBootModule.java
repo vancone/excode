@@ -49,8 +49,8 @@ public class SpringBootModule extends Module {
         @JacksonXmlProperty(localName = "cross-origin")
         private SpringBootProperties.CrossOrigin crossOrigin;
 
-        @JacksonXmlProperty(localName = "mekcone-cloud")
-        private MekConeCloud mekConeCloud;
+        @JacksonXmlProperty(localName = "vancone-cloud")
+        private VanConeCloud vanConeCloud;
 
 
         // Properties of extensions
@@ -81,7 +81,7 @@ public class SpringBootModule extends Module {
 
         @Data
         @ExtensionClass
-        public static class MekConeCloud {
+        public static class VanConeCloud {
             @JacksonXmlProperty(isAttribute = true)
             @Validator({"dev", "prod"})
             private String mode;

@@ -119,21 +119,21 @@
         <spring-boot use="true">
             <extensions>
                 <cross-origin id="cross-origin" use="true">
-                    <!-- 
-                        <allowed-headers>
+                    
+                        <!-- <allowed-headers>
                             <allowed-header>X-Custom-Header</allowed-header>
                         </allowed-headers>
                         <allowed-methods>
                             <allowed-method>GET</allowed-method>
                             <allowed-method>POST</allowed-method>
-                        </allowed-methods>
-                    -->
+                        </allowed-methods> -->
+                   
                     <!-- <allowed-origins>
                         <allowed-origin>*</allowed-origin>
                     </allowed-origins> -->
                 </cross-origin>
 
-                <swagger2 use="true"></swagger2>
+                <swagger2 id="swagger2" use="true"></swagger2>
             </extensions>
 
             <properties>
@@ -142,6 +142,11 @@
                 <server-port>9090</server-port>
                 <page-size>15</page-size>
                 <!-- <mybatis-pattern>annotation</mybatis-pattern> -->
+                <cross-origin>
+                    <allowed-headers>
+                        <allowed-header>*</allowed-header>
+                    </allowed-headers>
+                </cross-origin>
             </properties>
         </spring-boot>
 

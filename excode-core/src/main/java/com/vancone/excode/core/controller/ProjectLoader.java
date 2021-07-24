@@ -39,7 +39,7 @@ public class ProjectLoader {
 
             // Print module type
             log.info(StringUtils.center("mod::" + module.getType(), 100, "="));
-            long startTime = new Date().getTime();
+            long startTime = System.currentTimeMillis();
 
             // Initialize generators
             Generator generator;
@@ -68,7 +68,7 @@ public class ProjectLoader {
 
             if (generator != null) {
                 generator.generate();
-                long endTime = new Date().getTime();
+                long endTime = System.currentTimeMillis();
                 log.info("Generating module({}) completed in {} ms", module.getType(), (endTime - startTime));
             } else {
                 log.warn("Unsupported module type \"{}\"", module.getType());
@@ -84,6 +84,7 @@ public class ProjectLoader {
             log.info("Load project {}:{} completed", project.getGroupId(), project.getArtifactId());
         } catch (Exception e) {
             log.error("{}: {}", ErrorEnum.PARSE_XML_FAILED, e.getMessage());
+            return false;
         }
 
         List<Database> databases = project.getModuleSet().getDatasourceModule().getRelationalDatabase().getDatabases();

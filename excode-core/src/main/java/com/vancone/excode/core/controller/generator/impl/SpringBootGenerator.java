@@ -108,6 +108,9 @@ public class SpringBootGenerator extends Generator {
 
         // Run extension manager
         springBootModule.getExtensions().forEach(extension -> {
+            if (extension.getId() == null) {
+                log.error("extension id is null: {}", extension.toString());
+            }
             log.info(StringUtils.center("ext::" + extension.getId(), 100, "-"));
 
             switch (extension.getId()) {

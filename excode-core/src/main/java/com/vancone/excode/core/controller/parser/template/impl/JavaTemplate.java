@@ -36,6 +36,10 @@ public class JavaTemplate implements Template {
     }
 
     public boolean insert(String tag, String replacement) {
+        if (compilationUnit == null) {
+            log.info("Compilation unit is null: tag={}, replacement={}", tag, replacement);
+            return false;
+        }
         String templateText = compilationUnit.toString();
         int index = templateText.indexOf("__" + tag + "__");
         if (index < 0) {
