@@ -37,6 +37,10 @@ public class ProjectWriter {
 //        rootDirectory = genLocation + project.getGroupId() + "." + project.getArtifactId() + "-" + project.getVersion() + "-" + System.currentTimeMillis() + File.separator;
     }
 
+    public String getRootDirectory() {
+        return rootDirectory;
+    }
+
     public Project getProject() {
         return project;
     }
@@ -89,6 +93,9 @@ public class ProjectWriter {
             String content = output.getTemplate() == null ? output.getContent() : output.getTemplate().getContent();
             FileUtil.write(rootDirectory + output.getPath(), content);
         }
+
+        // Build and Package
+        SpringBootGenerator.build(this);
     }
 
     @Data

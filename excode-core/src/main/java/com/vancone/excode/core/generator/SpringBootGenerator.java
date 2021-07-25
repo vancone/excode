@@ -23,10 +23,14 @@ import com.vancone.excode.core.util.SqlUtil;
 import com.vancone.excode.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.shared.invoker.*;
 
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Tenton Lien
@@ -221,5 +225,27 @@ public class SpringBootGenerator {
         writer.addOutput(TemplateType.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER,
                 packagePath + "mapper" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Mapper.java",
                 template);
+    }
+
+    public static void build(ProjectWriter writer) {
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setPomFile(new File(writer.getRootDirectory() + "pom.xml"));
+        List<String> goals = new ArrayList<>();
+        goals.add("compile");
+        goals.add("package");
+        request.setGoals(goals);
+        Invoker invoker = new DefaultInvoker();
+        String mavenHome = System.getenv("MAVEN_HOME");
+        if (StringUtils.isBlank(mavenHome)) {
+            log.error("Environment variable 'MAVEN_HOME' not set.");
+            return;
+        }
+        invoker.setMavenHome(new File(mavenHome));
+        try {
+            invoker.execute(request);
+        } catch (MavenInvocationException e) {
+            e.printStackTrace();
+        }
+
     }
 }
