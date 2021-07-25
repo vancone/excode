@@ -33,7 +33,7 @@ import java.time.format.DateTimeFormatter;
  * @date 7/24/2021
  */
 @Slf4j
-public class SpringBootGenerator extends BaseGenerator {
+public class SpringBootGenerator {
 
     private String packagePath;
     private ProjectWriter writer;
@@ -69,21 +69,19 @@ public class SpringBootGenerator extends BaseGenerator {
                 continue;
             }
             switch (extension.getType()) {
+                case ExtensionType.SPRING_BOOT_CROSS_ORIGIN:
+                    SpringBootExtensionHandler.crossOrigin(writer);
+                    break;
                 case ExtensionType.SPRING_BOOT_LOMBOK:
                     SpringBootExtensionHandler.lombok(writer);
+                    break;
+                case ExtensionType.SPRING_BOOT_SWAGGER2:
+                    SpringBootExtensionHandler.swagger2(writer);
                     break;
                 default:
                     break;
             }
         }
-    }
-
-    private void preProcess(Template template) {
-        template.replace("groupId", project.getGroupId());
-        template.replace("artifactId", project.getArtifactId());
-        template.replace("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-        template.replace("date", formatter.format(LocalDateTime.now()));
     }
 
     public void createPom() {
@@ -123,7 +121,7 @@ public class SpringBootGenerator extends BaseGenerator {
 
     public void createApplicationEntry() {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_APPLICATION_ENTRY);
-        preProcess(template);
+        TemplateFactory.preProcess(project, template);
         writer.addOutput(TemplateType.SPRING_BOOT_APPLICATION_ENTRY,
                 packagePath + StrUtil.capitalize(project.getArtifactId()) + "Application.java",
                 template);
@@ -132,7 +130,7 @@ public class SpringBootGenerator extends BaseGenerator {
 
     public void createController(MysqlDataSource.Table table) {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_CONTROLLER);
-        preProcess(template);
+        TemplateFactory.preProcess(project, template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
@@ -144,7 +142,7 @@ public class SpringBootGenerator extends BaseGenerator {
 
     public void createService(MysqlDataSource.Table table) {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE);
-        preProcess(template);
+        TemplateFactory.preProcess(project, template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
@@ -155,7 +153,7 @@ public class SpringBootGenerator extends BaseGenerator {
 
     public void createServiceImpl(MysqlDataSource.Table table) {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE_IMPL);
-        preProcess(template);
+        TemplateFactory.preProcess(project, template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
@@ -185,7 +183,7 @@ public class SpringBootGenerator extends BaseGenerator {
         }
 
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER);
-        preProcess(template);
+        TemplateFactory.preProcess(project, template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));

@@ -22,7 +22,7 @@ public class ProjectLoader {
         Project project = new Project();
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+//            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             project = mapper.readValue(content, Project.class);
             log.info("Load project {}:{} completed", project.getGroupId(), project.getArtifactId());
         } catch (Exception e) {

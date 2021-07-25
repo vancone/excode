@@ -7,6 +7,7 @@
         "zh-CN"
     ],
     "name": {
+        "default": "zh-CN",
         "en-US": "VanCone Mall",
         "zh-CN": "甜筒云商城",
         "zh-TW": "甜筒雲商城",
@@ -14,6 +15,7 @@
         "th": "มอลล์ VanCone"
     },
     "description": {
+        "default": "zh-CN",
         "en-US": "VanCone Mall Project",
         "zh-CN": "甜筒云商城后台项目"
     },
@@ -26,11 +28,17 @@
                     "type": "cross-origin",
                     "enable": true,
                     "properties": {
-                        "allowed-methods": "GET,POST"
+                        "allowed-methods": "GET,POST",
+                        "allowed-headers": "*",
+                        "allowed-origins": "*"
                     }
                 },
                 {
                     "type": "lombok",
+                    "enable": true
+                },
+                {
+                    "type": "swagger2",
                     "enable": true
                 }
             ],
@@ -68,7 +76,8 @@
                         },
                         {
                             "name": "amount",
-                            "type": "int"
+                            "type": "int",
+                            "comment": "商品库存"
                         }
                     ]
                 }

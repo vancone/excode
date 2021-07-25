@@ -11,11 +11,14 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * @author ExCode
+ * @date __date__
+ */
 @Configuration
 @EnableSwagger2
 public class Swagger2Config {
 
-    // API package scanning path
     public static final String SWAGGER_SCAN_BASE_PACKAGE = "__groupId__.__artifactId__";
 
     public static final String VERSION = "__version__";
@@ -36,7 +39,7 @@ public class Swagger2Config {
                 .title("__title__")
                 .description("__description__")
                 .version(VERSION)
-                .termsOfServiceUrl("http://www.mekcone.com")
+                .termsOfServiceUrl("https://www.vancone.com")
                 .build();
     }
 }

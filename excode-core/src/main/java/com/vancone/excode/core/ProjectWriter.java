@@ -6,15 +6,15 @@ import com.vancone.excode.core.generator.SpringBootGenerator;
 import com.vancone.excode.core.model.Module;
 import com.vancone.excode.core.model.Project;
 import com.vancone.excode.core.model.Template;
+import com.vancone.excode.core.model.datasource.MysqlDataSource;
 import com.vancone.excode.core.util.FileUtil;
+import com.vancone.excode.core.util.SqlUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Tenton Lien
@@ -63,6 +63,18 @@ public class ProjectWriter {
         if (project.getModules().isEmpty()) {
             log.error("No valid module found");
             return;
+        }
+
+        // Data source
+        MysqlDataSource mysql = project.getDatasource().getMysql();
+        if (mysql != null && mysql.isSqlGen()) {
+            String sql = SqlUtil.createDatabase(mysql) + "\n\n";
+
+            for (MysqlDataSource.Table table: mysql.getTables()) {
+                sql += SqlUtil.createTable(table) + "\n\n";
+            }
+
+            addOutput(TemplateType.SQL, "create.sql", sql);
         }
 
         for (Module module: project.getModules()) {

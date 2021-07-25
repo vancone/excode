@@ -1,6 +1,8 @@
 {
     "template": {
         "SPRING_BOOT_APPLICATION_ENTRY": "Application.java",
+        "SPRING_BOOT_CONFIG_CROSS_ORIGIN": "CrossOriginConfig.java",
+        "SPRING_BOOT_CONFIG_SWAGGER2": "Swagger2Config.java",
         "SPRING_BOOT_CONTROLLER": "Controller.java",
         "SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER": "Mapper.java",
         "SPRING_BOOT_SERVICE": "Service.java",
