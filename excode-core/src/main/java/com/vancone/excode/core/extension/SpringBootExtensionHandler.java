@@ -233,8 +233,8 @@ public class SpringBootExtensionHandler {
                                 )
                         )
                 ));
+                output.getTemplate().updateJavaSource(unit);
             }
-            output.getTemplate().updateJavaSource(unit);
         }
     }
 }
