@@ -18,7 +18,7 @@ public class YamlPrinterTest {
     private final String SWAGGER2_CONTROLLER_EXAMPLE = "Swagger2ControllerExample";
     private final String CROSS_ORIGIN_CONFIG_EXAMPLE = "CrossOriginConfigExample";
 
-    private String currentExampleFileName = CROSS_ORIGIN_CONFIG_EXAMPLE;
+    private String currentExampleFileName = SWAGGER2_CONTROLLER_EXAMPLE;
 
     @Test
     public void print() throws FileNotFoundException {

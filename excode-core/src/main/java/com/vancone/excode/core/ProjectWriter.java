@@ -64,6 +64,16 @@ public class ProjectWriter {
         return results;
     }
 
+    public Output getOutputByName(String name) {
+        for (Output output: outputs) {
+            // This operation is not accurate enough
+            if (output.getPath().contains(name)) {
+                return output;
+            }
+        }
+        return null;
+    }
+
     public void write() {
         if (project.getModules().isEmpty()) {
             log.error("No valid module found");

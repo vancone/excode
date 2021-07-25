@@ -4,10 +4,9 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
-import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.vancone.excode.core.ProjectWriter;
@@ -20,10 +19,13 @@ import com.vancone.excode.core.model.Project;
 import com.vancone.excode.core.model.Template;
 import com.vancone.excode.core.model.datasource.MysqlDataSource;
 import com.vancone.excode.core.util.CompilationUnitUtil;
+import com.vancone.excode.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Tenton Lien
@@ -182,5 +184,57 @@ public class SpringBootExtensionHandler {
                 writer.getProject().getGroupId().replace(".", File.separator) + File.separator +
                 writer.getProject().getArtifactId().replace(".", File.separator) + File.separator + "config" + File.separator + "Swagger2Config.java",
                 template);
+
+        for (MysqlDataSource.Table table: writer.getProject().getDatasource().getMysql().getTables()) {
+
+            // Process entity class
+            ProjectWriter.Output output = writer.getOutputByName(StrUtil.upperCamelCase(table.getName()) + ".java");
+            CompilationUnit unit = StaticJavaParser.parse(output.getContent());
+            if (unit != null) {
+                unit.addImport("io.swagger.annotations.ApiModel");
+                ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(unit);
+                clazz.addAnnotation(new SingleMemberAnnotationExpr(
+                        new Name("ApiModel"),
+                        new StringLiteralExpr(table.getDescription())));
+
+                // Add annotation for each field
+                boolean apiModelPropertyExists = false;
+                for (MysqlDataSource.Table.Column column: table.getColumns()) {
+                    if (StringUtils.isNotBlank(column.getComment())) {
+                        Optional<FieldDeclaration> field = clazz.getFieldByName(column.getCamelCaseName(table.getName()));
+                        if (field.isPresent()) {
+                            field.get().addAnnotation(new SingleMemberAnnotationExpr(
+                                    new Name("ApiModelProperty"),
+                                    new StringLiteralExpr(column.getComment())));
+                            apiModelPropertyExists = true;
+                        }
+                    }
+                }
+                if (apiModelPropertyExists) {
+                    unit.addImport("io.swagger.annotations.ApiModelProperty");
+                }
+            } else {
+                log.error("Swagger2 extension fetch entity class null");
+            }
+            output.setContent(unit.toString());
+
+            // Process controller class
+            output = writer.getOutputByName(StrUtil.upperCamelCase(table.getName()) + "Controller.java");
+            unit = StaticJavaParser.parse(output.getTemplate().getContent());
+            if (unit != null) {
+                unit.addImport("io.swagger.annotations.Api");
+                ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(unit);
+                clazz.addAnnotation(new NormalAnnotationExpr(
+                        new Name("Api"),
+                        new NodeList<>(
+                                new MemberValuePair(
+                                        new SimpleName("tags"),
+                                        new StringLiteralExpr(table.getUpperCamelCaseName())
+                                )
+                        )
+                ));
+            }
+            output.getTemplate().updateJavaSource(unit);
+        }
     }
 }
