@@ -13,6 +13,7 @@ import java.util.Map;
 @Data
 public class Module {
     private String type;
+    private String name;
     private boolean enable;
     private List<Module> extensions;
     private Map<String, String> properties;

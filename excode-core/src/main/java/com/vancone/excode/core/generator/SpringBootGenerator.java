@@ -26,10 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.shared.invoker.*;
 
 import java.io.File;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,7 +45,8 @@ public class SpringBootGenerator {
         this.module = module;
         this.writer = writer;
         this.project = writer.getProject();
-        this.packagePath = "src" + File.separator + "main" + File.separator + "java" + File.separator +
+        this.packagePath = module.getName() + File.separator +
+                "src" + File.separator + "main" + File.separator + "java" + File.separator +
                 project.getGroupId().replace(".", File.separator) + File.separator +
                 project.getArtifactId().replace(".", File.separator) + File.separator;
     }
@@ -74,13 +72,13 @@ public class SpringBootGenerator {
             }
             switch (extension.getType()) {
                 case ExtensionType.SPRING_BOOT_CROSS_ORIGIN:
-                    SpringBootExtensionHandler.crossOrigin(writer);
+                    SpringBootExtensionHandler.crossOrigin(module, writer);
                     break;
                 case ExtensionType.SPRING_BOOT_LOMBOK:
-                    SpringBootExtensionHandler.lombok(writer);
+                    SpringBootExtensionHandler.lombok(module, writer);
                     break;
                 case ExtensionType.SPRING_BOOT_SWAGGER2:
-                    SpringBootExtensionHandler.swagger2(writer);
+                    SpringBootExtensionHandler.swagger2(module, writer);
                     break;
                 default:
                     break;
@@ -88,8 +86,29 @@ public class SpringBootGenerator {
         }
     }
 
+    public static void build(ProjectWriter writer) {
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setPomFile(new File(writer.getRootDirectory() + "pom.xml"));
+        List<String> goals = new ArrayList<>();
+        goals.add("compile");
+        goals.add("package");
+        request.setGoals(goals);
+        Invoker invoker = new DefaultInvoker();
+        String mavenHome = System.getenv("MAVEN_HOME");
+        if (StringUtils.isBlank(mavenHome)) {
+            log.error("Environment variable 'MAVEN_HOME' not set.");
+            return;
+        }
+        invoker.setMavenHome(new File(mavenHome));
+        try {
+            invoker.execute(request);
+        } catch (MavenInvocationException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void createPom() {
-        MavenPom pom = new MavenPom(project);
+        PomFile pom = new PomFile(project);
         pom.addDependencyByLabel("default");
         if (module.getProperty("ormType").equals(OrmType.MYBATIS_ANNOTATION.toString())) {
             pom.addDependencyByLabel("mybatis");
@@ -97,7 +116,7 @@ public class SpringBootGenerator {
         for (Module extension: module.getExtensions()) {
             pom.addDependencyByLabel(extension.getType());
         }
-        writer.addOutput(TemplateType.SPRING_BOOT_POM, "pom.xml", pom.toString());
+        writer.addOutput(TemplateType.SPRING_BOOT_POM, module.getName() + File.separator + "pom.xml", pom.toString());
     }
 
     public void createProperty() {
@@ -119,7 +138,7 @@ public class SpringBootGenerator {
         }
 
         writer.addOutput(TemplateType.SPRING_BOOT_PROPERTIES,
-                "src" + File.separator + "main" + File.separator + "resources" + File.separator + "application.properties",
+                module.getName() + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + "application.properties",
                 parser.generate());
     }
 
@@ -225,27 +244,5 @@ public class SpringBootGenerator {
         writer.addOutput(TemplateType.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER,
                 packagePath + "mapper" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Mapper.java",
                 template);
-    }
-
-    public static void build(ProjectWriter writer) {
-        InvocationRequest request = new DefaultInvocationRequest();
-        request.setPomFile(new File(writer.getRootDirectory() + "pom.xml"));
-        List<String> goals = new ArrayList<>();
-        goals.add("compile");
-        goals.add("package");
-        request.setGoals(goals);
-        Invoker invoker = new DefaultInvoker();
-        String mavenHome = System.getenv("MAVEN_HOME");
-        if (StringUtils.isBlank(mavenHome)) {
-            log.error("Environment variable 'MAVEN_HOME' not set.");
-            return;
-        }
-        invoker.setMavenHome(new File(mavenHome));
-        try {
-            invoker.execute(request);
-        } catch (MavenInvocationException e) {
-            e.printStackTrace();
-        }
-
     }
 }

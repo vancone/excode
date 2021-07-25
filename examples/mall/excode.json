@@ -22,6 +22,7 @@
     "modules": [
         {
             "type": "spring-boot",
+            "name": "vancone-mall-server",
             "enable": true,
             "extensions": [
                 {
@@ -46,6 +47,11 @@
                 "ormType": "MYBATIS_ANNOTATION",
                 "port": 8081
             }
+        },
+        {
+            "type": "vite-admin",
+            "name": "vancone-mall-web",
+            "enable": true
         }
     ],
     "datasource": {

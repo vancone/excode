@@ -56,7 +56,7 @@ public class SpringBootExtensionHandler {
      * Extensioin Cross-Origin
      * @param writer
      */
-    public static void crossOrigin(ProjectWriter writer) {
+    public static void crossOrigin(Module module, ProjectWriter writer) {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_CONFIG_CROSS_ORIGIN);
         TemplateFactory.preProcess(writer.getProject(), template);
 
@@ -121,6 +121,7 @@ public class SpringBootExtensionHandler {
         template.updateJavaSource(unit);
 
         writer.addOutput(TemplateType.SPRING_BOOT_CONFIG_CROSS_ORIGIN,
+                module.getName() + File.separator +
                 "src" + File.separator + "main" + File.separator + "java" + File.separator +
                 writer.getProject().getGroupId().replace(".", File.separator) + File.separator +
                 writer.getProject().getArtifactId().replace(".", File.separator) + File.separator + "config" + File.separator + "CrossOriginConfig.java",
@@ -131,7 +132,7 @@ public class SpringBootExtensionHandler {
      * Extension: Lombok
      * @param writer
      */
-    public static void lombok(ProjectWriter writer) {
+    public static void lombok(Module module, ProjectWriter writer) {
         for (ProjectWriter.Output output: writer.getOutputsByType(TemplateType.SPRING_BOOT_ENTITY)) {
             CompilationUnit unit = StaticJavaParser.parse(output.getContent());
             ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(unit);
@@ -156,7 +157,7 @@ public class SpringBootExtensionHandler {
      * Extension: Swagger2
      * @param writer
      */
-    public static void swagger2(ProjectWriter writer) {
+    public static void swagger2(Module module, ProjectWriter writer) {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_CONFIG_SWAGGER2);
         TemplateFactory.preProcess(writer.getProject(), template);
         template.replace("version", writer.getProject().getVersion());
@@ -176,9 +177,10 @@ public class SpringBootExtensionHandler {
         template.replace("tags", swaggerTags);
 
         writer.addOutput(TemplateType.SPRING_BOOT_CONFIG_SWAGGER2,
+                module.getName() + File.separator +
                 "src" + File.separator + "main" + File.separator + "java" + File.separator +
-                        writer.getProject().getGroupId().replace(".", File.separator) + File.separator +
-                        writer.getProject().getArtifactId().replace(".", File.separator) + File.separator + "config" + File.separator + "Swagger2Config.java",
+                writer.getProject().getGroupId().replace(".", File.separator) + File.separator +
+                writer.getProject().getArtifactId().replace(".", File.separator) + File.separator + "config" + File.separator + "Swagger2Config.java",
                 template);
     }
 }

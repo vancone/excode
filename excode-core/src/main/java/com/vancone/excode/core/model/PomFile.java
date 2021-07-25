@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Data
 @Slf4j
-public class MavenPom {
+public class PomFile {
     private String groupId;
     private String artifactId;
     private String version;
@@ -51,7 +51,7 @@ public class MavenPom {
         }
     }
 
-    public MavenPom(Project project) {
+    public PomFile(Project project) {
         groupId = project.getGroupId();
         artifactId = project.getArtifactId();
         version = project.getVersion();

@@ -3,6 +3,7 @@ package com.vancone.excode.core;
 import com.vancone.excode.core.constant.ModuleType;
 import com.vancone.excode.core.enums.TemplateType;
 import com.vancone.excode.core.generator.SpringBootGenerator;
+import com.vancone.excode.core.generator.ViteAdminGenerator;
 import com.vancone.excode.core.model.Module;
 import com.vancone.excode.core.model.Project;
 import com.vancone.excode.core.model.Template;
@@ -82,9 +83,11 @@ public class ProjectWriter {
         }
 
         for (Module module: project.getModules()) {
+            log.info("Generate module [{}]", module.getType());
             if (module.getType().equals(ModuleType.SPRING_BOOT)) {
-                log.info("Generate module [{}]", module.getType());
                 SpringBootGenerator.generate(module, this);
+            } else if (module.getType().equals(ModuleType.VITE_ADMIN)) {
+                ViteAdminGenerator.generate(module, this);
             }
         }
 
@@ -95,7 +98,7 @@ public class ProjectWriter {
         }
 
         // Build and Package
-        SpringBootGenerator.build(this);
+//        SpringBootGenerator.build(this);
     }
 
     @Data

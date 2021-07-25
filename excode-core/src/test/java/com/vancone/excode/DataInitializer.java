@@ -4,17 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.vancone.excode.core.model.MavenPom;
+import com.vancone.excode.core.model.PomFile;
 import com.vancone.excode.core.model.Template;
-import com.vancone.excode.core.model.TemplateConfig;
 import com.vancone.excode.core.TemplateFactory;
 import com.vancone.excode.core.util.FileUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Tenton Lien
@@ -26,6 +27,11 @@ public class DataInitializer {
     private MongoTemplate mongoTemplate = TemplateFactory.getMongoTemplate();
 
     final String templatePath = "../template" + File.separator;
+
+    @Data
+    public static class TemplateConfig {
+        Map<String, String> template;
+    }
 
     @Test
     public void importTemplate() throws JsonProcessingException {
@@ -65,8 +71,8 @@ public class DataInitializer {
                 String pomText = FileUtil.read(pomFile.getPath());
 
                 try {
-                    List<MavenPom.Dependency> dependencies = xmlMapper.readValue(pomText, new TypeReference<List<MavenPom.Dependency>>() {});
-                    for (MavenPom.Dependency dependency: dependencies) {
+                    List<PomFile.Dependency> dependencies = xmlMapper.readValue(pomText, new TypeReference<List<PomFile.Dependency>>() {});
+                    for (PomFile.Dependency dependency: dependencies) {
                         dependency.setLabel(pomFile.getName().substring(0, pomFile.getName().lastIndexOf(".")));
                         mongoTemplate.save(dependency);
                     }

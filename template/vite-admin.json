@@ -1,0 +1,5 @@
+{
+    "template": {
+        "VITE_ADMIN_PACKAGE_JSON": "package.json"
+    }
+}

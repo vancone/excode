@@ -6,4 +6,5 @@ package com.vancone.excode.core.constant;
  */
 public interface ModuleType {
     String SPRING_BOOT = "spring-boot";
+    String VITE_ADMIN = "vite-admin";
 }
