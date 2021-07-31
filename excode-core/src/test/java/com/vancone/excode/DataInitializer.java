@@ -26,7 +26,7 @@ public class DataInitializer {
 
     private MongoTemplate mongoTemplate = TemplateFactory.getMongoTemplate();
 
-    final String templatePath = "../template" + File.separator;
+    final String templatePath = "../templates" + File.separator;
 
     @Data
     public static class TemplateConfig {
