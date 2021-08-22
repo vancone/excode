@@ -16,7 +16,7 @@ public class Loader {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         loggerContext.getLogger("root").setLevel(Level.toLevel("INFO"));
 
-        Project project = ProjectLoader.parse(FileUtil.read("../examples/mall/excode.json"));
+        Project project = ProjectLoader.parse(FileUtil.read("../examples/mall.json"));
         if (project != null) {
             ProjectWriter writer = new ProjectWriter(project);
             writer.write();

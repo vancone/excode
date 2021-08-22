@@ -11,7 +11,7 @@ import java.io.File;
 
 /**
  * @author Tenton Lien
- * @date 7/25/2021
+ * @since 7/25/2021
  */
 public class ViteAdminGenerator {
     private ProjectWriter writer;

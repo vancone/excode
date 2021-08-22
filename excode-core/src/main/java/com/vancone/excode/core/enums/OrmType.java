@@ -3,7 +3,7 @@ package com.vancone.excode.core.enums;
 /**
  * Object-Relational Mapping Framework Type
  * @author Tenton Lien
- * @date 7/24/2021
+ * @since 7/24/2021
  */
 public enum OrmType {
     MYBATIS_ANNOTATION,

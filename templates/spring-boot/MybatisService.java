@@ -7,16 +7,16 @@ import java.util.List;
 
 /**
  * @author ExCode
- * @date __date__
+ * @since __date__
  */
 public interface __Table__Service {
   void create(__Table__ __table__);
 
-  List<__Table__> retrieve(String __primaryKey__);
+  __Table__ retrieve(String __primaryKey__);
 
   List<__Table__> retrieveList();
 
-  PageInfo<__Table__> retrieveList(int pageNo, int pageSize);
+  PageInfo<__Table__> retrievePage(int pageNo, int pageSize);
 
   void update(__Table__ __table__);
 

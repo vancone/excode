@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * @author Tenton Lien
- * @date 7/25/2021
+ * @since 7/25/2021
  */
 public class CompilationUnitUtil {
     public static ClassOrInterfaceDeclaration getMainClassOrInterface(CompilationUnit unit) {

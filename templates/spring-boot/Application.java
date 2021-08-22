@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @author ExCode
- * @date __date__
+ * @since __date__
  */
 @SpringBootApplication
 @MapperScan("__groupId__.__artifactId__.mapper")

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author ExCode
- * @date __date__
+ * @since __date__
  */
 @Service
 public interface __Table__Mapper {

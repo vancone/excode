@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author ExCode
- * @date __date__
+ * @since __date__
  */
 @Service
 public class __Table__ServiceImpl implements __Table__Service {
@@ -25,9 +25,9 @@ public class __Table__ServiceImpl implements __Table__Service {
   }
 
   @Override
-  public List<__Table__> retrieve(String __primaryKey__) {
-    List<__Table__> __table__List = __table__Mapper.retrieve(__primaryKey__);
-    return __table__List;
+  public __Table__ retrieve(String __primaryKey__) {
+    __Table__ __table__ = __table__Mapper.retrieve(__primaryKey__);
+    return __table__;
   }
 
   @Override
@@ -37,7 +37,7 @@ public class __Table__ServiceImpl implements __Table__Service {
   }
 
   @Override
-  public PageInfo<__Table__> retrieveList(int pageNo, int pageSize) {
+  public PageInfo<__Table__> retrievePage(int pageNo, int pageSize) {
     PageHelper.startPage(pageNo, pageSize);
     List<__Table__> __table__List = retrieveList();
     PageInfo<__Table__> pageInfo = new PageInfo<>(__table__List);

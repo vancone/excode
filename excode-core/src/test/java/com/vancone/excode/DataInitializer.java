@@ -10,7 +10,7 @@ import com.vancone.excode.core.TemplateFactory;
 import com.vancone.excode.core.util.FileUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.io.File;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * @author Tenton Lien
- * @date 7/24/2021
+ * @since 7/24/2021
  */
 @Slf4j
 public class DataInitializer {

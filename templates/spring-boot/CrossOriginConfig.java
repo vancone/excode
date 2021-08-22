@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author ExCode
- * @date __date__
+ * @since __date__
  */
 @Configuration
 public class CrossOriginConfig implements WebMvcConfigurer {

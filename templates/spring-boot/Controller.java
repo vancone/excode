@@ -3,15 +3,14 @@ package __groupId__.__artifactId__.controller;
 import __groupId__.__artifactId__.entity.__Table__;
 import __groupId__.__artifactId__.service.__Table__Service;
 
-import com.github.pagehelper.PageInfo;
+import __pagitionImport__;
 import com.mekcone.webplatform.common.model.Response;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author ExCode
- * @date __date__
+ * @since __date__
  */
 @RestController
 @RequestMapping("/api/__artifactId__/__table__")
@@ -26,16 +25,16 @@ public class __Table__Controller {
 
   @GetMapping("/{__primaryKey__}")
   public Response retrieve(@PathVariable String __primaryKey__) {
-    List<__Table__> __table__List = __table__Service.retrieve(__primaryKey__);
-    return Response.success(__table__List);
+    __Table__ __table__ = __table__Service.retrieve(__primaryKey__);
+    return Response.success(__table__);
   }
 
   @GetMapping
-  public Response retrieveList(
+  public Response retrievePage(
       @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
       @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
-    PageInfo<__Table__> __table__List = __table__Service.retrieveList(pageNo, pageSize);
-    return Response.success(__table__List);
+    __pagition__<__Table__> __table__Page = __table__Service.retrievePage(pageNo, pageSize);
+    return Response.success(__table__Page);
   }
 
   @PutMapping

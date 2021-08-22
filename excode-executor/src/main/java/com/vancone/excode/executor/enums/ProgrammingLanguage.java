@@ -4,10 +4,15 @@ package com.vancone.excode.executor.enums;
  * @author Tenton Lien
  * @since 8/1/2021
  */
-public enum ProgramType {
+public enum ProgrammingLanguage {
     C,
     CPP,
     JAVA,
     PYTHON,
-    SHELL
+    SHELL;
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 }

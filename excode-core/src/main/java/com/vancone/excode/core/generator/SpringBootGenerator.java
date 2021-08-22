@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * @author Tenton Lien
- * @date 7/24/2021
+ * @since 7/24/2021
  */
 @Slf4j
 public class SpringBootGenerator {
@@ -60,9 +60,23 @@ public class SpringBootGenerator {
         for (MysqlDataSource.Table table : generator.project.getDatasource().getMysql().getTables()) {
             generator.createController(table);
             generator.createEntity(table);
-            generator.createService(table);
-            generator.createServiceImpl(table);
-            generator.createMybatisMapper(table);
+
+            String ormType = module.getProperty("ormType");
+            if (StringUtils.isBlank(ormType)) {
+                ormType = OrmType.MYBATIS_ANNOTATION.toString();
+            }
+
+            if (OrmType.MYBATIS_ANNOTATION.toString().equals(ormType)) {
+                generator.createMybatisMapper(table);
+                generator.createMybatisService(table);
+                generator.createMybatisServiceImpl(table);
+            } else if (OrmType.SPRING_DATA_JPA.toString().equals(ormType)) {
+                generator.createJpaRepository(table);
+                generator.createJpaService(table);
+                generator.createJpaServiceImpl(table);
+            } else {
+                log.error("Unsupported ORM type: {}", module);
+            }
         }
 
         // Load extensions
@@ -112,6 +126,8 @@ public class SpringBootGenerator {
         pom.addDependencyByLabel("default");
         if (module.getProperty("ormType").equals(OrmType.MYBATIS_ANNOTATION.toString())) {
             pom.addDependencyByLabel("mybatis");
+        } else if (module.getProperty("ormType").equals(OrmType.SPRING_DATA_JPA.toString())) {
+            pom.addDependencyByLabel("spring-data-jpa");
         }
         for (Module extension: module.getExtensions()) {
             pom.addDependencyByLabel(extension.getType());
@@ -157,30 +173,61 @@ public class SpringBootGenerator {
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+
+        if (module.getProperty("ormType").equals(OrmType.MYBATIS_ANNOTATION.toString())) {
+            template.replace("pagition", "PageInfo");
+            template.replace("pagitionImport", "com.github.pagehelper.PageInfo");
+        } else if (module.getProperty("ormType").equals(OrmType.SPRING_DATA_JPA.toString())) {
+            template.replace("pagition", "Page");
+            template.replace("pagitionImport", "org.springframework.data.domain.Page");
+        }
+
         writer.addOutput(TemplateType.SPRING_BOOT_CONTROLLER,
                 packagePath + "controller" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Controller.java",
                 template);
 
     }
 
-    public void createService(MysqlDataSource.Table table) {
-        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE);
+    public void createMybatisService(MysqlDataSource.Table table) {
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE_MYBATIS);
         TemplateFactory.preProcess(project, template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
-        writer.addOutput(TemplateType.SPRING_BOOT_SERVICE,
+        writer.addOutput(TemplateType.SPRING_BOOT_SERVICE_MYBATIS,
                 packagePath + "service" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Service.java",
                 template);
     }
 
-    public void createServiceImpl(MysqlDataSource.Table table) {
-        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE_IMPL);
+    public void createJpaService(MysqlDataSource.Table table) {
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE_JPA);
         TemplateFactory.preProcess(project, template);
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
-        writer.addOutput(TemplateType.SPRING_BOOT_SERVICE_IMPL,
+        writer.addOutput(TemplateType.SPRING_BOOT_SERVICE_JPA,
+                packagePath + "service" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Service.java",
+                template);
+    }
+
+    public void createMybatisServiceImpl(MysqlDataSource.Table table) {
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE_IMPL_MYBATIS);
+        TemplateFactory.preProcess(project, template);
+        template.replace("Table", StrUtil.upperCamelCase(table.getName()));
+        template.replace("table", StrUtil.camelCase(table.getName()));
+        template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+        writer.addOutput(TemplateType.SPRING_BOOT_SERVICE_IMPL_MYBATIS,
+                packagePath + "service" + File.separator + "impl" + File.separator + StrUtil.upperCamelCase(table.getName()) + "ServiceImpl.java",
+                template);
+    }
+
+    public void createJpaServiceImpl(MysqlDataSource.Table table) {
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_SERVICE_IMPL_JPA);
+        TemplateFactory.preProcess(project, template);
+        template.replace("Table", StrUtil.upperCamelCase(table.getName()));
+        template.replace("table", StrUtil.camelCase(table.getName()));
+        template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+        writer.addOutput(TemplateType.SPRING_BOOT_SERVICE_IMPL_JPA,
                 packagePath + "service" + File.separator + "impl" + File.separator + StrUtil.upperCamelCase(table.getName()) + "ServiceImpl.java",
                 template);
     }
@@ -243,6 +290,24 @@ public class SpringBootGenerator {
         template.updateJavaSource(unit);
         writer.addOutput(TemplateType.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER,
                 packagePath + "mapper" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Mapper.java",
+                template);
+    }
+
+    public void createJpaRepository(MysqlDataSource.Table table) {
+        if (StringUtils.isBlank(table.getPrimaryKeyName())) {
+            log.error("Repository interface cannot be generated from a table without a primary key");
+            return;
+        }
+
+        Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_JPA_REPOSITORY);
+        TemplateFactory.preProcess(project, template);
+        template.replace("Table", StrUtil.upperCamelCase(table.getName()));
+        template.replace("table", StrUtil.camelCase(table.getName()));
+        template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+        template.replace("primary_key", StrUtil.snakeCase(table.getPrimaryKeyName()));
+
+        writer.addOutput(TemplateType.SPRING_BOOT_JPA_REPOSITORY,
+                packagePath + "repository" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Repository.java",
                 template);
     }
 }

@@ -13,7 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @author ExCode
- * @date __date__
+ * @since __date__
  */
 @Configuration
 @EnableSwagger2

@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * @author Tenton Lien
- * @date 7/25/2021
+ * @since 7/25/2021
  */
 @Data
 public class PackageJsonFile {

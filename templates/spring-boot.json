@@ -4,8 +4,11 @@
         "SPRING_BOOT_CONFIG_CROSS_ORIGIN": "CrossOriginConfig.java",
         "SPRING_BOOT_CONFIG_SWAGGER2": "Swagger2Config.java",
         "SPRING_BOOT_CONTROLLER": "Controller.java",
+        "SPRING_BOOT_JPA_REPOSITORY": "Repository.java",
         "SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER": "Mapper.java",
-        "SPRING_BOOT_SERVICE": "Service.java",
-        "SPRING_BOOT_SERVICE_IMPL": "ServiceImpl.java"
+        "SPRING_BOOT_SERVICE_JPA": "JpaService.java",
+        "SPRING_BOOT_SERVICE_MYBATIS": "MybatisService.java",
+        "SPRING_BOOT_SERVICE_IMPL_JPA": "JpaServiceImpl.java",
+        "SPRING_BOOT_SERVICE_IMPL_MYBATIS": "MybatisServiceImpl.java"
     }
 }
