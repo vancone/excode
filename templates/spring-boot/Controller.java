@@ -4,7 +4,7 @@ import __groupId__.__artifactId__.entity.__Table__;
 import __groupId__.__artifactId__.service.__Table__Service;
 
 import __pagitionImport__;
-import com.mekcone.webplatform.common.model.Response;
+import com.vancone.cloud.common.model.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

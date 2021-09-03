@@ -17,7 +17,7 @@ public interface __Table__Mapper {
 
   @Select("SELECT * FROM __table__ WHERE __primary_key__ = #{__primaryKey__}")
   @Results({})
-  List<__Table__> retrieve(String __primaryKey__);
+  __Table__ retrieve(String __primaryKey__);
 
   @Select("SELECT * FROM __table__")
   @Results({

@@ -1,8 +1,8 @@
 <dependencies>
     <dependency>
-        <groupId>com.mekcone</groupId>
-        <artifactId>web-platform-common</artifactId>
-        <version>1.0.0</version>
+        <groupId>com.vancone</groupId>
+        <artifactId>vancone-cloud-common</artifactId>
+        <version>0.1.0</version>
     </dependency>
 
     <dependency>
