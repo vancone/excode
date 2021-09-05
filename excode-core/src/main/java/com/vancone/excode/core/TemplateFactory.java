@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * @author Tenton Lien
@@ -25,8 +26,12 @@ public class TemplateFactory {
         return mongoTemplate;
     }
 
-    public static Template getTemplate(TemplateType name) {
-        return mongoTemplate.findOne(Query.query(Criteria.where("name").is(name)), Template.class);
+    public static Template getTemplate(TemplateType type) {
+        return mongoTemplate.findOne(Query.query(Criteria.where("type").is(type)), Template.class);
+    }
+
+    public static List<Template> getTemplatesByModuleName(String moduleName) {
+        return mongoTemplate.find(Query.query(Criteria.where("module").regex(moduleName)), Template.class);
     }
 
     public static void preProcess(Project project, Template template) {

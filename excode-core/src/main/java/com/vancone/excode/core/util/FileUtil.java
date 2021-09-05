@@ -28,6 +28,7 @@ public class FileUtil {
 
     public static boolean write(String url, String data) {
         try {
+            url = url.replace("/", File.separator);
             if (url.lastIndexOf(File.separator) > 0) {
                 createDirectoryIfNotExist(url.substring(0, url.lastIndexOf(File.separator)));
             }

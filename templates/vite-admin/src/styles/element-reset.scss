@@ -1,0 +1,138 @@
+@import './_variables.scss';
+@import './mixin.scss';
+
+.el-main {
+    padding: 15px 20px;
+    overflow: hidden;
+}
+
+.el-tabs-border-card {
+    box-shadow: none;
+}
+
+.el-form-item__label {
+    @include text-ellipsis;
+}
+.el-form-item {
+    .el-form-item {
+        margin-bottom:0;
+    }
+}
+
+.el-breadcrumb {
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 20px;
+}
+
+.el-menu-item {
+    color: $color-text-menu;
+    background-color: $color-bg-sidebar;
+    &.is-active {
+        color: $color-text-menu-active;
+    }
+}
+
+.el-submenu {
+    &.is-active {
+        >.el-submenu__title {
+            color: $color-text-menu-active;
+
+            >i {
+                color: inherit;
+            }
+        }
+    }
+
+    >.el-submenu__title {
+        color: $color-text-menu;
+        background-color: $color-bg-sidebar;
+
+        &:hover {
+            color: $color-text-menu-active;
+            background-color: $color-bg-menu-active;
+        }
+
+        >i {
+            color: inherit;
+        }
+    }
+}
+
+.el-dropdown {
+    cursor: pointer;
+}
+
+.el-container {
+    &.is-vertical {
+        height: 100%;
+    }
+}
+
+.table__fixed__summary-wrapper {
+    position: relative;
+    border: solid 1px #EBEEF5;
+    overflow: hidden;
+    .el-table--border,
+    .el-table--group {
+        border: none;
+        &::after {
+            display: none;
+        }
+    }
+    .el-table {
+        position: static;
+        overflow: auto;
+
+        .el-table__fixed {
+            box-shadow: 0 0 10px rgb(0 0 0 / 12%) !important;
+        }
+    }
+    .el-table--scrollable-x .el-table__body-wrapper {
+        overflow-x: visible;
+    }
+    .el-table__body-wrapper {
+        overflow: visible;
+    }
+    .el-table__header-wrapper {
+        overflow: visible;
+    }
+    .el-table__footer-wrapper {
+        overflow: visible;
+    }
+}
+
+.table__colored-header {
+    td, th {
+        text-align: center;
+    }
+
+    thead {
+        th {
+            background-color: #F5F7FA;
+        }
+    }
+}
+
+.el-scrollbar__bar.is-vertical {
+    opacity: 1;
+}
+
+.el-dialog {
+    border-radius: 6px;
+    // background: #fff url......;
+}
+
+.el-dialog__header {
+    padding-left: 0;
+
+    >.el-dialog__title {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        color: #303133;
+        font-size: 18px;
+
+        @extend .icon-triangle-right
+    }
+}

@@ -1,9 +1,11 @@
 package com.vancone.excode;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.vancone.excode.core.enums.TemplateType;
 import com.vancone.excode.core.model.PomFile;
 import com.vancone.excode.core.model.Template;
 import com.vancone.excode.core.TemplateFactory;
@@ -30,7 +32,18 @@ public class DataInitializer {
 
     @Data
     public static class TemplateConfig {
-        Map<String, String> template;
+        String directory;
+        Template template;
+
+        @Data
+        static class Template {
+            @JsonProperty("static")
+            List<String> staticTemplates;
+
+            @JsonProperty("dynamic")
+            Map<TemplateType, String> dynamicTemplates;
+        }
+
     }
 
     @Test
@@ -46,14 +59,30 @@ public class DataInitializer {
                 System.out.println("Importing module: " + moduleName);
                 ObjectMapper mapper = new ObjectMapper();
                 TemplateConfig config = mapper.readValue(FileUtil.read(configFile.getPath()), TemplateConfig.class);
-                for (String key: config.getTemplate().keySet()) {
-                    Template template = new Template();
-                    template.setName(key);
-                    System.out.println(templatePath + moduleName + File.separator + config.getTemplate().get(key));
-                    template.setContent(FileUtil.read(templatePath + moduleName + File.separator + config.getTemplate().get(key)));
-                    mongoTemplate.save(template);
+
+                // Import static templates
+                if (config.getTemplate().getStaticTemplates() != null) {
+                    for (String fileName: config.getTemplate().getStaticTemplates()) {
+                        Template template = new Template();
+                        template.setType(TemplateType.STATIC_TEMPLATE);
+                        template.setModule(moduleName);
+                        template.setFileName(fileName);
+                        log.info(templatePath + moduleName + File.separator + fileName);
+                        template.setContent(FileUtil.read(templatePath + moduleName + File.separator + fileName));
+                        mongoTemplate.save(template);
+                    }
                 }
 
+                // Import dynamic templates
+                for (TemplateType key: config.getTemplate().getDynamicTemplates().keySet()) {
+                    Template template = new Template();
+                    template.setType(key);
+                    template.setModule(moduleName);
+                    template.setFileName(config.getTemplate().getDynamicTemplates().get(key));
+                    log.info(templatePath + moduleName + File.separator + config.getTemplate().getDynamicTemplates().get(key));
+                    template.setContent(FileUtil.read(templatePath + moduleName + File.separator + config.getTemplate().getDynamicTemplates().get(key)));
+                    mongoTemplate.save(template);
+                }
             }
         }
     }

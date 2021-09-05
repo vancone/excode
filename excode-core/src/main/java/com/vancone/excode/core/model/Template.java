@@ -2,6 +2,7 @@ package com.vancone.excode.core.model;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.vancone.excode.core.enums.TemplateType;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,10 +13,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Document
 public class Template {
-    private String name;
+    private TemplateType type;
     private String path;
     private String format;
     private String module;
+    private String fileName;
     private String content;
 
     public void replace(String tag, String value) {

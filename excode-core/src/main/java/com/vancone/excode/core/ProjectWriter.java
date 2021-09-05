@@ -103,6 +103,10 @@ public class ProjectWriter {
 
         // Write to disk
         for (Output output: outputs) {
+            if (output.getType().equals(TemplateType.RAW_DIRECTORY)) {
+                
+                continue;
+            }
             String content = output.getTemplate() == null ? output.getContent() : output.getTemplate().getContent();
             FileUtil.write(rootDirectory + output.getPath(), content);
         }

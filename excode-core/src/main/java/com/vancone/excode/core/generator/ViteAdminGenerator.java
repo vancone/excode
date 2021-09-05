@@ -8,6 +8,7 @@ import com.vancone.excode.core.model.Project;
 import com.vancone.excode.core.model.Template;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Tenton Lien
@@ -23,6 +24,19 @@ public class ViteAdminGenerator {
         generator.writer = writer;
         generator.project = writer.getProject();
         generator.module = module;
+
+        List<Template> basicTemplates = TemplateFactory.getTemplatesByModuleName("vite-admin");
+
+        // Process static templates
+        for (Template template: basicTemplates) {
+            if (template.getType().equals(TemplateType.STATIC_TEMPLATE)) {
+                writer.addOutput(template.getType(),
+                        module.getName() + File.separator + template.getFileName(),
+                        template);
+            }
+        }
+
+        // Process dynamic templates
         generator.createPackageJson();
     }
 

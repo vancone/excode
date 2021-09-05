@@ -1,5 +1,18 @@
 {
+    "directory": "0.1.0",
     "template": {
-        "VITE_ADMIN_PACKAGE_JSON": "package.json"
+        "static": [
+            ".gitignore",
+            "tsconfig.json",
+            "README.md",
+            "vite.config.ts",
+            "src/App.vue"
+        ],
+        "dynamic": {
+            "VITE_ADMIN_PACKAGE_JSON": "package.json",
+            "VITE_ADMIN_README_MD": "README.md",
+            "VITE_ADMIN_SRC_APP_VUE": "src/App.vue",
+            "VITE_ADMIN_VITE_CONFIG_TS": "vite.config.ts"
+        }
     }
 }
