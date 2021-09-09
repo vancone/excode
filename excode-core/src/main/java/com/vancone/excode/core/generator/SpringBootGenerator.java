@@ -27,6 +27,7 @@ import org.apache.maven.shared.invoker.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,11 +54,15 @@ public class SpringBootGenerator {
 
     public static void generate(Module module, ProjectWriter writer) {
         SpringBootGenerator generator = new SpringBootGenerator(module, writer);
+        List<MysqlDataSource.Table> tables = generator.project.getDatasource().getMysql().getTables();
+
         generator.createPom();
         generator.createProperty();
         generator.createApplicationEntry();
 
-        for (MysqlDataSource.Table table : generator.project.getDatasource().getMysql().getTables()) {
+        generator.createPostmanCollection(tables);
+
+        for (MysqlDataSource.Table table : tables) {
             generator.createController(table);
             generator.createEntity(table);
 
@@ -309,5 +314,35 @@ public class SpringBootGenerator {
         writer.addOutput(TemplateType.SPRING_BOOT_JPA_REPOSITORY,
                 packagePath + "repository" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Repository.java",
                 template);
+    }
+
+    public void createPostmanCollection(List<MysqlDataSource.Table> tables) {
+        PostmanCollection collection = new PostmanCollection();
+
+        PostmanCollection.Info info = collection.getInfo();
+        info.setPostmanId("");
+        info.setName(project.getArtifactId());
+
+        List<PostmanCollection.Folder> folders = collection.getFolders();
+        for (MysqlDataSource.Table table: tables) {
+            PostmanCollection.Folder folder = new PostmanCollection.Folder();
+            folder.setName(table.getName());
+            folders.add(folder);
+
+            String[] verbs = new String[] { "Query", "Create", "Update", "Delete" };
+            String[] methods = new String[] { "GET", "POST", "PUT", "DELETE" };
+
+            for (int i = 0; i < methods.length; i ++) {
+                PostmanCollection.Folder.Api api = new PostmanCollection.Folder.Api();
+                folder.getApis().add(api);
+                api.setName( verbs[i] + " " + table.getName());
+                api.getRequest().setMethod(methods[i]);
+                api.getRequest().getUrl().setRaw("http://localhost/api/" + project.getArtifactId() + "/" + table.getName());
+                api.getRequest().getUrl().setProtocol("http");
+                api.getRequest().getUrl().setHost(Arrays.asList("localhost"));
+                api.getRequest().getUrl().setPath(Arrays.asList("api", project.getArtifactId(), table.getName()));
+            }
+        }
+        writer.addOutput(TemplateType.RAW_FILE, project.getArtifactId() + ".postman_collection.json", collection.toJson());
     }
 }
