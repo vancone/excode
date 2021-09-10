@@ -60,7 +60,10 @@ public class SpringBootGenerator {
         generator.createProperty();
         generator.createApplicationEntry();
 
-        generator.createPostmanCollection(tables);
+        String postmanFlag = module.getProperty("postmanCollection");
+        if (postmanFlag == null || "true".equals(postmanFlag)) {
+            generator.createPostmanCollection(tables);
+        }
 
         for (MysqlDataSource.Table table : tables) {
             generator.createController(table);
@@ -332,15 +335,23 @@ public class SpringBootGenerator {
             String[] verbs = new String[] { "Query", "Create", "Update", "Delete" };
             String[] methods = new String[] { "GET", "POST", "PUT", "DELETE" };
 
+            String port = module.getProperty("port");
+            if (StringUtils.isBlank(port)) {
+                port = "8080";
+            }
+
             for (int i = 0; i < methods.length; i ++) {
                 PostmanCollection.Folder.Api api = new PostmanCollection.Folder.Api();
                 folder.getApis().add(api);
                 api.setName( verbs[i] + " " + table.getName());
                 api.getRequest().setMethod(methods[i]);
-                api.getRequest().getUrl().setRaw("http://localhost/api/" + project.getArtifactId() + "/" + table.getName());
-                api.getRequest().getUrl().setProtocol("http");
-                api.getRequest().getUrl().setHost(Arrays.asList("localhost"));
-                api.getRequest().getUrl().setPath(Arrays.asList("api", project.getArtifactId(), table.getName()));
+
+                PostmanCollection.Folder.Api.Url url = api.getRequest().getUrl();
+                url.setRaw("http://localhost:" + port + "/api/" + project.getArtifactId() + "/" + table.getName());
+                url.setProtocol("http");
+                url.setPort(port);
+                url.setHost(Arrays.asList("localhost"));
+                url.setPath(Arrays.asList("api", project.getArtifactId(), table.getName()));
             }
         }
         writer.addOutput(TemplateType.RAW_FILE, project.getArtifactId() + ".postman_collection.json", collection.toJson());

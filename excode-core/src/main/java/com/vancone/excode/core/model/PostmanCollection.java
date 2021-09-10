@@ -73,6 +73,7 @@ public class PostmanCollection {
             public static class Url {
                 private String raw;
                 private String protocol;
+                private String port;
                 private List<String> host = new ArrayList<>();
                 private List<String> path = new ArrayList<>();
             }

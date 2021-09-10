@@ -45,7 +45,8 @@
             ],
             "properties": {
                 "ormType": "MYBATIS_ANNOTATION",
-                "port": 8081
+                "port": 8081,
+                "postmanCollection": true
             }
         },
         {
