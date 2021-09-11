@@ -2,8 +2,11 @@ package com.vancone.excode.core.model;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 import com.vancone.excode.core.enums.TemplateType;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -11,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @since 7/24/2021
  */
 @Data
+@Slf4j
 @Document
 public class Template {
     private TemplateType type;
@@ -29,6 +33,11 @@ public class Template {
     }
 
     public void updateJavaSource(CompilationUnit unit) {
-        content = unit.toString();
+        try {
+            content = new Formatter().formatSource(unit.toString());
+        } catch (FormatterException e) {
+            log.warn("Failed to format Java source code.");
+            content = unit.toString();
+        }
     }
 }

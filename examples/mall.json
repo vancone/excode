@@ -79,11 +79,13 @@
                         {
                             "name": "name",
                             "type": "varchar",
+                            "filter": "regex",
                             "length": 200
                         },
                         {
                             "name": "amount",
                             "type": "int",
+                            "filter": "default",
                             "comment": "商品库存"
                         }
                     ]

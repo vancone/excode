@@ -47,6 +47,7 @@ public class MysqlDataSource {
             private String type;
             private int length;
             private boolean primaryKey;
+            private String filter;
             private String comment;
 
             @JsonIgnore

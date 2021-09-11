@@ -1,14 +1,15 @@
 package com.vancone.excode.core.generator;
 
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.comments.JavadocComment;
-import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.github.javaparser.ast.expr.ArrayInitializerExpr;
-import com.github.javaparser.ast.expr.NormalAnnotationExpr;
-import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.stmt.Statement;
 import com.vancone.excode.core.ProjectWriter;
 import com.vancone.excode.core.PropertiesParser;
 import com.vancone.excode.core.TemplateFactory;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Tenton Lien
@@ -172,7 +174,6 @@ public class SpringBootGenerator {
         writer.addOutput(TemplateType.SPRING_BOOT_APPLICATION_ENTRY,
                 packagePath + StrUtil.capitalize(project.getArtifactId()) + "Application.java",
                 template);
-        log.info("template: {}", template.toString());
     }
 
     public void createController(MysqlDataSource.Table table) {
@@ -190,6 +191,46 @@ public class SpringBootGenerator {
             template.replace("pagitionImport", "org.springframework.data.domain.Page");
         }
 
+        for (MysqlDataSource.Table.Column column: table.getColumns()) {
+            String filterMode = column.getFilter();
+            if (StringUtils.isNotBlank(filterMode)) {
+                CompilationUnit unit = template.parseJavaSource();
+                ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(unit);
+                List<MethodDeclaration> methods = clazz.getMethodsByName("retrievePage");
+                if (!methods.isEmpty()) {
+                    MethodDeclaration method = methods.get(0);
+
+                    // Add parameters
+                    NodeList<Parameter> params = method.getParameters();
+                    Parameter param = new Parameter();
+                    param.setName(column.getName());
+                    param.setType("String");
+                    NormalAnnotationExpr annotation = new NormalAnnotationExpr();
+                    annotation.setName("RequestParam");
+                    annotation.addPair("required", "false");
+                    param.addAnnotation(annotation);
+                    params.add(param);
+                    log.info("Params: {}", params);
+
+                    // Add args of method call
+                    Optional<BlockStmt> body = method.getBody();
+                    if (body.isPresent()) {
+                        Statement statement = body.get().getStatement(0);
+                        List<Node> nodes = statement.getChildNodes();
+                        if (!nodes.isEmpty()) {
+                            VariableDeclarationExpr expr = (VariableDeclarationExpr) nodes.get(0);
+                            Optional<Expression> initializer = expr.getVariable(0).getInitializer();
+                            if (initializer.isPresent()) {
+                                NodeList<Expression> args = initializer.get().asMethodCallExpr().getArguments();
+                                args.add(new NameExpr((column.getName())));
+                            }
+                        }
+                    }
+                }
+                template.updateJavaSource(unit);
+            }
+        }
+
         writer.addOutput(TemplateType.SPRING_BOOT_CONTROLLER,
                 packagePath + "controller" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Controller.java",
                 template);
@@ -202,6 +243,27 @@ public class SpringBootGenerator {
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+
+        for (MysqlDataSource.Table.Column column: table.getColumns()) {
+            String filterMode = column.getFilter();
+            if (StringUtils.isNotBlank(filterMode)) {
+                CompilationUnit unit = template.parseJavaSource();
+                ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(unit);
+                List<MethodDeclaration> methods = clazz.getMethodsByName("retrievePage");
+                if (!methods.isEmpty()) {
+                    MethodDeclaration method = methods.get(0);
+
+                    // Add parameters
+                    NodeList<Parameter> params = method.getParameters();
+                    Parameter param = new Parameter();
+                    param.setName(column.getName());
+                    param.setType("String");
+                    params.add(param);
+                }
+                template.updateJavaSource(unit);
+            }
+        }
+
         writer.addOutput(TemplateType.SPRING_BOOT_SERVICE_MYBATIS,
                 packagePath + "service" + File.separator + StrUtil.upperCamelCase(table.getName()) + "Service.java",
                 template);
@@ -224,6 +286,27 @@ public class SpringBootGenerator {
         template.replace("Table", StrUtil.upperCamelCase(table.getName()));
         template.replace("table", StrUtil.camelCase(table.getName()));
         template.replace("primaryKey", StrUtil.camelCase(table.getPrimaryKeyName()));
+
+        for (MysqlDataSource.Table.Column column: table.getColumns()) {
+            String filterMode = column.getFilter();
+            if (StringUtils.isNotBlank(filterMode)) {
+                CompilationUnit unit = template.parseJavaSource();
+                ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(unit);
+                List<MethodDeclaration> methods = clazz.getMethodsByName("retrievePage");
+                if (!methods.isEmpty()) {
+                    MethodDeclaration method = methods.get(0);
+
+                    // Add parameters
+                    NodeList<Parameter> params = method.getParameters();
+                    Parameter param = new Parameter();
+                    param.setName(column.getName());
+                    param.setType("String");
+                    params.add(param);
+                }
+                template.updateJavaSource(unit);
+            }
+        }
+
         writer.addOutput(TemplateType.SPRING_BOOT_SERVICE_IMPL_MYBATIS,
                 packagePath + "service" + File.separator + "impl" + File.separator + StrUtil.upperCamelCase(table.getName()) + "ServiceImpl.java",
                 template);
@@ -247,7 +330,6 @@ public class SpringBootGenerator {
         ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(entity.getCompilationUnit());
         if (clazz != null) {
             clazz.addOrphanComment(new JavadocComment("\r\n * @Author ExCode\r\n"));
-            System.out.println(clazz);
         }
         writer.addOutput(TemplateType.SPRING_BOOT_ENTITY,
                 packagePath + "entity" + File.separator + StrUtil.upperCamelCase(table.getName()) + ".java",
