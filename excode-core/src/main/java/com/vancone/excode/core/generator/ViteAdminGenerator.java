@@ -30,6 +30,16 @@ public class ViteAdminGenerator {
         // Process static templates
         for (Template template: basicTemplates) {
             if (template.getType().equals(TemplateType.STATIC_TEMPLATE)) {
+
+                // Set title
+                if (template.getFileName().equals("src/components/layout/components/SideBar.vue")) {
+                    String title = module.getProperty("title");
+                    if (title == null) {
+                        title = generator.project.getArtifactId();
+                    }
+                    template.replace("title", title);
+                }
+
                 writer.addOutput(template.getType(),
                         module.getName() + File.separator + template.getFileName(),
                         template);

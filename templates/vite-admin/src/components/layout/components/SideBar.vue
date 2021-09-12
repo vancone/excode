@@ -1,7 +1,7 @@
 <template>
     <div id="siderbar" class="scrollbar">
         <div class="logo" title="ExCode">
-            <h1>ExCode</h1>
+            <h1>__title__</h1>
         </div>
         <el-menu
             class="el-menu-vertical-demo"

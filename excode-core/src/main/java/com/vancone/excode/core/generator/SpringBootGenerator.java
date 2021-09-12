@@ -359,11 +359,6 @@ public class SpringBootGenerator {
                 } else if (annotationExpr.getNameAsString().equals("Results")) {
                     ArrayInitializerExpr array = new ArrayInitializerExpr();
                     for (MysqlDataSource.Table.Column column : table.getColumns()) {
-                        if (methodDeclaration.getNameAsString().equals("retrieveList")) {
-//                            if (column.isDetail()) {
-//                                continue;
-//                            }
-                        }
                         NormalAnnotationExpr resultAnnotation = new NormalAnnotationExpr();
                         resultAnnotation.setName("Result");
                         resultAnnotation.addPair("property", new StringLiteralExpr(column.getCamelCaseName(table.getName())));

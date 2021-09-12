@@ -23,7 +23,7 @@
         {
             "type": "spring-boot",
             "name": "vancone-mall-server",
-            "enable": true,
+            "enable": false,
             "extensions": [
                 {
                     "type": "cross-origin",
@@ -52,7 +52,10 @@
         {
             "type": "vite-admin",
             "name": "vancone-mall-web",
-            "enable": true
+            "enable": true,
+            "properties": {
+                "title": "超级商城"
+            }
         }
     ],
     "datasource": {
