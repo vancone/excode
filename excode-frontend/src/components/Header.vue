@@ -2,35 +2,48 @@
   <div class="header">
     <img src="../assets/logo.png" class="logo">
     <h1>ExCode</h1>
-    <div class="help-doc" style="float:right;height:55px;padding-right: 20px;cursor:pointer;">
-      <i class="el-icon-question" style="display:inline-block;vertical-align:top;line-height:55px;"/>
-      <span style="display:inline-block;line-height:55px;margin-left:6px;">Help</span>
+    <div class="help-doc">
+      <i class="el-icon-question"/>
+      <span>Help</span>
     </div>
   </div>
 </template>
 
 <style scoped>
 .header {
-  background: black;
+  background: #222;
   color: white;
-  height: 54px;
+  height: 49px;
   text-align: left;
   padding-left: 10px;
 }
 h1 {
   margin-top: 0;
   margin-left: 10px;
-  font-size: 22px;
-  line-height: 55px;
+  font-size: 18px;
+  line-height: 50px;
   font-weight: 100;
   cursor: default;
   display: inline-block;
 }
 .logo {
-  height: 35px;
+  height: 30px;
   line-height: 55px;
   vertical-align: top;
-  margin-top: 9px;
+  margin-top: 10px;
   display: inline-block;
+}
+.help-doc {
+  float: right;
+  height: 50px;
+  padding-right: 20px;
+  cursor: pointer;
+}
+.help-doc span {
+  display: inline-block;
+  line-height: 50px;
+  margin-left: 6px;
+  font-size: 12px;
+  color: #ddd;
 }
 </style>

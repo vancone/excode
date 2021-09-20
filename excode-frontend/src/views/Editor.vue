@@ -1,10 +1,16 @@
 <template>
   <div class="editor">
     <div class="toolbar">
-      <div class="button-save" @click="back"><img src="../assets/back.svg"/></div>
-      <div class="button-save" @click="save"><img src="../assets/save.svg"/></div>
-      <div class="button-save" @click="openDataSourceDialog"><img src="../assets/database.svg"/></div>
-      <el-button type="primary" size="mini" class="button-export">Export</el-button>
+      <div class="button button-back" @click="back"></div>
+      <div class="button button-save" @click="save">
+        <span>Save</span>
+      </div>
+      <div class="button button-datasource" @click="openDataSourceDialog">
+        <span>Data Source</span>
+      </div>
+      <div class="button button-export" @click="openDataSourceDialog">
+        <span>Export</span>
+      </div>
     </div>
     <el-row style="height:calc(100% - 35px);">
       <el-col :span="19" style="height: 100%">
@@ -246,25 +252,41 @@ export default {
   background: white;
   border-bottom: solid 1px #ddd;
 }
-.button-save {
+.button {
   height: 35px;
-  width: 35px;
+  width: auto;
   cursor: pointer;
   margin-top: 0px;
+  padding: 0 8px 0 8px;
   /* margin-left: 10px; */
   float: left;
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  background-position: 10px center;
+  padding-left: 32px;
 }
-.button-save:hover {
-  background: #eee;
+.button:hover {
+  background-color: #eee;
+  color: #8ba74f;
 }
-.button-save img {
-  margin-top: 7px;
-  height: 20px;
+.button span {
+  color: #999;
+  font-size: 12px;
+  line-height: 35px;
+  vertical-align: middle;
+  margin: 0;
+}
+.button-back {
+  background-image: url(../assets/back.svg);
+}
+.button-save {
+  background-image: url(../assets/save.svg);
+}
+.button-datasource {
+  background-image: url(../assets/database.svg);
 }
 .button-export {
-  margin-top: 3px;
-  margin-right: 5px;
-  float: right;
+  background-image: url(../assets/export.svg);
 }
 .tabs {
   height: 100%;
