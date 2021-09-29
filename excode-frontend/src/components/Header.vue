@@ -1,7 +1,10 @@
 <template>
   <div class="header">
-    <img src="../assets/logo.png" class="logo">
-    <h1>ExCode</h1>
+    <div class="title">
+      <img src="../assets/logo.png" class="logo">
+      <h1>ExCode</h1>
+    </div>
+
     <div class="help-doc">
       <i class="el-icon-question"/>
       <span>Help</span>
@@ -11,38 +14,39 @@
 
 <style scoped>
 .header {
-  background: #222;
+  background: #313b1c;
   color: white;
   height: 49px;
   text-align: left;
-  padding-left: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 h1 {
-  margin-top: 0;
+  margin: 0;
   margin-left: 10px;
   font-size: 18px;
-  line-height: 50px;
   font-weight: 100;
   cursor: default;
-  display: inline-block;
 }
 .logo {
   height: 30px;
-  line-height: 55px;
-  vertical-align: top;
-  margin-top: 10px;
-  display: inline-block;
+  margin-left: 10px;
 }
 .help-doc {
-  float: right;
-  height: 50px;
-  padding-right: 20px;
+  height: 49px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 .help-doc span {
-  display: inline-block;
   line-height: 50px;
   margin-left: 6px;
+  margin-right: 20px;
   font-size: 12px;
   color: #ddd;
 }

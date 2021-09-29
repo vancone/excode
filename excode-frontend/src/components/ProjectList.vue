@@ -3,20 +3,21 @@
     <div class="toolbar">
       <h1 class="title">Projects</h1>
       <div class="tool-buttons">
-        <el-input placeholder="Search..." v-model="searchText" size="small" class="searchbox">
+        <el-input placeholder="Search..." v-model="searchText" size="mini" class="searchbox">
           <template #suffix>
             <i class="el-icon-search el-input__icon" @click="refresh"></i>
           </template>
         </el-input>
-        <el-button type="primary" style="display:inline-block;" @click="create" size="small">
+        <el-button type="primary" style="display:inline-block;" @click="create" size="mini">
           <i class="el-icon-plus"></i>
         </el-button>
-        <el-button @click="refresh" style="display:inline-block;" size="small">
+        <el-button @click="refresh" style="display:inline-block;" size="mini">
           <i class="el-icon-refresh"></i>
         </el-button>
       </div>
     </div>
     <el-table :data="tableData" class="table">
+      <el-table-column type="selection" width="40"> </el-table-column>
       <el-table-column label="Project Name" width="180">
         <template #default="scope">
           <span>{{ scope.row.name }}</span>
@@ -29,16 +30,16 @@
       </el-table-column>
       <el-table-column label="Operations">
         <template #default="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">
-            <i class="el-icon-edit"></i>
+          <el-button type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">
+            Edit
           </el-button>
-          <el-button size="mini" @click="handleConfigure(scope.$index, scope.row)">
-            <i class="el-icon-setting"></i>
+          <el-button type="text" size="mini" @click="handleConfigure(scope.$index, scope.row)">
+            Configure
           </el-button>
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
-              <el-button size="mini" type="danger">
-                <i class="el-icon-delete"></i>
+              <el-button type="text" size="mini">
+                Delete
               </el-button>
             </template>
           </el-popconfirm>
@@ -190,12 +191,13 @@ export default {
   font-weight: 600;
   font-size: 18px;
   margin-top: 0;
+  margin-left: 0;
   line-height: 32px;
 }
 .searchbox {
   display: inline-block;
   height: 20px;
-  width: 300px;
+  width: 240px;
   margin-right: 10px;
 }
 .toolbar {
@@ -208,9 +210,40 @@ export default {
   float: right;
 }
 .table {
-  width: calc(100% - 40px);
-  margin: 20px;
+  width: calc(100% - 10px);
+  margin-bottom: 10px;
 }
+
+/deep/.table .el-table__header-wrapper th {
+  background: #e3e3e3;
+  height: 28px;
+  font-size: 12px;
+  font-weight: 100;
+  color: #555;
+  text-align: left;
+  border-right: solid 1px white;
+}
+
+/deep/.table .el-table__row {
+  text-align: left;
+  height: 34px;
+  font-size: 12px;
+  font-weight: 100;
+  color: #555;
+}
+
+/deep/.table .el-table__row:nth-child(even) {
+  background: #f7f7f7;
+}
+
+/deep/.table .cell {
+  line-height: 16px;
+}
+
+/deep/.table .el-checkbox {
+  height: 16px;
+}
+
 .footer {
   color: #999;
   position: absolute;

@@ -10,7 +10,14 @@ const routes = [
   {
     path: '/editor',
     name: 'Editor',
-    component: () => import('../views/Editor.vue')
+    component: () => import('../views/Editor.vue'),
+    children: [
+      { path: '', component: () => import('../components/SpringBootPanel.vue') },
+      {
+        path: 'raw',
+        component: () => import('../views/RawViewer.vue')
+      }
+    ]
   },
   {
     path: '/about',

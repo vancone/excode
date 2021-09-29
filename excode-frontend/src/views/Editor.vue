@@ -1,21 +1,11 @@
 <template>
   <div class="editor">
-    <div class="toolbar">
-      <div class="button button-back" @click="back"></div>
-      <div class="button button-save" @click="save">
-        <span>Save</span>
-      </div>
-      <div class="button button-datasource" @click="openDataSourceDialog">
-        <span>Data Source</span>
-      </div>
-      <div class="button button-export" @click="openDataSourceDialog">
-        <span>Export</span>
-      </div>
-    </div>
-    <el-row style="height:calc(100% - 35px);">
+    <tool-bar/>
+    <el-row style="height:calc(100% - 65px);">
       <el-col :span="19" style="height: 100%">
         <el-tabs tab-position="left" class="tabs">
           <el-tab-pane label="Spring Boot" style="height: 100%;">
+            <router-view></router-view>
             <!-- <SpringBootPanel/> -->
           </el-tab-pane>
           <el-tab-pane label="Vue.js">Vue.js</el-tab-pane>
@@ -124,10 +114,11 @@
 import axios from 'axios'
 import DataSourcePanel from '@/components/DataSourcePanel'
 import ExportDialog from '@/components/ExportDialog'
+import ToolBar from '@/components/editor/ToolBar'
 // import SpringBootPanel from '@/components/SpringBootPanel.vue'
 export default {
   name: 'Editor',
-  components: { DataSourcePanel, ExportDialog/* , SpringBootPanel */ },
+  components: { DataSourcePanel, ExportDialog, ToolBar/* , SpringBootPanel */ },
   data () {
     return {
       dataTableDialogVisible: false,
@@ -199,15 +190,15 @@ export default {
       this.dataTableKeyDialogVisible = true
     },
     load () {
-      const _this = this
-      axios.get('/api/excode/project/' + this.getUrlParam('id'))
-        .then((res) => {
-          _this.project = res.data.data
-          localStorage.setItem('project', JSON.stringify(res.data.data))
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      // const _this = this
+      // axios.get('/api/excode/project/' + this.getUrlParam('id'))
+      //   .then((res) => {
+      //     _this.project = res.data.data
+      //     localStorage.setItem('project', JSON.stringify(res.data.data))
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
     },
     append (data) {
       const newChild = { label: 'testtest', children: [] }
@@ -242,7 +233,7 @@ export default {
 
 <style scoped>
 .editor {
-  height: calc(100% - 55px);
+  height: calc(100% - 50px);
   width: 100%;
   background: #f5f5f5;
 }
@@ -251,42 +242,6 @@ export default {
   width: 100%;
   background: white;
   border-bottom: solid 1px #ddd;
-}
-.button {
-  height: 35px;
-  width: auto;
-  cursor: pointer;
-  margin-top: 0px;
-  padding: 0 8px 0 8px;
-  /* margin-left: 10px; */
-  float: left;
-  background-size: 16px 16px;
-  background-repeat: no-repeat;
-  background-position: 10px center;
-  padding-left: 32px;
-}
-.button:hover {
-  background-color: #eee;
-  color: #8ba74f;
-}
-.button span {
-  color: #999;
-  font-size: 12px;
-  line-height: 35px;
-  vertical-align: middle;
-  margin: 0;
-}
-.button-back {
-  background-image: url(../assets/back.svg);
-}
-.button-save {
-  background-image: url(../assets/save.svg);
-}
-.button-datasource {
-  background-image: url(../assets/database.svg);
-}
-.button-export {
-  background-image: url(../assets/export.svg);
 }
 .tabs {
   height: 100%;
