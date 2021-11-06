@@ -1,96 +1,62 @@
 <template>
-  <div class="editor">
-    <tool-bar/>
-    <main>
-      <EditorMenu/>
-      <router-view class="container"></router-view>
-      <div class="data-table-panel">
-        <data-table-panel/>
-      </div>
-    </main>
-
-    <ExportDialog/>
-
-    <!-- Create data table dialog -->
-    <el-dialog title="Data Table" v-model="dataTableDialogVisible" width="50%" :before-close="handleClose">
-      <el-form ref="form" :model="dataObject" label-width="140px" label-position="left">
-        <el-form-item label="Table Name">
-          <el-input v-model="dataObject.value" maxlength="20" show-word-limit></el-input>
-        </el-form-item>
-        <el-form-item label="Data Source Type">
-          <el-select v-model="dataObject.type" @change="toggleDataSourceType" style="width:100%">
-            <el-option label="Elasticsearch" value="ELASTICSEARCH"></el-option>
-            <el-option label="MariaDB / MySQL" value="MYSQL"></el-option>
-            <el-option label="MongoDB" value="MONGODB"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Data Source">
-          <el-select v-model="dataObject.name" style="width:100%">
-            <el-option v-for="item in dataSourceOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dataTableDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="save">Save</el-button>
-        </span>
-      </template>
-    </el-dialog>
-
-    <!-- Data source dialog -->
-    <el-dialog title="Data Source" v-model="dataSourceDialogVisible" width="70%" :before-close="handleClose">
-      <data-source-panel/>
-    </el-dialog>
-
-    <!-- Data table key dialog -->
-    <el-dialog title="Data Table Key" v-model="dataTableKeyDialogVisible" width="40%" :before-close="handleClose">
-      <el-form ref="dataTableKey" :model="dataObject" label-width="80px" style="text-align:left;">
-        <el-form-item label="Value">
-          <el-input v-model="dataTableKey.value"></el-input>
-        </el-form-item>
-        <el-form-item label="Type">
-          <el-select v-model="dataTableKey.type" placeholder="" @change="toggleDataSourceType">
-            <el-option label="Elasticsearch" value="ELASTICSEARCH"></el-option>
-            <el-option label="MariaDB / MySQL" value="MYSQL"></el-option>
-            <el-option label="MongoDB" value="MONGODB"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Source" v-if="dataTableKey.root">
-          <span v-text="dataTableKey.source"></span>
-          <el-button type="primary" style="float:right;" size="small" @click="openSelectDataSourceDialog">Select</el-button>
-        </el-form-item>
-      </el-form>
-      <el-dialog title="Select..." v-model="dataTableKeySelectDataSourceDialogVisible">
-        <data-source-panel />
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="dataTableKeySelectDataSourceDialogVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="saveDataTableKey">OK</el-button>
-          </span>
-        </template>
-      </el-dialog>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dataTableKeyDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="saveDataTableKey">Save</el-button>
-        </span>
-      </template>
-    </el-dialog>
+  <!-- Data table header -->
+  <div class="data-table-panel-header">
+    <span style="">Data Table</span>
+    <i class="el-icon-plus" @click="openDataTableDialog" />
   </div>
+  <!-- Data table tree -->
+  <el-tree
+    :data="project.dataTables"
+    :props="defaultProps"
+    @node-click="handleNodeClick"
+    default-expand-all
+    :expand-on-click-node="false"
+    class="tree"
+  >
+    <template #default="{ node, data }">
+      <span class="custom-tree-node">
+        <span @dblclick="editDataTableKey(data)">
+          <img
+            src="@/assets/table.svg"
+            v-if="data.root == true"
+            class="data-table-key-icon"
+          />
+          <img
+            src="@/assets/key.svg"
+            v-if="data.root != true"
+            class="data-table-key-icon"
+          />
+          {{ node.label }}
+          <span
+            style="color: #aaa"
+            v-text="
+              data.root === true
+                ? data.dataSource.type + ':' + data.dataSource.database
+                : data.type
+            "
+          ></span>
+        </span>
+        <span>
+          <a @click="append(data)" style="margin-right: 10px"
+            ><i class="el-icon-plus"
+          /></a>
+          <a @click="remove(node, data)"><i class="el-icon-delete" /></a>
+        </span>
+      </span>
+    </template>
+  </el-tree>
 </template>
 
 <script>
 import axios from 'axios'
-import DataSourcePanel from '@/components/DataSourcePanel'
-import ExportDialog from '@/components/ExportDialog'
-import ToolBar from '@/components/editor/ToolBar'
-import DataTablePanel from '@/components/editor/DataTablePanel'
-import EditorMenu from '@/components/EditorMenu'
+// import DataSourcePanel from '@/components/DataSourcePanel'
+// import ExportDialog from '@/components/ExportDialog'
+// import ToolBar from '@/components/editor/ToolBar'
+// import DataTablePanel from '@/components/editor/DataTablePanel'
 // import SpringBootPanel from '@/components/SpringBootPanel.vue'
 export default {
   name: 'Editor',
-  components: { EditorMenu, DataSourcePanel, ExportDialog, ToolBar, DataTablePanel/* , SpringBootPanel */ },
+  components: { /* DataSourcePanel, ExportDialog, ToolBar *//*,  DataTablePanel *//* , SpringBootPanel */ },
   data () {
     return {
       dataTableDialogVisible: false,
@@ -198,7 +164,7 @@ export default {
     }
   },
   mounted: function () {
-    this.load()
+    // this.load()
   }
 }
 </script>
@@ -209,19 +175,11 @@ export default {
   width: 100%;
   background: #f5f5f5;
 }
-
-main {
-  display: flex;
-  height: calc(100% - 35px);
-}
 .toolbar {
   height: 35px;
   width: 100%;
   background: white;
   border-bottom: solid 1px #ddd;
-}
-.container {
-  width: calc(100% - 480px);
 }
 .tabs {
   height: 100%;
@@ -248,12 +206,12 @@ main {
 .data-table-panel {
   background: #fff;
   height: 100%;
-  width: 250px;
   text-align: left;
   border-left: solid 1px #ddd;
 }
 .data-table-panel-header {
-  height: 30px;width:100%;
+  height: 30px;
+  width:100%;
   border-bottom: solid 1px #ddd;
   text-align: left;
   background: #f9f9fa;

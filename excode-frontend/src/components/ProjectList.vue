@@ -3,15 +3,25 @@
     <div class="toolbar">
       <h1 class="title">Projects</h1>
       <div class="tool-buttons">
-        <el-input placeholder="Search..." v-model="searchText" size="mini" class="searchbox">
+        <el-input
+          placeholder="Search..."
+          v-model="searchText"
+          size="mini"
+          class="searchbox"
+        >
           <template #suffix>
             <i class="el-icon-search el-input__icon" @click="refresh"></i>
           </template>
         </el-input>
-        <el-button type="primary" style="display:inline-block;" @click="create" size="mini">
+        <el-button
+          type="primary"
+          style="display: inline-block"
+          @click="create"
+          size="mini"
+        >
           <i class="el-icon-plus"></i>
         </el-button>
-        <el-button @click="refresh" style="display:inline-block;" size="mini">
+        <el-button @click="refresh" style="display: inline-block" size="mini">
           <i class="el-icon-refresh"></i>
         </el-button>
       </div>
@@ -30,17 +40,26 @@
       </el-table-column>
       <el-table-column label="Operations">
         <template #default="scope">
-          <el-button type="text" size="mini" @click="handleEdit(scope.$index, scope.row)">
+          <el-button
+            type="text"
+            size="mini"
+            @click="handleEdit(scope.$index, scope.row)"
+          >
             Edit
           </el-button>
-          <el-button type="text" size="mini" @click="handleConfigure(scope.$index, scope.row)">
+          <el-button
+            type="text"
+            size="mini"
+            @click="handleConfigure(scope.$index, scope.row)"
+          >
             Configure
           </el-button>
-          <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
+          <el-popconfirm
+            title="Are you sure to delete this?"
+            @confirm="handleDelete(scope.$index, scope.row)"
+          >
             <template #reference>
-              <el-button type="text" size="mini">
-                Delete
-              </el-button>
+              <el-button type="text" size="mini"> Delete </el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -56,12 +75,18 @@
       :page-sizes="[10, 20, 50, 100]"
       :page-size="10"
       layout="total, sizes, prev, pager, next"
-      :total="totalElements">
+      :total="totalElements"
+    >
     </el-pagination>
 
     <!-- Create Project Dialog -->
-    <el-dialog :title="dialogTitle" v-model="dialogVisible" width="50%" :before-close="handleClose">
-      <el-form ref="form" :model="form" label-width="120px">
+    <el-dialog
+      :title="dialogTitle"
+      v-model="dialogVisible"
+      class="dialog"
+      :before-close="handleClose"
+    >
+      <el-form ref="form" :model="form" label-width="auto">
         <el-form-item label="Project name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
@@ -73,10 +98,6 @@
         </span>
       </template>
     </el-dialog>
-    <div class="footer">
-      <p>ExCode Low-Code Development Platform</p>
-      <p>&copy; 2020-2021 VanCone. All rights reserved.</p>
-    </div>
   </div>
 </template>
 
@@ -103,7 +124,14 @@ export default {
       if (this.searchText !== '') {
         searchParam = '&search=' + this.searchText
       }
-      axios.get('/api/excode/project?pageSize=' + this.pageSize + '&pageNo=' + (this.pageNo - 1) + searchParam)
+      axios
+        .get(
+          '/api/excode/project?pageSize=' +
+            this.pageSize +
+            '&pageNo=' +
+            (this.pageNo - 1) +
+            searchParam
+        )
         .then((res) => {
           _this.tableData = res.data.data.content
           _this.totalElements = res.data.data.totalElements
@@ -119,7 +147,8 @@ export default {
     },
     save () {
       const _this = this
-      axios.post('/api/excode/project', this.form)
+      axios
+        .post('/api/excode/project', this.form)
         .then((res) => {
           _this.$message({
             message: 'Project saved.',
@@ -144,7 +173,8 @@ export default {
     },
     handleDelete (index, row) {
       const _this = this
-      axios.delete('/api/excode/project/' + row.id)
+      axios
+        .delete('/api/excode/project/' + row.id)
         .then((res) => {
           _this.$message('Operation Success')
           _this.refresh()
@@ -155,11 +185,11 @@ export default {
     },
     handleClose (done) {
       this.$confirm('Are you sure to close this dialog?')
-        .then(_ => {
+        .then((_) => {
           done()
           this.dialogVisible = false
         })
-        .catch(_ => {})
+        .catch((_) => {})
     },
     handleSizeChange (val) {
       console.log(`${val} items per page`)
@@ -183,38 +213,32 @@ export default {
   background-color: white;
   border: solid 1px #eee;
   border-radius: 2px;
+  box-sizing: border-box;
   margin: 10px;
   padding: 10px;
 }
 .title {
-  float: left;
-  font-weight: 600;
+  font-weight: 400;
   font-size: 18px;
-  margin-top: 0;
-  margin-left: 0;
-  line-height: 32px;
 }
 .searchbox {
-  display: inline-block;
   height: 20px;
   width: 240px;
   margin-right: 10px;
 }
 .toolbar {
-  margin-top: 10px;
+  height: 50px;
   margin-left: 10px;
   margin-right: 10px;
-  text-align: left;
-}
-.tool-buttons {
-  float: right;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .table {
   width: calc(100% - 10px);
   margin-bottom: 10px;
 }
-
-/deep/.table .el-table__header-wrapper th {
+:deep(.table .el-table__header-wrapper th) {
   background: #e3e3e3;
   height: 28px;
   font-size: 12px;
@@ -223,35 +247,23 @@ export default {
   text-align: left;
   border-right: solid 1px white;
 }
-
-/deep/.table .el-table__row {
+:deep(.table .el-table__row) {
   text-align: left;
   height: 34px;
   font-size: 12px;
   font-weight: 100;
   color: #555;
 }
-
-/deep/.table .el-table__row:nth-child(even) {
+:deep(.table .el-table__row:nth-child(even)) {
   background: #f7f7f7;
 }
-
-/deep/.table .cell {
+:deep(.table .cell) {
   line-height: 16px;
 }
-
-/deep/.table .el-checkbox {
+:deep(.table .el-checkbox) {
   height: 16px;
 }
-
-.footer {
-  color: #999;
-  position: absolute;
-  font-size: 14px;
-  bottom: 0;
-  width: 100%;
-}
-.footer p {
-  margin: 5px;
+.dialog {
+  max-width: 500px !important;
 }
 </style>

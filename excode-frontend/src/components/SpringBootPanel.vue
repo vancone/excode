@@ -1,8 +1,18 @@
 <template>
   <div class="spring-boot-panel">
-    <el-form ref="form" :model="form" label-width="120px">
-      <h1>POM Info</h1>
-      <el-form-item label="Group ID">
+      <div class="property-block">
+        <h1>POM Info</h1>
+        <el-table
+          :data="pomTableData"
+          show-header="false"
+          border
+          style="width: 100%"
+        >
+          <el-table-column prop="key" width="180" />
+          <el-table-column prop="value" />
+        </el-table>
+      </div>
+      <!-- <el-form-item label="Group ID">
         <el-input v-model="project.modules.spring_boot.groupId"></el-input>
       </el-form-item>
       <el-form-item label="Artifact ID">
@@ -12,35 +22,45 @@
         <el-input v-model="form.version"></el-input>
       </el-form-item>
       <el-form-item label="ORM Type">
-        <el-select v-model="project.ormType" placeholder="please select ORM framework">
+        <el-select
+          v-model="project.ormType"
+          placeholder="please select ORM framework"
+        >
           <el-option label="MongoTemplate" value="mongo"></el-option>
           <el-option label="Spring Data JPA" value="jpa"></el-option>
-          <el-option label="MyBatis - Annotation" value="mybatis-annotation"></el-option>
+          <el-option
+            label="MyBatis - Annotation"
+            value="mybatis-annotation"
+          ></el-option>
           <el-option label="MyBatis - XML" value="mybatis-xml"></el-option>
           <el-option label="MyBatis Plus" value="mybatis-plus"></el-option>
         </el-select>
-      </el-form-item>
-      <h1>Middleware</h1>
-        <el-form-item label="MySQL">
-          <el-input v-model="form.middleware.mysql.value"></el-input>
-        </el-form-item>
-      <h1>Extensions</h1>
-      <el-form-item label="Lombok">
-        <el-switch v-model="project.extensions.lombok.enable"></el-switch>
-      </el-form-item>
-      <el-form-item label="Swagger2">
-        <el-switch v-model="project.extensions.swagger.enable"></el-switch>
-      </el-form-item>
-      <el-form-item label="Title">
-        <el-input v-model="project.extensions.swagger.title"></el-input>
-      </el-form-item>
-      <el-form-item label="Jasypt">
-        <el-switch v-model="project.extensions.jasypt.enable"></el-switch>
-      </el-form-item>
-      <el-form-item label="Jasypt Password">
-        <el-input v-model="project.extensions.jasypt.password"></el-input>
-      </el-form-item>
-    </el-form>
+      </el-form-item> -->
+      <div class="property-block">
+        <h1>Middleware</h1>
+        <el-table
+          :data="middlewareTableData"
+          show-header="false"
+          border
+          style="width: 100%"
+        >
+          <el-table-column prop="key" width="180" />
+          <el-table-column prop="value" />
+        </el-table>
+      </div>
+
+      <div class="property-block">
+        <h1>Extensions</h1>
+        <el-table
+          :data="extensionTableData"
+          show-header="false"
+          border
+          style="width: 100%"
+        >
+          <el-table-column prop="key" width="180" />
+          <el-table-column prop="value" />
+        </el-table>
+      </div>
   </div>
 </template>
 
@@ -50,7 +70,56 @@ export default {
   name: 'SpringBootPanel',
   data () {
     return {
-      tableData: [],
+      pomTableData: [
+        {
+          key: 'Group ID',
+          value: 'com.vancome.excode.example'
+        },
+        {
+          key: 'Artifact ID',
+          value: 'mall'
+        },
+        {
+          key: 'Version',
+          value: '0.1.0'
+        },
+        {
+          key: 'ORM Type',
+          value: 'MyBatis with Annotation'
+        }
+      ],
+      middlewareTableData: [
+        {
+          key: 'MySQL',
+          value: 'mysql://root:******@127.0.0.1:3306/mydb'
+        },
+        {
+          key: 'MongoDB',
+          value: ''
+        },
+        {
+          key: 'Redis',
+          value: ''
+        },
+        {
+          key: 'RabbitMQ',
+          value: ''
+        }
+      ],
+      extensionTableData: [
+        {
+          key: 'Lombok',
+          value: 'ON'
+        },
+        {
+          key: 'Swagger',
+          value: 'OFF'
+        },
+        {
+          key: 'Jasypt',
+          value: 'OFF'
+        }
+      ],
       dialogVisible: false,
       dialogTitle: '',
       searchText: '',
@@ -111,7 +180,8 @@ export default {
     },
     save () {
       const _this = this
-      axios.post('/api/excode/project', this.project)
+      axios
+        .post('/api/excode/project', this.project)
         .then((res) => {
           _this.$message({
             message: 'Project saved.',
@@ -136,7 +206,8 @@ export default {
     },
     handleDelete (index, row) {
       const _this = this
-      axios.delete('/api/excode/project/' + row.id)
+      axios
+        .delete('/api/excode/project/' + row.id)
         .then((res) => {
           _this.$message('Operation Success')
           _this.refresh()
@@ -147,11 +218,11 @@ export default {
     },
     handleClose (done) {
       this.$confirm('Are you sure to close this dialog?')
-        .then(_ => {
+        .then((_) => {
           done()
           this.dialogVisible = false
         })
-        .catch(_ => {})
+        .catch((_) => {})
     },
     handleSizeChange (val) {
       console.log(`${val} items per page`)
@@ -180,5 +251,20 @@ export default {
   padding-right: 20px;
   height: calc(100% - 20px);
   overflow: auto;
+}
+h1 {
+  font-size: 16px;
+  font-weight: 500;
+}
+.property-block {
+  margin-bottom: 25px;
+}
+.el-table tr {
+  border: solid 1px black;
+}
+:deep(.el-table__row td) {
+  border-right: solid 1px #ebeef5;
+  border-bottom: solid 1px #ebeef5;
+  height: 40px;
 }
 </style>

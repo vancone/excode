@@ -27,6 +27,7 @@ public class ProjectController {
 
     @PostMapping
     public Response create(@RequestBody Project project) {
+        log.info("Create project: {}", project.toString());
         projectService.save(project);
         return Response.success();
     }
@@ -34,14 +35,14 @@ public class ProjectController {
     @GetMapping("{projectId}")
     public Response findById(@PathVariable String projectId) {
         Project project = projectService.query(projectId);
-        log.info("Retrieve project: {}", project.toString());
+        log.info("Query project: {}", project.toString());
         return Response.success(project);
     }
 
     @GetMapping
     public Response query(@RequestParam(defaultValue = "0") int pageNo,
                             @RequestParam(defaultValue = "5") int pageSize,
-                            @RequestParam(defaultValue = "") String search) {
+                            @RequestParam(required = false) String search) {
         return Response.success(projectService.queryPage(pageNo, pageSize, search));
     }
 

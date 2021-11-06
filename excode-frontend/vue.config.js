@@ -1,5 +1,6 @@
 module.exports = {
   devServer: {
+    hot: true,
     proxy: {
       '/api': {
         ws: true,
