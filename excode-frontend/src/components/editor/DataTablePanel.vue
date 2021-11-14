@@ -1,7 +1,7 @@
 <template>
   <!-- Data table header -->
   <div class="data-table-panel-header">
-    <span style="">Data Table</span>
+    <span style="">Git Repo</span>
     <i class="el-icon-plus" @click="openDataTableDialog" />
   </div>
   <!-- Data table tree -->

@@ -43,7 +43,7 @@ public class ProjectController {
     public Response query(@RequestParam(defaultValue = "0") int pageNo,
                             @RequestParam(defaultValue = "5") int pageSize,
                             @RequestParam(required = false) String search) {
-        return Response.success(projectService.queryPage(pageNo, pageSize, search));
+        return Response.success(projectService.queryPage(pageNo - 1, pageSize, search));
     }
 
     @DeleteMapping("{projectId}")

@@ -1,12 +1,10 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
     <textarea
       placeholder="term, definition"
       class="bulk-match__editor"
       ref="textareaRef"
     ></textarea>
-    <h1>END</h1>
   </div>
 </template>
 

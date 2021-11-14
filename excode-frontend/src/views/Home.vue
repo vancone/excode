@@ -1,19 +1,19 @@
 <template>
   <div class="home">
-    <ProjectList/>
+    <ProjectTable/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import ProjectList from '@/components/ProjectList.vue'
+import { defineComponent } from 'vue'
+import ProjectTable from '@/components/ProjectTable.vue'
 
-export default {
+export default defineComponent({
   name: 'Home',
   components: {
-    ProjectList
+    ProjectTable
   }
-}
+})
 </script>
 
 <style scoped>

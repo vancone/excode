@@ -41,7 +41,6 @@
       </el-table-column>
       <el-table-column label="Operations">
         <template #default="scope">
-          <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit"></i></el-button> -->
           <el-popconfirm title="Are you sure to delete this?" @confirm="handleDelete(scope.$index, scope.row)">
             <template #reference>
               <el-button size="mini" type="danger"><i class="el-icon-delete"></i></el-button>

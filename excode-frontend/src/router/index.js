@@ -12,7 +12,18 @@ const routes = [
     name: 'Editor',
     component: () => import('../views/Editor.vue'),
     children: [
-      { path: '', component: () => import('../components/SpringBootPanel.vue') },
+      {
+        path: '',
+        redirect: '/editor/overview'
+      },
+      {
+        path: 'overview',
+        component: () => import('../components/editor/Overview.vue')
+      },
+      {
+        path: 'data-access',
+        component: () => import('../components/data-access/DataAccessPanel.vue')
+      },
       {
         path: 'raw',
         component: () => import('../views/RawViewer.vue')
