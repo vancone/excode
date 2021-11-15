@@ -3,15 +3,8 @@
   <router-view/>
 </template>
 
-<script>
-import Header from '@/components/Header.vue'
-
-export default {
-  name: 'Home',
-  components: {
-    Header
-  }
-}
+<script setup lang="ts">
+import Header from './components/Header.vue'
 </script>
 
 <style>

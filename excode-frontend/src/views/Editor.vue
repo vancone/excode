@@ -140,9 +140,9 @@
 import axios from 'axios'
 // import DataSourcePanel from '@/components/DataSourcePanel'
 // import ExportDialog from '@/components/dialog/ExportDialog'
-import ToolBar from '@/components/editor/ToolBar'
-import DataTablePanel from '@/components/editor/DataTablePanel'
-import EditorMenu from '@/components/editor/EditorMenu'
+import ToolBar from '~/components/editor/ToolBar'
+import DataTablePanel from '~/components/editor/DataTablePanel'
+import EditorMenu from '~/components/editor/EditorMenu'
 import { ElLoading } from 'element-plus'
 import { defineComponent, onMounted, reactive } from 'vue'
 export default defineComponent({

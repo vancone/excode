@@ -10,8 +10,7 @@
 
 <script>
 import { reactive, ref, toRefs } from 'vue'
-import { defineComponent } from '@vue/composition-api'
-import useCodeMirror from '../components/useCodeMirror.js'
+import { defineComponent } from 'vue'
 export default defineComponent({
   emits: ['change', 'save', 'upload'],
   setup (props, { emit }) {

@@ -1,4 +1,4 @@
-import service from '@/api/request'
+import service from '~/api/request'
 
 export function queryProject (projectId) {
   return service.get('/api/excode/project/' + projectId)

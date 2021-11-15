@@ -32,7 +32,7 @@
 <script>
 import { defineComponent, reactive, ref } from 'vue'
 import { ElPopconfirm } from 'element-plus'
-import { createProject, queryProject } from '@/api/project'
+import { createProject, queryProject } from '~/api/project'
 export default defineComponent({
   name: 'ProjectDialog',
   setup () {

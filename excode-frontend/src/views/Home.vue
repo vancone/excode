@@ -6,7 +6,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import ProjectTable from '@/components/ProjectTable.vue'
+import ProjectTable from '~/components/ProjectTable.vue'
 
 export default defineComponent({
   name: 'Home',

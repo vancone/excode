@@ -22,9 +22,9 @@
 
 <script>
 import { defineComponent, onMounted, reactive, ref } from 'vue'
-import { queryProject } from '@/api/project'
-import ProjectDialog from '@/components/ProjectDialog'
-import { getUrlParam } from '@/util/utils'
+import { queryProject } from '~/api/project'
+import ProjectDialog from '~/components/ProjectDialog'
+import { getUrlParam } from '~/util/utils'
 export default defineComponent({
   name: 'Overview',
   components: {

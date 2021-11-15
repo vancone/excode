@@ -13,7 +13,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import Solution from '@/components/data-access/components/Solution'
+import Solution from '~/components/data-access/components/Solution'
 export default defineComponent({
   name: 'DataAccessPanel',
   components: {

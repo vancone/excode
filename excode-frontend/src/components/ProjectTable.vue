@@ -106,7 +106,7 @@
 <script>
 import { Delete, Edit } from '@element-plus/icons'
 import ProjectDialog from './ProjectDialog.vue'
-import { queryProjects, deleteProject } from '@/api/project'
+import { queryProjects, deleteProject } from '~/api/project'
 import { defineComponent, reactive, ref } from 'vue'
 export default defineComponent({
   name: 'ProjectTable',
