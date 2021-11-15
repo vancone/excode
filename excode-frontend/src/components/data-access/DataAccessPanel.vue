@@ -4,7 +4,9 @@
       <el-tab-pane label="Solution" style="height: 100%; overflow: scroll">
         <Solution/>
       </el-tab-pane>
-      <el-tab-pane label="Data Table">Data Table</el-tab-pane>
+      <el-tab-pane label="API">API</el-tab-pane>
+      <el-tab-pane label="Data Entity">Data Table</el-tab-pane>
+
     </el-tabs>
   </div>
 </template>

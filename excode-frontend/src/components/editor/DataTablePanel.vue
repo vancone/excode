@@ -49,14 +49,9 @@
 
 <script>
 import axios from 'axios'
-// import DataSourcePanel from '@/components/DataSourcePanel'
-// import ExportDialog from '@/components/ExportDialog'
-// import ToolBar from '@/components/editor/ToolBar'
-// import DataTablePanel from '@/components/editor/DataTablePanel'
-// import SpringBootPanel from '@/components/SpringBootPanel.vue'
+
 export default {
   name: 'Editor',
-  components: { /* DataSourcePanel, ExportDialog, ToolBar *//*,  DataTablePanel *//* , SpringBootPanel */ },
   data () {
     return {
       dataTableDialogVisible: false,
