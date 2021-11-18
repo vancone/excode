@@ -17,12 +17,12 @@
       <span class="custom-tree-node">
         <span @dblclick="editDataTableKey(data)">
           <img
-            src="@/assets/table.svg"
+            src="./../assets/table.svg"
             v-if="data.root == true"
             class="data-table-key-icon"
           />
           <img
-            src="@/assets/key.svg"
+            src="./../assets/key.svg"
             v-if="data.root != true"
             class="data-table-key-icon"
           />

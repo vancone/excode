@@ -12,9 +12,9 @@ export default defineConfig({
       "~/": `${path.resolve(__dirname, "src")}/`,
     },
   },
-  define: {
-    'process.env': process.env
-  },
+  // define: {
+  //   'process.env': process.env
+  // },
   css: {
     preprocessorOptions: {
       scss: {
@@ -32,4 +32,9 @@ export default defineConfig({
       ],
     }),
   ],
+  server: {
+    proxy: {
+      '/api': 'http://localhost:9901/'
+    }
+  }
 });

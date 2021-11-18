@@ -23,8 +23,9 @@
 <script>
 import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { queryProject } from '~/api/project'
-import ProjectDialog from '~/components/ProjectDialog'
+import ProjectDialog from '~/components/ProjectDialog.vue'
 import { getUrlParam } from '~/util/utils'
+import { useRoute } from 'vue-router'
 export default defineComponent({
   name: 'Overview',
   components: {
@@ -32,6 +33,7 @@ export default defineComponent({
   },
   setup () {
     const projectDialogRef = ref(null)
+    const projectId = useRoute().params.projectId
 
     const projectInfo = reactive([
       { key: 'Name', value: '' },
@@ -42,7 +44,6 @@ export default defineComponent({
     ])
 
     const refresh = () => {
-      const projectId = getUrlParam('id')
       if (projectId !== null && projectId !== '') {
         queryProject(projectId).then(({ data }) => {
           const content = [
@@ -59,11 +60,10 @@ export default defineComponent({
 
     const updateInfo = () => {
       console.log(projectDialogRef.value)
-      projectDialogRef.value.show(getUrlParam('id'), refresh)
+      projectDialogRef.value.show(projectId, refresh)
     }
 
     onMounted(() => {
-      console.log(projectDialogRef)
       refresh()
     })
 

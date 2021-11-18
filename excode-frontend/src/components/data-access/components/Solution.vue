@@ -140,8 +140,4 @@ h1 {
 .solution-select {
   margin-top: 20px;
 }
-:deep(.el-select-dropdown__item span) {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 </style>

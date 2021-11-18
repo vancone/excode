@@ -16,4 +16,8 @@ import Header from './components/Header.vue'
   height: 100%;
   background: transparent;
 }
+
+li.el-select-dropdown__item span {
+  font-family: Arial, Helvetica, sans-serif;
+}
 </style>

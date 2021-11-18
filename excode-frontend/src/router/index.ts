@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
 
-const routes = [
+export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
@@ -17,11 +17,11 @@ const routes = [
         redirect: '/editor/overview'
       },
       {
-        path: 'overview',
+        path: 'overview/:projectId',
         component: () => import('../components/editor/Overview.vue')
       },
       {
-        path: 'data-access',
+        path: 'data-access/:projectId',
         component: () => import('../components/data-access/DataAccessPanel.vue')
       },
       {
@@ -41,7 +41,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes
 })
 

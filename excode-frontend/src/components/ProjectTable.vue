@@ -27,7 +27,7 @@
       </div>
     </div>
     <el-table :data="tableData" class="table">
-      <el-table-column type="selection" width="40"> </el-table-column>
+      <el-table-column type="selection" width="50"> </el-table-column>
       <el-table-column label="Name" width="180">
         <template #default="scope">
           <span>{{ scope.row.name }}</span>
@@ -35,7 +35,7 @@
       </el-table-column>
       <el-table-column label="Version" width="120">
         <template #default="scope">
-          <span>{{ scope.row.name }}</span>
+          <span>{{ scope.row.version }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Description" width="180">
@@ -108,6 +108,7 @@ import { Delete, Edit } from '@element-plus/icons'
 import ProjectDialog from './ProjectDialog.vue'
 import { queryProjects, deleteProject } from '~/api/project'
 import { defineComponent, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   name: 'ProjectTable',
   components: {
@@ -116,6 +117,7 @@ export default defineComponent({
     Edit
   },
   setup () {
+    const router = useRouter()
     const projectDialogRef = ref(null)
     const tableData = reactive([])
     const pagition = reactive({
@@ -154,6 +156,10 @@ export default defineComponent({
       refresh()
     }
 
+    function handleEdit (index, row) {
+      router.push(`/editor/overview/${row.id}`)
+    }
+
     return {
       tableData,
       pagition,
@@ -161,6 +167,7 @@ export default defineComponent({
       create,
       refresh,
       handleDelete,
+      handleEdit,
       handleSizeChange,
       handleCurrentChange
     }
@@ -171,9 +178,7 @@ export default defineComponent({
     }
   },
   methods: {
-    handleEdit (index, row) {
-      this.$router.push('/editor?id=' + row.id)
-    }
+    
   },
   mounted: function () {
     this.refresh()
