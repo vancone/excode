@@ -2,9 +2,9 @@ package com.vancone.excode.generator.enums;
 
 /**
  * @author Tenton Lien
- * @date 6/13/2021
+ * @date 2021/06/13
  */
-public enum DataSourceType {
+public enum DataCarrier {
 
     /**
      * Relational database

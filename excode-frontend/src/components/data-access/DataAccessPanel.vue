@@ -2,10 +2,12 @@
   <div class="data-access-panel">
     <el-tabs type="card" class="tabs">
       <el-tab-pane label="Solution" style="height: 100%; overflow: scroll">
-        <Solution/>
+        <Solution />
       </el-tab-pane>
       <el-tab-pane label="API">API</el-tab-pane>
-      <el-tab-pane label="Data Entity">Data Table</el-tab-pane>
+      <el-tab-pane label="Data Store">
+        <DataStore />
+      </el-tab-pane>
 
     </el-tabs>
   </div>
@@ -14,10 +16,11 @@
 <script>
 import { defineComponent } from 'vue'
 import Solution from '~/components/data-access/components/Solution.vue'
+import DataStore from '~/components/data-access/components/DataStore.vue'
 export default defineComponent({
   name: 'DataAccessPanel',
   components: {
-    Solution
+    DataStore, Solution
   }
 })
 </script>
