@@ -66,11 +66,6 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("download/{fileType}/{projectId}")
-    public void downloadFile(HttpServletResponse response, @PathVariable String fileType, @PathVariable String projectId) {
-        projectService.export(response, fileType, projectId);
-    }
-
     @GetMapping("dbTypeList")
     public Response retrieveDatabaseTypeList() throws IllegalAccessException {
         // Todo: The list should be cached in Redis to optimize performance

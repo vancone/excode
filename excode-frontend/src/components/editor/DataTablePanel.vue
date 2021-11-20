@@ -47,7 +47,7 @@
   </el-tree>
 </template>
 
-<script>
+<script lang="ts">
 import axios from 'axios'
 
 export default {
@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     save () {
-      alert(JSON.stringify(this.project))
+      // alert(JSON.stringify(this.project))
     },
     back () {
       this.$router.push('/')

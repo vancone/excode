@@ -1,5 +1,6 @@
 package com.vancone.excode.generator.entity.DTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vancone.excode.generator.enums.DataCarrier;
 import com.vancone.excode.generator.enums.DataStoreType;
 import lombok.Data;
@@ -29,8 +30,10 @@ public class DataStore {
 
     private List<Node> nodes;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdTime;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedTime;
 
     @Data

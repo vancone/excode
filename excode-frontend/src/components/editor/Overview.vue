@@ -1,84 +1,95 @@
 <template>
-  <div class="data-access-panel">
-    <div class="property-block">
-      <div class="header">
-        <h1>General</h1>
-        <el-button type="primary" size="mini" @click="updateInfo">Edit</el-button>
-      </div>
-      <el-table
-        :data="projectInfo"
-        :show-header="false"
-        border
-        style="width: 100%"
-      >
-        <el-table-column prop="key" width="180" style="background: #f5f7fa" />
-        <el-table-column prop="value" />
-      </el-table>
-    </div>
+  <div class="overview-wrapper">
+    <el-descriptions
+      class="margin-top"
+      title="General"
+      :column="2"
+      size="small"
+      border
+    >
+      <template #extra>
+        <el-button type="primary" size="mini" @click="updateInfo"
+          >Edit</el-button
+        >
+      </template>
+      <el-descriptions-item>
+        <template #label> Name </template>
+        {{ project.name }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template #label> Version </template>
+        {{ project.version }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template #label> Author </template>
+        {{ project.author }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template #label> Orginization </template>
+        {{ project.organization }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template #label> Description </template>
+        {{ project.description }}
+      </el-descriptions-item>
+    </el-descriptions>
 
-    <ProjectDialog ref="projectDialogRef"/>
+    <ProjectDialog ref="projectDialogRef" />
   </div>
 </template>
 
-<script>
-import { defineComponent, onMounted, reactive, ref } from 'vue'
-import { queryProject } from '~/api/project'
-import ProjectDialog from '~/components/ProjectDialog.vue'
-import { getUrlParam } from '~/util/utils'
-import { useRoute } from 'vue-router'
-export default defineComponent({
-  name: 'Overview',
-  components: {
-    ProjectDialog
-  },
-  setup () {
-    const projectDialogRef = ref(null)
-    const projectId = useRoute().params.projectId
+<script lang="ts">
+import { defineComponent, onMounted, reactive, ref } from "vue";
+import { queryProject } from "~/api";
+import ProjectDialog from "~/components/ProjectDialog.vue";
+import { useRoute } from "vue-router";
+import { IProject } from "~/api/types";
+import { defaultProject } from "~/api/default-value";
+import { ElDialog } from "element-plus";
 
-    const projectInfo = reactive([
-      { key: 'Name', value: '' },
-      { key: 'Version', value: '' },
-      { key: 'Description', value: '' },
-      { key: 'Author', value: '' },
-      { key: 'Organization', value: '' }
-    ])
+export default defineComponent({
+  name: "Overview",
+  components: {
+    ProjectDialog,
+  },
+  setup() {
+    const projectDialogRef = ref<InstanceType<typeof ElDialog> | null>(null);
+    const projectId = useRoute().params.projectId as string;
+
+    
+    const project = reactive<IProject>({...defaultProject});
 
     const refresh = () => {
-      if (projectId !== null && projectId !== '') {
+      if (projectId !== null && projectId !== "") {
         queryProject(projectId).then(({ data }) => {
-          const content = [
-            { key: 'Name', value: data.data.name },
-            { key: 'Version', value: data.data.version },
-            { key: 'Description', value: data.data.description },
-            { key: 'Author', value: data.data.author },
-            { key: 'Organization', value: data.data.organization }
-          ]
-          projectInfo.splice(0, projectInfo.length, ...content)
-        })
+          Object.assign(project, data.data)
+        });
       }
-    }
+    };
 
     const updateInfo = () => {
-      console.log(projectDialogRef.value)
-      projectDialogRef.value.show(projectId, refresh)
-    }
+      if (projectDialogRef.value !== null) {
+        projectDialogRef.value.show(projectId, refresh);
+      }
+    };
 
     onMounted(() => {
-      refresh()
-    })
+      refresh();
+    });
 
     return {
-      projectInfo,
+      project,
       updateInfo,
-      projectDialogRef
-    }
-  }
-})
+      projectDialogRef,
+    };
+  },
+});
 </script>
 
 <style scoped>
-.data-access-panel {
-  height: calc(100% - 20px);
+.overview-wrapper {
+  height: calc(100% - 60px);
+  padding: 20px;
   overflow: auto;
 }
 .header {

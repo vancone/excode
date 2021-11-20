@@ -19,14 +19,31 @@ public class DataStoreController {
     @Autowired
     private DataStoreService dataStoreService;
 
+    @GetMapping("{dataStoreId}")
+    public Response query(@PathVariable String dataStoreId) {
+        return Response.success(dataStoreService.query(dataStoreId));
+    }
+
+    @GetMapping
+    public Response queryList(@RequestParam String projectId) {
+        return Response.success(dataStoreService.queryList(projectId));
+    }
+
     @PostMapping
     public Response create(@RequestBody DataStore store) {
         dataStoreService.save(store);
         return Response.success();
     }
 
-    @GetMapping
-    public Response queryList(@RequestParam String projectId) {
-        return Response.success(dataStoreService.queryList(projectId));
+    @PutMapping
+    public Response update(@RequestBody DataStore store) {
+        dataStoreService.save(store);
+        return Response.success();
+    }
+
+    @DeleteMapping("{dataStoreId}")
+    public Response delete(@PathVariable String dataStoreId) {
+        dataStoreService.delete(dataStoreId);
+        return Response.success();
     }
 }

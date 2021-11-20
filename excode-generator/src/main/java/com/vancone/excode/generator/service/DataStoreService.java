@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -30,6 +31,11 @@ public class DataStoreService {
         if (store.getType() == null) {
             store.setType(DataStoreType.COLUMNAR);
         }
+        if (StringUtils.isNotBlank(store.getId())) {
+            store.setUpdatedTime(LocalDateTime.now());
+        } else {
+            store.setCreatedTime(LocalDateTime.now());
+        }
         mongoTemplate.save(store);
     }
 
@@ -37,5 +43,17 @@ public class DataStoreService {
         Query query = Query.query(
                 Criteria.where("projectId").is(projectId));
         return mongoTemplate.find(query, DataStore.class);
+    }
+
+    public DataStore query(String dataStoreId) {
+        return mongoTemplate.findById(dataStoreId, DataStore.class);
+    }
+
+    public void delete(String dataStoreId) {
+        DataStore dataStore = mongoTemplate.findById(dataStoreId, DataStore.class);
+        if (dataStore != null) {
+            mongoTemplate.save(dataStore, "history_data_store");
+            mongoTemplate.remove(dataStore);
+        }
     }
 }

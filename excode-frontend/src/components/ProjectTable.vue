@@ -28,7 +28,7 @@
     </div>
     <el-table :data="tableData" class="table">
       <el-table-column type="selection" width="50"> </el-table-column>
-      <el-table-column label="Name" width="180">
+      <el-table-column label="Name" width="220">
         <template #default="scope">
           <span>{{ scope.row.name }}</span>
         </template>
@@ -38,19 +38,19 @@
           <span>{{ scope.row.version }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Description" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.description }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Author" width="120">
+      <el-table-column label="Author" width="150">
         <template #default="scope">
           <span>{{ scope.row.author }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Organization" width="120">
+      <el-table-column label="Organization" width="150">
         <template #default="scope">
           <span>{{ scope.row.organization }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Description" width="300">
+        <template #default="scope">
+          <span>{{ scope.row.description }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Last Updated" width="180">
@@ -103,12 +103,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Delete, Edit } from '@element-plus/icons'
 import ProjectDialog from './ProjectDialog.vue'
-import { queryProjects, deleteProject } from '~/api/project'
-import { defineComponent, reactive, ref } from 'vue'
+import { queryProjects, deleteProject } from '~/api'
+import { defineComponent, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { IAnyObject, IProject } from '~/api/types'
 export default defineComponent({
   name: 'ProjectTable',
   components: {
@@ -117,53 +118,60 @@ export default defineComponent({
     Edit
   },
   setup () {
-    const router = useRouter()
-    const projectDialogRef = ref(null)
-    const tableData = reactive([])
+    const router = useRouter();
+    const projectDialogRef = ref(null);
+    const searchText = ref('');
+    const tableData = reactive<Array<IProject>>([]);
     const pagition = reactive({
       pageSize: 10,
       pageNo: 1,
       totalElements: 0
-    })
+    });
 
-    const refresh = () => {
+    function refresh() {
       queryProjects({
         pageSize: pagition.pageSize,
         pageNo: pagition.pageNo
       }).then(({ data }) => {
-        tableData.splice(0, tableData.length, ...data.data.content)
-        pagition.totalElements = data.data.totalElements
+        const { list, totalCount} = data.data
+        tableData.splice(0, tableData.length, ...list);
+        pagition.totalElements = totalCount;
       })
     }
 
-    const create = () => {
-      projectDialogRef.value.show(undefined, refresh)
+    function create() {
+      if (projectDialogRef.value != null) {
+        projectDialogRef.value.show(undefined, refresh);
+      }
     }
 
-    const handleDelete = (index, row) => {
+    function handleDelete (index: number, row: IAnyObject) {
       deleteProject(row.id).then(() => {
-        refresh()
-      })
+        refresh();
+      });
     }
 
-    const handleSizeChange = (val) => {
-      pagition.pageSize = val
-      refresh()
+    function handleSizeChange(val: number) {
+      pagition.pageSize = val;
+      refresh();
     }
 
-    const handleCurrentChange = (val) => {
-      pagition.pageNo = val
-      refresh()
+    function handleCurrentChange(val: number) {
+      pagition.pageNo = val;
+      refresh();
     }
 
-    function handleEdit (index, row) {
-      router.push(`/editor/overview/${row.id}`)
+    function handleEdit (index: number, row: IProject) {
+      router.push(`/editor/overview/${row.id}`);
     }
+
+    onMounted(refresh);
 
     return {
       tableData,
       pagition,
       projectDialogRef,
+      searchText,
       create,
       refresh,
       handleDelete,
@@ -171,17 +179,6 @@ export default defineComponent({
       handleSizeChange,
       handleCurrentChange
     }
-  },
-  data () {
-    return {
-      searchText: ''
-    }
-  },
-  methods: {
-    
-  },
-  mounted: function () {
-    this.refresh()
   }
 })
 </script>

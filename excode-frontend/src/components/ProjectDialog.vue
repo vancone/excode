@@ -5,21 +5,21 @@
     class="dialog"
     :before-close="handleClose"
   >
-    <el-form ref="formRef" :model="form" label-width="auto">
+    <el-form ref="formRef" :model="project" label-width="auto">
       <el-form-item label="Name">
-        <el-input v-model="form.name" size="small"></el-input>
+        <el-input v-model="project.name" size="small"></el-input>
       </el-form-item>
       <el-form-item label="Version">
-        <el-input v-model="form.version" size="small"></el-input>
-      </el-form-item>
-      <el-form-item label="Description">
-        <el-input v-model="form.description" size="small"></el-input>
+        <el-input v-model="project.version" size="small"></el-input>
       </el-form-item>
       <el-form-item label="Author">
-        <el-input v-model="form.author" size="small"></el-input>
+        <el-input v-model="project.author" size="small"></el-input>
       </el-form-item>
       <el-form-item label="Organization">
-        <el-input v-model="form.organization" size="small"></el-input>
+        <el-input v-model="project.organization" size="small"></el-input>
+      </el-form-item>
+      <el-form-item label="Description">
+        <el-input v-model="project.description" size="small"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -29,33 +29,41 @@
   </el-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
-import { ElPopconfirm } from 'element-plus'
-import { createProject, queryProject } from '~/api/project'
+import { ElMessageBox } from 'element-plus'
+import { createProject, queryProject } from '~/api'
+import { IProject } from '~/api/types'
+
+const defaultProject: IProject = {
+  id: '',
+  name: '',
+  version: '0.1.0-SNAPSHOT',
+  description: '',
+  author: '',
+  organization: ''
+}
+
 export default defineComponent({
   name: 'ProjectDialog',
   setup () {
     const dialogTitle = ref('')
     const dialogVisible = ref(false)
     const callbackFunc = ref(null)
-    const form = reactive({
-      name: '',
-      version: '',
-      description: ''
-    })
+    const project = reactive<IProject>(defaultProject)
 
     const save = () => {
-      createProject(form).then(({ data }) => {
+      createProject(project).then(({ data }) => {
         if (data.code === 0) {
-          dialogVisible.value = false
-          callbackFunc.value()
+          Object.assign(project, defaultProject);
+          dialogVisible.value = false;
+          callbackFunc.value();
         }
       })
     }
 
     const handleClose = (done) => {
-      ElPopconfirm('Are you sure to close this dialog?')
+      ElMessageBox.confirm('Are you sure to close this dialog?')
         .then((_) => {
           done()
           // this.dialogVisible = false
@@ -63,18 +71,18 @@ export default defineComponent({
         .catch((_) => {})
     }
 
-    const show = (projectId, callback) => {
+    const show = (projectId: string, callback) => {
       dialogVisible.value = true
       callbackFunc.value = callback
       if (projectId === undefined) {
         dialogTitle.value = 'New Project'
-        Object.assign(form, {
+        Object.assign(project, {
           version: '1.0.0-SNAPSHOT'
         })
       } else {
         dialogTitle.value = 'Project Info'
         queryProject(projectId).then(({ data }) => {
-          Object.assign(form, data.data)
+          Object.assign(project, data.data)
         })
       }
     }
@@ -82,7 +90,7 @@ export default defineComponent({
     return {
       dialogTitle,
       dialogVisible,
-      form,
+      project,
       save,
       show,
       handleClose

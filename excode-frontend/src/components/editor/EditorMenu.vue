@@ -3,8 +3,6 @@
     :default-active="activeIndex"
     class="menu"
     router
-    @open="handleOpen"
-    @close="handleClose"
   >
     <el-menu-item :index="`../overview/${projectId}`">
       <el-icon size="15"><data-line/></el-icon>Overview</el-menu-item>
@@ -14,7 +12,7 @@
   </el-menu>
 </template>
 
-<script>
+<script lang="ts">
 import { DataLine, PieChart } from '@element-plus/icons'
 import { defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
