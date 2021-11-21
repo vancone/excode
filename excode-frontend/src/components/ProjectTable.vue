@@ -19,10 +19,10 @@
           @click="create"
           size="mini"
         >
-          <i class="el-icon-plus"></i>
+          <el-icon><plus /></el-icon>
         </el-button>
         <el-button @click="refresh" style="display: inline-block" size="mini">
-          <i class="el-icon-refresh"></i>
+          <el-icon><refresh /></el-icon>
         </el-button>
       </div>
     </div>
@@ -99,12 +99,12 @@
     </el-pagination>
 
     <!-- Create Project Dialog -->
-    <ProjectDialog ref="projectDialogRef" />
+    <ProjectDialog v-model:dialogVisible="projectDialogVisible" @confirm="refresh"/>
   </div>
 </template>
 
 <script lang="ts">
-import { Delete, Edit } from '@element-plus/icons'
+import { Delete, Edit, Plus, Refresh } from '@element-plus/icons'
 import ProjectDialog from './ProjectDialog.vue'
 import { queryProjects, deleteProject } from '~/api'
 import { defineComponent, onMounted, reactive, ref } from 'vue'
@@ -115,11 +115,13 @@ export default defineComponent({
   components: {
     ProjectDialog,
     Delete,
-    Edit
+    Edit,
+    Plus,
+    Refresh
   },
   setup () {
     const router = useRouter();
-    const projectDialogRef = ref(null);
+    const projectDialogVisible = ref(false);
     const searchText = ref('');
     const tableData = reactive<Array<IProject>>([]);
     const pagition = reactive({
@@ -133,19 +135,17 @@ export default defineComponent({
         pageSize: pagition.pageSize,
         pageNo: pagition.pageNo
       }).then(({ data }) => {
-        const { list, totalCount} = data.data
+        const { list, totalCount} = data.data;
         tableData.splice(0, tableData.length, ...list);
         pagition.totalElements = totalCount;
       })
     }
 
     function create() {
-      if (projectDialogRef.value != null) {
-        projectDialogRef.value.show(undefined, refresh);
-      }
+      projectDialogVisible.value = true
     }
 
-    function handleDelete (index: number, row: IAnyObject) {
+    function handleDelete(index: number, row: IAnyObject) {
       deleteProject(row.id).then(() => {
         refresh();
       });
@@ -170,7 +170,7 @@ export default defineComponent({
     return {
       tableData,
       pagition,
-      projectDialogRef,
+      projectDialogVisible,
       searchText,
       create,
       refresh,

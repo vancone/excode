@@ -8,7 +8,7 @@
       border
     >
       <template #extra>
-        <el-button type="primary" size="mini" @click="updateInfo"
+        <el-button type="primary" size="mini" @click="edit"
           >Edit</el-button
         >
       </template>
@@ -34,7 +34,7 @@
       </el-descriptions-item>
     </el-descriptions>
 
-    <ProjectDialog ref="projectDialogRef" />
+    <ProjectDialog v-model:dialogVisible="projectDialogVisible" :project="project" @confirm="refresh"/>
   </div>
 </template>
 
@@ -45,7 +45,6 @@ import ProjectDialog from "~/components/ProjectDialog.vue";
 import { useRoute } from "vue-router";
 import { IProject } from "~/api/types";
 import { defaultProject } from "~/api/default-value";
-import { ElDialog } from "element-plus";
 
 export default defineComponent({
   name: "Overview",
@@ -53,10 +52,8 @@ export default defineComponent({
     ProjectDialog,
   },
   setup() {
-    const projectDialogRef = ref<InstanceType<typeof ElDialog> | null>(null);
+    const projectDialogVisible = ref(false);
     const projectId = useRoute().params.projectId as string;
-
-    
     const project = reactive<IProject>({...defaultProject});
 
     const refresh = () => {
@@ -67,10 +64,8 @@ export default defineComponent({
       }
     };
 
-    const updateInfo = () => {
-      if (projectDialogRef.value !== null) {
-        projectDialogRef.value.show(projectId, refresh);
-      }
+    const edit = () => {
+      projectDialogVisible.value = true;
     };
 
     onMounted(() => {
@@ -79,8 +74,9 @@ export default defineComponent({
 
     return {
       project,
-      updateInfo,
-      projectDialogRef,
+      projectDialogVisible,
+      edit,
+      refresh
     };
   },
 });
@@ -91,12 +87,6 @@ export default defineComponent({
   height: calc(100% - 60px);
   padding: 20px;
   overflow: auto;
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0 10px 0;
-  height: 30px;
 }
 :deep(.el-tabs__nav-scroll) {
   background: #f9f9fa;
@@ -124,19 +114,8 @@ export default defineComponent({
 :deep(.el-table td) {
   padding: 5px;
 }
-.tabs {
-  height: inherit;
-  overflow: hidden;
-  padding: 0;
-  margin: 0;
-}
 h1 {
   font-size: 16px;
   font-weight: 500;
-}
-.property-block {
-  margin-bottom: 25px;
-  margin-left: 20px;
-  margin-right: 20px;
 }
 </style>

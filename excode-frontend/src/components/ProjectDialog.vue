@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :title="dialogTitle"
-    v-model="dialogVisible"
+    :model-value="dialogVisible"
     class="dialog"
     :before-close="handleClose"
   >
@@ -23,7 +23,7 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button size="small" @click="dialogVisible = false">Cancel</el-button>
+      <el-button size="small" @click="$emit('update:dialogVisible', $event.target.value)">Cancel</el-button>
       <el-button type="primary" size="small" @click="save">Save</el-button>
     </template>
   </el-dialog>
@@ -32,67 +32,44 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
-import { createProject, queryProject } from '~/api'
+import { createProject } from '~/api'
 import { IProject } from '~/api/types'
-
-const defaultProject: IProject = {
-  id: '',
-  name: '',
-  version: '0.1.0-SNAPSHOT',
-  description: '',
-  author: '',
-  organization: ''
-}
+import { defaultProject } from '~/api/default-value'
 
 export default defineComponent({
   name: 'ProjectDialog',
-  setup () {
-    const dialogTitle = ref('')
-    const dialogVisible = ref(false)
-    const callbackFunc = ref(null)
-    const project = reactive<IProject>(defaultProject)
+  props: {
+    dialogVisible: Boolean,
+    project: Object
+  },
+  setup (props, { emit }) {
+    const project = reactive<IProject>({...defaultProject});
+    const dialogTitle = ref('New Project');
 
     const save = () => {
+      const project = props.project as IProject;
       createProject(project).then(({ data }) => {
         if (data.code === 0) {
           Object.assign(project, defaultProject);
-          dialogVisible.value = false;
-          callbackFunc.value();
+          emit('confirm');
+          emit('update:dialogVisible', false);
         }
       })
     }
 
-    const handleClose = (done) => {
+    const handleClose = (done: () => void) => {
       ElMessageBox.confirm('Are you sure to close this dialog?')
         .then((_) => {
-          done()
-          // this.dialogVisible = false
+          emit('update:dialogVisible', false);
+          done();
         })
         .catch((_) => {})
     }
 
-    const show = (projectId: string, callback) => {
-      dialogVisible.value = true
-      callbackFunc.value = callback
-      if (projectId === undefined) {
-        dialogTitle.value = 'New Project'
-        Object.assign(project, {
-          version: '1.0.0-SNAPSHOT'
-        })
-      } else {
-        dialogTitle.value = 'Project Info'
-        queryProject(projectId).then(({ data }) => {
-          Object.assign(project, data.data)
-        })
-      }
-    }
-
     return {
       dialogTitle,
-      dialogVisible,
       project,
       save,
-      show,
       handleClose
     }
   }

@@ -70,7 +70,14 @@
     </el-descriptions>
 
     <div class="property-block">
-      <h1>Entity</h1>
+      <div class="table-top-bar">
+        <h1>Entity</h1>
+        <div>
+          <el-button type="primary" size="mini">Add Node</el-button>
+          <el-button type="primary" size="mini">Generate SQL</el-button>
+        </div>
+      </div>
+      
       <el-table :data="dataStore.nodes" border style="width: 100%">
         <el-table-column label="Name" width="200">
           <template #default="scope">
@@ -229,7 +236,9 @@ h1 {
   border-bottom: solid 1px #ebeef5;
   height: 40px;
 }
-.solution-select {
-  margin-top: 20px;
+.table-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
