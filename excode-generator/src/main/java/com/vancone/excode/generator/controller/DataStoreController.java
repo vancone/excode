@@ -29,6 +29,11 @@ public class DataStoreController {
         return Response.success(dataStoreService.queryList(projectId));
     }
 
+    @GetMapping("generate-sql/{dataStoreId}")
+    public Response generateSql(@PathVariable String dataStoreId) {
+        return Response.success(dataStoreService.generateSQL(dataStoreId));
+    }
+
     @PostMapping
     public Response create(@RequestBody DataStore store) {
         dataStoreService.save(store);

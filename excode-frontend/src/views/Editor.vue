@@ -136,57 +136,17 @@
   </div>
 </template>
 
-<script>
-import axios from 'axios'
-// import DataSourcePanel from '@/components/DataSourcePanel'
-// import ExportDialog from '@/components/dialog/ExportDialog'
+<script lang="ts">
 import ToolBar from '~/components/editor/ToolBar.vue'
 import DataTablePanel from '~/components/editor/DataTablePanel.vue'
 import EditorMenu from '~/components/editor/EditorMenu.vue'
-import { ElLoading } from 'element-plus'
-import { defineComponent, onMounted, reactive } from 'vue'
+import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'Editor',
   components: {
     ToolBar,
     EditorMenu,
     DataTablePanel
-  },
-  setup () {
-    const project = reactive({})
-
-    const load = () => {
-      const loading = ElLoading.service({
-        lock: true,
-        text: 'Loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-
-      axios
-        .get('/api/excode/project/' + getUrlParam('id'))
-        .then((res) => {
-          project.value = reactive(res.data.data)
-          localStorage.setItem('project', JSON.stringify(res.data.data))
-          loading.close()
-        })
-        .catch((err) => {
-          console.log(err)
-          loading.close()
-        })
-    }
-
-    const getUrlParam = (name) => {
-      var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
-      var r = window.location.search.substr(1).match(reg)
-      if (r != null) return unescape(r[2])
-      return null
-    }
-
-    onMounted(load)
-
-    return {
-      project
-    }
   }
 })
 </script>
@@ -204,6 +164,7 @@ main {
 .container {
   width: calc(100% - 450px);
   height: calc(100%);
+  overflow-y: auto;
 }
 .data-table-panel {
   background: #fff;

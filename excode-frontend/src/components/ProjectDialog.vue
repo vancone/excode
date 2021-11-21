@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="dialogTitle"
+    :title="project.id === ''? 'New Project': 'Project'"
     :model-value="dialogVisible"
     class="dialog"
     :before-close="handleClose"
@@ -40,10 +40,12 @@ export default defineComponent({
   name: 'ProjectDialog',
   props: {
     dialogVisible: Boolean,
-    project: Object
+    project: {
+      type: Object,
+      default: reactive<IProject>({...defaultProject})
+    }
   },
   setup (props, { emit }) {
-    const project = reactive<IProject>({...defaultProject});
     const dialogTitle = ref('New Project');
 
     const save = () => {
@@ -68,7 +70,6 @@ export default defineComponent({
 
     return {
       dialogTitle,
-      project,
       save,
       handleClose
     }

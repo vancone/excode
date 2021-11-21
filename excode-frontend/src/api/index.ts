@@ -48,3 +48,8 @@ export function deleteDataStore (dataStoreId: string) {
   return service.delete('/api/excode/data-store/' + dataStoreId);
 }
 
+export function generateDataStoreSql (dataStoreId: string) {
+  return service.get('/api/excode/data-store/generate-sql/' + dataStoreId);
+}
+
+

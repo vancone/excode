@@ -1,4 +1,4 @@
-import { IDataStore, IProject } from "./types"
+import { IDataStore, IDataStoreNode, IProject } from "./types"
 
 const defaultProject: IProject = {
     id: '',
@@ -10,7 +10,6 @@ const defaultProject: IProject = {
     createdTime: '',
     updatedTime: ''
 }
-
 
 const defaultDataStore: IDataStore = {
     id: '',
@@ -24,7 +23,15 @@ const defaultDataStore: IDataStore = {
     updatedTime: ''
 }
 
+const defaultDataStoreNode: IDataStoreNode = {
+    name: '',
+    type: 'VARCHAR',
+    length: 255,
+    comment: ''
+}
+
 export {
     defaultDataStore,
+    defaultDataStoreNode,
     defaultProject
 }

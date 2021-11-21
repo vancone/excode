@@ -1,7 +1,7 @@
 <template>
   <el-dialog
-    :title="dialogTitle"
-    v-model="dialogVisible"
+    :title="dataStore.id === ''? 'New Data Store': 'Data Store'"
+    :model-value="dialogVisible"
     class="dialog"
     :before-close="handleClose"
   >
@@ -17,10 +17,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Carrier">
-        <el-select
-          v-model="dataStore.carrier"
-          size="small"
-        >
+        <el-select v-model="dataStore.carrier" size="small">
           <el-option-group label="Relational Database">
             <el-option label="MySQL" value="MYSQL" />
             <el-option label="PostgreSQL" value="POSTGRESQL" />
@@ -40,83 +37,65 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button size="small" @click="dialogVisible = false">Cancel</el-button>
+      <el-button size="small" @click="$emit('update:dialogVisible', $event.target.value)">Cancel</el-button>
       <el-button type="primary" size="small" @click="save">Save</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
-import { ElMessageBox } from 'element-plus';
-import { createDataStore, queryDataStore, updateDataStore } from '~/api/index';
-import { defaultDataStore } from '~/api/default-value';
-import { useRoute } from 'vue-router';
-import { IDataStore } from '~/api/types';
+import { defineComponent, reactive, ref } from 'vue'
+import { ElMessageBox } from 'element-plus'
+import { useRoute } from 'vue-router'
+import { createDataStore, updateDataStore } from '~/api/index'
+import { defaultDataStore } from '~/api/default-value'
+import { IDataStore } from '~/api/types'
 export default defineComponent({
   name: 'DataStoreDialog',
-  setup() {
+  props: {
+    dialogVisible: Boolean,
+    dataStore: {
+      type: Object,
+      default: reactive<IDataStore>({...defaultDataStore})
+    }
+  },
+  setup(props, { emit }) {
     const route = useRoute()
-    const dialogTitle = ref('');
-    const dialogVisible = ref(false);
-    const callbackFunc = ref(null);
-    const dataStore = reactive<IDataStore>({...defaultDataStore});
+    const dialogTitle = ref('')
+    const dataStore = props.dataStore as IDataStore
 
     function save() {
-      console.log('before save', dataStore)
       if (dataStore.id === '') {
+        dataStore.projectId = route.params.projectId as string
         createDataStore(dataStore).then(({ data }) => {
           if (data.code === 0) {
-            dialogVisible.value = false;
-            clear()
-            callbackFunc.value();
+            emit('confirm')
+            emit('update:dialogVisible', false)
           }
-        });
+        })
       } else {
         updateDataStore(dataStore).then(({ data }) => {
           if (data.code === 0) {
-            dialogVisible.value = false;
-            clear()
-            callbackFunc.value();
+            emit('confirm')
+            emit('update:dialogVisible', false)
           }
-        });
+        })
       }
     }
 
-    function clear() {
-      Object.assign(dataStore, defaultDataStore);
-    }
-
-    function handleClose(done) {
+    function handleClose(done: () => void) {
       ElMessageBox.confirm('Are you sure to close this dialog?')
         .then((_) => {
-          clear();
-          done();
+          emit('update:dialogVisible', false)
+          done()
         })
-        .catch((_) => {});
-    }
-
-    function show(dataStoreId: string, callback: () => void) {
-      dialogVisible.value = true;
-      callbackFunc.value = callback;
-      if (dataStoreId === null) {
-        dialogTitle.value = 'New Data Store';
-        Object.assign(dataStore, defaultDataStore);
-        dataStore.projectId = route.params.projectId as string;
-      } else {
-        dialogTitle.value = 'Data Store';
-        queryDataStore(dataStoreId).then(({ data }) => {
-          Object.assign(dataStore, data.data);
-        });
-      }
+        .catch((_) => {})
     }
 
     return {
       dialogTitle,
-      dialogVisible,
       dataStore,
       save,
-      show,
       handleClose,
     };
   },

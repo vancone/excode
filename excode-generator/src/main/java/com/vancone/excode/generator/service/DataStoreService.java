@@ -56,4 +56,21 @@ public class DataStoreService {
             mongoTemplate.remove(dataStore);
         }
     }
+
+    public String generateSQL(String storeId) {
+        DataStore store = mongoTemplate.findById(storeId, DataStore.class);
+        if (store != null) {
+            String code = "CREATE TABLE `" + store.getName() + "` (\n";
+            for (DataStore.Node node: store.getNodes()) {
+                code += "    `" + node.getName() + "` " + node.getType();
+                if (node.getLength() != null && node.getLength() > 0) {
+                    code += "(" + node.getLength() + ")";
+                }
+                code += ",\n";
+            }
+            code += ")";
+            return code;
+        }
+        return "";
+    }
 }
