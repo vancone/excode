@@ -42,9 +42,14 @@ export default defineComponent({
 }
 :deep(.el-menu-item) {
   display: flex;
+  height: 45px;
   align-items: center;
 }
 :deep(.el-icon) {
   margin-right: 5px;
+}
+:deep(.is-active) {
+  background-color: #8ba74f;
+  color: white;
 }
 </style>

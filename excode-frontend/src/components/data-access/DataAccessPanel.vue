@@ -4,7 +4,9 @@
       <el-tab-pane label="Solution" style="height: 100%; overflow-y: scroll">
         <Solution />
       </el-tab-pane>
-      <el-tab-pane label="API">API</el-tab-pane>
+      <el-tab-pane label="API">
+        <ApiTable />
+      </el-tab-pane>
       <el-tab-pane label="Data Store">
         <DataStore />
       </el-tab-pane>
@@ -16,11 +18,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Solution from '~/components/data-access/components/Solution.vue'
+import ApiTable from '~/components/data-access/components/ApiTable.vue'
 import DataStore from '~/components/data-access/components/DataStore.vue'
 export default defineComponent({
   name: 'DataAccessPanel',
   components: {
-    DataStore, Solution
+    ApiTable, DataStore, Solution
   }
 })
 </script>
