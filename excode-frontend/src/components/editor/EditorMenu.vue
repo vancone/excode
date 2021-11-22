@@ -7,18 +7,18 @@
     <el-menu-item :index="`../overview/${projectId}`">
       <el-icon size="15"><data-line/></el-icon>Overview</el-menu-item>
     <el-menu-item :index="`../data-access/${projectId}`"><el-icon size="15"><pie-chart/></el-icon>Data Access</el-menu-item>
-    <el-menu-item index="presentation"><img class="icon" src="./../../assets/vuejs.svg">Presentation</el-menu-item>
-    <el-menu-item index="presentation"><img class="icon" src="./../../assets/vuejs.svg">Documents</el-menu-item>
+    <el-menu-item index="presentation"><el-icon size="15"><Picture/></el-icon>Presentation</el-menu-item>
+    <el-menu-item index="presentation"><el-icon size="15"><Document/></el-icon>Documents</el-menu-item>
   </el-menu>
 </template>
 
 <script lang="ts">
-import { DataLine, PieChart } from '@element-plus/icons'
+import { DataLine, Document, Picture, PieChart } from '@element-plus/icons'
 import { defineComponent } from 'vue'
 import { useRoute } from 'vue-router'
 export default defineComponent({
   components: {
-    DataLine, PieChart
+    DataLine, Document, Picture, PieChart
   },
   setup() {
     const projectId = useRoute().params.projectId;

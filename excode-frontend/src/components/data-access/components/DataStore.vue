@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="block-wrapper">
-      <el-descriptions class="margin-top" title="Properties" :column="2" border>
+      <el-descriptions class="margin-top" title="Properties" :column="2" size="small" border>
         <template #extra>
           <el-button type="primary" size="mini" @click="edit">Edit</el-button>
         </template>
@@ -92,7 +92,7 @@
         </div>
       </div>
 
-      <el-table :data="dataStore.nodes" border style="width: 100%">
+      <el-table :data="dataStore.nodes" border size="small">
         <el-table-column label="Name" width="200">
           <template #default="scope">
             <span>{{ scope.row.name }}</span>
@@ -328,19 +328,13 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .data-store-wrapper {
   padding: 0 20px 0 20px;
 }
 .data-store-select {
   margin-top: 20px;
   margin-bottom: 20px;
-}
-h1 {
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 10px;
-  margin-bottom: 30px;
 }
 .block-wrapper {
   background: white;
@@ -358,6 +352,12 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 16px;
+
+  h1 {
+    font-size: 16px;
+    font-weight: bold;
+  }
 }
 :deep(.el-dialog__body) {
   padding-top: 0;
