@@ -1,18 +1,16 @@
 package com.vancone.excode.generator.service.basic;
 
-import com.vancone.excode.generator.entity.DTO.Project;
+import com.vancone.excode.generator.entity.Project;
 import com.vancone.excode.generator.entity.ResponsePage;
 import com.vancone.excode.generator.repository.ProjectRepository;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
 

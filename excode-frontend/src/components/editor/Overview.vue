@@ -1,5 +1,24 @@
 <template>
   <div class="overview-wrapper">
+    <div class="metrics">
+      <li>
+        <h1>APIs</h1>
+        <span>0</span>
+      </li>
+      <li>
+        <h1>Data Stores</h1>
+        <span>0</span>
+      </li>
+      <li>
+        <h1>Pages</h1>
+        <span>0</span>
+      </li>
+      <li>
+        <h1>Pages</h1>
+        <span>0</span>
+      </li>
+    </div>
+    <div class="block-wrapper">
     <el-descriptions
       class="margin-top"
       title="General"
@@ -33,6 +52,7 @@
         {{ project.description }}
       </el-descriptions-item>
     </el-descriptions>
+    </div>
 
     <ProjectDialog v-model:dialogVisible="projectDialogVisible" :project="project" @confirm="refresh"/>
   </div>
@@ -42,7 +62,6 @@
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { queryProject } from "~/api";
 import ProjectDialog from "~/components/ProjectDialog.vue";
-import { useRoute } from "vue-router";
 import { IProject } from "~/api/types";
 import { defaultProject } from "~/api/default-value";
 
@@ -53,7 +72,7 @@ export default defineComponent({
   },
   setup() {
     const projectDialogVisible = ref(false);
-    const projectId = useRoute().params.projectId as string;
+    const projectId = sessionStorage.getItem('projectId');
     const project = reactive<IProject>({...defaultProject});
 
     const refresh = () => {
@@ -82,40 +101,49 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .overview-wrapper {
-  height: calc(100% - 60px);
+  height: calc(100% - 100px);
   padding: 20px;
   overflow: auto;
 }
-:deep(.el-tabs__nav-scroll) {
-  background: #f9f9fa;
-  height: 30px;
-  border-bottom: solid 1px #ddd;
-}
-:deep(.el-tabs--card > .el-tabs__header .el-tabs__item) {
-  height: 30px;
-  line-height: 30px;
-}
-:deep(.el-tabs--card > .el-tabs__header .el-tabs__item) {
-  border-left: none;
-  border-right: solid 1px #ddd;
-}
-:deep(.el-tabs__item.is-active) {
-  border-right: solid 1px #ddd;
-  background-color: white;
-}
-:deep(.el-tabs__header) {
-  margin: 0;
-}
-:deep(.el-tabs--card > .el-tabs__header .el-tabs__nav) {
-  border: none;
-}
-:deep(.el-table td) {
-  padding: 5px;
+.block-wrapper {
+  background: white;
+  padding: 20px;
+  border: solid 1px #ddd;
+  border-radius: 5px;
+  margin: 20px 0 20px 0;
 }
 h1 {
   font-size: 16px;
   font-weight: 500;
+}
+.metrics {
+  display: flex;
+  justify-content: space-between;
+
+  li {
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+    background: white;
+    border: solid 1px #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    width: calc(25% - 36px);
+    height: 60px;
+
+    h1 {
+      display: inline;
+      font-weight: bold;
+      margin-right: 30px;
+    }
+
+    span {
+      font-size: 36px;
+      font-weight: bold;
+      color: #8ba74f;
+    }
+  }
 }
 </style>

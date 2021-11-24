@@ -4,9 +4,6 @@
     <main>
       <EditorMenu />
       <router-view class="container"></router-view>
-      <div class="data-table-panel">
-        <data-table-panel />
-      </div>
     </main>
 
     <ExportDialog />
@@ -39,15 +36,9 @@ main {
   height: calc(100% - 35px);
 }
 .container {
-  width: calc(100% - 450px);
+  width: calc(100% - 240px);
   height: calc(100%);
   overflow-y: auto;
-}
-.data-table-panel {
-  background: #fff;
-  height: 100%;
-  width: 250px;
-  text-align: left;
-  border-left: solid 1px #ddd;
+  /* overflow-y: auto; */
 }
 </style>

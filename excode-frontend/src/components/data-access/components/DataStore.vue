@@ -44,9 +44,13 @@
         <template #extra>
           <el-button type="primary" size="mini" @click="edit">Edit</el-button>
         </template>
-        <el-descriptions-item span="2">
+        <el-descriptions-item>
           <template #label> Name </template>
           {{ dataStore.name }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template #label> Description </template>
+          {{ dataStore.description }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label> Type </template>
@@ -56,10 +60,7 @@
           <template #label> Carrier </template>
           {{ dataStore.carrier }}
         </el-descriptions-item>
-        <el-descriptions-item span="2">
-          <template #label> Description </template>
-          {{ dataStore.description }}
-        </el-descriptions-item>
+        
         <el-descriptions-item>
           <template #label> Creator </template>
           -
@@ -203,7 +204,6 @@ export default defineComponent({
     Refresh,
   },
   setup() {
-    const route = useRoute();
     const dataStores = reactive<Array<IDataStore>>([]);
     const currentDataStoreName = ref("");
     const dataStore = reactive<IDataStore>({ ...defaultDataStore });
@@ -276,7 +276,7 @@ export default defineComponent({
 
     function refresh() {
       queryDataStores({
-        projectId: route.params.projectId,
+        projectId: sessionStorage.getItem('projectId'),
       }).then(({ data }) => {
         dataStores.splice(0, dataStores.length, ...data.data);
         Object.assign(dataStore, dataStores[0]);

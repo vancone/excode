@@ -134,7 +134,6 @@
 import { ElDialog, ElMessage, ElMessageBox } from "element-plus";
 import { Delete, Edit, Plus, QuestionFilled, Refresh } from "@element-plus/icons";
 import { defineComponent, onMounted, reactive, ref } from "vue";
-import { useRoute } from "vue-router";
 import { defaultDataStore, defaultDataStoreNode } from "~/api/default-value";
 import {
   deleteDataStore,
@@ -159,7 +158,6 @@ export default defineComponent({
     Refresh,
   },
   setup() {
-    const route = useRoute();
     const dataStores = reactive<Array<IDataStore>>([]);
     const currentDataStoreName = ref("");
     const dataStore = reactive<IDataStore>({ ...defaultDataStore });
@@ -277,7 +275,7 @@ export default defineComponent({
 
     function refresh() {
       queryDataStores({
-        projectId: route.params.projectId,
+        projectId: sessionStorage.getItem('projectId'),
       }).then(({ data }) => {
         dataStores.splice(0, dataStores.length, ...data.data);
         Object.assign(dataStore, dataStores[0]);
@@ -333,6 +331,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .data-store-wrapper {
   padding: 20px 20px 0 20px;
+  height: calc(100% - 20px);
 }
 .data-store-select {
   margin-top: 20px;

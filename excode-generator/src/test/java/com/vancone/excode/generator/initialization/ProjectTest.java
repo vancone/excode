@@ -1,6 +1,6 @@
 package com.vancone.excode.generator.initialization;
 
-import com.vancone.excode.generator.entity.DTO.Project;
+import com.vancone.excode.generator.entity.Project;
 import com.vancone.excode.generator.service.basic.ProjectService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

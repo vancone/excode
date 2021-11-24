@@ -1,6 +1,6 @@
 package com.vancone.excode.generator.repository;
 
-import com.vancone.excode.generator.entity.DTO.Project;
+import com.vancone.excode.generator.entity.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

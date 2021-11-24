@@ -4,7 +4,7 @@
       <el-tab-pane label="Solution" style="height: 100%; overflow-y: scroll">
         <Solution />
       </el-tab-pane>
-      <el-tab-pane label="API">
+      <el-tab-pane label="API Group">
         <ApiTable />
       </el-tab-pane>
       <el-tab-pane label="Data Store">

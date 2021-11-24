@@ -99,50 +99,53 @@
     </el-pagination>
 
     <!-- Create Project Dialog -->
-    <ProjectDialog v-model:dialogVisible="projectDialogVisible" @confirm="refresh"/>
+    <ProjectDialog
+      v-model:dialogVisible="projectDialogVisible"
+      @confirm="refresh"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { Delete, Edit, Plus, Refresh } from '@element-plus/icons'
-import ProjectDialog from './ProjectDialog.vue'
-import { queryProjects, deleteProject } from '~/api'
-import { defineComponent, onMounted, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { IAnyObject, IProject } from '~/api/types'
+import { Delete, Edit, Plus, Refresh } from "@element-plus/icons";
+import ProjectDialog from "./ProjectDialog.vue";
+import { queryProjects, deleteProject } from "~/api";
+import { defineComponent, onMounted, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+import { IAnyObject, IProject } from "~/api/types";
 export default defineComponent({
-  name: 'ProjectTable',
+  name: "ProjectTable",
   components: {
     ProjectDialog,
     Delete,
     Edit,
     Plus,
-    Refresh
+    Refresh,
   },
-  setup () {
+  setup() {
     const router = useRouter();
     const projectDialogVisible = ref(false);
-    const searchText = ref('');
+    const searchText = ref("");
     const tableData = reactive<Array<IProject>>([]);
     const pagition = reactive({
       pageSize: 10,
       pageNo: 1,
-      totalElements: 0
+      totalElements: 0,
     });
 
     function refresh() {
       queryProjects({
         pageSize: pagition.pageSize,
-        pageNo: pagition.pageNo
+        pageNo: pagition.pageNo,
       }).then(({ data }) => {
-        const { list, totalCount} = data.data;
+        const { list, totalCount } = data.data;
         tableData.splice(0, tableData.length, ...list);
         pagition.totalElements = totalCount;
-      })
+      });
     }
 
     function create() {
-      projectDialogVisible.value = true
+      projectDialogVisible.value = true;
     }
 
     function handleDelete(index: number, row: IAnyObject) {
@@ -161,8 +164,9 @@ export default defineComponent({
       refresh();
     }
 
-    function handleEdit (index: number, row: IProject) {
-      router.push(`/editor/overview/${row.id}`);
+    function handleEdit(_: number, row: IProject) {
+      sessionStorage.setItem("projectId", row.id);
+      router.push('/editor/overview');
     }
 
     onMounted(refresh);
@@ -177,10 +181,10 @@ export default defineComponent({
       handleDelete,
       handleEdit,
       handleSizeChange,
-      handleCurrentChange
-    }
-  }
-})
+      handleCurrentChange,
+    };
+  },
+});
 </script>
 
 <style scoped>

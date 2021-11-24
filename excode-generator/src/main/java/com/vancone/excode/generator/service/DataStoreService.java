@@ -1,6 +1,6 @@
 package com.vancone.excode.generator.service;
 
-import com.vancone.excode.generator.entity.DTO.DataStore;
+import com.vancone.excode.generator.entity.DataStore;
 import com.vancone.excode.generator.enums.DataStoreType;
 import com.vancone.excode.generator.enums.ResponseEnum;
 import com.vancone.excode.generator.exception.ResponseException;
@@ -68,7 +68,7 @@ public class DataStoreService {
                 }
                 code += ",\n";
             }
-            code += ")";
+            code = code.substring(0, code.length() - 2) + "\n)";
             return code;
         }
         return "";

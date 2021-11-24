@@ -1,4 +1,4 @@
-package com.vancone.excode.generator.entity.DTO;
+package com.vancone.excode.generator.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vancone.excode.generator.enums.DataCarrier;

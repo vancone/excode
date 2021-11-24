@@ -17,12 +17,20 @@ export const routes: Array<RouteRecordRaw> = [
         redirect: '/editor/overview'
       },
       {
-        path: 'overview/:projectId',
+        path: 'overview',
         component: () => import('../components/editor/Overview.vue')
       },
       {
-        path: 'data-access/:projectId',
-        component: () => import('../components/data-access/DataAccessPanel.vue')
+        path: 'solution',
+        component: () => import('../components/data-access/components/Solution.vue')
+      },
+      {
+        path: 'api-group',
+        component: () => import('../components/data-access/components/ApiGroup.vue')
+      },
+      {
+        path: 'data-store',
+        component: () => import('../components/data-access/components/DataStore.vue')
       },
       {
         path: 'raw',
