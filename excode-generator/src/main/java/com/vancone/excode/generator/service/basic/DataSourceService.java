@@ -1,7 +1,7 @@
 package com.vancone.excode.generator.service.basic;
 
 import com.vancone.excode.generator.entity.DTO.data.source.DataSource;
-import com.vancone.excode.generator.enums.DataSourceType;
+import com.vancone.excode.generator.enums.DataCarrier;
 import com.vancone.excode.generator.enums.ProjectEnum;
 import com.vancone.excode.generator.exception.ResponseException;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +70,7 @@ public class DataSourceService {
         if (dataSource == null) {
             throw new ResponseException(ProjectEnum.DATA_SOURCE_NOT_EXIST);
         }
-        if (dataSource.getType() == DataSourceType.REDIS) {
+        if (dataSource.getType() == DataCarrier.REDIS) {
             try {
                 Jedis jedis = new Jedis(dataSource.getHost(), dataSource.getPort());
                 if (StringUtils.isNotBlank(dataSource.getPassword())) {
@@ -85,7 +85,7 @@ public class DataSourceService {
                 log.error("Connect Redis failed: {}", e.toString());
                 throw new ResponseException(ProjectEnum.TEST_CONNECTION_FAILED);
             }
-        } else if (dataSource.getType() == DataSourceType.MYSQL) {
+        } else if (dataSource.getType() == DataCarrier.MYSQL) {
             try {
                 String url = "jdbc:mysql://" + dataSource.getHost() + ":" + dataSource.getPort() + "/" + dataSource.getDatabase();
                 DriverManager.getConnection(url, dataSource.getUsername(), dataSource.getPassword());

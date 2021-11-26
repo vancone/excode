@@ -1,90 +1,76 @@
 <template>
   <el-dialog
-    :title="dialogTitle"
-    v-model="dialogVisible"
+    :title="project.id === ''? 'New Project': 'Project'"
+    :model-value="dialogVisible"
     class="dialog"
     :before-close="handleClose"
   >
-    <el-form ref="formRef" :model="form" label-width="auto">
+    <el-form ref="formRef" :model="project" label-width="auto">
       <el-form-item label="Name">
-        <el-input v-model="form.name" size="small"></el-input>
+        <el-input v-model="project.name" size="small"></el-input>
       </el-form-item>
       <el-form-item label="Version">
-        <el-input v-model="form.version" size="small"></el-input>
-      </el-form-item>
-      <el-form-item label="Description">
-        <el-input v-model="form.description" size="small"></el-input>
+        <el-input v-model="project.version" size="small"></el-input>
       </el-form-item>
       <el-form-item label="Author">
-        <el-input v-model="form.author" size="small"></el-input>
+        <el-input v-model="project.author" size="small"></el-input>
       </el-form-item>
       <el-form-item label="Organization">
-        <el-input v-model="form.organization" size="small"></el-input>
+        <el-input v-model="project.organization" size="small"></el-input>
+      </el-form-item>
+      <el-form-item label="Description">
+        <el-input v-model="project.description" size="small"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button size="small" @click="dialogVisible = false">Cancel</el-button>
+      <el-button size="small" @click="$emit('update:dialogVisible', $event.target.value)">Cancel</el-button>
       <el-button type="primary" size="small" @click="save">Save</el-button>
     </template>
   </el-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, reactive, ref } from 'vue'
-import { ElPopconfirm } from 'element-plus'
-import { createProject, queryProject } from '~/api/project'
+import { ElMessageBox } from 'element-plus'
+import { createProject } from '~/api'
+import { IProject } from '~/api/types'
+import { defaultProject } from '~/api/default-value'
+
 export default defineComponent({
   name: 'ProjectDialog',
-  setup () {
-    const dialogTitle = ref('')
-    const dialogVisible = ref(false)
-    const callbackFunc = ref(null)
-    const form = reactive({
-      name: '',
-      version: '',
-      description: ''
-    })
+  props: {
+    dialogVisible: Boolean,
+    project: {
+      type: Object,
+      default: reactive<IProject>({...defaultProject})
+    }
+  },
+  setup (props, { emit }) {
+    const dialogTitle = ref('New Project');
 
     const save = () => {
-      createProject(form).then(({ data }) => {
+      const project = props.project as IProject;
+      createProject(project).then(({ data }) => {
         if (data.code === 0) {
-          dialogVisible.value = false
-          callbackFunc.value()
+          Object.assign(project, defaultProject);
+          emit('confirm');
+          emit('update:dialogVisible', false);
         }
       })
     }
 
-    const handleClose = (done) => {
-      ElPopconfirm('Are you sure to close this dialog?')
+    const handleClose = (done: () => void) => {
+      ElMessageBox.confirm('Are you sure to close this dialog?')
         .then((_) => {
-          done()
-          // this.dialogVisible = false
+          emit('update:dialogVisible', false);
+          done();
         })
         .catch((_) => {})
     }
 
-    const show = (projectId, callback) => {
-      dialogVisible.value = true
-      callbackFunc.value = callback
-      if (projectId === undefined) {
-        dialogTitle.value = 'New Project'
-        Object.assign(form, {
-          version: '1.0.0-SNAPSHOT'
-        })
-      } else {
-        dialogTitle.value = 'Project Info'
-        queryProject(projectId).then(({ data }) => {
-          Object.assign(form, data.data)
-        })
-      }
-    }
-
     return {
       dialogTitle,
-      dialogVisible,
-      form,
       save,
-      show,
       handleClose
     }
   }

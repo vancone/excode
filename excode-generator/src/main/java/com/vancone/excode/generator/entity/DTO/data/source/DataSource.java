@@ -1,7 +1,7 @@
 package com.vancone.excode.generator.entity.DTO.data.source;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vancone.excode.generator.enums.DataSourceType;
+import com.vancone.excode.generator.enums.DataCarrier;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class DataSource {
     private String id;
     private String name;
-    private DataSourceType type;
+    private DataCarrier type;
     private String host;
     private Integer port;
     private String username;

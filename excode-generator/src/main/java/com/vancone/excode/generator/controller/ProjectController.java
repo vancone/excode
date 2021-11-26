@@ -2,14 +2,13 @@ package com.vancone.excode.generator.controller;
 
 import com.vancone.cloud.common.model.Response;
 import com.vancone.excode.generator.constant.DataType;
-import com.vancone.excode.generator.entity.DTO.Project;
+import com.vancone.excode.generator.entity.Project;
 import com.vancone.excode.generator.service.basic.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,11 +63,6 @@ public class ProjectController {
             e.printStackTrace();
             return Response.fail(2, "Import failed");
         }
-    }
-
-    @GetMapping("download/{fileType}/{projectId}")
-    public void downloadFile(HttpServletResponse response, @PathVariable String fileType, @PathVariable String projectId) {
-        projectService.export(response, fileType, projectId);
     }
 
     @GetMapping("dbTypeList")

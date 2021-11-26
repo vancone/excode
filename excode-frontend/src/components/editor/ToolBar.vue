@@ -9,7 +9,7 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import axios from 'axios'
 export default {
   name: 'EditorToolBar',
@@ -35,7 +35,6 @@ export default {
   },
   methods: {
     save () {
-      alert(JSON.stringify(this.project))
     },
     back () {
       this.$router.push('/')
