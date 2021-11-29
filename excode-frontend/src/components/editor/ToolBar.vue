@@ -1,7 +1,7 @@
 <template>
     <div class="toolbar">
       <button class="button-back" @click="back"></button>
-      <button class="button-save" @click="save">Save</button>
+      <button class="button-save" :class="{disabled: editted}" @click="save" :disabled="editted">Save</button>
       <button class="button-datasource" @click="openDataSourceDialog">Data Source</button>
       <router-link to="/editor/raw"><button class="button-raw-code">Raw</button></router-link>
       <button class="button-settings" @click="openDataSourceDialog">Settings</button>
@@ -11,9 +11,17 @@
 
 <script lang="ts">
 import axios from 'axios'
-export default {
+import { defineComponent } from 'vue-demi'
+import { getProject } from '~/api/store'
+import { editted } from '~/api/store'
+export default defineComponent({
   name: 'EditorToolBar',
   components: {},
+  setup() {
+    return {
+      editted
+    }
+  },
   data () {
     return {
       dataTableDialogVisible: false,
@@ -35,6 +43,7 @@ export default {
   },
   methods: {
     save () {
+      alert(JSON.stringify(getProject()))
     },
     back () {
       this.$router.push('/')
@@ -78,7 +87,7 @@ export default {
       this.dataTableKeyDialogVisible = true
     }
   }
-}
+})
 </script>
 
 <style scoped>
@@ -127,5 +136,9 @@ button:hover {
 }
 .button-export {
   background-image: url(../../assets/export.svg);
+}
+.disabled {
+  background-image: url(../../assets/save-disabled.svg);
+  color: #bbb;
 }
 </style>

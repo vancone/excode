@@ -2,7 +2,7 @@ package com.vancone.excode.generator.enums;
 
 /**
  * @author Tenton Lien
- * @date 2021/06/13
+ * @since 2021/06/13
  */
 public enum DataCarrier {
 

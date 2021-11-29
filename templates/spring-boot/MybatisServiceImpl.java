@@ -1,8 +1,8 @@
-package __groupId__.__artifactId__.service.impl;
+package __groupId__.__artifact.id__.service.impl;
 
-import __groupId__.__artifactId__.entity.__Table__;
-import __groupId__.__artifactId__.mapper.__Table__Mapper;
-import __groupId__.__artifactId__.service.__Table__Service;
+import __groupId__.__artifact.id__.entity.__Table__;
+import __groupId__.__artifact.id__.mapper.__Table__Mapper;
+import __groupId__.__artifact.id__.service.__Table__Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

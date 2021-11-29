@@ -64,6 +64,7 @@ import { queryProject } from "~/api";
 import ProjectDialog from "~/components/ProjectDialog.vue";
 import { IProject } from "~/api/types";
 import { defaultProject } from "~/api/default-value";
+import { getProject } from "~/api/store";
 
 export default defineComponent({
   name: "Overview",
@@ -72,30 +73,30 @@ export default defineComponent({
   },
   setup() {
     const projectDialogVisible = ref(false);
-    const projectId = sessionStorage.getItem('projectId');
-    const project = reactive<IProject>({...defaultProject});
+    // const projectId = sessionStorage.getItem('projectId');
+    const project = getProject();
 
     const refresh = () => {
-      if (projectId !== null && projectId !== "") {
-        queryProject(projectId).then(({ data }) => {
-          Object.assign(project, data.data)
-        });
-      }
+      // if (projectId !== null && projectId !== "") {
+      //   queryProject(projectId).then(({ data }) => {
+      //     Object.assign(project, data.data)
+      //   });
+      // }
     };
 
     const edit = () => {
       projectDialogVisible.value = true;
     };
 
-    onMounted(() => {
-      refresh();
-    });
+    // onMounted(() => {
+    //   refresh();
+    // });
 
     return {
       project,
       projectDialogVisible,
       edit,
-      refresh
+      // refresh
     };
   },
 });

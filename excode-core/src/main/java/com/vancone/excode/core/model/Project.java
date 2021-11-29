@@ -1,49 +1,37 @@
 package com.vancone.excode.core.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.vancone.excode.core.model.datasource.MysqlDataSource;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Tenton Lien
  * @since 7/24/2021
  */
 @Data
+@Document("project")
 public class Project {
+    @Id
+    private String id;
     private String groupId;
     private String artifactId;
     private String version;
     private List<String> languages;
-    private Map<String, String> name;
-    private Map<String, String> description;
+    private String name;
+    private String description;
     private List<Module> modules;
     private DataSource datasource;
 
-    @JsonIgnore
-    public String getDefaultName() {
-        if (name != null) {
-            String defaultLanguage = name.get("default");
-            if (StringUtils.isNotBlank(defaultLanguage)) {
-                return name.get(defaultLanguage);
-            }
-        }
-        return "";
-    }
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdTime;
 
-    @JsonIgnore
-    public String getDefaultDescription() {
-        if (description != null) {
-            String defaultLanguage = description.get("default");
-            if (StringUtils.isNotBlank(defaultLanguage)) {
-                return description.get(defaultLanguage);
-            }
-        }
-        return "";
-    }
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updatedTime;
 
     @Data
     public static class DataSource {

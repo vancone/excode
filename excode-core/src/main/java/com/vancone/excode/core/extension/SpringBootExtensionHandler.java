@@ -163,8 +163,8 @@ public class SpringBootExtensionHandler {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_CONFIG_SWAGGER2);
         TemplateFactory.preProcess(writer.getProject(), template);
         template.replace("version", writer.getProject().getVersion());
-        template.replace("title", writer.getProject().getDefaultName());
-        template.replace("description", writer.getProject().getDefaultDescription());
+        template.replace("title", writer.getProject().getName());
+        template.replace("description", writer.getProject().getDescription());
 
         String swaggerTags = "";
         List<MysqlDataSource.Table> tables = writer.getProject().getDatasource().getMysql().getTables();

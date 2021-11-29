@@ -1,9 +1,9 @@
 package com.vancone.excode.generator.controller;
 
 import com.vancone.cloud.common.model.Response;
+import com.vancone.excode.core.model.Project;
 import com.vancone.excode.generator.constant.DataType;
-import com.vancone.excode.generator.entity.Project;
-import com.vancone.excode.generator.service.basic.ProjectService;
+import com.vancone.excode.generator.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +63,11 @@ public class ProjectController {
             e.printStackTrace();
             return Response.fail(2, "Import failed");
         }
+    }
+
+    @GetMapping("generate/{projectId}")
+    public Response generate(@PathVariable String projectId) {
+        return Response.success();
     }
 
     @GetMapping("dbTypeList")

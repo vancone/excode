@@ -1,4 +1,4 @@
-package __groupId__.__artifactId__.config;
+package __groupId__.__artifact.id__.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class Swagger2Config {
 
-    public static final String SWAGGER_SCAN_BASE_PACKAGE = "__groupId__.__artifactId__";
+    public static final String SWAGGER_SCAN_BASE_PACKAGE = "__groupId__.__artifact.id__";
 
     public static final String VERSION = "__version__";
 

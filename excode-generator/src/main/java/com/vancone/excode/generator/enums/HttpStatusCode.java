@@ -2,7 +2,7 @@ package com.vancone.excode.generator.enums;
 
 /**
  * @author Tenton Lien
- * @date 9/29/2020
+ * @since 2020/09/29
  */
 public enum HttpStatusCode {
 

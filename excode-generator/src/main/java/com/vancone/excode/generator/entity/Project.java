@@ -1,30 +1,23 @@
+/*
 package com.vancone.excode.generator.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.vancone.excode.generator.codegen.util.StrUtil;
-import com.vancone.excode.generator.entity.DTO.data.RootDataNode;
-import com.vancone.excode.generator.entity.DTO.module.Module;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+*/
 /**
  * @author Tenton Lien
- * @date 2020/09/09
- */
+ * @since 2020/09/09
+ *//*
+
 @Data
 @Table
 @Entity
@@ -56,3 +49,4 @@ public class Project {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedTime;
 }
+*/

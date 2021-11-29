@@ -42,7 +42,7 @@ public class SpringBootDataClass {
         String artifactId = project.getArtifactId();
 
         compilationUnit = new CompilationUnit();
-        compilationUnit.setPackageDeclaration(groupId + "." + artifactId + "." + "entity");
+        compilationUnit.setPackageDeclaration(groupId + "." + artifactId.replace('-', '.') + "." + "entity");
         entityClassDeclaration =
                 compilationUnit.addClass(table.getUpperCamelCaseName(), Modifier.Keyword.PUBLIC);
 

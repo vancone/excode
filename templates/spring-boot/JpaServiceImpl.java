@@ -1,8 +1,8 @@
-package __groupId__.__artifactId__.service.impl;
+package __groupId__.__artifact.id__.service.impl;
 
-import __groupId__.__artifactId__.entity.__Table__;
-import __groupId__.__artifactId__.repository.__Table__Repository;
-import __groupId__.__artifactId__.service.__Table__Service;
+import __groupId__.__artifact.id__.entity.__Table__;
+import __groupId__.__artifact.id__.repository.__Table__Repository;
+import __groupId__.__artifact.id__.service.__Table__Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

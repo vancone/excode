@@ -1,7 +1,7 @@
-package __groupId__.__artifactId__.controller;
+package __groupId__.__artifact.id__.controller;
 
-import __groupId__.__artifactId__.entity.__Table__;
-import __groupId__.__artifactId__.service.__Table__Service;
+import __groupId__.__artifact.id__.entity.__Table__;
+import __groupId__.__artifact.id__.service.__Table__Service;
 
 import __pagitionImport__;
 import com.vancone.cloud.common.model.Response;
