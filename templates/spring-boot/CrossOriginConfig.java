@@ -1,4 +1,4 @@
-package __groupId__.__artifactId__.config;
+package __groupId__.__artifact.id__.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

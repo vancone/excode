@@ -51,7 +51,7 @@ public class SpringBootGenerator {
         this.packagePath = module.getName() + File.separator +
                 "src" + File.separator + "main" + File.separator + "java" + File.separator +
                 project.getGroupId().replace(".", File.separator) + File.separator +
-                project.getArtifactId().replace(".", File.separator) + File.separator;
+                project.getArtifactId().replace(".", File.separator).replace('-', File.separatorChar) + File.separator;
     }
 
     public static void generate(Module module, ProjectWriter writer) {
@@ -172,7 +172,7 @@ public class SpringBootGenerator {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_APPLICATION_ENTRY);
         TemplateFactory.preProcess(project, template);
         writer.addOutput(TemplateType.SPRING_BOOT_APPLICATION_ENTRY,
-                packagePath + StrUtil.capitalize(project.getArtifactId()) + "Application.java",
+                packagePath + StrUtil.upperCamelCase(project.getArtifactId()) + "Application.java",
                 template);
     }
 

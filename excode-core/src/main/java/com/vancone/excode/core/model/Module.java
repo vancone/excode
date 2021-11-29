@@ -3,6 +3,8 @@ package com.vancone.excode.core.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +17,8 @@ public class Module {
     private String type;
     private String name;
     private boolean enable;
-    private List<Module> extensions;
-    private Map<String, String> properties;
+    private List<Module> extensions = new ArrayList<>();
+    private Map<String, String> properties = new HashMap<>();
 
     @JsonIgnore
     public String getProperty(String property) {

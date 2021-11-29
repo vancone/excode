@@ -1,5 +1,6 @@
 package com.vancone.excode.core.model;
 
+import com.github.javaparser.ParseProblemException;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.google.googlejavaformat.java.Formatter;
@@ -29,7 +30,13 @@ public class Template {
     }
 
     public CompilationUnit parseJavaSource() {
-        return StaticJavaParser.parse(content);
+        try {
+            return StaticJavaParser.parse(content);
+        } catch (ParseProblemException e) {
+            log.error(e.getMessage());
+            log.error("content: {}", content);
+            return null;
+        }
     }
 
     public void updateJavaSource(CompilationUnit unit) {

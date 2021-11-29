@@ -40,6 +40,12 @@
       </div>
     </div>
 
+    <div class="toolbar-wrapper">
+      <el-button type="primary" size="mini" @click="create" :icon="Download">
+        Postman Collection
+      </el-button>
+    </div>
+
     <el-collapse class="collapse" v-model="activeNames" @change="handleChange">
       <el-collapse-item
         v-for="(item, index) in dataStores"
@@ -48,8 +54,10 @@
         :name="index"
       >
         <template #title>
-          <h1>{{item.name}}</h1>
-          <el-icon style="color: #666;font-size:16px"><question-filled /></el-icon>
+          <h1>{{ item.name }}</h1>
+          <el-icon style="color: #666; font-size: 16px"
+            ><question-filled
+          /></el-icon>
         </template>
         <el-table :data="apiList" border size="small">
           <el-table-column label="Status" width="80">
@@ -59,7 +67,9 @@
           </el-table-column>
           <el-table-column label="Method" width="100">
             <template #default="scope">
-              <el-tag :type="scope.row.tagType" size="mini">{{ scope.row.method }}</el-tag>
+              <el-tag :type="scope.row.tagType" size="mini">{{
+                scope.row.method
+              }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="Name" width="150">
@@ -132,7 +142,14 @@
 
 <script lang="ts">
 import { ElDialog, ElMessage, ElMessageBox } from "element-plus";
-import { Delete, Edit, Plus, QuestionFilled, Refresh } from "@element-plus/icons";
+import {
+  Delete,
+  Download,
+  Edit,
+  Plus,
+  QuestionFilled,
+  Refresh,
+} from "@element-plus/icons";
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { defaultDataStore, defaultDataStoreNode } from "~/api/default-value";
 import {
@@ -151,6 +168,7 @@ export default defineComponent({
     DataStoreDialog,
     DataStoreNodeDialog,
     Delete,
+    Download,
     Edit,
     ElDialog,
     Plus,
@@ -175,43 +193,43 @@ export default defineComponent({
         method: "GET",
         tagType: "info",
         name: "Query",
-        path: '/api/employee/{id}',
-        params: 'id',
-        sql: 'SELECT * FROM employee WHERE id = ${id}'
+        path: "/api/employee/{id}",
+        params: "id",
+        sql: "SELECT * FROM employee WHERE id = ${id}",
       },
       {
         status: true,
         method: "GET",
         tagType: "info",
         name: "Query Page",
-        path: '/api/employee',
-        params: 'pageSize, pageNo',
-        sql: 'SELECT * FROM employee LIMIT ${pageSize} OFFSET (${pageNo} - 1) * ${pageSize}'
+        path: "/api/employee",
+        params: "pageSize, pageNo",
+        sql: "SELECT * FROM employee LIMIT ${pageSize} OFFSET (${pageNo} - 1) * ${pageSize}",
       },
       {
         status: true,
         method: "POST",
         tagType: "success",
         name: "Create",
-        path: '/api/employee',
-        sql: 'INSERT INTO employee VALUES(${body})'
+        path: "/api/employee",
+        sql: "INSERT INTO employee VALUES(${body})",
       },
       {
         status: true,
         method: "PUT",
         tagType: "warning",
         name: "Update",
-        path: '/api/employee',
-        sql: 'UPDATE employee SET name=${body.name} WHERE id = ${id}'
+        path: "/api/employee",
+        sql: "UPDATE employee SET name=${body.name} WHERE id = ${id}",
       },
       {
         status: false,
         method: "DELETE",
         tagType: "danger",
         name: "Delete",
-        path: '/api/employee/{id}',
-        params: 'id',
-        sql: 'DELETE FROM employee WHERE id = ${id}'
+        path: "/api/employee/{id}",
+        params: "id",
+        sql: "DELETE FROM employee WHERE id = ${id}",
       },
     ];
 
@@ -275,7 +293,7 @@ export default defineComponent({
 
     function refresh() {
       queryDataStores({
-        projectId: sessionStorage.getItem('projectId'),
+        projectId: sessionStorage.getItem("projectId"),
       }).then(({ data }) => {
         dataStores.splice(0, dataStores.length, ...data.data);
         Object.assign(dataStore, dataStores[0]);
@@ -308,6 +326,7 @@ export default defineComponent({
       dataStore,
       dataStoreNode,
       Delete,
+      Download,
       generatedSql,
       generateSqlDialogVisible,
       Plus,
@@ -375,5 +394,9 @@ export default defineComponent({
     font-size: 18px;
     margin-right: 10px;
   }
+}
+
+.toolbar-wrapper {
+  margin-bottom: 10px;
 }
 </style>

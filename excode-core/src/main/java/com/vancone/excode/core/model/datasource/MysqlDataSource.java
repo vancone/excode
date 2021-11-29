@@ -5,6 +5,7 @@ import com.vancone.excode.core.util.StrUtil;
 import lombok.Data;
 import org.springframework.data.annotation.Transient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
 public class MysqlDataSource {
     private boolean sqlGen;
     private Connection connection;
-    private List<Table> tables;
+    private List<Table> tables = new ArrayList<>();
 
     @Data
     public static class Connection {

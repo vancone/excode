@@ -1,7 +1,7 @@
-package __groupId__.__artifactId__.repository;
+package __groupId__.__artifact.id__.repository;
 
 
-import __groupId__.__artifactId__.entity.__Table__;
+import __groupId__.__artifact.id__.entity.__Table__;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

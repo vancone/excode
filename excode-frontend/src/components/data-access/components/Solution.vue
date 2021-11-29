@@ -91,7 +91,7 @@
       </el-descriptions>
     </div>
 
-    <div class="property-block">
+    <div class="block-wrapper">
       <h1>Extensions</h1>
       <el-table
         :data="extensionTableData"

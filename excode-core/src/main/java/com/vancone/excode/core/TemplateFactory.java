@@ -37,8 +37,9 @@ public class TemplateFactory {
     public static void preProcess(Project project, Template template) {
         template.replace("groupId", project.getGroupId());
         template.replace("artifactId", project.getArtifactId());
-        template.replace("ArtifactId", StrUtil.capitalize(project.getArtifactId()));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+        template.replace("artifact.id", project.getArtifactId().replace('-', '.'));
+        template.replace("ArtifactId", StrUtil.upperCamelCase(project.getArtifactId()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         template.replace("date", formatter.format(LocalDateTime.now()));
     }
 }

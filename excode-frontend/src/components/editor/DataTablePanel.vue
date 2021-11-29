@@ -16,16 +16,16 @@
     <template #default="{ node, data }">
       <span class="custom-tree-node">
         <span @dblclick="editDataTableKey(data)">
-          <img
+          <!-- <img
             src="./../assets/table.svg"
             v-if="data.root == true"
             class="data-table-key-icon"
-          />
-          <img
+          /> -->
+          <!-- <img
             src="./../assets/key.svg"
             v-if="data.root != true"
             class="data-table-key-icon"
-          />
+          /> -->
           {{ node.label }}
           <span
             style="color: #aaa"

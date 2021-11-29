@@ -20,6 +20,10 @@ export function createProject (project: IProject) {
   return service.post('/api/excode/project', project);
 }
 
+export function updateProject (project: IProject) {
+  return service.put('/api/excode/project', project);
+}
+
 export function deleteProject (projectId: string) {
   return service.delete('/api/excode/project/' + projectId);
 }

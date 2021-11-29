@@ -14,13 +14,23 @@
 import ToolBar from '~/components/editor/ToolBar.vue'
 import DataTablePanel from '~/components/editor/DataTablePanel.vue'
 import EditorMenu from '~/components/editor/EditorMenu.vue'
-import { defineComponent } from 'vue'
+import { defineComponent, onBeforeUnmount, onMounted } from 'vue'
+import { queryProject } from '~/api'
+import { loadProject, setProject } from '~/api/store'
 export default defineComponent({
   name: 'Editor',
   components: {
     ToolBar,
     EditorMenu,
     DataTablePanel
+  },
+  setup() {
+    onMounted(() => {
+      loadProject()
+    })
+    onBeforeUnmount(() => {
+        alert(1024)
+    })
   }
 })
 </script>
@@ -39,6 +49,5 @@ main {
   width: calc(100% - 240px);
   height: calc(100%);
   overflow-y: auto;
-  /* overflow-y: auto; */
 }
 </style>

@@ -1,7 +1,6 @@
 package com.vancone.excode.generator.initialization;
 
-import com.vancone.excode.generator.entity.Project;
-import com.vancone.excode.generator.service.basic.ProjectService;
+import com.vancone.excode.generator.service.ProjectService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +16,10 @@ public class ProjectTest {
 
     @Test
     public void insertProjects() {
-        Project project = new Project();
-        project.setId("2c9720817973cd22017973cd57d90000");
-        project.setName("VanCone Mall");
-        project.setVersion("1.2.0");
-        project.setOrganization("VanCone Corp");
-        project.setDescription("Demo only");
-//        project.setModules(new ArrayList<>());
-        projectService.save(project);
+    }
+
+    @Test
+    public void generateProject() {
+        projectService.generate("2c9790817d1ed7dc017d1ef7e7c10001");
     }
 }

@@ -1,6 +1,6 @@
-package __groupId__.__artifactId__.mapper;
+package __groupId__.__artifact.id__.mapper;
 
-import __groupId__.__artifactId__.entity.__Table__;
+import __groupId__.__artifact.id__.entity.__Table__;
 import java.util.List;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Service;

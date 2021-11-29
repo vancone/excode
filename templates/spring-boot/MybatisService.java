@@ -1,6 +1,6 @@
-package __groupId__.__artifactId__.service;
+package __groupId__.__artifact.id__.service;
 
-import __groupId__.__artifactId__.entity.__Table__;
+import __groupId__.__artifact.id__.entity.__Table__;
 
 import com.github.pagehelper.PageInfo;
 import java.util.List;

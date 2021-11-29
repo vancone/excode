@@ -1,4 +1,4 @@
-package com.vancone.excode.generator.service.basic;
+package com.vancone.excode.generator.service;
 
 import com.vancone.excode.generator.entity.DTO.data.source.DataSource;
 import com.vancone.excode.generator.enums.DataCarrier;

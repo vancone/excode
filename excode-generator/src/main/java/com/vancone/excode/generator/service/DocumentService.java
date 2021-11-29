@@ -1,4 +1,4 @@
-package com.vancone.excode.generator.service.basic;
+package com.vancone.excode.generator.service;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
