@@ -1,7 +1,7 @@
 package com.vancone.excode.generator.service;
 
+import com.vancone.excode.core.enums.DataCarrier;
 import com.vancone.excode.generator.entity.DTO.data.source.DataSource;
-import com.vancone.excode.generator.enums.DataCarrier;
 import com.vancone.excode.generator.enums.ProjectEnum;
 import com.vancone.excode.generator.exception.ResponseException;
 import lombok.extern.slf4j.Slf4j;

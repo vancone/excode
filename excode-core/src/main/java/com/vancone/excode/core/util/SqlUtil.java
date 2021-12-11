@@ -1,6 +1,6 @@
 package com.vancone.excode.core.util;
 
-import com.vancone.excode.core.model.datasource.MysqlDataSource;
+import com.vancone.excode.core.model.DataStore;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -8,27 +8,27 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class SqlUtil {
 
-    public static String createDatabase(MysqlDataSource database) {
-        return "CREATE DATABASE " + database.getConnection().getDatabase() + ";";
+    public static String createDatabase(DataStore store) {
+        return "CREATE DATABASE " + store.getConnection().getDatabase() + ";";
     }
 
-    public static String createTable(MysqlDataSource.Table table) {
-        String sql = "CREATE TABLE " + table.getName() + "(\n";
-        for (int i = 0; i < table.getColumns().size(); i ++) {
-            MysqlDataSource.Table.Column column = table.getColumns().get(i);
-            sql += "    `" + column.getName() + "` " + column.getType().toUpperCase();
-            if (column.getType().equals("varchar")) {
-                sql += "(" + column.getLength() + ")";
+    public static String createTable(DataStore store) {
+        String sql = "CREATE TABLE " + store.getName() + "(\n";
+        for (int i = 0; i < store.getNodes().size(); i ++) {
+            DataStore.Node node = store.getNodes().get(i);
+            sql += "    `" + node.getName() + "` " + node.getType().toUpperCase();
+            if (node.getType().equals("varchar")) {
+                sql += "(" + node.getLength() + ")";
             }
-            if (column.isPrimaryKey()) {
+            if (node.isPrimaryKey()) {
                 sql += " PRIMARY KEY NOT NULL";
             }
 
-            if (StringUtils.isNotBlank(column.getComment())) {
-                sql += " COMMENT '" + column.getComment() + "'";
+            if (StringUtils.isNotBlank(node.getComment())) {
+                sql += " COMMENT '" + node.getComment() + "'";
             }
 
-            if (i == table.getColumns().size() - 1) {
+            if (i == store.getNodes().size() - 1) {
                 sql += "\n";
             } else {
                 sql += ",\n";
@@ -38,27 +38,27 @@ public class SqlUtil {
         return sql;
     }
 
-    public static String insertQuery(MysqlDataSource.Table table, boolean ignorePrimaryKey) {
-        String query = "INSERT INTO " + table.getName() + " (";
+    public static String insertQuery(DataStore store, boolean ignorePrimaryKey) {
+        String query = "INSERT INTO " + store.getName() + " (";
         // If the last column is a primary key, this block of codes may not work out the correct result
-        for (int i = 0; i < table.getColumns().size(); i ++) {
-            if (ignorePrimaryKey && table.getColumns().get(i).isPrimaryKey()) {
+        for (int i = 0; i < store.getNodes().size(); i ++) {
+            if (ignorePrimaryKey && store.getNodes().get(i).isPrimaryKey()) {
                 continue;
             }
-            query += table.getColumns().get(i).getName();
-            if (i + 1 != table.getColumns().size()) {
+            query += store.getNodes().get(i).getName();
+            if (i + 1 != store.getNodes().size()) {
                 query += ", ";
             } else {
                 query +=") ";
             }
         }
         query += "VALUES(";
-        for (int i = 0; i < table.getColumns().size(); i ++) {
-            if (ignorePrimaryKey && table.getColumns().get(i).isPrimaryKey()) {
+        for (int i = 0; i < store.getNodes().size(); i ++) {
+            if (ignorePrimaryKey && store.getNodes().get(i).isPrimaryKey()) {
                 continue;
             }
-            query += "#{" + table.getColumns().get(i).getCamelCaseName(table.getName()) + "}";
-            if (i + 1 != table.getColumns().size()) {
+            query += "#{" + store.getNodes().get(i).getName() + "}";
+            if (i + 1 != store.getNodes().size()) {
                 query += ", ";
             } else {
                 query += ")";
@@ -67,18 +67,18 @@ public class SqlUtil {
         return query;
     }
 
-    public static String updateQuery(MysqlDataSource.Table table) {
-        String query = "UPDATE " + table.getName() + " SET ";
-        for (int i = 0; i < table.getColumns().size(); i ++) {
-            if (table.getColumns().get(i).isPrimaryKey()) {
+    public static String updateQuery(DataStore store) {
+        String query = "UPDATE " + store.getName() + " SET ";
+        for (int i = 0; i < store.getNodes().size(); i ++) {
+            if (i == 0) {
                 continue;
             }
-            query += table.getColumns().get(i).getName() + "=#{" + table.getColumns().get(i).getCamelCaseName(table.getName()) + "}";
-            if (i + 1 != table.getColumns().size()) {
+            query += store.getNodes().get(i).getName() + "=#{" + store.getNodes().get(i).getName() + "}";
+            if (i + 1 != store.getNodes().size()) {
                 query += ", ";
             }
         }
-        query += " WHERE " + table.getPrimaryKeyName() + "=#{" + StrUtil.camelCase(table.getPrimaryKeyName()) + "}";
+        query += " WHERE " + store.getNodes().get(0).getName() + "=#{" + StrUtil.camelCase(store.getNodes().get(0).getName()) + "}";
         return query;
     }
 }

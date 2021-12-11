@@ -1,7 +1,7 @@
 package com.vancone.excode.generator.entity.DTO.data.source;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vancone.excode.generator.enums.DataCarrier;
+import com.vancone.excode.core.enums.DataCarrier;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 

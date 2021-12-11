@@ -1,7 +1,7 @@
 package com.vancone.excode.generator.controller;
 
 import com.vancone.cloud.common.model.Response;
-import com.vancone.excode.generator.entity.DataStore;
+import com.vancone.excode.core.model.DataStore;
 import com.vancone.excode.generator.service.DataStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

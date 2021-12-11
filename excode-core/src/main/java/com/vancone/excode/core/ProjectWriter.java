@@ -1,13 +1,11 @@
 package com.vancone.excode.core;
 
-import com.vancone.excode.core.constant.ModuleType;
+import com.vancone.excode.core.enums.DataCarrier;
 import com.vancone.excode.core.enums.TemplateType;
 import com.vancone.excode.core.generator.SpringBootGenerator;
-import com.vancone.excode.core.generator.ViteAdminGenerator;
-import com.vancone.excode.core.model.Module;
+import com.vancone.excode.core.model.DataStore;
 import com.vancone.excode.core.model.Project;
 import com.vancone.excode.core.model.Template;
-import com.vancone.excode.core.model.datasource.MysqlDataSource;
 import com.vancone.excode.core.util.FileUtil;
 import com.vancone.excode.core.util.SqlUtil;
 import lombok.Data;
@@ -34,7 +32,10 @@ public class ProjectWriter {
 
     public ProjectWriter(Project project) {
         this.project = project;
-        rootDirectory = genLocation + project.getGroupId() + "." + project.getArtifactId() + "-" + project.getVersion() + File.separator;
+        Project.DataAccess.Solution.JavaSpringBoot module = project.getDataAccess().getSolution().getJavaSpringBoot();
+        String groupId = module.getGroupId();
+        String artifactId = module.getArtifactId();
+        rootDirectory = genLocation + groupId + "." + artifactId + "-" + project.getVersion() + File.separator;
 //        rootDirectory = genLocation + project.getGroupId() + "." + project.getArtifactId() + "-" + project.getVersion() + "-" + System.currentTimeMillis() + File.separator;
     }
 
@@ -75,31 +76,32 @@ public class ProjectWriter {
     }
 
     public void write() {
-        if (project.getModules().isEmpty()) {
-            log.error("No valid module found");
-            return;
-        }
+//        if (project.getModules().isEmpty()) {
+//            log.error("No valid module found");
+//            return;
+//        }
 
         // Data source
-        MysqlDataSource mysql = project.getDatasource().getMysql();
-        if (mysql != null && mysql.isSqlGen()) {
-            String sql = SqlUtil.createDatabase(mysql) + "\n\n";
+        DataStore store = project.getDataAccess().getDataStoreByCarrier(DataCarrier.MYSQL).get(0);
+        if (store != null) {
+            String sql = SqlUtil.createDatabase(store) + "\n\n";
 
-            for (MysqlDataSource.Table table: mysql.getTables()) {
-                sql += SqlUtil.createTable(table) + "\n\n";
+            for (DataStore item: project.getDataAccess().getDataStoreByCarrier(DataCarrier.MYSQL)) {
+                sql += SqlUtil.createTable(item) + "\n\n";
             }
 
             addOutput(TemplateType.SQL, "create.sql", sql);
         }
 
-        for (Module module: project.getModules()) {
-            log.info("Generate module [{}]", module.getType());
-            if (module.getType().equals(ModuleType.SPRING_BOOT)) {
-                SpringBootGenerator.generate(module, this);
-            } else if (module.getType().equals(ModuleType.VITE_ADMIN)) {
-                ViteAdminGenerator.generate(module, this);
-            }
-        }
+//        for (Module module: project.getModules()) {
+//            log.info("Generate module [{}]", module.getType());
+//            if (module.getType().equals(ModuleType.SPRING_BOOT)) {
+//                SpringBootGenerator.generate(module, this);
+//            } else if (module.getType().equals(ModuleType.VITE_ADMIN)) {
+//                ViteAdminGenerator.generate(module, this);
+//            }
+//        }
+        SpringBootGenerator.generate(project.getDataAccess().getSolution().getJavaSpringBoot(), this);
 
         // Write to disk
         for (Output output: outputs) {

@@ -13,11 +13,12 @@ import com.vancone.excode.core.ProjectWriter;
 import com.vancone.excode.core.TemplateFactory;
 import com.vancone.excode.core.constant.ExtensionType;
 import com.vancone.excode.core.constant.ModuleType;
+import com.vancone.excode.core.enums.DataCarrier;
 import com.vancone.excode.core.enums.TemplateType;
+import com.vancone.excode.core.model.DataStore;
 import com.vancone.excode.core.model.Module;
 import com.vancone.excode.core.model.Project;
 import com.vancone.excode.core.model.Template;
-import com.vancone.excode.core.model.datasource.MysqlDataSource;
 import com.vancone.excode.core.util.CompilationUnitUtil;
 import com.vancone.excode.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -34,20 +35,20 @@ import java.util.Optional;
 @Slf4j
 public class SpringBootExtensionHandler {
 
-    private static Module getModule(ProjectWriter writer) {
-        Project project = writer.getProject();
-        for (Module module: project.getModules()) {
-            if (module.getType().equals(ModuleType.SPRING_BOOT)) {
-                return module;
-            }
-        }
-        return null;
-    }
+//    private static Module getModule(ProjectWriter writer) {
+//        Project project = writer.getProject();
+//        for (Module module: project.getModules()) {
+//            if (module.getType().equals(ModuleType.SPRING_BOOT)) {
+//                return module;
+//            }
+//        }
+//        return null;
+//    }
 
-    private static Module getExtension(ProjectWriter writer, String name) {
-        Module module = getModule(writer);
-        for (Module extension: module.getExtensions()) {
-            if (extension.getType().equals(name)) {
+    private static Project.DataAccess.Solution.JavaSpringBoot.Extension getExtension(ProjectWriter writer, String id) {
+        Project.DataAccess.Solution.JavaSpringBoot module = writer.getProject().getDataAccess().getSolution().getJavaSpringBoot();
+        for (Project.DataAccess.Solution.JavaSpringBoot.Extension extension: module.getExtensions()) {
+            if (extension.getId().equals(id)) {
                 return extension;
             }
         }
@@ -58,7 +59,7 @@ public class SpringBootExtensionHandler {
      * Extensioin Cross-Origin
      * @param writer
      */
-    public static void crossOrigin(Module module, ProjectWriter writer) {
+    public static void crossOrigin(Project.DataAccess.Solution.JavaSpringBoot module, ProjectWriter writer) {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_CONFIG_CROSS_ORIGIN);
         TemplateFactory.preProcess(writer.getProject(), template);
 
@@ -73,10 +74,10 @@ public class SpringBootExtensionHandler {
         MethodCallExpr addMappingExpr = statement.asExpressionStmt().getExpression().asMethodCallExpr();
 
         MethodCallExpr rootExpr = addMappingExpr;
-        Module extension = getExtension(writer, ExtensionType.SPRING_BOOT_CROSS_ORIGIN);
+        Project.DataAccess.Solution.JavaSpringBoot.Extension extension = getExtension(writer, ExtensionType.SPRING_BOOT_CROSS_ORIGIN);
 
         // Add allowed origins
-        String[] allowedOrigins = extension.getProperty("allowed-origins").split(",");
+        String[] allowedOrigins = extension.getProperty("allowedOrigins").split(",");
         if (allowedOrigins.length > 0) {
             MethodCallExpr allowedOriginsExpr = new MethodCallExpr();
             NodeList allowedOriginsNodeList = new NodeList();
@@ -91,7 +92,7 @@ public class SpringBootExtensionHandler {
         }
 
         // Add allowed methods
-        String[] allowedMethods = extension.getProperty("allowed-methods").split(",");
+        String[] allowedMethods = extension.getProperty("allowedMethods").split(",");
         if (allowedMethods.length > 0) {
             MethodCallExpr allowedMethodsExpr = new MethodCallExpr();
             NodeList allowedMethodsNodeList = new NodeList();
@@ -106,7 +107,7 @@ public class SpringBootExtensionHandler {
         }
 
         // Add allowed headers
-        String[] allowedHeaders = extension.getProperty("allowed-headers").split(",");
+        String[] allowedHeaders = extension.getProperty("allowedHeaders").split(",");
         if (allowedHeaders.length > 0) {
             MethodCallExpr allowedHeadersExpr = new MethodCallExpr();
             NodeList allowedHeadersNodeList = new NodeList();
@@ -123,10 +124,10 @@ public class SpringBootExtensionHandler {
         template.updateJavaSource(unit);
 
         writer.addOutput(TemplateType.SPRING_BOOT_CONFIG_CROSS_ORIGIN,
-                module.getName() + File.separator +
+                writer.getProject().getName() + File.separator +
                 "src" + File.separator + "main" + File.separator + "java" + File.separator +
-                writer.getProject().getGroupId().replace(".", File.separator) + File.separator +
-                writer.getProject().getArtifactId().replace(".", File.separator) + File.separator + "config" + File.separator + "CrossOriginConfig.java",
+                module.getGroupId().replace(".", File.separator) + File.separator +
+                module.getArtifactId().replace(".", File.separator) + File.separator + "config" + File.separator + "CrossOriginConfig.java",
                 template);
     }
 
@@ -134,7 +135,7 @@ public class SpringBootExtensionHandler {
      * Extension: Lombok
      * @param writer
      */
-    public static void lombok(Module module, ProjectWriter writer) {
+    public static void lombok(Project.DataAccess.Solution.JavaSpringBoot module, ProjectWriter writer) {
         for (ProjectWriter.Output output: writer.getOutputsByType(TemplateType.SPRING_BOOT_ENTITY)) {
             CompilationUnit unit = StaticJavaParser.parse(output.getContent());
             ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(unit);
@@ -159,7 +160,7 @@ public class SpringBootExtensionHandler {
      * Extension: Swagger2
      * @param writer
      */
-    public static void swagger2(Module module, ProjectWriter writer) {
+    public static void swagger2(Project.DataAccess.Solution.JavaSpringBoot module, ProjectWriter writer) {
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_CONFIG_SWAGGER2);
         TemplateFactory.preProcess(writer.getProject(), template);
         template.replace("version", writer.getProject().getVersion());
@@ -167,10 +168,10 @@ public class SpringBootExtensionHandler {
         template.replace("description", writer.getProject().getDescription());
 
         String swaggerTags = "";
-        List<MysqlDataSource.Table> tables = writer.getProject().getDatasource().getMysql().getTables();
-        for (int i = 0; i < tables.size(); i++) {
-            swaggerTags += "new Tag(\"" + tables.get(i).getUpperCamelCaseName() + "\", " + "\"" + tables.get(i).getDescription() + "\")";
-            if (i + 1 == tables.size()) {
+        List<DataStore> stores = writer.getProject().getDataAccess().getDataStoreByCarrier(DataCarrier.MYSQL);
+        for (int i = 0; i < stores.size(); i++) {
+            swaggerTags += "new Tag(\"" + StrUtil.upperCamelCase(stores.get(i).getName()) + "\", " + "\"" + stores.get(i).getDescription() + "\")";
+            if (i + 1 == stores.size()) {
                 swaggerTags += "\n";
             } else {
                 swaggerTags += ",\n";
@@ -179,33 +180,33 @@ public class SpringBootExtensionHandler {
         template.replace("tags", swaggerTags);
 
         writer.addOutput(TemplateType.SPRING_BOOT_CONFIG_SWAGGER2,
-                module.getName() + File.separator +
+                writer.getProject().getName() + File.separator +
                 "src" + File.separator + "main" + File.separator + "java" + File.separator +
-                writer.getProject().getGroupId().replace(".", File.separator) + File.separator +
-                writer.getProject().getArtifactId().replace(".", File.separator) + File.separator + "config" + File.separator + "Swagger2Config.java",
+                module.getGroupId().replace(".", File.separator) + File.separator +
+                module.getArtifactId().replace(".", File.separator) + File.separator + "config" + File.separator + "Swagger2Config.java",
                 template);
 
-        for (MysqlDataSource.Table table: writer.getProject().getDatasource().getMysql().getTables()) {
+        for (DataStore store: writer.getProject().getDataAccess().getDataStoreByCarrier(DataCarrier.MYSQL)) {
 
             // Process entity class
-            ProjectWriter.Output output = writer.getOutputByName(StrUtil.upperCamelCase(table.getName()) + ".java");
+            ProjectWriter.Output output = writer.getOutputByName(StrUtil.upperCamelCase(store.getName()) + ".java");
             CompilationUnit unit = StaticJavaParser.parse(output.getContent());
             if (unit != null) {
                 unit.addImport("io.swagger.annotations.ApiModel");
                 ClassOrInterfaceDeclaration clazz = CompilationUnitUtil.getMainClassOrInterface(unit);
                 clazz.addAnnotation(new SingleMemberAnnotationExpr(
                         new Name("ApiModel"),
-                        new StringLiteralExpr(table.getDescription())));
+                        new StringLiteralExpr(store.getDescription())));
 
                 // Add annotation for each field
                 boolean apiModelPropertyExists = false;
-                for (MysqlDataSource.Table.Column column: table.getColumns()) {
-                    if (StringUtils.isNotBlank(column.getComment())) {
-                        Optional<FieldDeclaration> field = clazz.getFieldByName(column.getCamelCaseName(table.getName()));
+                for (DataStore.Node node: store.getNodes()) {
+                    if (StringUtils.isNotBlank(node.getComment())) {
+                        Optional<FieldDeclaration> field = clazz.getFieldByName(StrUtil.camelCase(node.getName()));
                         if (field.isPresent()) {
                             field.get().addAnnotation(new SingleMemberAnnotationExpr(
                                     new Name("ApiModelProperty"),
-                                    new StringLiteralExpr(column.getComment())));
+                                    new StringLiteralExpr(node.getComment())));
                             apiModelPropertyExists = true;
                         }
                     }
@@ -219,7 +220,7 @@ public class SpringBootExtensionHandler {
             output.setContent(unit.toString());
 
             // Process controller class
-            output = writer.getOutputByName(StrUtil.upperCamelCase(table.getName()) + "Controller.java");
+            output = writer.getOutputByName(StrUtil.upperCamelCase(store.getName()) + "Controller.java");
             unit = StaticJavaParser.parse(output.getTemplate().getContent());
             if (unit != null) {
                 unit.addImport("io.swagger.annotations.Api");
@@ -229,7 +230,7 @@ public class SpringBootExtensionHandler {
                         new NodeList<>(
                                 new MemberValuePair(
                                         new SimpleName("tags"),
-                                        new StringLiteralExpr(table.getUpperCamelCaseName())
+                                        new StringLiteralExpr(StrUtil.upperCamelCase(store.getName()))
                                 )
                         )
                 ));

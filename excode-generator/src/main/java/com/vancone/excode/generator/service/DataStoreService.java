@@ -1,7 +1,7 @@
 package com.vancone.excode.generator.service;
 
-import com.vancone.excode.generator.entity.DataStore;
-import com.vancone.excode.generator.enums.DataStoreType;
+import com.vancone.excode.core.enums.DataStoreType;
+import com.vancone.excode.core.model.DataStore;
 import com.vancone.excode.generator.enums.ResponseEnum;
 import com.vancone.excode.generator.exception.ResponseException;
 import org.apache.commons.lang.StringUtils;

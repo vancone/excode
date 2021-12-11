@@ -32,17 +32,23 @@ public class ProjectController {
     }
 
     @GetMapping("{projectId}")
-    public Response findById(@PathVariable String projectId) {
+    public Response query(@PathVariable String projectId) {
         Project project = projectService.query(projectId);
         log.info("Query project: {}", project.toString());
         return Response.success(project);
     }
 
     @GetMapping
-    public Response query(@RequestParam(defaultValue = "0") int pageNo,
-                            @RequestParam(defaultValue = "5") int pageSize,
-                            @RequestParam(required = false) String search) {
+    public Response queryPage(@RequestParam(defaultValue = "1") int pageNo,
+                              @RequestParam(defaultValue = "5") int pageSize,
+                              @RequestParam(required = false) String search) {
         return Response.success(projectService.queryPage(pageNo - 1, pageSize, search));
+    }
+
+    @PutMapping
+    public Response update(@RequestBody Project project) {
+        projectService.save(project);
+        return Response.success();
     }
 
     @DeleteMapping("{projectId}")

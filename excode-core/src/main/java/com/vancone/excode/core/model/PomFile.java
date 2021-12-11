@@ -52,9 +52,10 @@ public class PomFile {
     }
 
     public PomFile(Project project) {
-        groupId = project.getGroupId();
-        artifactId = project.getArtifactId();
-        version = project.getVersion();
+        Project.DataAccess.Solution.JavaSpringBoot module = project.getDataAccess().getSolution().getJavaSpringBoot();
+        groupId = module.getGroupId();
+        artifactId = module.getArtifactId();
+        version = module.getVersion();
     }
 
     public void addDependencyByLabel(String label) {

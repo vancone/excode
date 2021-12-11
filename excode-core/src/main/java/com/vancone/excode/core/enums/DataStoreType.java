@@ -1,4 +1,4 @@
-package com.vancone.excode.generator.enums;
+package com.vancone.excode.core.enums;
 
 /**
  * @author Tenton Lien
