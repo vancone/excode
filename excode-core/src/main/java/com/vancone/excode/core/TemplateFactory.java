@@ -35,10 +35,11 @@ public class TemplateFactory {
     }
 
     public static void preProcess(Project project, Template template) {
-        template.replace("groupId", project.getGroupId());
-        template.replace("artifactId", project.getArtifactId());
-        template.replace("artifact.id", project.getArtifactId().replace('-', '.'));
-        template.replace("ArtifactId", StrUtil.upperCamelCase(project.getArtifactId()));
+        Project.DataAccess.Solution.JavaSpringBoot module = project.getDataAccess().getSolution().getJavaSpringBoot();
+        template.replace("groupId", module.getGroupId());
+        template.replace("artifactId", module.getArtifactId());
+        template.replace("artifact.id", module.getArtifactId().replace('-', '.'));
+        template.replace("ArtifactId", StrUtil.upperCamelCase(module.getArtifactId()));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         template.replace("date", formatter.format(LocalDateTime.now()));
     }

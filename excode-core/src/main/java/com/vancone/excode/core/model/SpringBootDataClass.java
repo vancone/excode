@@ -11,6 +11,7 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.vancone.excode.core.model.datasource.MysqlDataSource;
 import com.vancone.excode.core.constant.DataType;
+import com.vancone.excode.core.util.StrUtil;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 public class SpringBootDataClass {
     private CompilationUnit compilationUnit;
     private ClassOrInterfaceDeclaration entityClassDeclaration;
-    private MysqlDataSource.Table table;
+    private DataStore store;
     private String name;
     private List<MemberVariable> memberVariables = new ArrayList<>();
     private boolean getterAndSetterAvailable = true;
@@ -34,47 +35,48 @@ public class SpringBootDataClass {
         String name;
     }
 
-    public SpringBootDataClass(Project project, MysqlDataSource.Table table) {
-        this.table = table;
-        name = table.getUpperCamelCaseName();
+    public SpringBootDataClass(Project project, DataStore store) {
+        this.store = store;
+        name = StrUtil.upperCamelCase(store.getName());
 
-        String groupId = project.getGroupId();
-        String artifactId = project.getArtifactId();
+        Project.DataAccess.Solution.JavaSpringBoot module = project.getDataAccess().getSolution().getJavaSpringBoot();
+        String groupId = module.getGroupId();
+        String artifactId = module.getArtifactId();
 
         compilationUnit = new CompilationUnit();
         compilationUnit.setPackageDeclaration(groupId + "." + artifactId.replace('-', '.') + "." + "entity");
         entityClassDeclaration =
-                compilationUnit.addClass(table.getUpperCamelCaseName(), Modifier.Keyword.PUBLIC);
+                compilationUnit.addClass(StrUtil.upperCamelCase(store.getName()), Modifier.Keyword.PUBLIC);
 
-        for (MysqlDataSource.Table.Column column : table.getColumns()) {
-            String type = column.getType();
+        for (DataStore.Node node: store.getNodes()) {
+            String type = node.getType();
             if (!type.equals(DataType.JAVA_INT)) {
                 type = DataType.JAVA_STRING;
             }
-            entityClassDeclaration.addField(type, column.getCamelCaseName(table.getName()), Modifier.Keyword.PRIVATE);
+            entityClassDeclaration.addField(type, node.getCamelCaseName(store.getName()), Modifier.Keyword.PRIVATE);
         }
     }
 
     private void addGetterAndSetter() {
-        for (MysqlDataSource.Table.Column column : table.getColumns()) {
+        for (DataStore.Node node: store.getNodes()) {
             // Getter
             MethodDeclaration getterMethodDeclaration =
-                    entityClassDeclaration.addMethod("get" + column.getUpperCamelCaseName(table.getName()), Modifier.Keyword.PUBLIC);
+                    entityClassDeclaration.addMethod("get" + node.getUpperCamelCaseName(store.getName()), Modifier.Keyword.PUBLIC);
             getterMethodDeclaration.setType(DataType.JAVA_STRING);
             BlockStmt getterMethodBody = new BlockStmt();
-            getterMethodBody.addAndGetStatement(new ReturnStmt(column.getCamelCaseName(table.getName())));
+            getterMethodBody.addAndGetStatement(new ReturnStmt(node.getCamelCaseName(store.getName())));
             getterMethodDeclaration.setBody(getterMethodBody);
 
             // Setter
             MethodDeclaration setterMethodDeclaration =
-                    entityClassDeclaration.addMethod("set" + column.getUpperCamelCaseName(table.getName()), Modifier.Keyword.PUBLIC);
+                    entityClassDeclaration.addMethod("set" + node.getUpperCamelCaseName(store.getName()), Modifier.Keyword.PUBLIC);
             setterMethodDeclaration.setType(DataType.JAVA_VOID);
-            setterMethodDeclaration.addParameter(DataType.JAVA_STRING, column.getCamelCaseName(table.getName()));
+            setterMethodDeclaration.addParameter(DataType.JAVA_STRING, node.getCamelCaseName(store.getName()));
             BlockStmt setterMethodBody = new BlockStmt();
             AssignExpr assignExpr = new AssignExpr();
             assignExpr.setOperator(AssignExpr.Operator.ASSIGN);
-            assignExpr.setTarget(new FieldAccessExpr(new NameExpr("this"), column.getCamelCaseName(table.getName())));
-            assignExpr.setValue(new NameExpr(column.getCamelCaseName(table.getName())));
+            assignExpr.setTarget(new FieldAccessExpr(new NameExpr("this"), node.getCamelCaseName(store.getName())));
+            assignExpr.setValue(new NameExpr(node.getCamelCaseName(store.getName())));
             setterMethodBody.addAndGetStatement(assignExpr);
             setterMethodDeclaration.setBody(setterMethodBody);
         }

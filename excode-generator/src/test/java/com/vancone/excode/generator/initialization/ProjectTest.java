@@ -20,6 +20,6 @@ public class ProjectTest {
 
     @Test
     public void generateProject() {
-        projectService.generate("2c9790817d1ed7dc017d1ef7e7c10001");
+        projectService.generate("61a377610695e1673d9ed109");
     }
 }
