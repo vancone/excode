@@ -18,16 +18,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class Swagger2Config {
 
-    // API package scanning path
-    private static final String SWAGGER_SCAN_BASE_PACKAGE = "com.vancone.devops";
-
+    private static final String SWAGGER_SCAN_BASE_PACKAGE = "com.vancone.excode";
     private static final String VERSION = "0.1.0";
 
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-//                .tags(__tags__)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(SWAGGER_SCAN_BASE_PACKAGE))
                 .paths(PathSelectors.any())
@@ -36,10 +33,10 @@ public class Swagger2Config {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("VanCone DevOps")
-                .description("DevOps Automation Platform")
+                .title("ExCode")
+                .description("Low-Development Platform")
                 .version(VERSION)
-                .termsOfServiceUrl("https://devops.vancone.com")
+                .termsOfServiceUrl("https://excode.vancone.com")
                 .build();
     }
 }

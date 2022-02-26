@@ -24,14 +24,11 @@ import java.util.Map;
 public class Project {
     @Id
     private String id;
-//    private String groupId;
-//    private String artifactId;
     private String version;
     private List<String> languages;
     private String name;
+    private String author;
     private String description;
-    private List<Module> modules;
-//    private DataSource datasource;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdTime;

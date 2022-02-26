@@ -87,6 +87,6 @@ public class DataStore {
                 return node.getName();
             }
         }
-        return null;
+        return nodes.get(0).getName();
     }
 }

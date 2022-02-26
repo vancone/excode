@@ -73,6 +73,7 @@ public class ProjectController {
 
     @GetMapping("generate/{projectId}")
     public Response generate(@PathVariable String projectId) {
+        projectService.generate(projectId);
         return Response.success();
     }
 

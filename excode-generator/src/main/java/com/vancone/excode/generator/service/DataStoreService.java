@@ -2,16 +2,16 @@ package com.vancone.excode.generator.service;
 
 import com.vancone.excode.core.enums.DataStoreType;
 import com.vancone.excode.core.model.DataStore;
+import com.vancone.excode.core.model.Project;
 import com.vancone.excode.generator.enums.ResponseEnum;
 import com.vancone.excode.generator.exception.ResponseException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,9 +40,14 @@ public class DataStoreService {
     }
 
     public List<DataStore> queryList(String projectId) {
-        Query query = Query.query(
-                Criteria.where("projectId").is(projectId));
-        return mongoTemplate.find(query, DataStore.class);
+        Project project = mongoTemplate.findById(projectId, Project.class);
+        List<DataStore> stores = new ArrayList<>();
+        if (project != null) {
+            for (String storeId: project.getDataAccess().getDataStoreIds()) {
+                stores.add(mongoTemplate.findById(storeId, DataStore.class));
+            }
+        }
+        return stores;
     }
 
     public DataStore query(String dataStoreId) {
