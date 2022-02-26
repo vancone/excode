@@ -21,6 +21,7 @@ import com.vancone.excode.core.extension.SpringBootExtensionHandler;
 import com.vancone.excode.core.model.*;
 import com.vancone.excode.core.model.datasource.MysqlDataSource;
 import com.vancone.excode.core.util.CompilationUnitUtil;
+import com.vancone.excode.core.util.ProgressLogger;
 import com.vancone.excode.core.util.SqlUtil;
 import com.vancone.excode.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,7 @@ public class SpringBootGenerator {
                 "src" + File.separator + "main" + File.separator + "java" + File.separator +
                 module.getGroupId().replace(".", File.separator) + File.separator +
                 module.getArtifactId().replace(".", File.separator).replace('-', File.separatorChar) + File.separator;
+        ProgressLogger.output(project.getId(), "Generating Spring Boot Project...");
     }
 
     public static void generate(Project.DataAccess.Solution.JavaSpringBoot module, ProjectWriter writer) {
@@ -133,6 +135,7 @@ public class SpringBootGenerator {
     }
 
     public void createPom() {
+        ProgressLogger.output(project.getId(), "=> Project Model Object");
         PomFile pom = new PomFile(project);
         pom.addDependencyByLabel("default");
         if (module.getOrmType() == OrmType.MYBATIS_ANNOTATION) {
@@ -147,6 +150,7 @@ public class SpringBootGenerator {
     }
 
     public void createProperty() {
+        ProgressLogger.output(project.getId(), "=> Properties");
         PropertiesParser parser = new PropertiesParser();
         parser.add("spring.application.name", module.getArtifactId());
 
@@ -194,6 +198,7 @@ public class SpringBootGenerator {
         }
 
         for (DataStore.Node node: store.getNodes()) {
+            ProgressLogger.output(project.getId(), "=> Entity Class (" + node.getName() + ")");
             String filterMode = ""; // node.getFilter();
             if (StringUtils.isNotBlank(filterMode)) {
                 CompilationUnit unit = template.parseJavaSource();

@@ -13,6 +13,7 @@ public enum ResponseEnum implements BaseEnum {
     /**
      * Project (10001 ~ 11000)
      */
+    PROJECT_GENERATE_TASK_ALREADY_EXIST(10001, "There has been a running task"),
 
     /**
      * Data Store (11001 ~ 12000)

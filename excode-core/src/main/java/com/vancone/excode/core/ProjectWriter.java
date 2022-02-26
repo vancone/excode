@@ -7,6 +7,7 @@ import com.vancone.excode.core.model.DataStore;
 import com.vancone.excode.core.model.Project;
 import com.vancone.excode.core.model.Template;
 import com.vancone.excode.core.util.FileUtil;
+import com.vancone.excode.core.util.ProgressLogger;
 import com.vancone.excode.core.util.SqlUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -111,6 +112,8 @@ public class ProjectWriter {
 
         // Build and Package
 //        SpringBootGenerator.build(this);
+        ProgressLogger.output(project.getId(), "Complete");
+        ProgressLogger.output(project.getId(), "<EOF>");
     }
 
     @Data

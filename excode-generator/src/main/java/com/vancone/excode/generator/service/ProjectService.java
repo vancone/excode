@@ -4,6 +4,9 @@ import com.vancone.excode.core.ProjectWriter;
 import com.vancone.excode.core.model.DataStore;
 import com.vancone.excode.core.model.Project;
 import com.vancone.excode.generator.entity.ResponsePage;
+import com.vancone.excode.generator.enums.ResponseEnum;
+import com.vancone.excode.generator.exception.BaseEnum;
+import com.vancone.excode.generator.exception.ResponseException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
@@ -26,7 +29,7 @@ import java.util.List;
 public class ProjectService {
 
     @Autowired
-    private ProjectService projectService;
+    private ProgressLogService progressLogService;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -69,7 +72,14 @@ public class ProjectService {
     }
 
     public void generate(String projectId) {
-        Project project = projectService.query(projectId);
+        // Check if there is a running task
+        if (!progressLogService.isFinished(projectId)) {
+            throw new ResponseException(ResponseEnum.PROJECT_GENERATE_TASK_ALREADY_EXIST);
+        } else {
+            progressLogService.clear(projectId);
+        }
+
+        Project project = query(projectId);
         ProjectWriter writer = new ProjectWriter(project);
         writer.write();
     }
