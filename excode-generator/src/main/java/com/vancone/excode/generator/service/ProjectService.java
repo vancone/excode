@@ -5,7 +5,6 @@ import com.vancone.excode.core.model.DataStore;
 import com.vancone.excode.core.model.Project;
 import com.vancone.excode.generator.entity.ResponsePage;
 import com.vancone.excode.generator.enums.ResponseEnum;
-import com.vancone.excode.generator.exception.BaseEnum;
 import com.vancone.excode.generator.exception.ResponseException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +80,6 @@ public class ProjectService {
 
         Project project = query(projectId);
         ProjectWriter writer = new ProjectWriter(project);
-        writer.write();
+        writer.writeAndCompress();
     }
 }

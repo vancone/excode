@@ -18,7 +18,7 @@ public class ConfigManager {
     }
 
     public static Jedis getJedis() {
-        if (jedis == null) {
+        if (jedis == null || StringUtils.isBlank(jedis.ping())) {
             GlobalConfig.RedisConfig redisConfig = config.getRedisConfig();
             jedis = new Jedis(redisConfig.getHost(), redisConfig.getPort());
             if (StringUtils.isNotBlank(redisConfig.getPassword())) {

@@ -1,5 +1,6 @@
 package com.vancone.excode.core;
 
+import cn.hutool.core.util.ZipUtil;
 import com.vancone.excode.core.enums.DataCarrier;
 import com.vancone.excode.core.enums.TemplateType;
 import com.vancone.excode.core.generator.SpringBootGenerator;
@@ -36,8 +37,9 @@ public class ProjectWriter {
         Project.DataAccess.Solution.JavaSpringBoot module = project.getDataAccess().getSolution().getJavaSpringBoot();
         String groupId = module.getGroupId();
         String artifactId = module.getArtifactId();
-        rootDirectory = genLocation + groupId + "." + artifactId + "-" + project.getVersion() + File.separator;
-//        rootDirectory = genLocation + project.getGroupId() + "." + project.getArtifactId() + "-" + project.getVersion() + "-" + System.currentTimeMillis() + File.separator;
+//        rootDirectory = genLocation + groupId + "." + artifactId + "-" + project.getVersion() + File.separator;
+//        rootDirectory = genLocation + groupId + "." + artifactId + "-" + project.getVersion() + "-" + System.currentTimeMillis() + File.separator;
+        rootDirectory = genLocation + project.getId() + File.separator;
     }
 
     public String getRootDirectory() {
@@ -114,6 +116,11 @@ public class ProjectWriter {
 //        SpringBootGenerator.build(this);
         ProgressLogger.output(project.getId(), "Complete");
         ProgressLogger.output(project.getId(), "<EOF>");
+    }
+
+    public void writeAndCompress() {
+        write();
+        ZipUtil.zip(rootDirectory);
     }
 
     @Data

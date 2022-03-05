@@ -183,6 +183,7 @@ public class SpringBootGenerator {
     }
 
     public void createController(DataStore store) {
+        ProgressLogger.output(project.getId(), "=> Controller (" + store.getName() + ")");
         Template template = TemplateFactory.getTemplate(TemplateType.SPRING_BOOT_CONTROLLER);
         TemplateFactory.preProcess(project, template);
         template.replace("Table", StrUtil.upperCamelCase(store.getName()));
@@ -198,7 +199,6 @@ public class SpringBootGenerator {
         }
 
         for (DataStore.Node node: store.getNodes()) {
-            ProgressLogger.output(project.getId(), "=> Entity Class (" + node.getName() + ")");
             String filterMode = ""; // node.getFilter();
             if (StringUtils.isNotBlank(filterMode)) {
                 CompilationUnit unit = template.parseJavaSource();
@@ -331,6 +331,7 @@ public class SpringBootGenerator {
     }
 
     public void createEntity(DataStore store) {
+        ProgressLogger.output(project.getId(), "=> Entity Class (" + store.getName() + ")");
         SpringBootDataClass entity = new SpringBootDataClass(project, store);
 
         // Attention: Adding Javadoc comment not works
