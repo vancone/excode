@@ -1,12 +1,12 @@
 package com.vancone.excode.generator.enums;
 
-import com.vancone.excode.generator.exception.BaseEnum;
+import com.vancone.cloud.common.exception.BaseEnum;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * @author Tenton Lien
- * @ate 9/20/2020
+ * @since 2020/09/20
  */
 public enum ProjectEnum implements BaseEnum {
     PROJECT_NOT_EXIST(1001, "The project is not found"),

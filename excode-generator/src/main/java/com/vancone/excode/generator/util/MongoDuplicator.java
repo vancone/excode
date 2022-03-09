@@ -6,7 +6,7 @@ import org.bson.Document;
 
 /**
  * @author Tenton Lien
- * @date 7/1/2020
+ * @since 2020/07/01
  */
 @Slf4j
 public class MongoDuplicator {

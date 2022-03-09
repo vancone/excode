@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * @author Tenton Lien
- * @date 9/20/2020
+ * @since 2020/09/20
  */
 @RestControllerAdvice
 public class ResponseExceptionHandler {

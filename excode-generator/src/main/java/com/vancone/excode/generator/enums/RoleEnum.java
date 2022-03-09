@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * @author Tenton Lien
- * @date 10/1/2020
+ * @since 2020/10/01
  */
 public enum RoleEnum {
 

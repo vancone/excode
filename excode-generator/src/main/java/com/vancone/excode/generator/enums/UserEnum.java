@@ -1,14 +1,13 @@
 package com.vancone.excode.generator.enums;
 
-import com.vancone.excode.generator.exception.BaseEnum;
+import com.vancone.cloud.common.exception.BaseEnum;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
  * @author Tenton Lien
- * @date 9/21/2020
+ * @since 2020/09/21
  */
-
 public enum UserEnum implements BaseEnum {
     NOT_LOGIN_YET(1001, "Not login yet."),
     LOGIN_TIMEOUT(1002, "Login timout.");

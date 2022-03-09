@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Tenton Lien
- * @date 9/21/2020
+ * @since 2020/09/21
  */
 public class CookieUtil {
 

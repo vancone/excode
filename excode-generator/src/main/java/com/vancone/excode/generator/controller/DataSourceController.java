@@ -1,14 +1,14 @@
 package com.vancone.excode.generator.controller;
 
 import com.vancone.cloud.common.model.Response;
-import com.vancone.excode.generator.entity.DTO.data.source.DataSource;
+import com.vancone.excode.generator.entity.DataSource;
 import com.vancone.excode.generator.service.DataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Tenton Lien
- * @date 6/13/2021
+ * @since 2021/06/13
  */
 @RestController
 @RequestMapping("/api/excode/data-source")

@@ -1,10 +1,11 @@
 package com.vancone.excode.generator.exception;
 
+import com.vancone.cloud.common.exception.BaseEnum;
 import lombok.Data;
 
 /**
  * @author Tenton Lien
- * @date 9/20/2020
+ * @since 2020/09/20
  */
 @Data
 public class ResponseException extends RuntimeException {

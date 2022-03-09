@@ -7,7 +7,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 
 /**
  * @author Tenton Lien
- * @date 3/13/2021
+ * @since 2021/03/13
  */
 public class PdfUtil {
     private static BaseFont simSunBaseFont;

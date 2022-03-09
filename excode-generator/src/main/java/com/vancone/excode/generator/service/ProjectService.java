@@ -1,11 +1,9 @@
 package com.vancone.excode.generator.service;
 
-import com.vancone.excode.core.ProjectWriter;
-import com.vancone.excode.core.model.DataStore;
-import com.vancone.excode.core.model.Project;
-import com.vancone.excode.generator.entity.ResponsePage;
+import com.vancone.cloud.common.exception.ResponseException;
+import com.vancone.cloud.common.model.ResponsePage;
 import com.vancone.excode.generator.enums.ResponseEnum;
-import com.vancone.excode.generator.exception.ResponseException;
+import com.vancone.excode.generator.entity.Project;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageImpl;
@@ -18,14 +16,21 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Tenton Lien
  */
 @Service
 public class ProjectService {
+
+    @Autowired
+    private DataStoreService dataStoreService;
+
+    @Autowired
+    private ProjectWriterService projectWriterService;
 
     @Autowired
     private ProgressLogService progressLogService;
@@ -39,12 +44,8 @@ public class ProjectService {
 
     public Project query(String projectId) {
         Project project = mongoTemplate.findById(projectId, Project.class);
-        if (project != null && project.getDataAccess() != null && project.getDataAccess().getDataStoreIds() != null) {
-            List<DataStore> stores = new ArrayList<>();
-            for (String dataStoreId : project.getDataAccess().getDataStoreIds()) {
-                stores.add(mongoTemplate.findById(dataStoreId, DataStore.class));
-            }
-            project.getDataAccess().setDataStores(stores);
+        if (project != null && project.getDataAccess() != null) {
+            project.getDataAccess().setDataStores(dataStoreService.queryList(projectId));
         }
         return project;
     }
@@ -79,7 +80,36 @@ public class ProjectService {
         }
 
         Project project = query(projectId);
-        ProjectWriter writer = new ProjectWriter(project);
-        writer.writeAndCompress();
+        projectWriterService.writeAndCompress(project);
+    }
+
+    public void saveSolution(String projectId, Project.DataAccess.Solution solution) {
+        Project project = query(projectId);
+        if (project != null) {
+            if (project.getDataAccess() == null) {
+                project.setDataAccess(new Project.DataAccess());
+            }
+            project.getDataAccess().setSolution(solution);
+            save(project);
+        }
+    }
+
+    public Map<String, Integer> overview(String projectId) {
+        Map<String, Integer> overview = new HashMap<>(4);
+        Project project = query(projectId);
+        if (project != null) {
+            overview.put("api", 0);
+            overview.put("page", 0);
+
+            // Count data stores
+            int dataStoreCount = 0;
+            if (project.getDataAccess() != null) {
+                if (project.getDataAccess().getDataStores() != null) {
+                    dataStoreCount = project.getDataAccess().getDataStores().size();
+                }
+            }
+            overview.put("dataStore", dataStoreCount);
+        }
+        return overview;
     }
 }

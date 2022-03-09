@@ -1,8 +1,5 @@
 package com.vancone.excode.generator.constant;
 
-/**
- * @author Tenton Lien
- */
 public interface DataType {
     // Java basic types
     String JAVA_BYTE = "byte";

@@ -1,6 +1,6 @@
 package com.vancone.excode.generator.enums;
 
-import com.vancone.excode.generator.exception.BaseEnum;
+import com.vancone.cloud.common.exception.BaseEnum;
 import lombok.Getter;
 import lombok.Setter;
 
