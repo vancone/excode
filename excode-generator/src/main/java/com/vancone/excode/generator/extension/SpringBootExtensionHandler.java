@@ -10,14 +10,13 @@ import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.vancone.excode.generator.entity.Output;
-import com.vancone.excode.generator.service.ProjectWriterService;
 import com.vancone.excode.generator.constant.ExtensionType;
 import com.vancone.excode.generator.enums.DataCarrier;
 import com.vancone.excode.generator.enums.TemplateType;
 import com.vancone.excode.generator.entity.DataStore;
 import com.vancone.excode.generator.entity.Project;
 import com.vancone.excode.generator.entity.Template;
-import com.vancone.excode.generator.service.TemplateFactoryService;
+import com.vancone.excode.generator.service.TemplateService;
 import com.vancone.excode.generator.util.CompilationUnitUtil;
 import com.vancone.excode.generator.util.OutputUtil;
 import com.vancone.excode.generator.util.StrUtil;
@@ -39,7 +38,7 @@ import java.util.Optional;
 public class SpringBootExtensionHandler {
 
     @Autowired
-    private TemplateFactoryService templateFactoryService;
+    private TemplateService templateService;
 
 //    private static Module getModule(ProjectWriter writer) {
 //        Project project = writer.getProject();
@@ -65,8 +64,8 @@ public class SpringBootExtensionHandler {
      * @param module
      */
     public Output crossOrigin(Project.DataAccess.Solution.JavaSpringBoot module) {
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_CONFIG_CROSS_ORIGIN);
-        templateFactoryService.preProcess(module, template);
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_CONFIG_CROSS_ORIGIN);
+        templateService.preProcess(module, template);
 
         CompilationUnit unit = template.parseJavaSource();
         MethodDeclaration addCorsMappingsMethod = CompilationUnitUtil.getMethodByName(unit, "addCorsMappings");
@@ -167,8 +166,8 @@ public class SpringBootExtensionHandler {
      * @param outputs
      */
     public Output swagger2(Project.DataAccess.Solution.JavaSpringBoot module, Project.DataAccess dataAccess, List<Output> outputs) {
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_CONFIG_SWAGGER2);
-        templateFactoryService.preProcess(module, template);
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_CONFIG_SWAGGER2);
+        templateService.preProcess(module, template);
         template.replace("version", module.getVersion());
         template.replace("title", module.getName());
         template.replace("description", module.getDescription());
@@ -176,7 +175,7 @@ public class SpringBootExtensionHandler {
         String swaggerTags = "";
         List<DataStore> stores = dataAccess.getDataStoreByCarrier(DataCarrier.MYSQL);
         for (int i = 0; i < stores.size(); i++) {
-            swaggerTags += "new Tag(\"" + StrUtil.upperCamelCase(stores.get(i).getName()) + "\", " + "\"" + stores.get(i).getDescription() + "\")";
+            swaggerTags += "new Tag(\"" + StrUtil.toPascalCase(stores.get(i).getName()) + "\", " + "\"" + stores.get(i).getDescription() + "\")";
             if (i + 1 == stores.size()) {
                 swaggerTags += "\n";
             } else {
@@ -188,7 +187,7 @@ public class SpringBootExtensionHandler {
         for (DataStore store: dataAccess.getDataStoreByCarrier(DataCarrier.MYSQL)) {
 
             // Process entity class
-            Output output = OutputUtil.getOutputByName(outputs, StrUtil.upperCamelCase(store.getName()) + ".java");
+            Output output = OutputUtil.getOutputByName(outputs, StrUtil.toPascalCase(store.getName()) + ".java");
             CompilationUnit unit = StaticJavaParser.parse(output.getContent());
             if (unit != null) {
                 unit.addImport("io.swagger.annotations.ApiModel");
@@ -201,7 +200,7 @@ public class SpringBootExtensionHandler {
                 boolean apiModelPropertyExists = false;
                 for (DataStore.Node node: store.getNodes()) {
                     if (StringUtils.isNotBlank(node.getComment())) {
-                        Optional<FieldDeclaration> field = clazz.getFieldByName(StrUtil.camelCase(node.getName()));
+                        Optional<FieldDeclaration> field = clazz.getFieldByName(StrUtil.toCamelCase(node.getName()));
                         if (field.isPresent()) {
                             field.get().addAnnotation(new SingleMemberAnnotationExpr(
                                     new Name("ApiModelProperty"),
@@ -219,7 +218,7 @@ public class SpringBootExtensionHandler {
             output.setContent(unit.toString());
 
             // Process controller class
-            output = OutputUtil.getOutputByName(outputs, StrUtil.upperCamelCase(store.getName()) + "Controller.java");
+            output = OutputUtil.getOutputByName(outputs, StrUtil.toPascalCase(store.getName()) + "Controller.java");
             unit = StaticJavaParser.parse(output.getTemplate().getContent());
             if (unit != null) {
                 unit.addImport("io.swagger.annotations.Api");
@@ -229,7 +228,7 @@ public class SpringBootExtensionHandler {
                         new NodeList<>(
                                 new MemberValuePair(
                                         new SimpleName("tags"),
-                                        new StringLiteralExpr(StrUtil.upperCamelCase(store.getName()))
+                                        new StringLiteralExpr(StrUtil.toPascalCase(store.getName()))
                                 )
                         )
                 ));

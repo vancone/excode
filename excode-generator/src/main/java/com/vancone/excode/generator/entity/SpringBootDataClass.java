@@ -12,6 +12,7 @@ import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.vancone.excode.generator.constant.DataType;
 import com.vancone.excode.generator.util.StrUtil;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,15 +37,15 @@ public class SpringBootDataClass {
 
     public SpringBootDataClass(Project.DataAccess.Solution.JavaSpringBoot module, DataStore store) {
         this.store = store;
-        name = StrUtil.upperCamelCase(store.getName());
+        name = StrUtil.toPascalCase(store.getName());
 
-        String groupId = module.getGroupId();
-        String artifactId = module.getArtifactId();
+        String groupId = StringUtils.isBlank(module.getGroupId())? "com.vancone": module.getGroupId();
+        String artifactId = StringUtils.isBlank(module.getArtifactId())? "excode-project": module.getArtifactId();
 
         compilationUnit = new CompilationUnit();
         compilationUnit.setPackageDeclaration(groupId + "." + artifactId.replace('-', '.') + "." + "entity");
         entityClassDeclaration =
-                compilationUnit.addClass(StrUtil.upperCamelCase(store.getName()), Modifier.Keyword.PUBLIC);
+                compilationUnit.addClass(StrUtil.toPascalCase(store.getName()), Modifier.Keyword.PUBLIC);
 
         for (DataStore.Node node: store.getNodes()) {
             String type = node.getType();

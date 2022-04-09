@@ -10,7 +10,7 @@ import com.github.javaparser.ast.comments.JavadocComment;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.Statement;
-import com.vancone.excode.generator.PropertiesParser;
+import com.vancone.excode.generator.util.PropertiesParser;
 import com.vancone.excode.generator.constant.ExtensionType;
 import com.vancone.excode.generator.entity.*;
 import com.vancone.excode.generator.entity.datasource.MysqlDataSource;
@@ -19,7 +19,7 @@ import com.vancone.excode.generator.enums.OrmType;
 import com.vancone.excode.generator.enums.TemplateType;
 import com.vancone.excode.generator.extension.SpringBootExtensionHandler;
 import com.vancone.excode.generator.service.ProgressLogService;
-import com.vancone.excode.generator.service.TemplateFactoryService;
+import com.vancone.excode.generator.service.TemplateService;
 import com.vancone.excode.generator.util.CompilationUnitUtil;
 import com.vancone.excode.generator.util.SqlUtil;
 import com.vancone.excode.generator.util.StrUtil;
@@ -53,7 +53,7 @@ public class SpringBootGenerator {
     private ProgressLogService progressLogService;
 
     @Autowired
-    private TemplateFactoryService templateFactoryService;
+    private TemplateService templateService;
 
     @Autowired
     private SpringBootExtensionHandler springBootExtensionHandler;
@@ -71,11 +71,6 @@ public class SpringBootGenerator {
         outputs.add(createPom(project));
         outputs.add(createProperty(project));
         outputs.add(createApplicationEntry(module, module.getArtifactId()));
-
-//        String postmanFlag = module.getProperty("postmanCollection");
-//        if (postmanFlag == null || "true".equals(postmanFlag)) {
-//            generator.createPostmanCollection(stores);
-//        }
 
         for (DataStore store : stores) {
             if (store.getCarrier() != DataCarrier.MYSQL) {
@@ -193,21 +188,21 @@ public class SpringBootGenerator {
     }
 
     public Output createApplicationEntry(Project.DataAccess.Solution.JavaSpringBoot module, String artifactId) {
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_APPLICATION_ENTRY);
-        templateFactoryService.preProcess(module, template);
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_APPLICATION_ENTRY);
+        templateService.preProcess(module, template);
         return new Output(TemplateType.SPRING_BOOT_APPLICATION_ENTRY,
-                module.getPackagePath() + StrUtil.upperCamelCase(artifactId) + "Application.java",
+                module.getPackagePath() + StrUtil.toPascalCase(artifactId) + "Application.java",
                 template);
     }
 
     public Output createController(Project project, DataStore store) {
         Project.DataAccess.Solution.JavaSpringBoot module = project.getDataAccess().getSolution().getJavaSpringBoot();
         progressLogService.output(project.getId(), "=> Controller (" + store.getName() + ")");
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_CONTROLLER);
-        templateFactoryService.preProcess(module, template);
-        template.replace("Table", StrUtil.upperCamelCase(store.getName()));
-        template.replace("table", StrUtil.camelCase(store.getName()));
-        template.replace("primaryKey", StrUtil.camelCase(store.getNodes().get(0).getName()));
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_CONTROLLER);
+        templateService.preProcess(module, template);
+        template.replace("Table", StrUtil.toPascalCase(store.getName()));
+        template.replace("table", StrUtil.toCamelCase(store.getName()));
+        template.replace("primaryKey", StrUtil.toCamelCase(store.getNodes().get(0).getName()));
 
         if (module.getOrmType() == OrmType.MYBATIS_ANNOTATION) {
             template.replace("pagition", "PageInfo");
@@ -258,17 +253,17 @@ public class SpringBootGenerator {
         }
 
         return new Output(TemplateType.SPRING_BOOT_CONTROLLER,
-                module.getPackagePath() + "controller" + File.separator + StrUtil.upperCamelCase(store.getName()) + "Controller.java",
+                module.getPackagePath() + "controller" + File.separator + StrUtil.toPascalCase(store.getName()) + "Controller.java",
                 template);
 
     }
 
     public Output createMybatisService(Project.DataAccess.Solution.JavaSpringBoot module, DataStore store) {
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_SERVICE_MYBATIS);
-        templateFactoryService.preProcess(module, template);
-        template.replace("Table", StrUtil.upperCamelCase(store.getName()));
-        template.replace("table", StrUtil.camelCase(store.getName()));
-        template.replace("primaryKey", StrUtil.camelCase(store.getPrimaryKeyName()));
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_SERVICE_MYBATIS);
+        templateService.preProcess(module, template);
+        template.replace("Table", StrUtil.toPascalCase(store.getName()));
+        template.replace("table", StrUtil.toCamelCase(store.getName()));
+        template.replace("primaryKey", StrUtil.toCamelCase(store.getPrimaryKeyName()));
 
         for (DataStore.Node node: store.getNodes()) {
             String filterMode = ""; // node.getFilter();
@@ -291,27 +286,27 @@ public class SpringBootGenerator {
         }
 
         return new Output(TemplateType.SPRING_BOOT_SERVICE_MYBATIS,
-                module.getPackagePath() + "service" + File.separator + StrUtil.upperCamelCase(store.getName()) + "Service.java",
+                module.getPackagePath() + "service" + File.separator + StrUtil.toPascalCase(store.getName()) + "Service.java",
                 template);
     }
 
     public Output createJpaService(Project.DataAccess.Solution.JavaSpringBoot module, DataStore store) {
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_SERVICE_JPA);
-        templateFactoryService.preProcess(module, template);
-        template.replace("Table", StrUtil.upperCamelCase(store.getName()));
-        template.replace("table", StrUtil.camelCase(store.getName()));
-        template.replace("primaryKey", StrUtil.camelCase(store.getPrimaryKeyName()));
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_SERVICE_JPA);
+        templateService.preProcess(module, template);
+        template.replace("Table", StrUtil.toPascalCase(store.getName()));
+        template.replace("table", StrUtil.toCamelCase(store.getName()));
+        template.replace("primaryKey", StrUtil.toCamelCase(store.getPrimaryKeyName()));
         return new Output(TemplateType.SPRING_BOOT_SERVICE_JPA,
-                module.getPackagePath() + "service" + File.separator + StrUtil.upperCamelCase(store.getName()) + "Service.java",
+                module.getPackagePath() + "service" + File.separator + StrUtil.toPascalCase(store.getName()) + "Service.java",
                 template);
     }
 
     public Output createMybatisServiceImpl(Project.DataAccess.Solution.JavaSpringBoot module, DataStore store) {
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_SERVICE_IMPL_MYBATIS);
-        templateFactoryService.preProcess(module, template);
-        template.replace("Table", StrUtil.upperCamelCase(store.getName()));
-        template.replace("table", StrUtil.camelCase(store.getName()));
-        template.replace("primaryKey", StrUtil.camelCase(store.getPrimaryKeyName()));
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_SERVICE_IMPL_MYBATIS);
+        templateService.preProcess(module, template);
+        template.replace("Table", StrUtil.toPascalCase(store.getName()));
+        template.replace("table", StrUtil.toCamelCase(store.getName()));
+        template.replace("primaryKey", StrUtil.toCamelCase(store.getPrimaryKeyName()));
 
         for (DataStore.Node node: store.getNodes()) {
             String filterMode = ""; // node.getFilter();
@@ -334,18 +329,18 @@ public class SpringBootGenerator {
         }
 
         return new Output(TemplateType.SPRING_BOOT_SERVICE_IMPL_MYBATIS,
-                module.getPackagePath() + "service" + File.separator + "impl" + File.separator + StrUtil.upperCamelCase(store.getName()) + "ServiceImpl.java",
+                module.getPackagePath() + "service" + File.separator + "impl" + File.separator + StrUtil.toPascalCase(store.getName()) + "ServiceImpl.java",
                 template);
     }
 
     public Output createJpaServiceImpl(Project.DataAccess.Solution.JavaSpringBoot module, DataStore store) {
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_SERVICE_IMPL_JPA);
-        templateFactoryService.preProcess(module, template);
-        template.replace("Table", StrUtil.upperCamelCase(store.getName()));
-        template.replace("table", StrUtil.camelCase(store.getName()));
-        template.replace("primaryKey", StrUtil.camelCase(store.getPrimaryKeyName()));
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_SERVICE_IMPL_JPA);
+        templateService.preProcess(module, template);
+        template.replace("Table", StrUtil.toPascalCase(store.getName()));
+        template.replace("table", StrUtil.toCamelCase(store.getName()));
+        template.replace("primaryKey", StrUtil.toCamelCase(store.getPrimaryKeyName()));
         return new Output(TemplateType.SPRING_BOOT_SERVICE_IMPL_JPA,
-                module.getPackagePath() + "service" + File.separator + "impl" + File.separator + StrUtil.upperCamelCase(store.getName()) + "ServiceImpl.java",
+                module.getPackagePath() + "service" + File.separator + "impl" + File.separator + StrUtil.toPascalCase(store.getName()) + "ServiceImpl.java",
                 template);
     }
 
@@ -358,7 +353,7 @@ public class SpringBootGenerator {
             clazz.addOrphanComment(new JavadocComment("\r\n * @Author ExCode\r\n"));
         }
         return new Output(TemplateType.SPRING_BOOT_ENTITY,
-                module.getPackagePath() + "entity" + File.separator + StrUtil.upperCamelCase(store.getName()) + ".java",
+                module.getPackagePath() + "entity" + File.separator + StrUtil.toPascalCase(store.getName()) + ".java",
                 entity.toString());
     }
 
@@ -368,15 +363,15 @@ public class SpringBootGenerator {
             return null;
         }
 
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER);
-        templateFactoryService.preProcess(module, template);
-        template.replace("Table", StrUtil.upperCamelCase(store.getName()));
-        template.replace("table", StrUtil.camelCase(store.getName()));
-        template.replace("primaryKey", StrUtil.camelCase(store.getNodes().get(0).getName()));
-        template.replace("primary_key", StrUtil.snakeCase(store.getNodes().get(0).getName()));
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER);
+        templateService.preProcess(module, template);
+        template.replace("Table", StrUtil.toPascalCase(store.getName()));
+        template.replace("table", StrUtil.toCamelCase(store.getName()));
+        template.replace("primaryKey", StrUtil.toCamelCase(store.getNodes().get(0).getName()));
+        template.replace("primary_key", StrUtil.toSnakeCase(store.getNodes().get(0).getName()));
 
         CompilationUnit unit = template.parseJavaSource();
-        for (MethodDeclaration methodDeclaration : unit.getInterfaceByName(StrUtil.upperCamelCase(store.getName()) + "Mapper").get().getMethods()) {
+        for (MethodDeclaration methodDeclaration : unit.getInterfaceByName(StrUtil.toPascalCase(store.getName()) + "Mapper").get().getMethods()) {
             NodeList<AnnotationExpr> annotations = methodDeclaration.getAnnotations();
             for (AnnotationExpr annotationExpr : annotations) {
                 if (annotationExpr.getNameAsString().equals("Insert")) {
@@ -400,7 +395,7 @@ public class SpringBootGenerator {
         }
         template.updateJavaSource(unit);
         return new Output(TemplateType.SPRING_BOOT_MYBATIS_ANNOTATION_MAPPER,
-                module.getPackagePath() + "mapper" + File.separator + StrUtil.upperCamelCase(store.getName()) + "Mapper.java",
+                module.getPackagePath() + "mapper" + File.separator + StrUtil.toPascalCase(store.getName()) + "Mapper.java",
                 template);
     }
 
@@ -410,15 +405,15 @@ public class SpringBootGenerator {
             return null;
         }
 
-        Template template = templateFactoryService.getTemplate(TemplateType.SPRING_BOOT_JPA_REPOSITORY);
-        templateFactoryService.preProcess(module, template);
-        template.replace("Table", StrUtil.upperCamelCase(store.getName()));
-        template.replace("table", StrUtil.camelCase(store.getName()));
-        template.replace("primaryKey", StrUtil.camelCase(store.getPrimaryKeyName()));
-        template.replace("primary_key", StrUtil.snakeCase(store.getPrimaryKeyName()));
+        Template template = templateService.getTemplate(TemplateType.SPRING_BOOT_JPA_REPOSITORY);
+        templateService.preProcess(module, template);
+        template.replace("Table", StrUtil.toPascalCase(store.getName()));
+        template.replace("table", StrUtil.toCamelCase(store.getName()));
+        template.replace("primaryKey", StrUtil.toCamelCase(store.getPrimaryKeyName()));
+        template.replace("primary_key", StrUtil.toSnakeCase(store.getPrimaryKeyName()));
 
         return new Output(TemplateType.SPRING_BOOT_JPA_REPOSITORY,
-                module.getPackagePath() + "repository" + File.separator + StrUtil.upperCamelCase(store.getName()) + "Repository.java",
+                module.getPackagePath() + "repository" + File.separator + StrUtil.toPascalCase(store.getName()) + "Repository.java",
                 template);
     }
 

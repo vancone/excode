@@ -78,7 +78,7 @@ public class SqlUtil {
                 query += ", ";
             }
         }
-        query += " WHERE " + store.getNodes().get(0).getName() + "=#{" + StrUtil.camelCase(store.getNodes().get(0).getName()) + "}";
+        query += " WHERE " + store.getNodes().get(0).getName() + "=#{" + StrUtil.toCamelCase(store.getNodes().get(0).getName()) + "}";
         return query;
     }
 }

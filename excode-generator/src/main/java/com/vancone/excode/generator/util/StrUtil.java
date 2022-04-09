@@ -4,45 +4,45 @@ package com.vancone.excode.generator.util;
  * @author Tenton Lien
  */
 public class StrUtil {
-    public static String camelCase(String data) {
+    public static String toCamelCase(String str) {
         String[] stringArray;
-        if (data.contains("_")) {
-            stringArray = data.split("_");
-        } else if (data.contains("-")) {
-            stringArray = data.split("-");
+        if (str.contains("_")) {
+            stringArray = str.split("_");
+        } else if (str.contains("-")) {
+            stringArray = str.split("-");
         } else {
-            return data;
+            return str;
         }
 
         if (stringArray.length > 1) {
-            data = stringArray[0];
+            str = stringArray[0];
             int i = 1;
-            StringBuilder dataBuilder = new StringBuilder(data);
+            StringBuilder dataBuilder = new StringBuilder(str);
             while (i < stringArray.length) {
                 dataBuilder.append(stringArray[i].substring(0, 1).toUpperCase()).append(stringArray[i].substring(1));
                 i ++;
             }
-            data = dataBuilder.toString();
+            str = dataBuilder.toString();
         }
-        return data;
+        return str;
     }
 
     /**
      * Transform camel case into snake case
-     * @param data
+     * @param str
      * @return
      */
-    public static String snakeCase(String data) {
+    public static String toSnakeCase(String str) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < data.length(); i ++) {
-            if (data.charAt(i) >= 'A' && data.charAt(i) <= 'Z') {
+        for (int i = 0; i < str.length(); i ++) {
+            if (str.charAt(i) >= 'A' && str.charAt(i) <= 'Z') {
                 if (i == 0) {
-                    stringBuilder.append((char)(data.charAt(i) + 32));
+                    stringBuilder.append((char)(str.charAt(i) + 32));
                 } else {
-                    stringBuilder.append('_').append((char)(data.charAt(i) + 32));
+                    stringBuilder.append('_').append((char)(str.charAt(i) + 32));
                 }
             } else {
-                stringBuilder.append(data.charAt(i));
+                stringBuilder.append(str.charAt(i));
             }
         }
         return stringBuilder.toString().toLowerCase();
@@ -50,20 +50,20 @@ public class StrUtil {
 
     /**
      * Transform kebab case into snake case
-     * @param data
+     * @param str
      * @return
      */
-    public static String kebabCase(String data) {
+    public static String toKebabCase(String str) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < data.length(); i ++) {
-            if (data.charAt(i) >= 'A' && data.charAt(i) <= 'Z') {
+        for (int i = 0; i < str.length(); i ++) {
+            if (str.charAt(i) >= 'A' && str.charAt(i) <= 'Z') {
                 if (i == 0) {
-                    stringBuilder.append((char)(data.charAt(i) + 32));
+                    stringBuilder.append((char)(str.charAt(i) + 32));
                 } else {
-                    stringBuilder.append('-').append((char)(data.charAt(i) + 32));
+                    stringBuilder.append('-').append((char)(str.charAt(i) + 32));
                 }
             } else {
-                stringBuilder.append(data.charAt(i));
+                stringBuilder.append(str.charAt(i));
             }
         }
         return stringBuilder.toString().toLowerCase();
@@ -74,8 +74,8 @@ public class StrUtil {
         return (data.substring(0, 1).toUpperCase() + data.substring(1));
     }
 
-    public static String upperCamelCase(String data) {
-        data = camelCase(data);
-        return (data.substring(0, 1).toUpperCase() + data.substring(1));
+    public static String toPascalCase(String str) {
+        str = toCamelCase(str);
+        return (str.substring(0, 1).toUpperCase() + str.substring(1));
     }
 }

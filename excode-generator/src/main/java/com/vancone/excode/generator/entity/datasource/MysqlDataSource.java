@@ -39,7 +39,7 @@ public class MysqlDataSource {
         private String primaryKeyName;
 
         public String getUpperCamelCaseName() {
-            return StrUtil.upperCamelCase(name);
+            return StrUtil.toPascalCase(name);
         }
 
         @Data
@@ -62,7 +62,7 @@ public class MysqlDataSource {
                 } else {
                     name = getName();
                 }
-                return StrUtil.camelCase(name);
+                return StrUtil.toCamelCase(name);
             }
 
             @JsonIgnore

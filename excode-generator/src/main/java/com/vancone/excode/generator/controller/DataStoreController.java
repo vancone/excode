@@ -32,6 +32,12 @@ public class DataStoreController {
         return Response.success(dataStoreService.generateSQL(dataStoreId));
     }
 
+    @GetMapping("generate")
+    public Response generateCode(@RequestParam String dataStoreId,
+                                 @RequestParam(defaultValue = "SQL") String type) {
+        return Response.success(dataStoreService.generateCode(dataStoreId, type));
+    }
+
     @PostMapping
     public Response create(@RequestBody DataStore store) {
         dataStoreService.save(store);

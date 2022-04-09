@@ -1,7 +1,7 @@
 package com.vancone.excode.generator.controller;
 
 import com.vancone.cloud.common.model.Response;
-import com.vancone.excode.generator.service.TemplateFactoryService;
+import com.vancone.excode.generator.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class TemplateController {
 
     @Autowired
-    private TemplateFactoryService templateFactoryService;
+    private TemplateService templateService;
 
     @GetMapping()
     public Response queryPage(@RequestParam(defaultValue = "1") int pageNo,
                               @RequestParam(defaultValue = "10") int pageSize) {
-        return Response.success(templateFactoryService.queryPage(pageNo, pageSize - 1));
+        return Response.success(templateService.queryPage(pageNo, pageSize - 1));
     }
 }

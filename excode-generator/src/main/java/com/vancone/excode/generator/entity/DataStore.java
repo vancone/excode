@@ -6,6 +6,7 @@ import com.vancone.excode.generator.enums.DataCarrier;
 import com.vancone.excode.generator.enums.DataStoreType;
 import com.vancone.excode.generator.util.StrUtil;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ import java.util.List;
 @Data
 @Document("data_store")
 public class DataStore {
+    @Id
     private String id;
 
     private String projectId;
@@ -61,7 +63,7 @@ public class DataStore {
             } else {
                 name = getName();
             }
-            return StrUtil.camelCase(name);
+            return StrUtil.toCamelCase(name);
         }
 
         @JsonIgnore

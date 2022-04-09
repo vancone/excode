@@ -7,7 +7,6 @@ import com.vancone.excode.generator.service.ProjectService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -37,7 +36,9 @@ public class ProjectController {
     @GetMapping("{projectId}")
     public Response query(@PathVariable String projectId) {
         Project project = projectService.query(projectId);
-        log.info("Query project: {}", project.toString());
+        if (project != null) {
+            log.info("Query project: {}", project.toString());
+        }
         return Response.success(project);
     }
 
@@ -66,20 +67,6 @@ public class ProjectController {
     public Response delete(@PathVariable String projectId) {
         projectService.delete(projectId);
         return Response.success();
-    }
-
-    @PostMapping("import")
-    public Response importProject(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return Response.fail(1, "File is empty");
-        }
-
-        try {
-            return Response.success();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.fail(2, "Import failed");
-        }
     }
 
     @GetMapping("generate/{projectId}")

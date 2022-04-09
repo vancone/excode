@@ -119,4 +119,9 @@ public class DataInitializer {
             }
         }
     }
+
+    @Test
+    public void importTerminology() {
+
+    }
 }

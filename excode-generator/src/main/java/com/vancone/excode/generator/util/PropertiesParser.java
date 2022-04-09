@@ -1,7 +1,6 @@
-package com.vancone.excode.generator;
+package com.vancone.excode.generator.util;
 
 import cn.hutool.core.lang.Pair;
-import com.vancone.excode.generator.util.FileUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

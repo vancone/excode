@@ -1,5 +1,6 @@
 package com.vancone.excode.generator.service;
 
+import com.vancone.cloud.common.model.ResponsePage;
 import com.vancone.excode.generator.entity.DataSource;
 import com.vancone.excode.generator.enums.DataCarrier;
 import com.vancone.excode.generator.enums.ProjectEnum;
@@ -47,7 +48,7 @@ public class DataSourceService {
         return dataSource;
     }
 
-    public Page<DataSource> queryPage(int pageNo, int pageSize, String search, String type) {
+    public ResponsePage<DataSource> queryPage(int pageNo, int pageSize, String search, String type) {
         Sort sort = Sort.by(Sort.Direction.DESC, "modifiedTime");
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Query query = Query.query(Criteria.where("deleted").is(false));
@@ -61,12 +62,11 @@ public class DataSourceService {
 
         long count = mongoTemplate.count(query, DataSource.class);
         List<DataSource> dataSources = mongoTemplate.find(query.with(pageable), DataSource.class);
-        return new PageImpl<>(dataSources, pageable, count);
+        return new ResponsePage<>(new PageImpl<>(dataSources, pageable, count));
     }
 
-    public void testConnection(String id) {
-        log.info("Test data source connection: {}", id);
-        DataSource dataSource = query(id);
+    public void testConnection(DataSource dataSource) {
+        log.info("Test data source connection: {}", dataSource);
         if (dataSource == null) {
             throw new ResponseException(ProjectEnum.DATA_SOURCE_NOT_EXIST);
         }

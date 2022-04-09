@@ -1,9 +1,12 @@
 package com.vancone.excode.generator.service;
 
 import com.vancone.cloud.common.exception.ResponseException;
-import com.vancone.excode.generator.enums.DataStoreType;
 import com.vancone.excode.generator.entity.DataStore;
+import com.vancone.excode.generator.entity.Output;
+import com.vancone.excode.generator.entity.Project;
+import com.vancone.excode.generator.enums.DataStoreType;
 import com.vancone.excode.generator.enums.ResponseEnum;
+import com.vancone.excode.generator.generator.SpringBootGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -23,6 +26,9 @@ public class DataStoreService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private SpringBootGenerator springBootGenerator;
 
     public void save(DataStore store) {
         if (StringUtils.isBlank(store.getProjectId())) {
@@ -71,5 +77,30 @@ public class DataStoreService {
             return code;
         }
         return "";
+    }
+
+    public String generateCode(String dataStoreId, String type) {
+        DataStore dataStore = mongoTemplate.findById(dataStoreId, DataStore.class);
+        if (dataStore == null) {
+            return "Error: dataStore is null";
+        }
+
+        Query query = Query.query(Criteria.where("id").is(dataStore.getProjectId()));
+        Project project = mongoTemplate.findOne(query, Project.class);
+        if (project == null) {
+            return "Error: project is null";
+        }
+
+        switch (type) {
+            case "SQL":
+                return generateSQL(dataStoreId);
+            case "ENTITY_CLASS":
+                Output output = springBootGenerator.createEntity(project.getDataAccess().getSolution().getJavaSpringBoot(), dataStore);
+                return output.getContent();
+            case "CONTROLLER":
+                return springBootGenerator.createController(project, dataStore).getTemplate().getContent();
+            default:
+                return "";
+        }
     }
 }

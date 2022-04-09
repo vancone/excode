@@ -24,7 +24,7 @@ import java.util.List;
  * @since 2021/07/24
  */
 @Service
-public class TemplateFactoryService {
+public class TemplateService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -36,10 +36,6 @@ public class TemplateFactoryService {
         long count = mongoTemplate.count(query, Template.class);
         List<Template> templates = mongoTemplate.find(query.with(pageable), Template.class);
         return new ResponsePage<>(new PageImpl<>(templates, pageable, count));
-    }
-
-    public MongoTemplate getMongoTemplate() {
-        return mongoTemplate;
     }
 
     public Template getTemplate(TemplateType type) {
@@ -54,7 +50,7 @@ public class TemplateFactoryService {
         template.replace("groupId", module.getGroupId());
         template.replace("artifactId", module.getArtifactId());
         template.replace("artifact.id", module.getArtifactId().replace('-', '.'));
-        template.replace("ArtifactId", StrUtil.upperCamelCase(module.getArtifactId()));
+        template.replace("ArtifactId", StrUtil.toPascalCase(module.getArtifactId()));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         template.replace("date", formatter.format(LocalDateTime.now()));
     }

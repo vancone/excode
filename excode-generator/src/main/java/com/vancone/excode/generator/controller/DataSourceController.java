@@ -29,16 +29,16 @@ public class DataSourceController {
     }
 
     @GetMapping
-    public Response queryList(@RequestParam(defaultValue = "0") int pageNo,
+    public Response queryList(@RequestParam(defaultValue = "1") int pageNo,
                               @RequestParam(defaultValue = "5") int pageSize,
-                              @RequestParam(defaultValue = "") String search,
-                              @RequestParam(defaultValue = "") String type) {
-        return Response.success(dataSourceService.queryPage(pageNo, pageSize, search, type));
+                              @RequestParam(required = false) String search,
+                              @RequestParam(required = false) String type) {
+        return Response.success(dataSourceService.queryPage(pageNo - 1, pageSize, search, type));
     }
 
-    @GetMapping("test/{dataSourceId}")
-    public Response testConnection(@PathVariable String dataSourceId) {
-        dataSourceService.testConnection(dataSourceId);
+    @PostMapping("test")
+    public Response testConnection(@RequestBody DataSource dataSource) {
+        dataSourceService.testConnection(dataSource);
         return Response.success("Test data source connection success", null);
     }
 }

@@ -1,17 +1,15 @@
 package com.vancone.excode.generator.service;
 
 import cn.hutool.core.util.ZipUtil;
+import com.vancone.excode.generator.entity.DataStore;
 import com.vancone.excode.generator.entity.Output;
+import com.vancone.excode.generator.entity.Project;
 import com.vancone.excode.generator.enums.DataCarrier;
 import com.vancone.excode.generator.enums.TemplateType;
 import com.vancone.excode.generator.generator.SpringBootGenerator;
-import com.vancone.excode.generator.entity.DataStore;
-import com.vancone.excode.generator.entity.Project;
-import com.vancone.excode.generator.entity.Template;
 import com.vancone.excode.generator.util.FileUtil;
 import com.vancone.excode.generator.util.OutputUtil;
 import com.vancone.excode.generator.util.SqlUtil;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,24 +33,6 @@ public class ProjectWriterService {
     private SpringBootGenerator springBootGenerator;
 
     private final String GEN_LOCATION = "/opt/excode/gen" + File.separator;
-
-//    public ProjectWriterService(Project project) {
-//        this.project = project;
-//        Project.DataAccess.Solution.JavaSpringBoot module = project.getDataAccess().getSolution().getJavaSpringBoot();
-//        String groupId = module.getGroupId();
-//        String artifactId = module.getArtifactId();
-////        rootDirectory = genLocation + groupId + "." + artifactId + "-" + project.getVersion() + File.separator;
-////        rootDirectory = genLocation + groupId + "." + artifactId + "-" + project.getVersion() + "-" + System.currentTimeMillis() + File.separator;
-//        rootDirectory = GEN_LOCATION + project.getId() + File.separator;
-//    }
-
-//    public String getRootDirectory() {
-//        return rootDirectory;
-//    }
-
-//    public Project getProject() {
-//        return project;
-//    }
 
     public String write(Project project) {
         List<Output> outputs = new ArrayList<>();
