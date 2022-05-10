@@ -53,4 +53,9 @@ public class ProjectNewController {
         projectNewService.delete(id);
         return Response.success();
     }
+
+    @GetMapping("/overview/{projectId}")
+    public Response queryOverview(@PathVariable String projectId) {
+        return Response.success(projectNewService.overview(projectId));
+    }
 }

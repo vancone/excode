@@ -1,7 +1,7 @@
 package com.vancone.excode.generator.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.vancone.excode.generator.enums.MicroserviceType;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -15,22 +15,31 @@ import java.time.LocalDateTime;
  * @since 2022/05/08
  */
 @Data
-@MappedSuperclass
-public class Microservice {
+@Entity
+@Table
+@GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+public class DataStoreRelationalColumn {
 
     @Id
+    @Column(length = 36)
     @GeneratedValue(generator = "jpa-uuid")
     private String id;
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private MicroserviceType type;
+    private String type;
 
-    private String description;
+    private Integer length;
+
+    private String comment;
+
+    private Boolean primaryKey;
+
+    private Boolean foreignKey;
 
     @ManyToOne
-    private ProjectNew project;
+    @JsonBackReference
+    private DataStoreRelational dataStoreRelational;
 
     @Column(updatable = false)
     private String creator;
@@ -45,4 +54,5 @@ public class Microservice {
     @UpdateTimestamp
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedTime;
+
 }

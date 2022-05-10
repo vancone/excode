@@ -21,9 +21,10 @@ public class ProjectNew {
     @GeneratedValue(generator = "jpa-uuid")
     private String id;
 
-    private String version;
     private String name;
-    private String author;
+
+    private String owner;
+
     private String description;
 
     @Column(updatable = false)

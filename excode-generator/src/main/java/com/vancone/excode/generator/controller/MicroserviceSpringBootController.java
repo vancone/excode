@@ -38,8 +38,9 @@ public class MicroserviceSpringBootController {
     @GetMapping
     public Response queryPage(@RequestParam(defaultValue = "1") int pageNo,
                               @RequestParam(defaultValue = "5") int pageSize,
-                              @RequestParam(required = false) String search) {
-        return Response.success(microserviceSpringBootService.queryPage(pageNo - 1, pageSize, search));
+                              @RequestParam(required = false) String search,
+                              @RequestParam String projectId) {
+        return Response.success(microserviceSpringBootService.queryPage(pageNo - 1, pageSize, search, projectId));
     }
 
     @PutMapping

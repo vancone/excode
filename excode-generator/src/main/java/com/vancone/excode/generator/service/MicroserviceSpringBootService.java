@@ -3,6 +3,7 @@ package com.vancone.excode.generator.service;
 import com.vancone.cloud.common.model.ResponsePage;
 import com.vancone.excode.generator.entity.Microservice;
 import com.vancone.excode.generator.entity.MicroserviceSpringBoot;
+import com.vancone.excode.generator.entity.ProjectNew;
 import com.vancone.excode.generator.repository.MicroserviceSpringBootRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +37,7 @@ public class MicroserviceSpringBootService {
         return microserviceSpringBootRepository.findById(id).get();
     }
 
-    public ResponsePage<MicroserviceSpringBoot> queryPage(int pageNo, int pageSize, String search) {
+    public ResponsePage<MicroserviceSpringBoot> queryPage(int pageNo, int pageSize, String search, String projectId) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         MicroserviceSpringBoot example = new MicroserviceSpringBoot();
         ExampleMatcher matcher = ExampleMatcher.matching()
@@ -44,6 +45,9 @@ public class MicroserviceSpringBootService {
         if (StringUtils.isNotBlank(search)) {
             example.setName(search);
         }
+        ProjectNew project = new ProjectNew();
+        project.setId(projectId);
+        example.setProject(project);
         return new ResponsePage<>(microserviceSpringBootRepository.findAll(Example.of(example, matcher), pageable));
     }
 
