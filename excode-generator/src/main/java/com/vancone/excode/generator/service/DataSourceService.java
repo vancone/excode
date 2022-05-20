@@ -5,20 +5,21 @@ import com.vancone.excode.generator.entity.DataSource;
 import com.vancone.excode.generator.enums.DataCarrier;
 import com.vancone.excode.generator.enums.ProjectEnum;
 import com.vancone.excode.generator.exception.ResponseException;
+import com.vancone.excode.generator.repository.DataSourceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.sql.DriverManager;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Tenton Lien
@@ -29,40 +30,34 @@ import java.util.List;
 public class DataSourceService {
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private DataSourceRepository dataSourceRepository;
 
     public void save(DataSource dataSource) {
-        LocalDateTime time = LocalDateTime.now();
-        if (dataSource.getId() == null) {
-            dataSource.setCreatedTime(time);
-        }
-        dataSource.setModifiedTime(time);
-        mongoTemplate.save(dataSource);
+        dataSourceRepository.save(dataSource);
+    }
+
+    public void delete(String dataSourceId) {
+        dataSourceRepository.deleteById(dataSourceId);
     }
 
     public DataSource query(String id) {
-        DataSource dataSource = mongoTemplate.findById(id, DataSource.class);
-        if (dataSource == null || dataSource.getDeleted()) {
+        Optional<DataSource> optional = dataSourceRepository.findById(id);
+        if (!optional.isPresent()) {
             throw new ResponseException(ProjectEnum.DATA_SOURCE_NOT_EXIST);
         }
-        return dataSource;
+        return optional.get();
     }
 
     public ResponsePage<DataSource> queryPage(int pageNo, int pageSize, String search, String type) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "modifiedTime");
+        Sort sort = Sort.by(Sort.Direction.DESC, "updatedTime");
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-        Query query = Query.query(Criteria.where("deleted").is(false));
-        if (StringUtils.isNotBlank(search)) {
-            query.addCriteria(Criteria.where("name").regex(search));
-        }
+        return new ResponsePage<>(dataSourceRepository.findAll(pageable));
+    }
 
-        if (StringUtils.isNotBlank(type)) {
-            query.addCriteria(Criteria.where("type").is(type));
-        }
-
-        long count = mongoTemplate.count(query, DataSource.class);
-        List<DataSource> dataSources = mongoTemplate.find(query.with(pageable), DataSource.class);
-        return new ResponsePage<>(new PageImpl<>(dataSources, pageable, count));
+    public List<DataSource> queryList(DataCarrier type) {
+        DataSource example = new DataSource();
+        example.setType(type);
+        return dataSourceRepository.findAll(Example.of(example));
     }
 
     public void testConnection(DataSource dataSource) {

@@ -1,6 +1,7 @@
 package com.vancone.excode.generator.service;
 
 import com.vancone.cloud.common.model.ResponsePage;
+import com.vancone.excode.generator.entity.MicroserviceSpringBoot;
 import com.vancone.excode.generator.entity.Project;
 import com.vancone.excode.generator.entity.Template;
 import com.vancone.excode.generator.enums.TemplateType;
@@ -51,6 +52,15 @@ public class TemplateService {
         template.replace("artifactId", module.getArtifactId());
         template.replace("artifact.id", module.getArtifactId().replace('-', '.'));
         template.replace("ArtifactId", StrUtil.toPascalCase(module.getArtifactId()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        template.replace("date", formatter.format(LocalDateTime.now()));
+    }
+
+    public void preProcess(MicroserviceSpringBoot microservice, Template template) {
+        template.replace("groupId", microservice.getGroupId());
+        template.replace("artifactId", microservice.getArtifactId());
+        template.replace("artifact.id", microservice.getArtifactId().replace('-', '.'));
+        template.replace("ArtifactId", StrUtil.toPascalCase(microservice.getArtifactId()));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         template.replace("date", formatter.format(LocalDateTime.now()));
     }

@@ -23,4 +23,6 @@ public class MicroserviceSpringBoot extends Microservice {
 
     private String version;
 
+    private Integer serverPort;
+
 }

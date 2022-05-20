@@ -12,5 +12,58 @@
             "SPRING_BOOT_SERVICE_IMPL_JPA": "JpaServiceImpl.java",
             "SPRING_BOOT_SERVICE_IMPL_MYBATIS": "MybatisServiceImpl.java"
         }
+    },
+    "structure": {
+        "module": "spring-boot",
+        "label": "$projectName",
+        "type": "DIRECTORY",
+        "children": [
+            {
+                "label": "pom.xml",
+                "type": "SPRING_BOOT_POM"
+            },
+            {
+                "label": "src",
+                "type": "DIRECTORY",
+                "children": [
+                    {
+                        "label": "main",
+                        "type": "DIRECTORY",
+                        "children": [
+                            {
+                                "label": "java",
+                                "type": "DIRECTORY",
+                                "children": [
+                                    {
+                                        "label": "$groupId.$artifactId",
+                                        "type": "DIRECTORY",
+                                        "children": [
+                                            {
+                                                "label": "Application.java",
+                                                "type": "SPRING_BOOT_APPLICATION_ENTRY"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "label": "resources",
+                                "type": "DIRECTORY",
+                                "children": [
+                                    {
+                                        "label": "application.properties",
+                                        "type": "SPRING_BOOT_PROPERTIES"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "label": "test",
+                        "type": "DIRECTORY"
+                    }
+                ]
+            }
+        ]
     }
 }

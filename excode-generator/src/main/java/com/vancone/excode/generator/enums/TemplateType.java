@@ -5,6 +5,7 @@ package com.vancone.excode.generator.enums;
  * @since 2021/07/24
  */
 public enum TemplateType {
+    DIRECTORY,
     RAW_FILE,
     SPRING_BOOT_APPLICATION_ENTRY,
     SPRING_BOOT_CONFIG_CROSS_ORIGIN,

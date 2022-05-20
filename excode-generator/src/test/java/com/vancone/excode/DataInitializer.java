@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.vancone.excode.generator.Application;
 import com.vancone.excode.generator.entity.PomFile;
+import com.vancone.excode.generator.entity.ProjectStructure;
 import com.vancone.excode.generator.entity.Template;
 import com.vancone.excode.generator.enums.TemplateType;
 import com.vancone.excode.generator.util.FileUtil;
@@ -39,8 +40,8 @@ public class DataInitializer {
 
     @Data
     public static class TemplateConfig {
-        String directory;
-        Template template;
+        private String directory;
+        private Template template;
 
         @Data
         static class Template {
@@ -49,8 +50,11 @@ public class DataInitializer {
 
             @JsonProperty("dynamic")
             Map<TemplateType, String> dynamicTemplates;
+
+
         }
 
+        private ProjectStructure structure;
     }
 
     @Test
@@ -58,12 +62,15 @@ public class DataInitializer {
         if (mongoTemplate.collectionExists("template")) {
             mongoTemplate.dropCollection("template");
         }
+        if (mongoTemplate.collectionExists("project_structure")) {
+            mongoTemplate.dropCollection("project_structure");
+        }
 
         File[] configFiles = new File(templatePath).listFiles();
         for (File configFile: configFiles) {
             if (configFile.isFile()) {
                 String moduleName = configFile.getName().substring(0, configFile.getName().lastIndexOf("."));
-                System.out.println("Importing module: " + moduleName);
+                log.info("Importing module: " + moduleName);
                 ObjectMapper mapper = new ObjectMapper();
                 TemplateConfig config = mapper.readValue(FileUtil.read(configFile.getPath()), TemplateConfig.class);
 
@@ -90,6 +97,11 @@ public class DataInitializer {
                     template.setContent(FileUtil.read(templatePath + moduleName + File.separator + config.getTemplate().getDynamicTemplates().get(key)));
                     mongoTemplate.save(template);
                 }
+
+                // Import project structure
+                if (config.getStructure() != null) {
+                    mongoTemplate.save(config.getStructure());
+                }
             }
         }
     }
@@ -112,7 +124,7 @@ public class DataInitializer {
                         dependency.setLabel(pomFile.getName().substring(0, pomFile.getName().lastIndexOf(".")));
                         mongoTemplate.save(dependency);
                     }
-                    System.out.println(dependencies);
+                    log.info(dependencies.toString());
                 } catch (JsonProcessingException e) {
                     log.info("Parse XML error while retrieving dependencies of extension \"{}\": {}", pomText, e.getMessage());
                 }
@@ -122,6 +134,11 @@ public class DataInitializer {
 
     @Test
     public void importTerminology() {
+
+    }
+
+    @Test
+    public void importProjectFileTree() {
 
     }
 }

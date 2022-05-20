@@ -1,8 +1,11 @@
 package com.vancone.excode.generator.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vancone.cloud.common.model.Response;
-import com.vancone.excode.generator.entity.Microservice;
 import com.vancone.excode.generator.entity.MicroserviceSpringBoot;
+import com.vancone.excode.generator.entity.ProjectStructure;
+import com.vancone.excode.generator.enums.TemplateType;
 import com.vancone.excode.generator.service.MicroserviceSpringBootService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,11 @@ public class MicroserviceSpringBootController {
     public Response create(@RequestBody MicroserviceSpringBoot microservice) {
         log.info("Create project: {}", microservice.toString());
         return Response.success(microserviceSpringBootService.create(microservice));
+    }
+
+    @GetMapping("structure")
+    public Response queryStructure(@RequestParam String microserviceId) {
+        return Response.success(microserviceSpringBootService.queryStructure(microserviceId));
     }
 
     @GetMapping("{id}")
@@ -53,5 +61,11 @@ public class MicroserviceSpringBootController {
     public Response delete(@PathVariable String id) {
         microserviceSpringBootService.delete(id);
         return Response.success();
+    }
+
+    @GetMapping("generate")
+    public Response generate(@RequestParam String microserviceId,
+                             @RequestParam(required = false) TemplateType type) {
+        return Response.success(microserviceSpringBootService.generate(microserviceId, type));
     }
 }

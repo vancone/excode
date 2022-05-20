@@ -6,10 +6,7 @@ import com.vancone.excode.generator.repository.DataStoreRelationalRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -38,7 +35,8 @@ public class DataStoreRelationalService {
     }
 
     public ResponsePage<DataStoreRelational> queryPage(int pageNo, int pageSize, String search, String projectId) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Sort sort = Sort.by(Sort.Direction.DESC, "updatedTime");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         DataStoreRelational example = new DataStoreRelational();
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains);

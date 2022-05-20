@@ -23,6 +23,8 @@ public class DataStoreNew {
 
     private String name;
 
+    private String description;
+
     @ManyToOne
     private ProjectNew project;
 

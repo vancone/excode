@@ -54,6 +54,12 @@ public class PomFile {
         version = module.getVersion();
     }
 
+    public PomFile(MicroserviceSpringBoot microservice) {
+        groupId = microservice.getGroupId();
+        artifactId = microservice.getArtifactId();
+        version = microservice.getVersion();
+    }
+
     @Override
     public String toString() {
         // Root
