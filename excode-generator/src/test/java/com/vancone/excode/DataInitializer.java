@@ -2,15 +2,12 @@ package com.vancone.excode;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.vancone.excode.generator.Application;
-import com.vancone.excode.generator.entity.PomFile;
-import com.vancone.excode.generator.entity.ProjectStructure;
-import com.vancone.excode.generator.entity.Template;
-import com.vancone.excode.generator.enums.TemplateType;
-import com.vancone.excode.generator.util.FileUtil;
+import com.vancone.excode.entity.ProjectStructure;
+import com.vancone.excode.entity.Template;
+import com.vancone.excode.enums.TemplateType;
+import com.vancone.excode.service.microservice.ProjectObjectModelService;
+import com.vancone.excode.util.FileUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -35,6 +32,9 @@ public class DataInitializer {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private ProjectObjectModelService projectObjectModelService;
 
     final String templatePath = "../templates" + File.separator;
 
@@ -108,28 +108,7 @@ public class DataInitializer {
 
     @Test
     public void importPom() {
-        if (mongoTemplate.collectionExists("spring_boot_pom")) {
-            mongoTemplate.dropCollection("spring_boot_pom");
-        }
-
-        File[] pomFiles = new File(templatePath + "spring-boot" + File.separator + "pom").listFiles();
-        for (File pomFile: pomFiles) {
-            if (pomFile.isFile()) {
-                XmlMapper xmlMapper = new XmlMapper();
-                String pomText = FileUtil.read(pomFile.getPath());
-
-                try {
-                    List<PomFile.Dependency> dependencies = xmlMapper.readValue(pomText, new TypeReference<List<PomFile.Dependency>>() {});
-                    for (PomFile.Dependency dependency: dependencies) {
-                        dependency.setLabel(pomFile.getName().substring(0, pomFile.getName().lastIndexOf(".")));
-                        mongoTemplate.save(dependency);
-                    }
-                    log.info(dependencies.toString());
-                } catch (JsonProcessingException e) {
-                    log.info("Parse XML error while retrieving dependencies of extension \"{}\": {}", pomText, e.getMessage());
-                }
-            }
-        }
+        projectObjectModelService.initData();
     }
 
     @Test
