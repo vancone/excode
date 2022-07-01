@@ -3,7 +3,7 @@ package com.vancone.excode.service;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.vancone.excode.entity.DataStoreOld;
-import com.vancone.excode.entity.ProjectOld;
+import com.vancone.excode.entity.Project;
 import com.vancone.excode.util.DataTypeConverter;
 import com.vancone.excode.util.PdfUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public class DocumentService {
     private MongoTemplate mongoTemplate;
 
     @Autowired
-    private ProjectServiceOld projectServiceOld;
+    private ProjectService projectService;
 
     @Autowired
     private TerminologyService terminologyService;
@@ -66,7 +66,7 @@ public class DocumentService {
 
     public void generatePdf(String projectId, String language) {
         log.info("Start generating PDF document...");
-        ProjectOld project = projectServiceOld.query(projectId);
+        Project project = projectService.query(projectId);
         try {
             Document document = new Document(PageSize.A4, 50, 50, 50, 50);
 
@@ -91,7 +91,7 @@ public class DocumentService {
             Font font = new Font(simHeiBaseFont, Font.BOLD);
             font.setSize(14);
             paragraph.setFont(font);
-            Chunk chunk = new Chunk("v" + project.getVersion());
+            Chunk chunk = new Chunk("v1.0.0");
             paragraph.add(chunk);
             document.add(paragraph);
 

@@ -7,7 +7,6 @@ import com.vancone.excode.entity.*;
 import com.vancone.excode.entity.microservice.Microservice;
 import com.vancone.excode.entity.microservice.SpringBootMicroservice;
 import com.vancone.excode.enums.TemplateType;
-//import com.vancone.excode.generator.entity.*;
 import com.vancone.excode.repository.SpringBootMicroserviceRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

@@ -84,10 +84,10 @@ public class DataStoreService {
         }
 
         Query query = Query.query(Criteria.where("id").is(dataStoreOld.getProjectId()));
-        ProjectOld project = mongoTemplate.findOne(query, ProjectOld.class);
-        if (project == null) {
-            return "Error: project is null";
-        }
+//        ProjectOld project = mongoTemplate.findOne(query, ProjectOld.class);
+//        if (project == null) {
+//            return "Error: project is null";
+//        }
 
 //        switch (type) {
 //            case "SQL":
