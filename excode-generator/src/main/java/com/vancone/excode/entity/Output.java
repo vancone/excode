@@ -22,6 +22,7 @@ public class Output {
         this.type = type;
         this.path = path;
         this.template = template;
+        this.content = template.getContent();
     }
 
     public Output(TemplateType type, String path, String content) {

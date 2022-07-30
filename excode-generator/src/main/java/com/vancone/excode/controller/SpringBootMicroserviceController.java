@@ -62,7 +62,8 @@ public class SpringBootMicroserviceController {
 
     @GetMapping("generate")
     public Response generate(@RequestParam String microserviceId,
-                             @RequestParam(required = false) TemplateType type) {
-        return Response.success(springBootMicroserviceService.generate(microserviceId, type));
+                             @RequestParam(required = false) TemplateType type,
+                             @RequestParam(required = false) String name) {
+        return Response.success(springBootMicroserviceService.generate(microserviceId, type, name));
     }
 }

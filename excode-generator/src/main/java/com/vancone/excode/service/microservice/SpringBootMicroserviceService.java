@@ -7,7 +7,9 @@ import com.vancone.excode.entity.*;
 import com.vancone.excode.entity.microservice.Microservice;
 import com.vancone.excode.entity.microservice.SpringBootMicroservice;
 import com.vancone.excode.enums.TemplateType;
+import com.vancone.excode.repository.DataStoreRelationalRepository;
 import com.vancone.excode.repository.SpringBootMicroserviceRepository;
+import com.vancone.excode.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,6 +38,9 @@ public class SpringBootMicroserviceService {
 
     @Autowired
     private SpringBootMicroserviceGenerator generator;
+
+    @Autowired
+    private DataStoreRelationalRepository dataStoreRelationalRepository;
 
     @Autowired
     private SpringBootMicroserviceRepository springBootMicroserviceRepository;
@@ -74,9 +80,26 @@ public class SpringBootMicroserviceService {
         Criteria criteria = Criteria.where("module").is("spring-boot");
         ProjectStructure structure = mongoTemplate.findOne(new Query().addCriteria(criteria), ProjectStructure.class);
         if (structure != null) {
+
             Optional<SpringBootMicroservice> optional = springBootMicroserviceRepository.findById(microserviceId);
             if (optional.isPresent()) {
                 SpringBootMicroservice microservice = optional.get();
+                List<DataStoreRelational> dataStores = dataStoreRelationalRepository.findByProjectId(microservice.getProject().getId());
+
+                for (DataStoreRelational dataStore: dataStores) {
+                    structure.addNode("$projectName__src__main__java__$groupId.$artifactId__controller",
+                            new ProjectStructure(StrUtil.capitalize(dataStore.getName()) + "Controller",
+                                    TemplateType.SPRING_BOOT_CONTROLLER));
+
+                    structure.addNode("$projectName__src__main__java__$groupId.$artifactId__entity",
+                            new ProjectStructure(StrUtil.capitalize(dataStore.getName()),
+                                    TemplateType.SPRING_BOOT_ENTITY));
+
+                    structure.addNode("$projectName__src__main__java__$groupId.$artifactId__service",
+                            new ProjectStructure(StrUtil.capitalize(dataStore.getName()) + "Service",
+                                    TemplateType.SPRING_BOOT_CONTROLLER));
+                }
+
                 ObjectMapper mapper = new ObjectMapper();
                 try {
                     String json = mapper.writeValueAsString(structure);
@@ -92,7 +115,7 @@ public class SpringBootMicroserviceService {
         return structure;
     }
 
-    public Output generate(String microserviceId, TemplateType type) {
+    public Output generate(String microserviceId, TemplateType type, String fileName) {
         Optional<SpringBootMicroservice> optional = springBootMicroserviceRepository.findById(microserviceId);
         if (optional.isPresent()) {
             SpringBootMicroservice microservice = optional.get();
@@ -103,6 +126,9 @@ public class SpringBootMicroserviceService {
                     return generator.createProperty(microservice);
                 case SPRING_BOOT_APPLICATION_ENTRY:
                     return generator.createApplicationEntry(microservice);
+                case SPRING_BOOT_CONTROLLER:
+                    String dataStoreName = fileName.replace("Controller", "").toLowerCase();
+                    return generator.createController(microservice, dataStoreName);
                 default:
                     return null;
             }

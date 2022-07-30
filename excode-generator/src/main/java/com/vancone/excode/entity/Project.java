@@ -34,6 +34,8 @@ public class Project {
     @Column(updatable = false)
     private String creator;
 
+    private String organization;
+
     private String updater;
 
     @Column(updatable = false)
