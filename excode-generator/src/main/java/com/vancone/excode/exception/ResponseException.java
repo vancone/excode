@@ -1,6 +1,6 @@
 package com.vancone.excode.exception;
 
-import com.vancone.cloud.common.exception.BaseEnum;
+import com.vancone.web.common.exception.BaseEnum;
 import lombok.Data;
 
 /**

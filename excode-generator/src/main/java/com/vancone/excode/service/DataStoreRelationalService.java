@@ -1,6 +1,6 @@
 package com.vancone.excode.service;
 
-import com.vancone.cloud.common.model.ResponsePage;
+import com.vancone.web.common.model.ResponsePage;
 import com.vancone.excode.entity.DataStore;
 import com.vancone.excode.entity.DataStoreRelational;
 import com.vancone.excode.entity.DataStoreRelationalColumn;

@@ -1,6 +1,6 @@
 package com.vancone.excode.service;
 
-import com.vancone.cloud.common.model.ResponsePage;
+import com.vancone.web.common.model.ResponsePage;
 import com.vancone.excode.enums.ProjectEnum;
 import com.vancone.excode.exception.ResponseException;
 import com.vancone.excode.entity.DataSource;

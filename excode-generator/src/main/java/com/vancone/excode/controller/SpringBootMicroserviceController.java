@@ -1,6 +1,6 @@
 package com.vancone.excode.controller;
 
-import com.vancone.cloud.common.model.Response;
+import com.vancone.web.common.model.Response;
 import com.vancone.excode.entity.microservice.SpringBootMicroservice;
 import com.vancone.excode.enums.TemplateType;
 import com.vancone.excode.service.microservice.SpringBootMicroserviceService;

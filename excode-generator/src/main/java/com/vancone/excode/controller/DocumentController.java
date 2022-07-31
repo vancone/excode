@@ -1,6 +1,6 @@
 package com.vancone.excode.controller;
 
-import com.vancone.cloud.common.model.Response;
+import com.vancone.web.common.model.Response;
 import com.vancone.excode.constant.LanguageType;
 import com.vancone.excode.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;

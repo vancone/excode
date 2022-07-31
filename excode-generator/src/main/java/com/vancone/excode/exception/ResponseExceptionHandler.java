@@ -1,6 +1,6 @@
 package com.vancone.excode.exception;
 
-import com.vancone.cloud.common.model.Response;
+import com.vancone.web.common.model.Response;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

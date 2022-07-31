@@ -1,6 +1,6 @@
 package com.vancone.excode.controller;
 
-import com.vancone.cloud.common.model.Response;
+import com.vancone.web.common.model.Response;
 import com.vancone.excode.entity.DataStoreRelationalColumn;
 import com.vancone.excode.service.DataStoreRelationalColumnService;
 import lombok.extern.slf4j.Slf4j;

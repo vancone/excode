@@ -1,6 +1,6 @@
 package com.vancone.excode.controller;
 
-import com.vancone.cloud.common.model.Response;
+import com.vancone.web.common.model.Response;
 import com.vancone.excode.entity.DataSource;
 import com.vancone.excode.enums.DataCarrier;
 import com.vancone.excode.service.DataSourceService;

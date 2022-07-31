@@ -2,7 +2,7 @@ package com.vancone.excode.service.microservice;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vancone.cloud.common.model.ResponsePage;
+import com.vancone.web.common.model.ResponsePage;
 import com.vancone.excode.entity.*;
 import com.vancone.excode.entity.microservice.Microservice;
 import com.vancone.excode.entity.microservice.SpringBootMicroservice;
