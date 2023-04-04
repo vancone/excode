@@ -1,0 +1,27 @@
+<project>
+    <name>e-school</name>
+    <version>0.1</version>
+
+    <middleware>
+        <mysql name="ds" port="3306" />
+    </middleware>
+
+    <models>
+        <model name="student" source="ds">
+            <field name="id" type="number" primary="true" comment="Student ID"/>
+        </model>
+    </models>
+
+    <templates>
+        <template type="ext/spring-boot">
+            <plugins>
+                <plugin name="lombok" enabled="true" />
+            </plugins>
+
+            <properties>
+                <property name="pom.groupId" value="com.vancone" />
+                <property name="pom.artifactId" value="passport" />
+            </properties>
+        </template>
+    </templates>
+</project>

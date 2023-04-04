@@ -5,7 +5,7 @@ type Project struct {
 	Version    string     `xml:"version"`
 	Middleware Middleware `xml:"middleware"`
 	Models     []Model    `xml:"models>model"`
-	Plugins    []Plugin   `xml:"plugins>plugin"`
+	Templates  []Template `xml:"templates>template"`
 }
 
 type Middleware struct {
@@ -31,7 +31,18 @@ type Field struct {
 	Comment string `xml:"comment,attr"`
 }
 
+type Template struct {
+	Type       string     `xml:"type,attr"`
+	Plugins    []Plugin   `xml:"plugins>plugin"`
+	Properties []Property `xml:"properties>property"`
+}
+
 type Plugin struct {
 	Name    string `xml:"name,attr"`
 	Enabled bool   `xml:"enabled,attr"`
+}
+
+type Property struct {
+	Name  string `xml:"name,attr"`
+	Value string `xml:"value,attr"`
 }
