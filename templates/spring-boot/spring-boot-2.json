@@ -1,0 +1,71 @@
+{
+    "name": "spring-boot",
+    "version": "1.0.0",
+    "metadata": {
+        "javaVersion": "8",
+        "springBootVersion": "2.7"
+    },
+    "structure": {
+        "name": "spring-boot",
+        "type": "dir",
+        "children": [
+            {
+                "name": "pom.xml",
+                "type": "file",
+                "source": "content/pom/default.xml",
+                "transformer": "process_pom"
+            },
+            {
+                "name": "src",
+                "type": "dir",
+                "children": [
+                    {
+                        "name": "main",
+                        "type": "dir",
+                        "children": [
+                            {
+                                "name": "java",
+                                "type": "dir",
+                                "children": [
+                                    {
+                                        "name": "${groupId}/${artifactId}",
+                                        "type": "dir",
+                                        "children": [
+                                            {
+                                                "name": "Application.java",
+                                                "type": "file",
+                                                "source": "content/Application.java"
+                                            },
+                                            {
+                                                "name": "controller",
+                                                "type": "dir"
+                                            },
+                                            {
+                                                "name": "service",
+                                                "type": "dir"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "resources",
+                                "type": "dir"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "test",
+                        "type": "dir",
+                        "children": [
+                            {
+                                "name": "java",
+                                "type": "dir"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
