@@ -1,7 +1,6 @@
 package util
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -26,7 +25,6 @@ func CreateDir(path string) error {
 	}
 	if exist {
 		fmt.Println("Directory already exists")
-		return errors.New("directory already exists")
 	} else {
 		err := os.MkdirAll(path, os.ModePerm)
 		if err != nil {

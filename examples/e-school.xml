@@ -13,14 +13,14 @@
     </models>
 
     <templates>
-        <template type="ext/spring-boot">
+        <template type="spring-boot" external="true">
             <plugins>
                 <plugin name="lombok" enabled="true" />
             </plugins>
 
             <properties>
-                <property name="pom.groupId" value="com.vancone" />
-                <property name="pom.artifactId" value="passport" />
+                <property name="project.groupId" value="com.vancone" />
+                <property name="project.artifactId" value="passport" />
             </properties>
         </template>
     </templates>

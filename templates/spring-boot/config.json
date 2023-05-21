@@ -28,13 +28,14 @@
                                 "type": "dir",
                                 "children": [
                                     {
-                                        "name": "${groupId}/${artifactId}",
+                                        "name": "${template.properties.project.groupId}/${template.properties.project.artifactId}",
                                         "type": "dir",
                                         "children": [
                                             {
                                                 "name": "Application.java",
                                                 "type": "file",
-                                                "source": "content/Application.java"
+                                                "source": "content/Application.java",
+                                                "transformer": "greet"
                                             },
                                             {
                                                 "name": "controller",

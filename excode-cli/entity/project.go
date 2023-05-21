@@ -46,3 +46,7 @@ type Property struct {
 	Name  string `xml:"name,attr"`
 	Value string `xml:"value,attr"`
 }
+
+//func (p *Project) GetProperty(key string) string {
+//
+//}
