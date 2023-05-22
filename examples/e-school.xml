@@ -10,6 +10,9 @@
         <model name="student" source="ds">
             <field name="id" type="number" primary="true" comment="Student ID"/>
         </model>
+        <model name="teacher" source="ds">
+            <field name="id" type="number" primary="true" comment="Teacher ID"/>
+        </model>
     </models>
 
     <templates>

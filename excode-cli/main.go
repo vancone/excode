@@ -12,6 +12,7 @@ import (
 	"fmt"
 	lua "github.com/yuin/gopher-lua"
 	"io/ioutil"
+	"layeh.com/gopher-luar"
 	"log"
 )
 
@@ -69,9 +70,19 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 		if err != nil {
 			panic(err)
 		}
+		if structure.Generator != "" {
+			ret := ExecLuaScript(templateName, structure.Generator, project, template)
+			table := ret.(*lua.LTable)
+			table.ForEach(func(L1 lua.LValue, L2 lua.LValue) {
+				fmt.Println("k = ", L1)
+				fmt.Println("v = ", L2)
+				dstFileName := baseUrl + "/" + L1.String()
+				err = ioutil.WriteFile(dstFileName, []byte(L2.String()), 0666)
+			})
+		}
 	} else if structure.Type == "file" {
 		if structure.Transformer != "" {
-			ExecLuaScript(templateName)
+			//ExecLuaScript(templateName)
 		}
 		dstFileName := baseUrl + "/" + structure.Name
 		srcFileName := fmt.Sprintf("../templates/%s/%s", templateName, structure.Source)
@@ -101,16 +112,35 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 	}
 }
 
-func ExecLuaScript(templateName string) {
+func registerProjectType(L *lua.LState) {
+	mt := L.NewTypeMetatable("project")
+	L.SetGlobal("project", mt)
+}
+
+func ExecLuaScript(templateName string, funcName string, project entity.Project, template entity.Template) lua.LValue {
 	L := lua.NewState()
 	defer L.Close()
+
 	if err := L.DoFile(fmt.Sprintf("../templates/%s/transform.lua", templateName)); err != nil {
 		panic(err)
 	}
-	f := L.GetGlobal("test1")
-	L.Push(f)
-	table := lua.LTable{}
-	L.Push(lua.LString(templateName))
-	L.Call(1, 1)
-	fmt.Println(L.Get(-1))
+
+	L.SetGlobal("project", luar.New(L, project))
+	err := L.CallByParam(lua.P{
+		Fn:      L.GetGlobal(funcName),
+		NRet:    1,
+		Protect: true,
+	})
+	if err != nil {
+		log.Printf("Failed to execute lua function %s: %s", funcName, err)
+		return nil
+	}
+	fmt.Println(project.Name)
+	return L.Get(-1)
+
+	//f := L.GetGlobal("test1")
+	//L.Push(f)
+	//L.Push(lua.LString(templateName))
+	//L.Call(1, 1)
+	//fmt.Println(L.Get(-1))
 }

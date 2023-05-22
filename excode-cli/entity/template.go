@@ -13,5 +13,6 @@ type Structure struct {
 	Source      string      `json:"source"`
 	Dynamic     bool        `json:"dynamic"`
 	Transformer string      `json:"transformer"`
+	Generator   string      `json:"generator"`
 	Children    []Structure `json:"children"`
 }
