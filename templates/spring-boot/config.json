@@ -12,6 +12,7 @@
             {
                 "name": "pom.xml",
                 "type": "file",
+                "dynamic": true,
                 "source": "content/pom/default.xml",
                 "transformer": "process_pom"
             },
@@ -34,15 +35,28 @@
                                             {
                                                 "name": "Application.java",
                                                 "type": "file",
+                                                "dynamic": true,
                                                 "source": "content/Application.java",
                                                 "transformer": "greet"
+                                            },
+                                            {
+                                                "name": "config",
+                                                "type": "dir"
                                             },
                                             {
                                                 "name": "controller",
                                                 "type": "dir"
                                             },
                                             {
+                                                "name": "entity",
+                                                "type": "dir"
+                                            },
+                                            {
                                                 "name": "service",
+                                                "type": "dir"
+                                            },
+                                            {
+                                                "name": "util",
                                                 "type": "dir"
                                             }
                                         ]
@@ -51,7 +65,15 @@
                             },
                             {
                                 "name": "resources",
-                                "type": "dir"
+                                "type": "dir",
+                                "children": [
+                                    {
+                                        "name": "application.properties",
+                                        "type": "file",
+                                        "dynamic": true,
+                                        "source": "content/properties/default.properties"
+                                    }
+                                ]
                             }
                         ]
                     },

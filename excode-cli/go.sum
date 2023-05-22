@@ -1,5 +1,3 @@
-github.com/aarzilli/golua v0.0.0-20210507130708-11106aa57765 h1:N6gB4UCRBZz8twlJbMFiCKj0zX5Et2nFU/LRafT4x80=
-github.com/aarzilli/golua v0.0.0-20210507130708-11106aa57765/go.mod h1:hMjfaJVSqVnxenMlsxrq3Ni+vrm9Hs64tU4M7dhUoO4=
 github.com/cpuguy83/go-md2man/v2 v2.0.2/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/inconshreveable/mousetrap v1.0.1/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=

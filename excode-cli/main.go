@@ -13,9 +13,6 @@ import (
 	lua "github.com/yuin/gopher-lua"
 	"io/ioutil"
 	"log"
-	"reflect"
-	"regexp"
-	"strings"
 )
 
 func main() {
@@ -39,71 +36,32 @@ func main() {
 				fmt.Println("failed to read xml file:", err)
 				return
 			}
-			templateStr := string(bytes)
-			// Disable greedy match
-			re, _ := regexp.Compile("(?U)\\$\\{.*\\}")
-			all := re.FindAll([]byte(templateStr), -1)
-			s := reflect.ValueOf(&project).Elem()
-			for _, v := range all {
-				fmt.Println("all ", string(v))
-				paramName := string(v)[2 : len(string(v))-1]
-				if len(paramName) == 0 {
-					log.Printf("Invalid param name: %s", string(v))
-					continue
-				}
-
-				if strings.Index(paramName, "project.") == 0 {
-					paramName = strings.Replace(paramName, "project.", "", -1)
-					if s.FieldByName(paramName).IsValid() {
-						fmt.Println("Parse param", s.FieldByName(paramName).Interface())
-					} else {
-						log.Printf("Unrecognized param: %s", paramName)
-						continue
-					}
-				} else if strings.Index(paramName, "template.") == 0 {
-					paramName = strings.Replace(paramName, "template.", "", -1)
-					if strings.Contains(paramName, "properties.") {
-						paramName = strings.Replace(paramName, "properties.", "", -1)
-						propertyFoundFlag := false
-						for _, property := range template.Properties {
-							if property.Name == paramName {
-								templateStr = strings.Replace(templateStr, string(v), property.Value, -1)
-								propertyFoundFlag = true
-								break
-							}
-						}
-						if !propertyFoundFlag {
-							log.Printf("Param %s not found in template's properties", paramName)
-						}
-					}
-				}
-
-			}
-
+			templateStr := util.ParseDynamicParams(string(bytes), project, template)
 			var templateConfig entity.TemplateConfig
 			err = json.Unmarshal([]byte(templateStr), &templateConfig)
 			if err != nil {
 				return
 			}
 			fmt.Println(templateConfig)
-			generate(templateConfig, project)
+			generate(templateConfig, project, template)
 		}
 	}
 
 	//cmd.Execute()
 }
 
-func generate(config entity.TemplateConfig, project entity.Project) {
+func generate(config entity.TemplateConfig, project entity.Project, template entity.Template) {
 	fmt.Println("generating...")
 	baseUrl := "../output" // + time.Now().Format("20060102150405")
 	err := util.CreateDir(baseUrl)
 	if err != nil {
 		panic(err)
 	}
-	traverseStructure(config.Structure, baseUrl, config.Name)
+	traverseStructure(config.Structure, baseUrl, config.Name, project, template)
 }
 
-func traverseStructure(structure entity.Structure, baseUrl string, templateName string) {
+func traverseStructure(structure entity.Structure, baseUrl string, templateName string,
+	project entity.Project, template entity.Template) {
 	fmt.Println(structure.Name)
 	if structure.Type == "dir" {
 		baseUrl += "/" + structure.Name
@@ -115,17 +73,30 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 		if structure.Transformer != "" {
 			ExecLuaScript(templateName)
 		}
-		srcFileName := fmt.Sprintf("../templates/%s/%s", templateName, structure.Source)
 		dstFileName := baseUrl + "/" + structure.Name
-		err := util.CopyFile(dstFileName, srcFileName)
-		if err != nil {
-			panic(err)
+		srcFileName := fmt.Sprintf("../templates/%s/%s", templateName, structure.Source)
+		if structure.Dynamic {
+			templateFile, err := ioutil.ReadFile(srcFileName)
+			if err != nil {
+				log.Printf("Failed to read template file: %s", srcFileName)
+				return
+			}
+			templateFile = []byte(util.ParseDynamicParams(string(templateFile), project, template))
+			err = ioutil.WriteFile(dstFileName, templateFile, 0666)
+			if err != nil {
+				log.Printf("Failed to write file: %s", dstFileName)
+			}
+		} else {
+			err := util.CopyFile(dstFileName, srcFileName)
+			if err != nil {
+				panic(err)
+			}
 		}
 	}
 
 	if structure.Children != nil {
 		for _, child := range structure.Children {
-			traverseStructure(child, baseUrl, templateName)
+			traverseStructure(child, baseUrl, templateName, project, template)
 		}
 	}
 }
@@ -138,6 +109,7 @@ func ExecLuaScript(templateName string) {
 	}
 	f := L.GetGlobal("test1")
 	L.Push(f)
+	table := lua.LTable{}
 	L.Push(lua.LString(templateName))
 	L.Call(1, 1)
 	fmt.Println(L.Get(-1))

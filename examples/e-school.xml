@@ -21,6 +21,8 @@
             <properties>
                 <property name="project.groupId" value="com.vancone" />
                 <property name="project.artifactId" value="passport" />
+                <property name="spring.application.name" value="e-school" />
+                <property name="server.port" value="8080"/>
             </properties>
         </template>
     </templates>

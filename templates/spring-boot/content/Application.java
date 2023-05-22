@@ -1,4 +1,4 @@
-package __groupId__.__artifact.id__;
+package ${template.properties.project.groupId}.${template.properties.project.artifactId};
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -6,12 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @author ExCode
- * @since __date__
+ * @since ${date}
  */
 @SpringBootApplication
-@MapperScan("__groupId__.__artifact.id__.mapper")
-public class __ArtifactId__Application {
+@MapperScan("${template.properties.project.groupId}.${template.properties.project.artifactId}.mapper")
+public class Application {
   public static void main(String[] args) {
-    SpringApplication.run(__ArtifactId__Application.class, args);
+    SpringApplication.run(Application.class, args);
   }
 }

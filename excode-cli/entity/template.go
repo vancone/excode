@@ -11,6 +11,7 @@ type Structure struct {
 	Name        string      `json:"name"`
 	Type        string      `json:"type"`
 	Source      string      `json:"source"`
+	Dynamic     bool        `json:"dynamic"`
 	Transformer string      `json:"transformer"`
 	Children    []Structure `json:"children"`
 }
