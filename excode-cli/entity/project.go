@@ -18,9 +18,10 @@ type MySql struct {
 }
 
 type Model struct {
-	Name   string  `xml:"name,attr"`
-	Source string  `xml:"source,attr"`
-	Fields []Field `xml:"field"`
+	Name        string  `xml:"name,attr"`
+	Source      string  `xml:"source,attr"`
+	TablePrefix string  `xml:"tablePrefix,attr"`
+	Fields      []Field `xml:"field"`
 }
 
 type Field struct {

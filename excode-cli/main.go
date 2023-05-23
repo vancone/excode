@@ -27,11 +27,9 @@ func main() {
 	if err != nil {
 		return
 	}
-	//fmt.Println(project)
 
 	if project.Templates != nil {
 		for _, template := range project.Templates {
-			//fmt.Println(template.Type)
 			bytes, err = ioutil.ReadFile(fmt.Sprintf("../templates/%s/config.json", template.Type))
 			if err != nil {
 				fmt.Println("failed to read xml file:", err)
@@ -43,7 +41,6 @@ func main() {
 			if err != nil {
 				return
 			}
-			fmt.Println(templateConfig)
 			generate(templateConfig, project, template)
 		}
 	}
@@ -63,7 +60,6 @@ func generate(config entity.TemplateConfig, project entity.Project, template ent
 
 func traverseStructure(structure entity.Structure, baseUrl string, templateName string,
 	project entity.Project, template entity.Template) {
-	fmt.Println(structure.Name)
 	if structure.Type == "dir" {
 		baseUrl += "/" + structure.Name
 		err := util.CreateDir(baseUrl)
@@ -71,11 +67,9 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 			panic(err)
 		}
 		if structure.Generator != "" {
-			ret := ExecLuaScript(templateName, structure.Generator, project, template)
+			ret := ExecLuaScript(templateName, structure.Generator, project, template, structure.Source)
 			table := ret.(*lua.LTable)
 			table.ForEach(func(L1 lua.LValue, L2 lua.LValue) {
-				fmt.Println("k = ", L1)
-				fmt.Println("v = ", L2)
 				dstFileName := baseUrl + "/" + L1.String()
 				err = ioutil.WriteFile(dstFileName, []byte(L2.String()), 0666)
 			})
@@ -112,12 +106,7 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 	}
 }
 
-func registerProjectType(L *lua.LState) {
-	mt := L.NewTypeMetatable("project")
-	L.SetGlobal("project", mt)
-}
-
-func ExecLuaScript(templateName string, funcName string, project entity.Project, template entity.Template) lua.LValue {
+func ExecLuaScript(templateName string, funcName string, project entity.Project, template entity.Template, source string) lua.LValue {
 	L := lua.NewState()
 	defer L.Close()
 
@@ -126,6 +115,18 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	}
 
 	L.SetGlobal("project", luar.New(L, project))
+
+	if source != "" {
+		srcFileName := fmt.Sprintf("../templates/%s/%s", templateName, source)
+		sourceBytes, err := ioutil.ReadFile(srcFileName)
+		if err != nil {
+			log.Printf("Failed to read source file before execute Lua script: %s", srcFileName)
+			return nil
+		}
+		sourceStr := util.ParseDynamicParams(string(sourceBytes), project, template)
+		L.SetGlobal("source", lua.LString(sourceStr))
+	}
+
 	err := L.CallByParam(lua.P{
 		Fn:      L.GetGlobal(funcName),
 		NRet:    1,
@@ -135,12 +136,5 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 		log.Printf("Failed to execute lua function %s: %s", funcName, err)
 		return nil
 	}
-	fmt.Println(project.Name)
 	return L.Get(-1)
-
-	//f := L.GetGlobal("test1")
-	//L.Push(f)
-	//L.Push(lua.LString(templateName))
-	//L.Call(1, 1)
-	//fmt.Println(L.Get(-1))
 }

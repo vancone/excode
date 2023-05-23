@@ -16,7 +16,6 @@ func ParseDynamicParams(content string, project entity.Project, template entity.
 	all := re.FindAll([]byte(content), -1)
 	s := reflect.ValueOf(&project).Elem()
 	for _, v := range all {
-		//fmt.Println("all ", string(v))
 		paramName := string(v)[2 : len(string(v))-1]
 		if len(paramName) == 0 {
 			log.Printf("Invalid param name: %s", string(v))

@@ -7,8 +7,9 @@
     </middleware>
 
     <models>
-        <model name="student" source="ds">
+        <model name="student" source="ds" tablePrefix="school_">
             <field name="id" type="number" primary="true" comment="Student ID"/>
+            <field name="name" type="string"/>
         </model>
         <model name="teacher" source="ds">
             <field name="id" type="number" primary="true" comment="Teacher ID"/>
@@ -16,14 +17,14 @@
     </models>
 
     <templates>
-        <template type="spring-boot" external="true">
+        <template type="spring-boot-mybatis" external="true">
             <plugins>
                 <plugin name="lombok" enabled="true" />
             </plugins>
 
             <properties>
                 <property name="project.groupId" value="com.vancone" />
-                <property name="project.artifactId" value="passport" />
+                <property name="project.artifactId" value="eschool" />
                 <property name="spring.application.name" value="e-school" />
                 <property name="server.port" value="8080"/>
             </properties>

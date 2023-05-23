@@ -1,12 +1,12 @@
 {
-    "name": "spring-boot",
+    "name": "spring-boot-mybatis",
     "version": "1.0.0",
     "metadata": {
         "javaVersion": "8",
         "springBootVersion": "2.7"
     },
     "structure": {
-        "name": "spring-boot",
+        "name": "spring-boot-mybatis",
         "type": "dir",
         "children": [
             {
@@ -45,16 +45,35 @@
                                             },
                                             {
                                                 "name": "controller",
-                                                "type": "dir"
+                                                "type": "dir",
+                                                "source": "content/Controller.java",
+                                                "generator": "generateControllers"
                                             },
                                             {
                                                 "name": "entity",
                                                 "type": "dir",
+                                                "source": "content/Entity.java",
                                                 "generator": "generateEntities"
                                             },
                                             {
+                                                "name": "mapper",
+                                                "type": "dir",
+                                                "source": "content/Mapper.java",
+                                                "generator": "generateMappers"
+                                            },
+                                            {
                                                 "name": "service",
-                                                "type": "dir"
+                                                "type": "dir",
+                                                "source": "content/Service.java",
+                                                "generator": "generateServices",
+                                                "children": [
+                                                    {
+                                                        "name": "impl",
+                                                        "type": "dir",
+                                                        "source": "content/ServiceImpl.java",
+                                                        "generator": "generateServiceImpls"
+                                                    }
+                                                ]
                                             },
                                             {
                                                 "name": "util",
@@ -68,6 +87,12 @@
                                 "name": "resources",
                                 "type": "dir",
                                 "children": [
+                                    {
+                                        "name": "mapper",
+                                        "type": "dir",
+                                        "source": "content/Mapper.xml",
+                                        "generator": "generateMapperXmlFiles"
+                                    },
                                     {
                                         "name": "application.properties",
                                         "type": "file",
