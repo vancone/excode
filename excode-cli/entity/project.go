@@ -27,8 +27,10 @@ type Model struct {
 type Field struct {
 	Name    string `xml:"name,attr"`
 	Type    string `xml:"type,attr"`
+	DbType  string `xml:"dbType,attr"`
 	Length  int    `xml:"length,attr"`
 	Primary bool   `xml:"primary,attr"`
+	NotNull bool   `xml:"notNull,attr"`
 	Comment string `xml:"comment,attr"`
 }
 
@@ -47,7 +49,3 @@ type Property struct {
 	Name  string `xml:"name,attr"`
 	Value string `xml:"value,attr"`
 }
-
-//func (p *Project) GetProperty(key string) string {
-//
-//}

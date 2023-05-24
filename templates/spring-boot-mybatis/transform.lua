@@ -139,3 +139,62 @@ function generateControllers()
     end
     return files
 end
+
+function generateSqlStatements()
+    print("Start to generate SQL statements...")
+    models = project.Models
+    local finalSource = ""
+    for i = 1, #models do
+        local modelName = models[i].Name
+        finalSource = finalSource.."CREATE TABLE IF NOT EXISTS `"..models[i].TablePrefix..modelName.."` (\n"
+        for k = 1, #models[i].Fields do
+            local field = models[i].Fields[k]
+
+            -- Fill in field name
+            finalSource = finalSource.."    `"..field.Name.."` "
+
+            -- Fill in field type
+            local type = field.DbType
+            if type == "VARCHAR" then
+                local length = 255
+                if field.Length > 0 then length = field.Length end
+                type = type.."("..length..")"
+            end
+            finalSource = finalSource..type
+
+            -- Fill in primary key / null attributes
+            if field.Primary then
+                finalSource = finalSource.." PRIMARY KEY NOT NULL"
+            elseif field.NotNull then
+                finalSource = finalSource.." NOT NULL"
+            end
+
+            -- Line break
+            if k == #models[i].Fields then
+                finalSource = finalSource.."\n"
+            else
+                finalSource = finalSource..",\n"
+            end
+        end
+        finalSource = finalSource..");\n\n"
+    end
+    files = {}
+    files[project.Name..".sql"] = finalSource
+    return files
+end
+
+function generateCrossOriginConfig()
+    print("Start to generate cross origin config...")
+    models = project.Models
+    files = {}
+    -- for i = 1, #models do
+    --     local modelName = models[i].Name
+    --     local ModelName = modelName:gsub("^%l",string.upper)
+    --     local finalSource = string.gsub(source, "${ModelName}", ModelName)
+    --     finalSource = string.gsub(finalSource, "${modelName}", modelName)
+    --     files[ModelName.."Config.java"] = finalSource
+    -- end
+    print("***************************************"..template.Properties[1].)
+    files["CrossOriginConfig.java"] = source
+    return files
+end

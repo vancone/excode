@@ -75,9 +75,7 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 			})
 		}
 	} else if structure.Type == "file" {
-		if structure.Transformer != "" {
-			//ExecLuaScript(templateName)
-		}
+
 		dstFileName := baseUrl + "/" + structure.Name
 		srcFileName := fmt.Sprintf("../templates/%s/%s", templateName, structure.Source)
 		if structure.Dynamic {
@@ -90,6 +88,20 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 			err = ioutil.WriteFile(dstFileName, templateFile, 0666)
 			if err != nil {
 				log.Printf("Failed to write file: %s", dstFileName)
+			}
+		} else if structure.Transformer != "" {
+			ret := ExecLuaScript(templateName, structure.Transformer, project, template, structure.Source)
+			if ret != nil && ret.String() != "nil" {
+				table := ret.(*lua.LTable)
+				table.ForEach(func(L1 lua.LValue, L2 lua.LValue) {
+					if L1 != nil && L2 != nil {
+						dstFileName := baseUrl + "/" + L1.String()
+						err := ioutil.WriteFile(dstFileName, []byte(L2.String()), 0666)
+						if err != nil {
+							log.Printf("Failed to write tranformed files(%s): %s", dstFileName, err)
+						}
+					}
+				})
 			}
 		} else {
 			err := util.CopyFile(dstFileName, srcFileName)
@@ -115,6 +127,7 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	}
 
 	L.SetGlobal("project", luar.New(L, project))
+	L.SetGlobal("template", luar.New(L, template))
 
 	if source != "" {
 		srcFileName := fmt.Sprintf("../templates/%s/%s", templateName, source)

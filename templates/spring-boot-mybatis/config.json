@@ -13,8 +13,7 @@
                 "name": "pom.xml",
                 "type": "file",
                 "dynamic": true,
-                "source": "content/pom/default.xml",
-                "transformer": "process_pom"
+                "source": "content/pom/default.xml"
             },
             {
                 "name": "src",
@@ -36,12 +35,19 @@
                                                 "name": "Application.java",
                                                 "type": "file",
                                                 "dynamic": true,
-                                                "source": "content/Application.java",
-                                                "transformer": "greet"
+                                                "source": "content/Application.java"
                                             },
                                             {
                                                 "name": "config",
-                                                "type": "dir"
+                                                "type": "dir",
+                                                "children": [
+                                                    {
+                                                        "name": "CrossOriginConfig.java",
+                                                        "type": "file",
+                                                        "source": "content/config/CrossOriginConfig.java",
+                                                        "transformer": "generateCrossOriginConfig"
+                                                    }
+                                                ]
                                             },
                                             {
                                                 "name": "controller",
@@ -82,6 +88,12 @@
                                         ]
                                     }
                                 ]
+                            },
+                            {
+                                "name": "sql",
+                                "type": "dir",
+                                "source": "content/Model.sql",
+                                "generator": "generateSqlStatements"
                             },
                             {
                                 "name": "resources",
