@@ -15,7 +15,6 @@ public class CrossOriginConfig {
     private CorsConfiguration buildConfig(){
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOriginPattern("*");
-        corsConfiguration.addAllowedHeader("*");
         ${addAllowedHeaders}
         corsConfiguration.addAllowedMethod("*");
         

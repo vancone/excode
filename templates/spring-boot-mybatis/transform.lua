@@ -194,7 +194,25 @@ function generateCrossOriginConfig()
     --     finalSource = string.gsub(finalSource, "${modelName}", modelName)
     --     files[ModelName.."Config.java"] = finalSource
     -- end
-    print("***************************************"..template.Properties[1].)
-    files["CrossOriginConfig.java"] = source
+    local finalSource = source
+    for i = 1, #template.Properties do
+        if template.Properties[i].Name == "cross-origin.allowed-headers" then
+            local value = template.Properties[i].Value
+            if value == "*" then
+                finalSource = string.gsub(finalSource, "${addAllowedHeaders}", "corsConfiguration.addAllowedHeader(\"*\");")
+            else
+                -- TODO: split function should be used here
+                local headers = string.sub(",", 1)
+                local tmp = ""
+                for k = 1, #headers do
+                    tmp = tmp.."\n    corsConfiguration.addAllowedHeader(\""..headers[k].."\");"
+                end
+                finalSource = string.gsub(finalSource, "${addAllowedHeaders}", tmp)
+            end
+        end
+    end
+    -- Remove redundant params
+    finalSource = string.gsub(finalSource, "${addAllowedHeaders}", "")
+    files["CrossOriginConfig.java"] = finalSource
     return files
 end
