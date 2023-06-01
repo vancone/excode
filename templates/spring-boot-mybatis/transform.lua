@@ -187,13 +187,6 @@ function generateCrossOriginConfig()
     print("Start to generate cross origin config...")
     models = project.Models
     files = {}
-    -- for i = 1, #models do
-    --     local modelName = models[i].Name
-    --     local ModelName = modelName:gsub("^%l",string.upper)
-    --     local finalSource = string.gsub(source, "${ModelName}", ModelName)
-    --     finalSource = string.gsub(finalSource, "${modelName}", modelName)
-    --     files[ModelName.."Config.java"] = finalSource
-    -- end
     local finalSource = source
     for i = 1, #template.Properties do
         if template.Properties[i].Name == "cross-origin.allowed-headers" then
@@ -214,5 +207,19 @@ function generateCrossOriginConfig()
     -- Remove redundant params
     finalSource = string.gsub(finalSource, "${addAllowedHeaders}", "")
     files["CrossOriginConfig.java"] = finalSource
+    return files
+end
+
+function generateServiceTests()
+    print("Start to generate service tests...")
+    models = project.Models
+    files = {}
+    for i = 1, #models do
+        local modelName = models[i].Name
+        local ModelName = modelName:gsub("^%l",string.upper)
+        local finalSource = string.gsub(source, "${ModelName}", ModelName)
+        finalSource = string.gsub(finalSource, "${modelName}", modelName)
+        files[ModelName.."ServiceTest.java"] = finalSource
+    end
     return files
 end

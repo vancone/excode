@@ -121,7 +121,33 @@
                         "children": [
                             {
                                 "name": "java",
-                                "type": "dir"
+                                "type": "dir",
+                                "children": [
+                                    {
+                                        "name": "${template.properties.project.groupId}/${template.properties.project.artifactId}",
+                                        "type": "dir",
+                                        "children": [
+                                            {
+                                                "name": "controller",
+                                                "type": "dir",
+                                                "source": "content/Controller.java",
+                                                "generator": "generateControllers"
+                                            },
+                                            {
+                                                "name": "service",
+                                                "type": "dir",
+                                                "children": [
+                                                    {
+                                                        "name": "impl",
+                                                        "type": "dir",
+                                                        "source": "content/ServiceTest.java",
+                                                        "generator": "generateServiceTests"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     }
