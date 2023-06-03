@@ -1,0 +1,225 @@
+function greet()
+    print(project.Name)
+    print("External Module [ spring-boot ] starts")
+end
+
+function test1(name)
+    print("Lua print: " .. name)
+    return "hahaha"
+end
+
+function generateEntities()
+    print("Start to generate entities...")
+    models = project.Models
+    files = {}
+    for i = 1, #models do
+        -- print(models[i].Name)
+        local finalSource = string.gsub(source, "${modelName}", models[i].Name:gsub("^%l",string.upper))
+        local fieldCode = ""
+        for k = 1, #models[i].Fields do
+            fieldCode = fieldCode.."    private String "..models[i].Fields[k].Name..";\n"
+        end
+        finalSource = finalSource.gsub(finalSource, "${fields}", fieldCode)
+        files[(models[i].Name:gsub("^%l",string.upper))..".java"] = finalSource
+    end
+    return files
+end
+
+function generateMappers()
+    print("Start to generate mappers...")
+    models = project.Models
+    files = {}
+    for i = 1, #models do
+        local modelName = models[i].Name
+        local ModelName = modelName:gsub("^%l",string.upper)
+        local finalSource = string.gsub(source, "${ModelName}", ModelName)
+        finalSource = string.gsub(finalSource, "${modelName}", modelName)
+        files[ModelName.."Mapper.java"] = finalSource
+    end
+    return files
+end
+
+function generateMapperXmlFiles()
+    print("Start to generate mapper xml files...")
+    models = project.Models
+    files = {}
+    for i = 1, #models do
+        local modelName = models[i].Name
+        local ModelName = modelName:gsub("^%l",string.upper)
+        local finalSource = string.gsub(source, "${ModelName}", ModelName)
+        finalSource = string.gsub(finalSource, "${modelName}", modelName)
+        finalSource = string.gsub(finalSource, "${tableName}", models[i].TablePrefix..modelName)
+
+        -- Fill in result map fields
+        local resultMapFieldsCode = ""
+        for k = 1, #models[i].Fields do
+            local field = models[i].Fields[k]
+            if (field.Primary)
+            then
+                resultMapFieldsCode = resultMapFieldsCode.."        <id column=\""..field.Name.."\" property=\""..field.Name.."\" jdbcType=\"VARCHAR\"/>\n"
+            else
+                resultMapFieldsCode = resultMapFieldsCode.."        <result column=\""..field.Name.."\" property=\""..field.Name.."\" jdbcType=\"VARCHAR\"/>\n"
+            end
+        end
+        finalSource = finalSource.gsub(finalSource, "${resultMapFields}", resultMapFieldsCode)
+
+        -- Fill in basic params and MyBatis params
+        local basicParamsCode = ""
+        local mybatisParamsCode = ""
+        for k = 1, #models[i].Fields do
+            local field = models[i].Fields[k]
+            if k > 1
+            then
+                basicParamsCode = basicParamsCode..", "
+                mybatisParamsCode = mybatisParamsCode..", "
+            end
+            basicParamsCode = basicParamsCode.."`"..field.Name.."`"
+            mybatisParamsCode = mybatisParamsCode.."#{"..field.Name.."}"
+        end
+        finalSource = finalSource.gsub(finalSource, "${basicParams}", basicParamsCode)
+        finalSource = finalSource.gsub(finalSource, "${mybatisParams}", mybatisParamsCode)
+
+        -- Fill in update fields
+        local updateFieldsCode = ""
+        for k = 1, #models[i].Fields do
+            local field = models[i].Fields[k]
+            if k > 1
+            then
+                updateFieldsCode = updateFieldsCode..", "
+            end
+            if (field.Primary ~= false) then
+                updateFieldsCode = updateFieldsCode..field.Name.." = #{"..field.Name.."}"
+            end
+        end
+        finalSource = finalSource.gsub(finalSource, "${updateFields}", updateFieldsCode)
+
+        files[ModelName.."Mapper.xml"] = finalSource
+    end
+    return files
+end
+
+function generateServices()
+    print("Start to generate services...")
+    models = project.Models
+    files = {}
+    for i = 1, #models do
+        local modelName = models[i].Name
+        local ModelName = modelName:gsub("^%l",string.upper)
+        local finalSource = string.gsub(source, "${ModelName}", ModelName)
+        finalSource = string.gsub(finalSource, "${modelName}", modelName)
+        files[ModelName.."Service.java"] = finalSource
+    end
+    return files
+end
+
+function generateServiceImpls()
+    print("Start to generate service impls...")
+    models = project.Models
+    files = {}
+    for i = 1, #models do
+        local modelName = models[i].Name
+        local ModelName = modelName:gsub("^%l",string.upper)
+        local finalSource = string.gsub(source, "${ModelName}", ModelName)
+        finalSource = string.gsub(finalSource, "${modelName}", modelName)
+        files[ModelName.."ServiceImpl.java"] = finalSource
+    end
+    return files
+end
+
+function generateControllers()
+    print("Start to generate controllers...")
+    models = project.Models
+    files = {}
+    for i = 1, #models do
+        local modelName = models[i].Name
+        local ModelName = modelName:gsub("^%l",string.upper)
+        local finalSource = string.gsub(source, "${ModelName}", ModelName)
+        finalSource = string.gsub(finalSource, "${modelName}", modelName)
+        files[ModelName.."Controller.java"] = finalSource
+    end
+    return files
+end
+
+function generateSqlStatements()
+    print("Start to generate SQL statements...")
+    models = project.Models
+    local finalSource = ""
+    for i = 1, #models do
+        local modelName = models[i].Name
+        finalSource = finalSource.."CREATE TABLE IF NOT EXISTS `"..models[i].TablePrefix..modelName.."` (\n"
+        for k = 1, #models[i].Fields do
+            local field = models[i].Fields[k]
+
+            -- Fill in field name
+            finalSource = finalSource.."    `"..field.Name.."` "
+
+            -- Fill in field type
+            local type = field.DbType
+            if type == "VARCHAR" then
+                local length = 255
+                if field.Length > 0 then length = field.Length end
+                type = type.."("..length..")"
+            end
+            finalSource = finalSource..type
+
+            -- Fill in primary key / null attributes
+            if field.Primary then
+                finalSource = finalSource.." PRIMARY KEY NOT NULL"
+            elseif field.NotNull then
+                finalSource = finalSource.." NOT NULL"
+            end
+
+            -- Line break
+            if k == #models[i].Fields then
+                finalSource = finalSource.."\n"
+            else
+                finalSource = finalSource..",\n"
+            end
+        end
+        finalSource = finalSource..");\n\n"
+    end
+    files = {}
+    files[project.Name..".sql"] = finalSource
+    return files
+end
+
+function generateCrossOriginConfig()
+    print("Start to generate cross origin config...")
+    models = project.Models
+    files = {}
+    local finalSource = source
+    for i = 1, #template.Properties do
+        if template.Properties[i].Name == "cross-origin.allowed-headers" then
+            local value = template.Properties[i].Value
+            if value == "*" then
+                finalSource = string.gsub(finalSource, "${addAllowedHeaders}", "corsConfiguration.addAllowedHeader(\"*\");")
+            else
+                -- TODO: split function should be used here
+                local headers = string.sub(",", 1)
+                local tmp = ""
+                for k = 1, #headers do
+                    tmp = tmp.."\n    corsConfiguration.addAllowedHeader(\""..headers[k].."\");"
+                end
+                finalSource = string.gsub(finalSource, "${addAllowedHeaders}", tmp)
+            end
+        end
+    end
+    -- Remove redundant params
+    finalSource = string.gsub(finalSource, "${addAllowedHeaders}", "")
+    files["CrossOriginConfig.java"] = finalSource
+    return files
+end
+
+function generateServiceTests()
+    print("Start to generate service tests...")
+    models = project.Models
+    files = {}
+    for i = 1, #models do
+        local modelName = models[i].Name
+        local ModelName = modelName:gsub("^%l",string.upper)
+        local finalSource = string.gsub(source, "${ModelName}", ModelName)
+        finalSource = string.gsub(finalSource, "${modelName}", modelName)
+        files[ModelName.."ServiceTest.java"] = finalSource
+    end
+    return files
+end

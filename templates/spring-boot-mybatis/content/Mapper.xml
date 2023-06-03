@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="${template.properties.project.groupId}.${template.properties.project.artifactId}.mapper.${ModelName}Mapper">
+    <resultMap id="resultMap" type="${template.properties.project.groupId}.${template.properties.project.artifactId}.entity.${ModelName}">
+${resultMapFields}
+    </resultMap>
+
+    <sql id="basicParams">
+        ${basicParams}
+    </sql>
+
+    <select id="queryPage" resultMap="resultMap">
+        SELECT
+        <include refid="basicParams" />
+        FROM ${tableName}
+    </select>
+
+    <insert id="create">
+        INSERT INTO ${tableName} (<include refid="basicParams" />)
+        VALUES (${mybatisParams});
+    </insert>
+
+    <select id="query" resultMap="resultMap">
+        SELECT
+        <include refid="basicParams" />
+        FROM ${tableName}
+        WHERE id = #{id}
+        LIMIT 1
+    </select>
+
+    <update id="update">
+        UPDATE ${tableName} SET
+        ${updateFields}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM ${tableName} WHERE id = #{id}
+    </delete>
+</mapper>

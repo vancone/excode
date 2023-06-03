@@ -1,0 +1,158 @@
+{
+    "name": "spring-boot-mybatis",
+    "version": "1.0.0",
+    "metadata": {
+        "javaVersion": "8",
+        "springBootVersion": "2.7"
+    },
+    "structure": {
+        "name": "spring-boot-mybatis",
+        "type": "dir",
+        "children": [
+            {
+                "name": "pom.xml",
+                "type": "file",
+                "dynamic": true,
+                "source": "content/pom/default.xml"
+            },
+            {
+                "name": "src",
+                "type": "dir",
+                "children": [
+                    {
+                        "name": "main",
+                        "type": "dir",
+                        "children": [
+                            {
+                                "name": "java",
+                                "type": "dir",
+                                "children": [
+                                    {
+                                        "name": "${template.properties.project.groupId}/${template.properties.project.artifactId}",
+                                        "type": "dir",
+                                        "children": [
+                                            {
+                                                "name": "Application.java",
+                                                "type": "file",
+                                                "dynamic": true,
+                                                "source": "content/Application.java"
+                                            },
+                                            {
+                                                "name": "config",
+                                                "type": "dir",
+                                                "children": [
+                                                    {
+                                                        "name": "CrossOriginConfig.java",
+                                                        "type": "file",
+                                                        "source": "content/config/CrossOriginConfig.java",
+                                                        "transformer": "generateCrossOriginConfig"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "name": "controller",
+                                                "type": "dir",
+                                                "source": "content/Controller.java",
+                                                "generator": "generateControllers"
+                                            },
+                                            {
+                                                "name": "entity",
+                                                "type": "dir",
+                                                "source": "content/Entity.java",
+                                                "generator": "generateEntities"
+                                            },
+                                            {
+                                                "name": "mapper",
+                                                "type": "dir",
+                                                "source": "content/Mapper.java",
+                                                "generator": "generateMappers"
+                                            },
+                                            {
+                                                "name": "service",
+                                                "type": "dir",
+                                                "source": "content/Service.java",
+                                                "generator": "generateServices",
+                                                "children": [
+                                                    {
+                                                        "name": "impl",
+                                                        "type": "dir",
+                                                        "source": "content/ServiceImpl.java",
+                                                        "generator": "generateServiceImpls"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "name": "util",
+                                                "type": "dir"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "sql",
+                                "type": "dir",
+                                "source": "content/Model.sql",
+                                "generator": "generateSqlStatements"
+                            },
+                            {
+                                "name": "resources",
+                                "type": "dir",
+                                "children": [
+                                    {
+                                        "name": "mapper",
+                                        "type": "dir",
+                                        "source": "content/Mapper.xml",
+                                        "generator": "generateMapperXmlFiles"
+                                    },
+                                    {
+                                        "name": "application.properties",
+                                        "type": "file",
+                                        "dynamic": true,
+                                        "source": "content/properties/default.properties"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "test",
+                        "type": "dir",
+                        "children": [
+                            {
+                                "name": "java",
+                                "type": "dir",
+                                "children": [
+                                    {
+                                        "name": "${template.properties.project.groupId}/${template.properties.project.artifactId}",
+                                        "type": "dir",
+                                        "children": [
+                                            {
+                                                "name": "controller",
+                                                "type": "dir",
+                                                "source": "content/Controller.java",
+                                                "generator": "generateControllers"
+                                            },
+                                            {
+                                                "name": "service",
+                                                "type": "dir",
+                                                "children": [
+                                                    {
+                                                        "name": "impl",
+                                                        "type": "dir",
+                                                        "source": "content/ServiceTest.java",
+                                                        "generator": "generateServiceTests"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

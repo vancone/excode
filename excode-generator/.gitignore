@@ -2,5 +2,5 @@
 target/
 excrud.iml
 .classpath
-.project
+.projectOld
 *.iml

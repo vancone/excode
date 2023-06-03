@@ -1,0 +1,80 @@
+package com.vancone.excode.service;
+
+import com.vancone.web.common.model.ResponsePage;
+import com.vancone.excode.entity.DataStore;
+import com.vancone.excode.entity.DataStoreRelational;
+import com.vancone.excode.entity.DataStoreRelationalColumn;
+import com.vancone.excode.entity.Project;
+//import com.vancone.excode.generator.entity.*;
+import com.vancone.excode.repository.DataStoreRelationalRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+/**
+ * @author Tenton Lien
+ * @since 2022/05/09
+ */
+@Slf4j
+@Service
+public class DataStoreRelationalService {
+
+    @Autowired
+    private DataStoreRelationalRepository dataStoreRelationalRepository;
+
+    public DataStore create(DataStoreRelational dataStore) {
+        return dataStoreRelationalRepository.save(dataStore);
+    }
+
+    public void update(DataStoreRelational dataStore) {
+        dataStoreRelationalRepository.save(dataStore);
+    }
+
+    public DataStoreRelational query(String id) {
+        return dataStoreRelationalRepository.findById(id).get();
+    }
+
+    public ResponsePage<DataStoreRelational> queryPage(int pageNo, int pageSize, String search, String projectId) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "updatedTime");
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        DataStoreRelational example = new DataStoreRelational();
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains);
+        if (StringUtils.isNotBlank(search)) {
+            example.setName(search);
+        }
+        Project project = new Project();
+        project.setId(projectId);
+        example.setProject(project);
+        return new ResponsePage<>(dataStoreRelationalRepository.findAll(Example.of(example, matcher), pageable));
+    }
+
+    public void delete(String id) {
+        dataStoreRelationalRepository.deleteById(id);
+    }
+
+    public String generateDDL(String dataStoreId) {
+        Optional<DataStoreRelational> optional = dataStoreRelationalRepository.findById(dataStoreId);
+        if (optional.isPresent()) {
+            DataStoreRelational dataStore = optional.get();
+            String sql = "CREATE TABLE `" + dataStore.getName() + "` (\n";
+            for (DataStoreRelationalColumn column: dataStore.getColumns()) {
+                sql += "    `" + column.getName() + "` " + column.getType();
+                if (column.getLength() != null && column.getLength() > 0) {
+                    sql += "(" + column.getLength() + ")";
+                }
+                if (StringUtils.isNotBlank(column.getComment())) {
+                    sql += " COMMENT '" + column.getComment() + "'";
+                }
+                sql += ",\n";
+            }
+            sql = sql.substring(0, sql.length() - 2) + "\n)";
+            return sql;
+        }
+        return "";
+    }
+}
