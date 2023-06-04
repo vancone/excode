@@ -34,7 +34,7 @@ var genCmd = &cobra.Command{
 
 		if project.Templates != nil {
 			for _, template := range project.Templates {
-				bytes, err = ioutil.ReadFile(fmt.Sprintf("../templates/%s/config.json", template.Type))
+				bytes, err = ioutil.ReadFile(fmt.Sprintf("templates/%s/config.json", template.Type))
 				if err != nil {
 					fmt.Println("failed to read xml file:", err)
 					return
@@ -57,7 +57,7 @@ func init() {
 
 func generate(config entity.TemplateConfig, project entity.Project, template entity.Template) {
 	fmt.Println("generating...")
-	baseUrl := "../output" // + time.Now().Format("20060102150405")
+	baseUrl := "output" // + time.Now().Format("20060102150405")
 	err := util.CreateDir(baseUrl)
 	if err != nil {
 		panic(err)
@@ -84,7 +84,7 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 	} else if structure.Type == "file" {
 
 		dstFileName := baseUrl + "/" + structure.Name
-		srcFileName := fmt.Sprintf("../templates/%s/%s", templateName, structure.Source)
+		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, structure.Source)
 		if structure.Dynamic {
 			templateFile, err := ioutil.ReadFile(srcFileName)
 			if err != nil {
@@ -129,7 +129,7 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	L := lua.NewState()
 	defer L.Close()
 
-	if err := L.DoFile(fmt.Sprintf("../templates/%s/transform.lua", templateName)); err != nil {
+	if err := L.DoFile(fmt.Sprintf("templates/%s/transform.lua", templateName)); err != nil {
 		panic(err)
 	}
 
@@ -137,7 +137,7 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	L.SetGlobal("template", luar.New(L, template))
 
 	if source != "" {
-		srcFileName := fmt.Sprintf("../templates/%s/%s", templateName, source)
+		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, source)
 		sourceBytes, err := ioutil.ReadFile(srcFileName)
 		if err != nil {
 			log.Printf("Failed to read source file before execute Lua script: %s", srcFileName)
