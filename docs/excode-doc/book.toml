@@ -1,6 +1,6 @@
 [book]
 authors = ["Tenton Lien"]
 language = "en"
-multilingual = false
+multilingual = true
 src = "src"
-title = "excode-doc"
+title = "ExCode Low-Code Tool"

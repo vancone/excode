@@ -1,41 +1,51 @@
 # 快速上手
 
-Hello World 示例
+## 常用命令
+
+```bash
+# 生成项目
+excode-cli gen path/your-project.xml
+```
+
+## 演示项目：e-School
 
 ```xml
 <project>
-	<name>Demo</name>
-    <version>1.0.0</version>
-    
+    <name>e-school</name>
+    <version>0.1</version>
+
     <middleware>
-    	<mysql id="demo">
-            <host>10.10.10.1</host>
-            <port>3306</port>
-            <database>demo</database>
-            <user>root</user>
-            <password>ENC(LJdKL23rwiheOIFHLdf)</password>
-        </mysql>
+        <mysql name="ds" port="3306" />
     </middleware>
-    
+
     <models>
-    	<model name="student" source="demo">
-            <field name="id" type="string" primary="true" />
-        	<field name="name" type="string" length="50" />
+        <model name="student" source="ds" tablePrefix="school_">
+            <field name="id" type="number" dbType="BIGINT" primary="true" comment="Student ID"/>
+            <field name="name" type="string" dbType="VARCHAR" notNull="true"/>
+            <field name="gender" type="enum" dbType="BIT"/>
+            <field name="birthday" type="date" dbType="DATETIME"/>
+        </model>
+        <model name="teacher" source="ds">
+            <field name="id" type="number" dbType="BIGINT" primary="true" comment="Teacher ID"/>
         </model>
     </models>
-    
-    <generators>
-        <generator name="spring-boot">
+
+    <templates>
+        <template type="spring-boot-mybatis" external="true">
             <plugins>
-                <plugin name="lombok" enable="true"/>
+                <plugin name="lombok" enabled="true" />
             </plugins>
-            
+
             <properties>
-                <property name="project.groupId" value="com.vancone"/>
-                <property name="project.artifactId" value="e-school"/>
+                <property name="project.groupId" value="com.vancone" />
+                <property name="project.artifactId" value="eschool" />
+                <property name="spring.application.name" value="e-school" />
+                <property name="server.port" value="8080" />
+                <property name="cross-origin.allowed-methods" value="*" />
+                <property name="cross-origin.allowed-headers" value="*" />
             </properties>
-    	</generator>
-    </generators>
+        </template>
+    </templates>
 </project>
 ```
 

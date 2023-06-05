@@ -1,4 +1,5 @@
 # Summary
 
-- [概述](./overview.md)
-- [快速上手](./quick-start.md)
+- [Overview](./overview.md)
+- [Quick Start](./quick-start.md)
+- [Data Model](./data-model.md)
