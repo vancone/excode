@@ -165,6 +165,9 @@ function generateSqlStatements()
             -- Fill in primary key / null attributes
             if field.Primary then
                 finalSource = finalSource.." PRIMARY KEY NOT NULL"
+                if field.AutoIncrement then
+                    finalSource = finalSource.." AUTO_INCREMENT"
+                end
             elseif field.NotNull then
                 finalSource = finalSource.." NOT NULL"
             end

@@ -8,7 +8,7 @@
 
     <models>
         <model name="student" source="ds" tablePrefix="school_">
-            <field name="id" type="number" dbType="BIGINT" primary="true" comment="Student ID"/>
+            <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true" comment="Student ID"/>
             <field name="name" type="string" dbType="VARCHAR" notNull="true"/>
             <field name="gender" type="enum" dbType="BIT"/>
             <field name="birthday" type="date" dbType="DATETIME"/>
