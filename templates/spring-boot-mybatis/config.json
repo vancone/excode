@@ -96,6 +96,12 @@
                                 "generator": "generateSqlStatements"
                             },
                             {
+                                "name": "postman",
+                                "type": "dir",
+                                "source": "content/PostmanCollection.json",
+                                "generator": "generatePostmanCollection"
+                            },
+                            {
                                 "name": "resources",
                                 "type": "dir",
                                 "children": [

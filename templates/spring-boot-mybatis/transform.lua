@@ -226,3 +226,17 @@ function generateServiceTests()
     end
     return files
 end
+
+function generatePostmanCollection()
+    local finalSource = '{\n'..
+        '    "info": {\n'..
+        '        "_postman_id": "6677f9a2-0725-4a62-8472-221789071ee9",\n'..
+        '        "name": "'..project.Name..'",\n'..
+        '        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"\n'..
+        '    },\n'..
+        '    "item": []\n'..
+        '}'
+    files = {}
+    files[project.Name..".postman_collection.json"] = finalSource
+    return files
+end

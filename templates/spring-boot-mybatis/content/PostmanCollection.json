@@ -1,0 +1,36 @@
+{
+    "name": "${folderName}",
+    "item": [
+        {
+            "name": "${requestName}",
+            "request": {
+                "method": "${requestMethod}",
+                "header": [],
+                "url": {
+                    "raw": "${requestUrl}",
+                    "protocol": "http",
+                    "host": [
+                        "${requestHost}"
+                    ],
+                    "port": "${port}",
+                    "path": [
+                        "api",
+                        "wiki",
+                        "book"
+                    ],
+                    "query": [
+                        {
+                            "key": "pageSize",
+                            "value": "5"
+                        },
+                        {
+                            "key": "pageNo",
+                            "value": "1"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+}
