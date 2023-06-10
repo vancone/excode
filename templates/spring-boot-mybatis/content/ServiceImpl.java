@@ -3,8 +3,10 @@ package ${template.properties.project.groupId}.${template.properties.project.art
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.entity.${ModelName};
+import ${template.properties.project.groupId}.${template.properties.project.artifactId}.enums.ResponseEnum;
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.mapper.${ModelName}Mapper;
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.service.${ModelName}Service;
+import com.vancone.web.common.exception.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.vancone.web.common.model.ResponsePage;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,10 @@ public class ${ModelName}ServiceImpl implements ${ModelName}Service {
 
     @Override
     public void delete(String id) {
-        ${modelName}Mapper.query(id);
+        ${ModelName} ${modelName} = query(id);
+        if (${modelName} != null) {
+            throw new ResponseException(ResponseEnum.NOT_FOUND);
+        }
+        ${modelName}Mapper.delete(id);
     }
 }

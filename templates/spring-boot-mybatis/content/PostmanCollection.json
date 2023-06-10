@@ -3,6 +3,15 @@
                     "request": {
                         "method": "${requestMethod}",
                         "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "${requestBody}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "url": {
                             "raw": "${requestUrl}",
                             "protocol": "http",
@@ -13,16 +22,7 @@
                             "path": [
                                 ${paths}
                             ],
-                            "query": [
-                                {
-                                    "key": "pageSize",
-                                    "value": "5"
-                                },
-                                {
-                                    "key": "pageNo",
-                                    "value": "1"
-                                }
-                            ]
+                            "query": [ ${query} ]
                         }
                     },
                     "response": []

@@ -62,6 +62,30 @@
                                                 "generator": "generateEntities"
                                             },
                                             {
+                                                "name": "enums",
+                                                "type": "dir",
+                                                "children": [
+                                                    {
+                                                        "name": "ResponseEnum.java",
+                                                        "type": "file",
+                                                        "source": "content/ResponseEnum.java",
+                                                        "dynamic": true
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "name": "exception",
+                                                "type": "dir",
+                                                "children": [
+                                                    {
+                                                        "name": "ValidExceptionHandler.java",
+                                                        "type": "file",
+                                                        "source": "content/ValidExceptionHandler.java",
+                                                        "dynamic": true
+                                                    }
+                                                ]
+                                            },
+                                            {
                                                 "name": "mapper",
                                                 "type": "dir",
                                                 "source": "content/Mapper.java",

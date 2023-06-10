@@ -253,31 +253,47 @@ function generatePostmanCollection()
             itemSource = itemSource..',\n'
         end
         local subItemSource = ''
+        local requestUrl = 'http://localhost:'..properties['server.port']..'/api/'..properties['project.artifactId']..'/'..modelName
+        local paths = '"api", "'..properties['project.artifactId']..'", "'..modelName..'"'
 
         -- GET
         subItemSource = subItemSource..'\n'..source..','
         subItemSource = string.gsub(subItemSource, "${requestName}", 'Query '..ModelName)
         subItemSource = string.gsub(subItemSource, "${requestMethod}", 'GET')
+        subItemSource = string.gsub(subItemSource, '${query}', '{ "key": "pageSize", "value": "5" }, { "key": "pageNo", "value": "1" }')
+        subItemSource = string.gsub(subItemSource, '${requestBody}', '')
+        subItemSource = string.gsub(subItemSource, "${requestUrl}", requestUrl)
+        subItemSource = string.gsub(subItemSource, "${paths}", paths)
 
         -- POST
         subItemSource = subItemSource..'\n'..source..','
         subItemSource = string.gsub(subItemSource, "${requestName}", 'Create '..ModelName)
         subItemSource = string.gsub(subItemSource, "${requestMethod}", 'POST')
+        subItemSource = string.gsub(subItemSource, '${query}', '')
+        subItemSource = string.gsub(subItemSource, '${requestBody}', '{\\"id\\": 1, \\"name\\": \\"Tom\\"}')
+        subItemSource = string.gsub(subItemSource, "${requestUrl}", requestUrl)
+        subItemSource = string.gsub(subItemSource, "${paths}", paths)
 
         -- PUT
         subItemSource = subItemSource..'\n'..source..','
         subItemSource = string.gsub(subItemSource, "${requestName}", 'Update '..ModelName)
         subItemSource = string.gsub(subItemSource, "${requestMethod}", 'PUT')
+        subItemSource = string.gsub(subItemSource, '${query}', '')
+        subItemSource = string.gsub(subItemSource, '${requestBody}', '')
+        subItemSource = string.gsub(subItemSource, "${requestUrl}", requestUrl)
+        subItemSource = string.gsub(subItemSource, "${paths}", paths)
 
         -- DELETE
         subItemSource = subItemSource..'\n'..source
         subItemSource = string.gsub(subItemSource, "${requestName}", 'Delete '..ModelName)
         subItemSource = string.gsub(subItemSource, "${requestMethod}", 'DELETE')
+        subItemSource = string.gsub(subItemSource, '${query}', '')
+        subItemSource = string.gsub(subItemSource, '${requestBody}', '')
+        subItemSource = string.gsub(subItemSource, "${requestUrl}", requestUrl..'/1')
+        subItemSource = string.gsub(subItemSource, "${paths}", paths..', "1"')
 
-        subItemSource = string.gsub(subItemSource, "${requestUrl}", 'http://localhost:'..properties['server.port']..'/api/'..properties['project.artifactId']..'/'..modelName)
         subItemSource = string.gsub(subItemSource, "${requestHost}", 'localhost')
         subItemSource = string.gsub(subItemSource, "${port}", properties['server.port'])
-        subItemSource = string.gsub(subItemSource, "${paths}", '"api", "'..properties['project.artifactId']..'", "'..modelName..'"')
         itemSource = string.gsub(itemSource, "${subItems}", subItemSource)
     end
 
