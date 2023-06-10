@@ -1,5 +1,7 @@
 package ${template.properties.project.groupId}.${template.properties.project.artifactId}.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.entity.${ModelName};
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.mapper.${ModelName}Mapper;
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.service.${ModelName}Service;
@@ -28,7 +30,8 @@ public class ${ModelName}ServiceImpl implements ${ModelName}Service {
 
     @Override
     public ResponsePage<${ModelName}> queryPage(int pageNo, int pageSize) {
-        return ${modelName}Mapper.queryPage(pageNo, pageSize);
+        PageHelper.startPage(pageNo, pageSize);
+        return new ResponsePage<>(new PageInfo<>(${modelName}Mapper.queryPage()));
     }
 
     @Override
