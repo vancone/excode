@@ -234,8 +234,54 @@ function generatePostmanCollection()
         '        "name": "'..project.Name..'",\n'..
         '        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"\n'..
         '    },\n'..
-        '    "item": []\n'..
+        '    "item": [\n${items}    ]\n'..
         '}'
+    
+    models = project.Models
+    local itemSource = ''
+    for i = 1, #models do
+        local modelName = models[i].Name
+        local ModelName = modelName:gsub("^%l",string.upper)
+        -- local finalSource = string.gsub(source, "${ModelName}", ModelName)
+        itemSource = itemSource..'        {\n'..
+                                '            "name": "'..ModelName..'",\n'..
+                                '            "item": [${subItems}]\n'..
+                                '        }'
+        if i == #models then
+            itemSource = itemSource..'\n'
+        else
+            itemSource = itemSource..',\n'
+        end
+        local subItemSource = ''
+
+        -- GET
+        subItemSource = subItemSource..'\n'..source..','
+        subItemSource = string.gsub(subItemSource, "${requestName}", 'Query '..ModelName)
+        subItemSource = string.gsub(subItemSource, "${requestMethod}", 'GET')
+
+        -- POST
+        subItemSource = subItemSource..'\n'..source..','
+        subItemSource = string.gsub(subItemSource, "${requestName}", 'Create '..ModelName)
+        subItemSource = string.gsub(subItemSource, "${requestMethod}", 'POST')
+
+        -- PUT
+        subItemSource = subItemSource..'\n'..source..','
+        subItemSource = string.gsub(subItemSource, "${requestName}", 'Update '..ModelName)
+        subItemSource = string.gsub(subItemSource, "${requestMethod}", 'PUT')
+
+        -- DELETE
+        subItemSource = subItemSource..'\n'..source
+        subItemSource = string.gsub(subItemSource, "${requestName}", 'Delete '..ModelName)
+        subItemSource = string.gsub(subItemSource, "${requestMethod}", 'DELETE')
+
+        subItemSource = string.gsub(subItemSource, "${requestUrl}", 'http://localhost:'..properties['server.port']..'/api/'..properties['project.artifactId']..'/'..modelName)
+        subItemSource = string.gsub(subItemSource, "${requestHost}", 'localhost')
+        subItemSource = string.gsub(subItemSource, "${port}", properties['server.port'])
+        subItemSource = string.gsub(subItemSource, "${paths}", '"api", "'..properties['project.artifactId']..'", "'..modelName..'"')
+        itemSource = string.gsub(itemSource, "${subItems}", subItemSource)
+    end
+
+    finalSource = string.gsub(finalSource, "${items}", itemSource)
     files = {}
     files[project.Name..".postman_collection.json"] = finalSource
     return files

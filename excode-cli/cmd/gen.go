@@ -136,6 +136,12 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	L.SetGlobal("project", luar.New(L, project))
 	L.SetGlobal("template", luar.New(L, template))
 
+	properties := map[string]string{}
+	for _, item := range template.Properties {
+		properties[item.Name] = item.Value
+	}
+	L.SetGlobal("properties", luar.New(L, properties))
+
 	if source != "" {
 		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, source)
 		sourceBytes, err := ioutil.ReadFile(srcFileName)
