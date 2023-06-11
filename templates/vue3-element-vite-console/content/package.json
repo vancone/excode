@@ -1,5 +1,5 @@
 {
-  "name": "vancone-design-starter-vue",
+  "name": "${project.Name}",
   "version": "0.1.0",
   "scripts": {
     "dev": "vite",

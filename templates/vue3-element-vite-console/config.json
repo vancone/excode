@@ -2,8 +2,8 @@
     "name": "vue3-element-vite-console",
     "version": "1.0.0",
     "metadata": {
-        "vueVersion": "-",
-        "elementPlusVersion": "-"
+        "vueVersion": "3.2.31",
+        "elementPlusVersion": "2.2.29"
     },
     "structure": {
         "name": "vue3-element-vite-console",
@@ -45,6 +45,12 @@
                         "dynamic": true
                     }
                 ]
+            },
+            {
+                "name": "package.json",
+                "type": "file",
+                "source": "content/package.json",
+                "dynamic": true
             }
         ]
     }
