@@ -15,4 +15,5 @@ type Structure struct {
 	Transformer string      `json:"transformer"`
 	Generator   string      `json:"generator"`
 	Children    []Structure `json:"children"`
+	InitialCopy string      `json:"initialCopy"`
 }

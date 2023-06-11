@@ -81,6 +81,13 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 				err = ioutil.WriteFile(dstFileName, []byte(L2.String()), 0666)
 			})
 		}
+		if len(structure.InitialCopy) > 0 {
+			err := util.CopyDir(baseUrl, "templates/"+templateName+"/"+structure.InitialCopy)
+			if err != nil {
+				log.Printf("Failed to copy directory (%s): %s", structure.InitialCopy, err)
+				return
+			}
+		}
 	} else if structure.Type == "file" {
 
 		dstFileName := baseUrl + "/" + structure.Name

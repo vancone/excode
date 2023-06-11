@@ -74,18 +74,6 @@
                                                 ]
                                             },
                                             {
-                                                "name": "exception",
-                                                "type": "dir",
-                                                "children": [
-                                                    {
-                                                        "name": "ValidExceptionHandler.java",
-                                                        "type": "file",
-                                                        "source": "content/ValidExceptionHandler.java",
-                                                        "dynamic": true
-                                                    }
-                                                ]
-                                            },
-                                            {
                                                 "name": "mapper",
                                                 "type": "dir",
                                                 "source": "content/Mapper.java",

@@ -1,0 +1,39 @@
+{
+    "name": "vue3-element-vite-console",
+    "version": "1.0.0",
+    "metadata": {
+        "vueVersion": "-",
+        "elementPlusVersion": "-"
+    },
+    "structure": {
+        "name": "vue3-element-vite-console",
+        "type": "dir",
+        "initialCopy": "content/static",
+        "children": [
+            {
+                "name": "index.html",
+                "type": "file",
+                "source": "content/index.html",
+                "transformer": "generateIndexHtml"
+            },
+            {
+                "name": "src",
+                "type": "dir",
+                "children": [
+                    {
+                        "name": "router",
+                        "type": "dir",
+                        "children": [
+                            {
+                                "name": "index.ts",
+                                "type": "file",
+                                "source": "content/router-index.ts",
+                                "transformer": "generateRouter"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

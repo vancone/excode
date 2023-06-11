@@ -1,0 +1,1 @@
+VITE_PASSPORT_BASE_URL=passport.vancone.com

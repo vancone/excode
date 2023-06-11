@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
 func HasDir(path string) (bool, error) {
@@ -47,6 +49,32 @@ func CopyFile(dst string, src string) error {
 		fmt.Println("Error creating", dst)
 		fmt.Println(err)
 		return err
+	}
+	return nil
+}
+
+func CopyDir(dst string, src string) error {
+	var files []string
+
+	err := filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() {
+			dstPath := strings.Replace(strings.Replace(path, "\\", "/", -1), src, dst, 1)
+			CreateDir(dstPath)
+		} else {
+			files = append(files, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	for _, file := range files {
+		srcPath := strings.Replace(file, "\\", "/", -1)
+		dstPath := strings.Replace(srcPath, src, dst, 1)
+		err = CopyFile(dstPath, srcPath)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
