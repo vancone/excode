@@ -43,7 +43,7 @@ export default defineConfig({
     host: 'localhost.vancone.com',
     port: 3000,
     proxy: {
-      '/api': 'http://localhost:9091/'
+      '/api': 'http://localhost:8080/'
     }
   }
 });

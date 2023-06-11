@@ -31,6 +31,18 @@
                                 "transformer": "generateRouter"
                             }
                         ]
+                    },
+                    {
+                        "name": "views",
+                        "type": "dir",
+                        "source": "content/TableView.vue",
+                        "generator": "generateTableViews"
+                    },
+                    {
+                        "name": "App.vue",
+                        "type": "file",
+                        "source": "content/App.vue",
+                        "dynamic": true
                     }
                 ]
             }

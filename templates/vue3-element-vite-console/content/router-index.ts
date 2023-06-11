@@ -1,8 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Dashboard from '../views/dashboard/index.vue'
-import TableView from '../views/TableView.vue';
-import Building from '../components/common/Building.vue';
-import Secondary from '../components/common/Secondary.vue';
+${imports}
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -17,20 +14,10 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'Home',
-    redirect: '/overview',
+    redirect: '/${modelName}',
     meta: {
       title: 'Home',
       hidden: true,
-    }
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
-    meta: {
-      title: 'menu.dashboard',
-      activeMenu: '/dashboard',
-      icon: 'el-icon-data-analysis',
     }
   },
 ${routes}

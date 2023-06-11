@@ -5,24 +5,28 @@
 ${resultMapFields}
     </resultMap>
 
-    <sql id="basicParams">
-        ${basicParams}
+    <sql id="queryParams">
+        ${queryParams}
+    </sql>
+
+    <sql id="insertParams">
+        ${insertParams}
     </sql>
 
     <select id="queryPage" resultMap="resultMap">
         SELECT
-        <include refid="basicParams" />
+        <include refid="queryParams" />
         FROM ${tableName}
     </select>
 
     <insert id="create">
-        INSERT INTO ${tableName} (<include refid="basicParams" />)
+        INSERT INTO ${tableName} (<include refid="insertParams" />)
         VALUES (${mybatisParams});
     </insert>
 
     <select id="query" resultMap="resultMap">
         SELECT
-        <include refid="basicParams" />
+        <include refid="queryParams" />
         FROM ${tableName}
         WHERE id = #{id}
         LIMIT 1

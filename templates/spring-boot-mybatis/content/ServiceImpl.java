@@ -44,7 +44,7 @@ public class ${ModelName}ServiceImpl implements ${ModelName}Service {
     @Override
     public void delete(String id) {
         ${ModelName} ${modelName} = query(id);
-        if (${modelName} != null) {
+        if (${modelName} == null) {
             throw new ResponseException(ResponseEnum.NOT_FOUND);
         }
         ${modelName}Mapper.delete(id);

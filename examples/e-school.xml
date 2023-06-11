@@ -14,7 +14,10 @@
             <field name="birthday" type="date" dbType="DATETIME"/>
         </model>
         <model name="teacher" source="ds">
-            <field name="id" type="number" dbType="BIGINT" primary="true" comment="Teacher ID"/>
+            <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true" comment="Teacher ID"/>
+            <field name="name" type="string" dbType="VARCHAR" notNull="true"/>
+            <field name="gender" type="enum" dbType="BIT"/>
+            <field name="title" type="string" dbType="VARCHAR"/>
         </model>
     </models>
 
@@ -34,6 +37,10 @@
             </properties>
         </template>
 
-        <template type="vue3-element-vite-console" external="true"></template>
+        <template type="vue3-element-vite-console" external="true">
+            <properties>
+                <property name="apiPath" value="/api/eschool"></property>
+            </properties>
+        </template>
     </templates>
 </project>

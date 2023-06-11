@@ -30,6 +30,7 @@ func ParseDynamicParams(content string, project entity.Project, template entity.
 			paramName = strings.Replace(paramName, "project.", "", -1)
 			if s.FieldByName(paramName).IsValid() {
 				fmt.Println("Parse param", s.FieldByName(paramName).Interface())
+				content = strings.Replace(content, string(v), s.FieldByName(paramName).String(), -1)
 			} else {
 				log.Printf("Unrecognized param: %s", paramName)
 				continue

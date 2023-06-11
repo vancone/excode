@@ -61,33 +61,49 @@ function generateMapperXmlFiles()
                 resultMapFieldsCode = resultMapFieldsCode.."        <result column=\""..field.Name.."\" property=\""..field.Name.."\" jdbcType=\"VARCHAR\"/>\n"
             end
         end
+        resultMapFieldsCode = resultMapFieldsCode.."        <result column=\"created_time\" property=\"createdTime\" jdbcType=\"TIMESTAMP\"/>\n"
+        resultMapFieldsCode = resultMapFieldsCode.."        <result column=\"updated_time\" property=\"updatedTime\" jdbcType=\"TIMESTAMP\"/>"
         finalSource = finalSource.gsub(finalSource, "${resultMapFields}", resultMapFieldsCode)
 
-        -- Fill in basic params and MyBatis params
-        local basicParamsCode = ""
+        -- Fill in query params and MyBatis params
+        local queryParamsCode = ""
+        local insertParamsCode = ""
         local mybatisParamsCode = ""
+        local isFirstInsertField = true
         for k = 1, #models[i].Fields do
             local field = models[i].Fields[k]
-            if k > 1
-            then
-                basicParamsCode = basicParamsCode..", "
-                mybatisParamsCode = mybatisParamsCode..", "
+            if k > 1 then
+                queryParamsCode = queryParamsCode..", "
             end
-            basicParamsCode = basicParamsCode.."`"..field.Name.."`"
-            mybatisParamsCode = mybatisParamsCode.."#{"..field.Name.."}"
+
+            queryParamsCode = queryParamsCode.."`"..field.Name.."`"
+            if field.Primary ~= true then
+                if isFirstInsertField == true then
+                    isFirstInsertField = false
+                else
+                    insertParamsCode = insertParamsCode..", "
+                    mybatisParamsCode = mybatisParamsCode..", "
+                end
+                insertParamsCode = insertParamsCode.."`"..field.Name.."`"
+                mybatisParamsCode = mybatisParamsCode.."#{"..field.Name.."}"
+            end
         end
-        finalSource = finalSource.gsub(finalSource, "${basicParams}", basicParamsCode)
+        queryParamsCode = queryParamsCode..", `created_time`, `updated_time`"
+        finalSource = finalSource.gsub(finalSource, "${queryParams}", queryParamsCode)
+        finalSource = finalSource.gsub(finalSource, "${insertParams}", insertParamsCode)
         finalSource = finalSource.gsub(finalSource, "${mybatisParams}", mybatisParamsCode)
 
         -- Fill in update fields
         local updateFieldsCode = ""
+        local isFirstField = true
         for k = 1, #models[i].Fields do
             local field = models[i].Fields[k]
-            if k > 1
-            then
-                updateFieldsCode = updateFieldsCode..", "
-            end
-            if (field.Primary ~= false) then
+            if (field.Primary == false) then
+                if isFirstField then
+                    isFirstField = false
+                else
+                    updateFieldsCode = updateFieldsCode..", "
+                end
                 updateFieldsCode = updateFieldsCode..field.Name.." = #{"..field.Name.."}"
             end
         end

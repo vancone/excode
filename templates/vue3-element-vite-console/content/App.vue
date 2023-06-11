@@ -1,7 +1,7 @@
 <template>
   <Header v-if="route.query.embedded !== 'true'" />
   <div class="container">
-    <Menu title="Design" v-if="route.query.embedded !== 'true'" />
+    <Menu title="${project.Name}" v-if="route.query.embedded !== 'true'" />
     <main class="wrapper"><router-view/></main>
   </div>
 </template>

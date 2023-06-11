@@ -1,34 +1,23 @@
 <template>
   <div class="application-table">
-    <h1 class="title">Table</h1>
+    <h1 class="title">${ModelName}</h1>
     <CommonTable :config="tableConfig" />
   </div>
 
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
-import { IApplication } from "~/api/types";
+import { reactive } from "vue";
 import CommonTable, { ITableConfig } from "~/components/common/CommonTable.vue";
 
-const updateDialogVisible = ref(false);
-const activeIndex = ref(0);
-
 const tableConfig = reactive<ITableConfig>({
-  api: '/api/passport/admin/v1/user-group',
-  createPageRoutePath: undefined,
-  editPageRoutePath: '/user-group/detail',
+  api: '${template.properties.apiPath}/${modelName}',
   columns: [
-    { prop: 'name', link: true },
-    { prop: 'description' },
+${columns}
     { prop: 'createdTime', label: 'Created Time', formItemVisible: false },
+    { prop: 'updatedTime', label: 'Updated Time', formItemVisible: false },
   ]
 });
-
-function handleEdit(index: number, row: IApplication) {
-  updateDialogVisible.value = true;
-  activeIndex.value = index
-}
 </script>
 
 <style lang="scss" scoped>
