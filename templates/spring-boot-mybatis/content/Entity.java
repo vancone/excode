@@ -3,6 +3,8 @@ package ${template.properties.project.groupId}.${template.properties.project.art
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * @author ExCode
  * @since ${date}
@@ -11,4 +13,6 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ${modelName} {
 ${fields}
+    private LocalDateTime createdTime;
+    private LocalDateTime updatedTime;
 }

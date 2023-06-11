@@ -146,7 +146,7 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, source)
 		sourceBytes, err := ioutil.ReadFile(srcFileName)
 		if err != nil {
-			log.Printf("Failed to read source file before execute Lua script: %s", srcFileName)
+			log.Printf("Failed to read source file before executing Lua script: %s", srcFileName)
 			return nil
 		}
 		sourceStr := util.ParseDynamicParams(string(sourceBytes), project, template)

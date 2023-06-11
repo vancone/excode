@@ -172,13 +172,16 @@ function generateSqlStatements()
                 finalSource = finalSource.." NOT NULL"
             end
 
+            finalSource = finalSource..",\n"
             -- Line break
-            if k == #models[i].Fields then
-                finalSource = finalSource.."\n"
-            else
-                finalSource = finalSource..",\n"
-            end
+            -- if k == #models[i].Fields then
+            --     finalSource = finalSource.."\n"
+            -- else
+            --     finalSource = finalSource..",\n"
+            -- end
         end
+        finalSource = finalSource..'    `created_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n'
+        finalSource = finalSource..'    `updated_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n'
         finalSource = finalSource..");\n\n"
     end
     files = {}
