@@ -16,5 +16,5 @@ ExCode aims at helping programmers liberate from boring CRUD template codes. In 
 
 - **spring-boot-mybatis**
   - **Supported Components**: API document, Lombok, MyBatis, Postman Collection, Swagger;
-- **vite-admin**
+- **vue3-element-vite-console**
   - In construction ...
