@@ -321,3 +321,29 @@ function generatePostmanCollection()
     files[project.Name..".postman_collection.json"] = finalSource
     return files
 end
+
+function generateProperties()
+    files = {}
+
+    for i = 1, #(project.Deployment.Env) do
+        local env = project.Deployment.Env[i]
+        local finalSource = source
+
+        -- Add MySQL properties
+        if #(env.Middleware.Mysql) > 0 then
+            local mysql = env.Middleware.Mysql[1]
+            local mysqlProperties = 'spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver\n' ..
+                'spring.datasource.url=jdbc:mysql://10.10.10.1:3306/vancone_passport?serverTimezone=GMT%%2B8&characterEncoding=utf-8\n' ..
+                'spring.datasource.username=' .. mysql.User .. '\n' ..
+                'spring.datasource.password=' .. mysql.Password
+            finalSource = string.gsub(finalSource, '${mysqlProperties}', mysqlProperties)
+        end
+
+        -- Remove dynamic params
+        finalSource = string.gsub(finalSource, "${mysqlProperties}", '')
+
+        files['application-' .. env.Profile .. '.properties'] = finalSource
+    end
+
+    return files
+end

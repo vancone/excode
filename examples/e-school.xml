@@ -2,12 +2,21 @@
     <name>e-school</name>
     <version>0.1</version>
 
-    <middleware>
-        <mysql name="ds" port="3306" />
-    </middleware>
+    <deployment>
+        <env profile="test">
+            <middleware>
+                <mysql name="mysql_default" host="10.10.10.1" port="3306" user="root" password="123456" />
+            </middleware>
+        </env>
+        <env profile="pro">
+            <middleware>
+                <mysql name="mysql_default" host="10.10.10.1" port="3306" user="root" password="123456" />
+            </middleware>
+        </env>
+    </deployment>
 
     <models>
-        <model name="student" source="ds" tablePrefix="school_">
+        <model name="student" source="mysql_default" tablePrefix="school_">
             <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true" comment="Student ID"/>
             <field name="name" type="string" dbType="VARCHAR" notNull="true"/>
             <field name="gender" type="enum" dbType="BIT"/>
