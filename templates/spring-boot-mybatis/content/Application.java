@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 @MapperScan("${template.properties.project.groupId}.${template.properties.project.artifactId}.mapper")
 @ComponentScan(basePackages = "com.vancone")
 public class Application {
-  public static void main(String[] args) {
-    SpringApplication.run(Application.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 }

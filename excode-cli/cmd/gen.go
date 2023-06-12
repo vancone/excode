@@ -23,7 +23,7 @@ var genCmd = &cobra.Command{
 		}
 		bytes, err := ioutil.ReadFile(args[0])
 		if err != nil {
-			fmt.Println("failed to read xml file:", err)
+			log.Println("failed to read xml file:", err)
 			return
 		}
 		var project entity.Project
@@ -35,9 +35,12 @@ var genCmd = &cobra.Command{
 		fillEncryptedFields(&project)
 		if project.Templates != nil {
 			for _, template := range project.Templates {
+				if !template.Enabled {
+					continue
+				}
 				bytes, err = ioutil.ReadFile(fmt.Sprintf("templates/%s/config.json", template.Type))
 				if err != nil {
-					fmt.Println("failed to read xml file:", err)
+					log.Println("failed to read xml file:", err)
 					return
 				}
 				templateStr := util.ParseDynamicParams(string(bytes), project, template)
@@ -72,7 +75,7 @@ func fillEncryptedFields(project *entity.Project) {
 }
 
 func generate(config entity.TemplateConfig, project entity.Project, template entity.Template) {
-	fmt.Println("generating...")
+	log.Println("generating...")
 	baseUrl := "output" // + time.Now().Format("20060102150405")
 	err := util.CreateDir(baseUrl)
 	if err != nil {

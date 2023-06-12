@@ -8,13 +8,13 @@ import com.vancone.web.common.model.ResponsePage;
  * @since ${date}
  */
 public interface ${ModelName}Service {
-  void create(${ModelName} ${modelName});
+    void create(${ModelName} ${modelName});
 
-  ${ModelName} query(String id);
+    ${ModelName} query(String id);
 
-  ResponsePage<${ModelName}> queryPage(int pageNo, int pageSize);
+    ResponsePage<${ModelName}> queryPage(int pageNo, int pageSize);
 
-  void update(${ModelName} ${modelName});
+    void update(${ModelName} ${modelName});
 
-  void delete(String id);
+    void delete(String id);
 }

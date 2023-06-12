@@ -31,7 +31,7 @@
     </models>
 
     <templates>
-        <template type="spring-boot-mybatis" external="true">
+        <template type="spring-boot-mybatis" external="true" enabled="true">
             <plugins>
                 <plugin name="lombok" enabled="true" />
             </plugins>
@@ -46,7 +46,7 @@
             </properties>
         </template>
 
-        <template type="vue3-element-vite-console" external="true">
+        <template type="vue3-element-vite-console" external="true" enabled="true">
             <properties>
                 <property name="apiPath" value="/api/eschool"></property>
             </properties>
