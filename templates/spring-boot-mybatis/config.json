@@ -116,18 +116,14 @@
                             {
                                 "name": "resources",
                                 "type": "dir",
+                                "source": "content/properties/default.properties",
+                                "generator": "generateProperties",
                                 "children": [
                                     {
                                         "name": "mapper",
                                         "type": "dir",
                                         "source": "content/Mapper.xml",
                                         "generator": "generateMapperXmlFiles"
-                                    },
-                                    {
-                                        "name": "application.properties",
-                                        "type": "file",
-                                        "dynamic": true,
-                                        "source": "content/properties/default.properties"
                                     }
                                 ]
                             }
