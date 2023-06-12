@@ -332,10 +332,14 @@ function generateProperties()
         -- Add MySQL properties
         if #(env.Middleware.Mysql) > 0 then
             local mysql = env.Middleware.Mysql[1]
+            local password = mysql.Password
+            if mysql.EncryptedPassword ~= '' then
+                password = 'ENC(' .. mysql.EncryptedPassword .. ')'
+            end
             local mysqlProperties = 'spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver\n' ..
-                'spring.datasource.url=jdbc:mysql://10.10.10.1:3306/vancone_passport?serverTimezone=GMT%%2B8&characterEncoding=utf-8\n' ..
+                'spring.datasource.url=jdbc:mysql://' .. mysql.Host .. ':' .. mysql.Port .. '/' .. mysql.Database .. '?serverTimezone=GMT%%2B8&characterEncoding=utf-8\n' ..
                 'spring.datasource.username=' .. mysql.User .. '\n' ..
-                'spring.datasource.password=' .. mysql.Password
+                'spring.datasource.password=' .. password
             finalSource = string.gsub(finalSource, '${mysqlProperties}', mysqlProperties)
         end
 

@@ -116,7 +116,7 @@
                             {
                                 "name": "resources",
                                 "type": "dir",
-                                "source": "content/properties/default.properties",
+                                "source": "content/properties/application-profile.properties",
                                 "generator": "generateProperties",
                                 "children": [
                                     {
@@ -124,6 +124,12 @@
                                         "type": "dir",
                                         "source": "content/Mapper.xml",
                                         "generator": "generateMapperXmlFiles"
+                                    },
+                                    {
+                                        "name": "application.properties",
+                                        "type": "file",
+                                        "source": "content/properties/application-default.properties",
+                                        "dynamic": true
                                     }
                                 ]
                             }

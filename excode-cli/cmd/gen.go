@@ -32,6 +32,7 @@ var genCmd = &cobra.Command{
 			return
 		}
 
+		fillEncryptedFields(&project)
 		if project.Templates != nil {
 			for _, template := range project.Templates {
 				bytes, err = ioutil.ReadFile(fmt.Sprintf("templates/%s/config.json", template.Type))
@@ -53,6 +54,21 @@ var genCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(genCmd)
+}
+
+func fillEncryptedFields(project *entity.Project) {
+	for i, env := range project.Deployment.Env {
+		if len(env.Middleware.Mysql) > 0 {
+			for k, mysql := range env.Middleware.Mysql {
+				if mysql.Password != "" {
+					encryptedPassword, err := util.Encrypt(mysql.Password)
+					if err == nil {
+						project.Deployment.Env[i].Middleware.Mysql[k].EncryptedPassword = encryptedPassword
+					}
+				}
+			}
+		}
+	}
 }
 
 func generate(config entity.TemplateConfig, project entity.Project, template entity.Template) {

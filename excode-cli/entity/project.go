@@ -1,7 +1,5 @@
 package entity
 
-import "excode-cli/util"
-
 type Project struct {
 	Name       string     `xml:"name"`
 	Version    string     `xml:"version"`
@@ -27,6 +25,7 @@ type Mysql struct {
 	Name              string `xml:"name,attr"`
 	Host              string `xml:"host,attr"`
 	Port              int    `xml:"port,attr"`
+	Database          string `xml:"database,attr"`
 	User              string `xml:"user,attr"`
 	Password          string `xml:"password,attr"`
 	EncryptedPassword string `xml:"encryptedPassword"`
@@ -64,20 +63,4 @@ type Plugin struct {
 type Property struct {
 	Name  string `xml:"name,attr"`
 	Value string `xml:"value,attr"`
-}
-
-func (project *Project) fillEncryptedFields() {
-	for _, env := range project.Deployment.Env {
-		if len(env.Middleware.Mysql) > 0 {
-			for _, mysql := range env.Middleware.Mysql {
-				if mysql.Password != "" {
-					encryptedPassword, err := util.Encrypt(mysql.Password)
-					if err != nil {
-						encryptedPassword = mysql.Password
-					}
-					mysql.EncryptedPassword = encryptedPassword
-				}
-			}
-		}
-	}
 }
