@@ -71,6 +71,17 @@ func fillEncryptedFields(project *entity.Project) {
 				}
 			}
 		}
+
+		if len(env.Middleware.Redis) > 0 {
+			for k, redis := range env.Middleware.Redis {
+				if redis.Password != "" {
+					encryptedPassword, err := util.Encrypt(redis.Password)
+					if err == nil {
+						project.Deployment.Env[i].Middleware.Redis[k].EncryptedPassword = encryptedPassword
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -19,6 +19,7 @@ type Env struct {
 
 type Middleware struct {
 	Mysql []Mysql `xml:"mysql"`
+	Redis []Redis `xml:"redis"`
 }
 
 type Mysql struct {
@@ -27,6 +28,15 @@ type Mysql struct {
 	Port              int    `xml:"port,attr"`
 	Database          string `xml:"database,attr"`
 	User              string `xml:"user,attr"`
+	Password          string `xml:"password,attr"`
+	EncryptedPassword string `xml:"encryptedPassword"`
+}
+
+type Redis struct {
+	Name              string `xml:"name,attr"`
+	Host              string `xml:"host,attr"`
+	Port              int    `xml:"port,attr"`
+	Database          string `xml:"database,attr"`
 	Password          string `xml:"password,attr"`
 	EncryptedPassword string `xml:"encryptedPassword"`
 }

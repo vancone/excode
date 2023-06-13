@@ -1,11 +1,30 @@
-function greet()
-    print(project.Name)
-    print("External Module [ spring-boot ] starts")
+function init()
+    print("External Module [ spring-boot-mybatis ] starts")
 end
 
-function test1(name)
-    print("Lua print: " .. name)
-    return "hahaha"
+function generatePom()
+    files = {}
+    local otherDependencies = ''
+    local redisInjected = false
+    local finalSource = source
+    print('+++++'..project.Deployment.Env[1].Middleware.Redis[1].Name)
+    for i = 1, #(project.Deployment.Env) do
+        local env = project.Deployment.Env[i]
+        -- print('====='..env)
+        -- Add Redis dependency
+        if #(project.Deployment.Env[1].Middleware.Redis) > 0 and redisInjected == false then
+            otherDependencies = otherDependencies ..
+                '        <dependency>\n' ..
+                '            <groupId>org.springframework.boot</groupId>\n' ..
+                '            <artifactId>spring-boot-starter-data-redis</artifactId>\n' ..
+                '        </dependency>\n'
+            redisInjected = true
+        end
+    end
+
+    finalSource = string.gsub(finalSource, '${otherDependencies}', otherDependencies)
+    files['pom.xml'] = finalSource
+    return files
 end
 
 function generateEntities()
@@ -343,8 +362,27 @@ function generateProperties()
             finalSource = string.gsub(finalSource, '${mysqlProperties}', mysqlProperties)
         end
 
+        -- Add Redis properties
+        if env.Middleware.Redis ~= nil and #(env.Middleware.Redis) > 0 then
+            local redis = env.Middleware.Redis[1]
+            local password = redis.Password
+            if redis.EncryptedPassword ~= '' then
+                password = 'ENC(' .. redis.EncryptedPassword .. ')'
+            end
+            local redisProperties = 'spring.redis.database=' .. redis.Database .. '\n' ..
+                'spring.redis.host=' .. redis.Host .. '\n' ..
+                'spring.redis.port=' .. redis.Port .. '\n' ..
+                'spring.redis.password=' .. password .. '\n' ..
+                'spring.redis.jedis.pool.max-idle=200\n' ..
+                'spring.redis.jedis.pool.max-wait=-1\n' ..
+                'spring.redis.jedis.pool.min-idle=0\n' ..
+                'spring.redis.timeout=1000'
+            finalSource = string.gsub(finalSource, '${redisProperties}', redisProperties)
+        end
+
         -- Remove dynamic params
-        finalSource = string.gsub(finalSource, "${mysqlProperties}", '')
+        finalSource = string.gsub(finalSource, '${mysqlProperties}', '')
+        finalSource = string.gsub(finalSource, '${redisProperties}', '')
 
         files['application-' .. env.Profile .. '.properties'] = finalSource
     end

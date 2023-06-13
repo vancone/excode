@@ -72,5 +72,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+${otherDependencies}
     </dependencies>
 </project>

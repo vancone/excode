@@ -12,8 +12,8 @@
             {
                 "name": "pom.xml",
                 "type": "file",
-                "dynamic": true,
-                "source": "content/pom/default.xml"
+                "source": "content/pom/default.xml",
+                "transformer":"generatePom"
             },
             {
                 "name": "src",
