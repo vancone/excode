@@ -35,6 +35,7 @@
         <template type="spring-boot-mybatis" external="true" enabled="true">
             <plugins>
                 <plugin name="lombok" enabled="true" />
+                <plugin name="vancone-passport-sdk" enabled="true" />
             </plugins>
 
             <properties>

@@ -71,8 +71,6 @@
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-${otherDependencies}
+        </dependency>${otherDependencies}
     </dependencies>
 </project>

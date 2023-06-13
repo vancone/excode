@@ -5,21 +5,29 @@ end
 function generatePom()
     files = {}
     local otherDependencies = ''
-    local redisInjected = false
     local finalSource = source
-    print('+++++'..project.Deployment.Env[1].Middleware.Redis[1].Name)
+
+    local redisInjected = false
     for i = 1, #(project.Deployment.Env) do
         local env = project.Deployment.Env[i]
-        -- print('====='..env)
         -- Add Redis dependency
         if #(project.Deployment.Env[1].Middleware.Redis) > 0 and redisInjected == false then
-            otherDependencies = otherDependencies ..
+            otherDependencies = otherDependencies .. '\n\n' ..
                 '        <dependency>\n' ..
                 '            <groupId>org.springframework.boot</groupId>\n' ..
                 '            <artifactId>spring-boot-starter-data-redis</artifactId>\n' ..
-                '        </dependency>\n'
+                '        </dependency>'
             redisInjected = true
         end
+    end
+
+    if plugins['vancone-passport-sdk'] == true then
+        otherDependencies = otherDependencies .. '\n\n' ..
+                '        <dependency>\n' ..
+                '            <groupId>com.vancone</groupId>\n' ..
+                '            <artifactId>vancone-passport-sdk</artifactId>\n' ..
+                '            <version>0.1.1</version>\n' ..
+                '        </dependency>'
     end
 
     finalSource = string.gsub(finalSource, '${otherDependencies}', otherDependencies)
@@ -378,6 +386,19 @@ function generateProperties()
                 'spring.redis.jedis.pool.min-idle=0\n' ..
                 'spring.redis.timeout=1000'
             finalSource = string.gsub(finalSource, '${redisProperties}', redisProperties)
+        end
+
+        -- Add Passport SDK properties
+        if plugins['vancone-passport-sdk'] == true then
+            if env.Profile == 'pro' or env.Profile == 'prod' then
+                finalSource = finalSource .. '\n\nvancone.passport.auth.base-url=http://passport.vancone.com\n' ..
+                    'vancone.passport.service-account.access-key-id=\n' ..
+                    'vancone.passport.service-account.secret-access-key=\n'
+            else
+                finalSource = finalSource .. '\n\nvancone.passport.auth.base-url=http://passport.beta.vancone.com\n' ..
+                    'vancone.passport.service-account.access-key-id=\n' ..
+                    'vancone.passport.service-account.secret-access-key=\n'
+            end
         end
 
         -- Remove dynamic params

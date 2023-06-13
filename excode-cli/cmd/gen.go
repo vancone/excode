@@ -179,6 +179,14 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	}
 	L.SetGlobal("properties", luar.New(L, properties))
 
+	plugins := map[string]bool{}
+	for _, item := range template.Plugins {
+		if item.Enabled {
+			plugins[item.Name] = true
+		}
+	}
+	L.SetGlobal("plugins", luar.New(L, plugins))
+
 	if source != "" {
 		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, source)
 		sourceBytes, err := ioutil.ReadFile(srcFileName)
