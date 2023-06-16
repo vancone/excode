@@ -200,6 +200,8 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	}
 	L.SetGlobal("plugins", luar.New(L, plugins))
 
+	L.SetGlobal("go_jasypt_encrypt", L.NewFunction(util.JasyptEncrypt))
+
 	if source != "" {
 		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, source)
 		sourceBytes, err := ioutil.ReadFile(srcFileName)

@@ -344,28 +344,20 @@ function generateProperties()
         -- Add MySQL properties
         if #(env.Middleware.Mysql) > 0 then
             local mysql = env.Middleware.Mysql[1]
-            local password = mysql.Password
-            if mysql.EncryptedPassword ~= '' then
-                password = 'ENC(' .. mysql.EncryptedPassword .. ')'
-            end
             local mysqlProperties = 'spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver\n' ..
                 'spring.datasource.url=jdbc:mysql://' .. mysql.Host .. ':' .. mysql.Port .. '/' .. mysql.Database .. '?serverTimezone=GMT%%2B8&characterEncoding=utf-8\n' ..
                 'spring.datasource.username=' .. mysql.User .. '\n' ..
-                'spring.datasource.password=' .. password
+                'spring.datasource.password=' .. go_jasypt_encrypt(mysql.Password)
             finalSource = string.gsub(finalSource, '${mysqlProperties}', mysqlProperties)
         end
 
         -- Add Redis properties
         if env.Middleware.Redis ~= nil and #(env.Middleware.Redis) > 0 then
             local redis = env.Middleware.Redis[1]
-            local password = redis.Password
-            if redis.EncryptedPassword ~= '' then
-                password = 'ENC(' .. redis.EncryptedPassword .. ')'
-            end
             local redisProperties = 'spring.redis.database=' .. redis.Database .. '\n' ..
                 'spring.redis.host=' .. redis.Host .. '\n' ..
                 'spring.redis.port=' .. redis.Port .. '\n' ..
-                'spring.redis.password=' .. password .. '\n' ..
+                'spring.redis.password=' .. go_jasypt_encrypt(redis.Password) .. '\n' ..
                 'spring.redis.jedis.pool.max-idle=200\n' ..
                 'spring.redis.jedis.pool.max-wait=-1\n' ..
                 'spring.redis.jedis.pool.min-idle=0\n' ..
@@ -377,12 +369,12 @@ function generateProperties()
         if plugins['vancone-passport-sdk'] == true then
             if env.Profile == 'pro' or env.Profile == 'prod' then
                 finalSource = finalSource .. '\n\nvancone.passport.auth.base-url=http://passport.vancone.com\n' ..
-                    'vancone.passport.service-account.access-key-id=\n' ..
-                    'vancone.passport.service-account.secret-access-key=\n'
+                    'vancone.passport.service-account.access-key-id=' .. go_jasypt_encrypt('hr7UMw7j6oxwkK4SRhZ8oOwNiYQw45di') .. '\n' ..
+                    'vancone.passport.service-account.secret-access-key=' .. go_jasypt_encrypt('iABrBQZYGgBqErtmUqHWvAvZBu5ryAzJLZUIKMLfg2ISY4wcwQcq9WkQ4MtOz9Ev') .. '\n'
             else
                 finalSource = finalSource .. '\n\nvancone.passport.auth.base-url=http://passport.beta.vancone.com\n' ..
-                    'vancone.passport.service-account.access-key-id=\n' ..
-                    'vancone.passport.service-account.secret-access-key=\n'
+                    'vancone.passport.service-account.access-key-id=' .. go_jasypt_encrypt('hr7UMw7j6oxwkK4SRhZ8oOwNiYQw45di') .. '\n' ..
+                    'vancone.passport.service-account.secret-access-key=' .. go_jasypt_encrypt('iABrBQZYGgBqErtmUqHWvAvZBu5ryAzJLZUIKMLfg2ISY4wcwQcq9WkQ4MtOz9Ev') .. '\n'
             end
         end
 
