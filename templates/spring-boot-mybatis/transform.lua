@@ -338,7 +338,7 @@ function generateProperties()
         -- Add MySQL properties
         if #(env.Middleware.Mysql) > 0 then
             local mysql = env.Middleware.Mysql[1]
-            local mysqlProperties = go_read_template_file(template.Name, 'content/properties/mysql.properties')
+            local mysqlProperties = go_read_template_file(template.Name, 'content/properties/mysql.properties', mysql)
             mysqlProperties = string.gsub(mysqlProperties, '${mysql.Host}', mysql.Host)
             mysqlProperties = string.gsub(mysqlProperties, '${mysql.Port}', tostring(mysql.Port))
             mysqlProperties = string.gsub(mysqlProperties, '${mysql.Database}', mysql.Database)
@@ -350,7 +350,7 @@ function generateProperties()
         -- Add Redis properties
         if env.Middleware.Redis ~= nil and #(env.Middleware.Redis) > 0 then
             local redis = env.Middleware.Redis[1]
-            local redisProperties = go_read_template_file(template.Name, 'content/properties/redis.properties')
+            local redisProperties = go_read_template_file(template.Name, 'content/properties/redis.properties', redis)
             redisProperties = string.gsub(redisProperties, '${redis.Host}', redis.Host)
             redisProperties = string.gsub(redisProperties, '${redis.Port}', tostring(redis.Port))
             redisProperties = string.gsub(redisProperties, '${redis.Database}', redis.Database)
