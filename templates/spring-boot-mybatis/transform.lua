@@ -1,5 +1,7 @@
-function init()
-    print("External Module [ spring-boot-mybatis ] starts")
+function getModelName(model)
+    local modelName = model.Name
+    local ModelName = modelName:gsub('^%l',string.upper)
+    return modelName, ModelName
 end
 
 function generatePom()
@@ -39,14 +41,14 @@ function generateEntities()
     models = project.Models
     files = {}
     for i = 1, #models do
-        -- print(models[i].Name)
-        local finalSource = string.gsub(source, "${modelName}", models[i].Name:gsub("^%l",string.upper))
-        local fieldCode = ""
+        local modelName, ModelName = getModelName(models[i])
+        local finalSource = string.gsub(source, '${modelName}', ModelName)
+        local fieldCode = ''
         for k = 1, #models[i].Fields do
-            fieldCode = fieldCode.."    private String "..models[i].Fields[k].Name..";\n"
+            fieldCode = fieldCode..'    private String '..models[i].Fields[k].Name..';\n'
         end
-        finalSource = finalSource.gsub(finalSource, "${fields}", fieldCode)
-        files[(models[i].Name:gsub("^%l",string.upper))..".java"] = finalSource
+        finalSource = finalSource.gsub(finalSource, '${fields}', fieldCode)
+        files[ModelName..'.java'] = finalSource
     end
     return files
 end
@@ -55,8 +57,7 @@ function generateMappers()
     models = project.Models
     files = {}
     for i = 1, #models do
-        local modelName = models[i].Name
-        local ModelName = modelName:gsub("^%l",string.upper)
+        local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, "${ModelName}", ModelName)
         finalSource = string.gsub(finalSource, "${modelName}", modelName)
         files[ModelName.."Mapper.java"] = finalSource
@@ -68,8 +69,7 @@ function generateMapperXmlFiles()
     models = project.Models
     files = {}
     for i = 1, #models do
-        local modelName = models[i].Name
-        local ModelName = modelName:gsub("^%l",string.upper)
+        local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, "${ModelName}", ModelName)
         finalSource = string.gsub(finalSource, "${modelName}", modelName)
         finalSource = string.gsub(finalSource, "${tableName}", models[i].TablePrefix..modelName)
@@ -142,8 +142,7 @@ function generateServices()
     models = project.Models
     files = {}
     for i = 1, #models do
-        local modelName = models[i].Name
-        local ModelName = modelName:gsub("^%l",string.upper)
+        local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, "${ModelName}", ModelName)
         finalSource = string.gsub(finalSource, "${modelName}", modelName)
         files[ModelName.."Service.java"] = finalSource
@@ -155,8 +154,7 @@ function generateServiceImpls()
     models = project.Models
     files = {}
     for i = 1, #models do
-        local modelName = models[i].Name
-        local ModelName = modelName:gsub("^%l",string.upper)
+        local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, "${ModelName}", ModelName)
         finalSource = string.gsub(finalSource, "${modelName}", modelName)
         files[ModelName.."ServiceImpl.java"] = finalSource
@@ -168,8 +166,7 @@ function generateControllers()
     models = project.Models
     files = {}
     for i = 1, #models do
-        local modelName = models[i].Name
-        local ModelName = modelName:gsub("^%l",string.upper)
+        local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, "${ModelName}", ModelName)
         finalSource = string.gsub(finalSource, "${modelName}", modelName)
         files[ModelName.."Controller.java"] = finalSource
@@ -249,8 +246,7 @@ function generateServiceTests()
     models = project.Models
     files = {}
     for i = 1, #models do
-        local modelName = models[i].Name
-        local ModelName = modelName:gsub("^%l",string.upper)
+        local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, "${ModelName}", ModelName)
         finalSource = string.gsub(finalSource, "${modelName}", modelName)
         files[ModelName.."ServiceTest.java"] = finalSource
@@ -271,9 +267,7 @@ function generatePostmanCollection()
     models = project.Models
     local itemSource = ''
     for i = 1, #models do
-        local modelName = models[i].Name
-        local ModelName = modelName:gsub("^%l",string.upper)
-        -- local finalSource = string.gsub(source, "${ModelName}", ModelName)
+        local modelName, ModelName = getModelName(models[i])
         itemSource = itemSource..'        {\n'..
                                 '            "name": "'..ModelName..'",\n'..
                                 '            "item": [${subItems}]\n'..
@@ -339,48 +333,45 @@ function generateProperties()
 
     for i = 1, #(project.Deployment.Env) do
         local env = project.Deployment.Env[i]
-        local finalSource = source
+        local finalSource = ''
 
         -- Add MySQL properties
         if #(env.Middleware.Mysql) > 0 then
             local mysql = env.Middleware.Mysql[1]
-            local mysqlProperties = 'spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver\n' ..
-                'spring.datasource.url=jdbc:mysql://' .. mysql.Host .. ':' .. mysql.Port .. '/' .. mysql.Database .. '?serverTimezone=GMT%%2B8&characterEncoding=utf-8\n' ..
-                'spring.datasource.username=' .. mysql.User .. '\n' ..
-                'spring.datasource.password=' .. go_jasypt_encrypt(mysql.Password)
-            finalSource = string.gsub(finalSource, '${mysqlProperties}', mysqlProperties)
+            local mysqlProperties = go_read_template_file(template.Name, 'content/properties/mysql.properties')
+            mysqlProperties = string.gsub(mysqlProperties, '${mysql.Host}', mysql.Host)
+            mysqlProperties = string.gsub(mysqlProperties, '${mysql.Port}', tostring(mysql.Port))
+            mysqlProperties = string.gsub(mysqlProperties, '${mysql.Database}', mysql.Database)
+            mysqlProperties = string.gsub(mysqlProperties, '${mysql.Username}', mysql.Database)
+            mysqlProperties = string.gsub(mysqlProperties, '${mysql.Password}', go_jasypt_encrypt(mysql.Password))
+            finalSource = finalSource .. mysqlProperties .. '\n\n'
         end
 
         -- Add Redis properties
         if env.Middleware.Redis ~= nil and #(env.Middleware.Redis) > 0 then
             local redis = env.Middleware.Redis[1]
-            local redisProperties = 'spring.redis.database=' .. redis.Database .. '\n' ..
-                'spring.redis.host=' .. redis.Host .. '\n' ..
-                'spring.redis.port=' .. redis.Port .. '\n' ..
-                'spring.redis.password=' .. go_jasypt_encrypt(redis.Password) .. '\n' ..
-                'spring.redis.jedis.pool.max-idle=200\n' ..
-                'spring.redis.jedis.pool.max-wait=-1\n' ..
-                'spring.redis.jedis.pool.min-idle=0\n' ..
-                'spring.redis.timeout=1000'
-            finalSource = string.gsub(finalSource, '${redisProperties}', redisProperties)
+            local redisProperties = go_read_template_file(template.Name, 'content/properties/redis.properties')
+            redisProperties = string.gsub(redisProperties, '${redis.Host}', redis.Host)
+            redisProperties = string.gsub(redisProperties, '${redis.Port}', tostring(redis.Port))
+            redisProperties = string.gsub(redisProperties, '${redis.Database}', redis.Database)
+            redisProperties = string.gsub(redisProperties, '${redis.Password}', go_jasypt_encrypt(redis.Password))
+            finalSource = finalSource .. redisProperties .. '\n\n'
         end
 
         -- Add Passport SDK properties
         if plugins['vancone-passport-sdk'] == true then
+            local baseUrl
             if env.Profile == 'pro' or env.Profile == 'prod' then
-                finalSource = finalSource .. '\n\nvancone.passport.auth.base-url=http://passport.vancone.com\n' ..
-                    'vancone.passport.service-account.access-key-id=' .. go_jasypt_encrypt('hr7UMw7j6oxwkK4SRhZ8oOwNiYQw45di') .. '\n' ..
-                    'vancone.passport.service-account.secret-access-key=' .. go_jasypt_encrypt('iABrBQZYGgBqErtmUqHWvAvZBu5ryAzJLZUIKMLfg2ISY4wcwQcq9WkQ4MtOz9Ev') .. '\n'
+                baseUrl = 'http://passport.vancone.com'
             else
-                finalSource = finalSource .. '\n\nvancone.passport.auth.base-url=http://passport.beta.vancone.com\n' ..
-                    'vancone.passport.service-account.access-key-id=' .. go_jasypt_encrypt('hr7UMw7j6oxwkK4SRhZ8oOwNiYQw45di') .. '\n' ..
-                    'vancone.passport.service-account.secret-access-key=' .. go_jasypt_encrypt('iABrBQZYGgBqErtmUqHWvAvZBu5ryAzJLZUIKMLfg2ISY4wcwQcq9WkQ4MtOz9Ev') .. '\n'
+                baseUrl = 'http://passport.beta.vancone.com'
             end
+            local passportSdkProperties = go_read_template_file(template.Name, 'content/properties/vancone-passport-sdk.properties')
+            passportSdkProperties = string.gsub(passportSdkProperties, '${passport.baseUrl}', baseUrl)
+            passportSdkProperties = string.gsub(passportSdkProperties, '${passport.accessKeyId}', go_jasypt_encrypt(properties['vancone.passport.service-account.access-key-id']))
+            passportSdkProperties = string.gsub(passportSdkProperties, '${passport.secretAccessKey}', go_jasypt_encrypt(properties['vancone.passport.service-account.secret-access-key']))
+            finalSource = finalSource .. passportSdkProperties .. '\n\n'
         end
-
-        -- Remove dynamic params
-        finalSource = string.gsub(finalSource, '${mysqlProperties}', '')
-        finalSource = string.gsub(finalSource, '${redisProperties}', '')
 
         files['application-' .. env.Profile .. '.properties'] = finalSource
     end

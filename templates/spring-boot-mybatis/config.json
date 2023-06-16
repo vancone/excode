@@ -116,7 +116,6 @@
                             {
                                 "name": "resources",
                                 "type": "dir",
-                                "source": "content/properties/application-profile.properties",
                                 "generator": "generateProperties",
                                 "children": [
                                     {

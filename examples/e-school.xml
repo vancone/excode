@@ -32,7 +32,7 @@
     </models>
 
     <templates>
-        <template type="spring-boot-mybatis" external="true" enabled="true">
+        <template name="spring-boot-mybatis" external="true" enabled="true">
             <plugins>
                 <plugin name="lombok" enabled="true" />
                 <plugin name="vancone-passport-sdk" enabled="true" />
@@ -45,10 +45,12 @@
                 <property name="server.port" value="8080" />
                 <property name="cross-origin.allowed-methods" value="*" />
                 <property name="cross-origin.allowed-headers" value="*" />
+                <property name="vancone.passport.service-account.access-key-id" value="hr7UMw7j6oxwkK4SRhZ8oOwNiYQw45di" />
+                <property name="vancone.passport.service-account.secret-access-key" value="iABrBQZYGgBqErtmUqHWvAvZBu5ryAzJLZUIKMLfg2ISY4wcwQcq9WkQ4MtOz9Ev" />
             </properties>
         </template>
 
-        <template type="vue3-element-vite-console" external="true" enabled="false">
+        <template name="vue3-element-vite-console" external="true" enabled="false">
             <properties>
                 <property name="apiPath" value="/api/eschool"></property>
             </properties>

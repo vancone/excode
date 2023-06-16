@@ -60,7 +60,7 @@ type Field struct {
 }
 
 type Template struct {
-	Type       string     `xml:"type,attr"`
+	Name       string     `xml:"name,attr"`
 	Enabled    bool       `xml:"enabled,attr"`
 	Plugins    []Plugin   `xml:"plugins>plugin"`
 	Properties []Property `xml:"properties>property"`

@@ -43,7 +43,7 @@ var genCmd = &cobra.Command{
 				if !template.Enabled {
 					continue
 				}
-				bytes, err = ioutil.ReadFile(fmt.Sprintf("templates/%s/config.json", template.Type))
+				bytes, err = ioutil.ReadFile(fmt.Sprintf("templates/%s/config.json", template.Name))
 				if err != nil {
 					log.Println("failed to read xml file:", err)
 					return
@@ -91,7 +91,7 @@ func fillEncryptedFields(project *entity.Project) {
 }
 
 func generate(config entity.TemplateConfig, project entity.Project, template entity.Template) {
-	log.Println("========== Template [ " + template.Type + " ] ==========")
+	log.Println("========== Template [ " + template.Name + " ] ==========")
 	log.Printf("%d plugin(s) and %d property(s) found\n", len(template.Plugins), len(template.Properties))
 	startTime := time.Now()
 	baseUrl := "output" // + time.Now().Format("20060102150405")
@@ -103,7 +103,7 @@ func generate(config entity.TemplateConfig, project entity.Project, template ent
 	timeCost := time.Since(startTime)
 	wd, err := os.Getwd()
 	if err == nil {
-		log.Println("Output directory: " + wd + string(os.PathSeparator) + baseUrl + string(os.PathSeparator) + template.Type)
+		log.Println("Output directory: " + wd + string(os.PathSeparator) + baseUrl + string(os.PathSeparator) + template.Name)
 	}
 	log.Println("Generating template completed. Time cost:", timeCost)
 }
@@ -201,6 +201,7 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	L.SetGlobal("plugins", luar.New(L, plugins))
 
 	L.SetGlobal("go_jasypt_encrypt", L.NewFunction(util.JasyptEncrypt))
+	L.SetGlobal("go_read_template_file", L.NewFunction(util.ReadTemplateFile))
 
 	if source != "" {
 		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, source)
