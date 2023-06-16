@@ -1,12 +1,12 @@
 <project>
     <name>e-school</name>
-    <version>0.1</version>
+    <version>0.1.0</version>
 
     <deployment>
         <env profile="test">
             <middleware>
                 <mysql name="mysql_default" host="localhost" port="3306" database="excode" user="root" password="123456" />
-                <redis name="redis_default" host="localhost" port="6379" database="0" password="123456" />
+                <redis name="redis_default" host="beta.vancone.com" port="6380" database="0" password="123456" />
             </middleware>
         </env>
         <env profile="pro">
@@ -48,7 +48,7 @@
             </properties>
         </template>
 
-        <template type="vue3-element-vite-console" external="true" enabled="true">
+        <template type="vue3-element-vite-console" external="true" enabled="false">
             <properties>
                 <property name="apiPath" value="/api/eschool"></property>
             </properties>

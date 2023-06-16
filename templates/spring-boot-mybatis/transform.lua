@@ -36,7 +36,6 @@ function generatePom()
 end
 
 function generateEntities()
-    print("Start to generate entities...")
     models = project.Models
     files = {}
     for i = 1, #models do
@@ -53,7 +52,6 @@ function generateEntities()
 end
 
 function generateMappers()
-    print("Start to generate mappers...")
     models = project.Models
     files = {}
     for i = 1, #models do
@@ -67,7 +65,6 @@ function generateMappers()
 end
 
 function generateMapperXmlFiles()
-    print("Start to generate mapper xml files...")
     models = project.Models
     files = {}
     for i = 1, #models do
@@ -142,7 +139,6 @@ function generateMapperXmlFiles()
 end
 
 function generateServices()
-    print("Start to generate services...")
     models = project.Models
     files = {}
     for i = 1, #models do
@@ -156,7 +152,6 @@ function generateServices()
 end
 
 function generateServiceImpls()
-    print("Start to generate service impls...")
     models = project.Models
     files = {}
     for i = 1, #models do
@@ -170,7 +165,6 @@ function generateServiceImpls()
 end
 
 function generateControllers()
-    print("Start to generate controllers...")
     models = project.Models
     files = {}
     for i = 1, #models do
@@ -184,7 +178,6 @@ function generateControllers()
 end
 
 function generateSqlStatements()
-    print("Start to generate SQL statements...")
     models = project.Models
     local finalSource = ""
     for i = 1, #models do
@@ -216,12 +209,6 @@ function generateSqlStatements()
             end
 
             finalSource = finalSource..",\n"
-            -- Line break
-            -- if k == #models[i].Fields then
-            --     finalSource = finalSource.."\n"
-            -- else
-            --     finalSource = finalSource..",\n"
-            -- end
         end
         finalSource = finalSource..'    `created_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n'
         finalSource = finalSource..'    `updated_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n'
@@ -233,7 +220,6 @@ function generateSqlStatements()
 end
 
 function generateCrossOriginConfig()
-    print("Start to generate cross origin config...")
     models = project.Models
     files = {}
     local finalSource = source
@@ -260,7 +246,6 @@ function generateCrossOriginConfig()
 end
 
 function generateServiceTests()
-    print("Start to generate service tests...")
     models = project.Models
     files = {}
     for i = 1, #models do

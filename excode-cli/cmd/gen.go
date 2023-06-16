@@ -11,6 +11,8 @@ import (
 	"io/ioutil"
 	luar "layeh.com/gopher-luar"
 	"log"
+	"os"
+	"time"
 )
 
 var genCmd = &cobra.Command{
@@ -31,6 +33,9 @@ var genCmd = &cobra.Command{
 		if err != nil {
 			return
 		}
+
+		log.Println("Scanning project: name = " + project.Name + ", version = " + project.Version)
+		log.Printf("%d model(s) and %d template(s) found\n", len(project.Models), len(project.Templates))
 
 		fillEncryptedFields(&project)
 		if project.Templates != nil {
@@ -86,13 +91,21 @@ func fillEncryptedFields(project *entity.Project) {
 }
 
 func generate(config entity.TemplateConfig, project entity.Project, template entity.Template) {
-	log.Println("generating...")
+	log.Println("========== Template [ " + template.Type + " ] ==========")
+	log.Printf("%d plugin(s) and %d property(s) found\n", len(template.Plugins), len(template.Properties))
+	startTime := time.Now()
 	baseUrl := "output" // + time.Now().Format("20060102150405")
 	err := util.CreateDir(baseUrl)
 	if err != nil {
 		panic(err)
 	}
 	traverseStructure(config.Structure, baseUrl, config.Name, project, template)
+	timeCost := time.Since(startTime)
+	wd, err := os.Getwd()
+	if err == nil {
+		log.Println("Output directory: " + wd + string(os.PathSeparator) + baseUrl + string(os.PathSeparator) + template.Type)
+	}
+	log.Println("Generating template completed. Time cost:", timeCost)
 }
 
 func traverseStructure(structure entity.Structure, baseUrl string, templateName string,
