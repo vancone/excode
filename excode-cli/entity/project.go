@@ -23,22 +23,20 @@ type Middleware struct {
 }
 
 type Mysql struct {
-	Name              string `xml:"name,attr"`
-	Host              string `xml:"host,attr"`
-	Port              int    `xml:"port,attr"`
-	Database          string `xml:"database,attr"`
-	User              string `xml:"user,attr"`
-	Password          string `xml:"password,attr"`
-	EncryptedPassword string `xml:"encryptedPassword"`
+	Name     string `xml:"name,attr"`
+	Host     string `xml:"host,attr"`
+	Port     int    `xml:"port,attr"`
+	Database string `xml:"database,attr"`
+	User     string `xml:"user,attr"`
+	Password string `xml:"password,attr"`
 }
 
 type Redis struct {
-	Name              string `xml:"name,attr"`
-	Host              string `xml:"host,attr"`
-	Port              int    `xml:"port,attr"`
-	Database          string `xml:"database,attr"`
-	Password          string `xml:"password,attr"`
-	EncryptedPassword string `xml:"encryptedPassword"`
+	Name     string `xml:"name,attr"`
+	Host     string `xml:"host,attr"`
+	Port     int    `xml:"port,attr"`
+	Database string `xml:"database,attr"`
+	Password string `xml:"password,attr"`
 }
 
 type Model struct {

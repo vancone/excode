@@ -36,8 +36,7 @@ var genCmd = &cobra.Command{
 
 		log.Println("Scanning project: name = " + project.Name + ", version = " + project.Version)
 		log.Printf("%d model(s) and %d template(s) found\n", len(project.Models), len(project.Templates))
-
-		fillEncryptedFields(&project)
+		
 		if project.Templates != nil {
 			for _, template := range project.Templates {
 				if !template.Enabled {
@@ -62,32 +61,6 @@ var genCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(genCmd)
-}
-
-func fillEncryptedFields(project *entity.Project) {
-	for i, env := range project.Deployment.Env {
-		if len(env.Middleware.Mysql) > 0 {
-			for k, mysql := range env.Middleware.Mysql {
-				if mysql.Password != "" {
-					encryptedPassword, err := util.Encrypt(mysql.Password)
-					if err == nil {
-						project.Deployment.Env[i].Middleware.Mysql[k].EncryptedPassword = encryptedPassword
-					}
-				}
-			}
-		}
-
-		if len(env.Middleware.Redis) > 0 {
-			for k, redis := range env.Middleware.Redis {
-				if redis.Password != "" {
-					encryptedPassword, err := util.Encrypt(redis.Password)
-					if err == nil {
-						project.Deployment.Env[i].Middleware.Redis[k].EncryptedPassword = encryptedPassword
-					}
-				}
-			}
-		}
-	}
 }
 
 func generate(config entity.TemplateConfig, project entity.Project, template entity.Template) {
