@@ -1,11 +1,13 @@
 package util
 
 import (
+	"encoding/json"
 	"fmt"
 	lua "github.com/yuin/gopher-lua"
 	"io/ioutil"
 	"log"
 	"reflect"
+	"strings"
 )
 
 func JasyptEncrypt(L *lua.LState) int {
@@ -23,20 +25,24 @@ func JasyptEncrypt(L *lua.LState) int {
 func ReadTemplateFile(L *lua.LState) int {
 	templateName := L.ToString(1)
 	filePath := L.ToString(2)
-	paramMap := L.ToUserData(3)
-	if paramMap != nil {
-		v := reflect.ValueOf(paramMap.Value)
-		fmt.Println(reflect.TypeOf(paramMap.Value))
+	userData := L.ToUserData(3)
+	paramMap := map[string]string{}
+	if userData != nil {
+		v := reflect.ValueOf(userData.Value)
+		prefix := strings.ToLower(reflect.TypeOf(userData.Value).String())
+		if strings.Contains(prefix, ".") {
+			prefix = prefix[strings.Index(prefix, ".")+1:]
+		}
 		if v.Kind() == reflect.Ptr {
 			v = v.Elem()
 		}
 		if v.Kind() != reflect.Struct {
 			fmt.Println("data is not a struct")
-			//return
+			return 0
 		}
 		for i := 0; i < v.NumField(); i++ {
 			field := v.Field(i)
-			fmt.Printf("Field %d: %s = %v\n", i, v.Type().Field(i).Name, field.Interface())
+			paramMap[prefix+"."+v.Type().Field(i).Name] = fmt.Sprintf("%v", field.Interface())
 		}
 	}
 
@@ -45,7 +51,43 @@ func ReadTemplateFile(L *lua.LState) int {
 		log.Println(err.Error())
 		L.Push(lua.LString(""))
 	} else {
-		L.Push(lua.LString(bytes))
+		content := string(bytes)
+		if len(paramMap) > 0 {
+			for k, v := range paramMap {
+				if strings.Contains(content, "${"+k+"}") {
+					content = strings.Replace(content, "${"+k+"}", v, -1)
+				}
+			}
+		}
+		L.Push(lua.LString(content))
 	}
+	return 1
+}
+
+func AddIndent(L *lua.LState) int {
+	arg := L.ToString(1)
+	indentSpaceCount := L.ToInt(2)
+	indent := strings.Repeat(" ", indentSpaceCount)
+	lines := strings.Split(strings.ReplaceAll(arg, "\r\n", "\n"), "\n")
+	result := ""
+	for k, v := range lines {
+		result += indent + v
+		if k != len(lines)-1 {
+			result += "\n"
+		}
+	}
+	L.Push(lua.LString(result))
+	return 1
+}
+
+func JsonFormat(L *lua.LState) int {
+	arg := L.ToString(1)
+	var result map[string]interface{}
+	err := json.Unmarshal([]byte(arg), &result)
+	if err != nil {
+		return 0
+	}
+	formattedData, _ := json.MarshalIndent(result, "", "    ")
+	L.Push(lua.LString(formattedData))
 	return 1
 }

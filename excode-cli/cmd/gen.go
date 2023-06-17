@@ -36,7 +36,7 @@ var genCmd = &cobra.Command{
 
 		log.Println("Scanning project: name = " + project.Name + ", version = " + project.Version)
 		log.Printf("%d model(s) and %d template(s) found\n", len(project.Models), len(project.Templates))
-		
+
 		if project.Templates != nil {
 			for _, template := range project.Templates {
 				if !template.Enabled {
@@ -175,6 +175,8 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 
 	L.SetGlobal("go_jasypt_encrypt", L.NewFunction(util.JasyptEncrypt))
 	L.SetGlobal("go_read_template_file", L.NewFunction(util.ReadTemplateFile))
+	L.SetGlobal("go_add_indent", L.NewFunction(util.AddIndent))
+	L.SetGlobal("go_json_format", L.NewFunction(util.JsonFormat))
 
 	if source != "" {
 		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, source)

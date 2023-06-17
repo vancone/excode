@@ -1,0 +1,8 @@
+{
+    "info": {
+        "_postman_id": "6677f9a2-0725-4a62-8472-221789071ee9",
+        "name": "e-school",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [${items}]
+}

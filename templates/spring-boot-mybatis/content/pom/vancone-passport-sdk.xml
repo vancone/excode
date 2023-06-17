@@ -1,0 +1,5 @@
+<dependency>
+    <groupId>com.vancone</groupId>
+    <artifactId>vancone-passport-sdk</artifactId>
+    <version>0.1.1</version>
+</dependency>

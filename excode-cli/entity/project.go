@@ -27,7 +27,7 @@ type Mysql struct {
 	Host     string `xml:"host,attr"`
 	Port     int    `xml:"port,attr"`
 	Database string `xml:"database,attr"`
-	User     string `xml:"user,attr"`
+	Username string `xml:"username,attr"`
 	Password string `xml:"password,attr"`
 }
 
@@ -40,10 +40,11 @@ type Redis struct {
 }
 
 type Model struct {
-	Name        string  `xml:"name,attr"`
-	Source      string  `xml:"source,attr"`
-	TablePrefix string  `xml:"tablePrefix,attr"`
-	Fields      []Field `xml:"field"`
+	Name        string    `xml:"name,attr"`
+	Source      string    `xml:"source,attr"`
+	TablePrefix string    `xml:"tablePrefix,attr"`
+	Fields      []Field   `xml:"fields>field"`
+	Mappings    []Mapping `xml:"mappings>mapping"`
 }
 
 type Field struct {
@@ -55,6 +56,12 @@ type Field struct {
 	AutoIncrement bool   `xml:"autoIncrement,attr"`
 	NotNull       bool   `xml:"notNull,attr"`
 	Comment       string `xml:"comment,attr"`
+}
+
+type Mapping struct {
+	Type  string `xml:"type,attr"`
+	Model string `xml:"model,attr"`
+	Field string `xml:"field,attr"`
 }
 
 type Template struct {

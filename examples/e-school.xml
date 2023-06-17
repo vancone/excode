@@ -5,29 +5,48 @@
     <deployment>
         <env profile="test">
             <middleware>
-                <mysql name="mysql_default" host="localhost" port="3306" database="excode" user="root" password="123456" />
-                <redis name="redis_default" host="beta.vancone.com" port="6380" database="0" password="123456" />
+                <mysql name="mysql_default" host="localhost" port="3306" database="excode"
+                    username="root" password="123456" />
+                <redis name="redis_default" host="beta.vancone.com" port="6380" database="0"
+                    password="123456" />
             </middleware>
         </env>
         <env profile="pro">
             <middleware>
-                <mysql name="mysql_default" host="10.10.10.1" port="3306" database="excode" user="root" password="123456" />
+                <mysql name="mysql_default" host="10.10.10.1" port="3306" database="excode"
+                    username="root" password="123456" />
             </middleware>
         </env>
     </deployment>
 
     <models>
-        <model name="student" source="mysql_default" tablePrefix="school_">
-            <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true" comment="Student ID"/>
-            <field name="name" type="string" dbType="VARCHAR" notNull="true"/>
-            <field name="gender" type="enum" dbType="BIT"/>
-            <field name="birthday" type="date" dbType="DATETIME"/>
+        <model name="student" source="mysql_default" tablePrefix="eschool_">
+            <fields>
+                <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true"
+                    comment="Student ID" />
+                <field name="name" type="string" dbType="VARCHAR" notNull="true" />
+                <field name="gender" type="enum" dbType="BIT" />
+                <field name="birthday" type="date" dbType="DATETIME" />
+            </fields>
+            <mappings>
+                <mapping type="many2many" model="teacher" />
+            </mappings>
         </model>
-        <model name="teacher" source="ds">
-            <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true" comment="Teacher ID"/>
-            <field name="name" type="string" dbType="VARCHAR" notNull="true"/>
-            <field name="gender" type="enum" dbType="BIT"/>
-            <field name="title" type="string" dbType="VARCHAR"/>
+        <model name="teacher" source="ds" tablePrefix="eschool_">
+            <fields>
+                <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true"
+                    comment="Teacher ID" />
+                <field name="name" type="string" dbType="VARCHAR" notNull="true" />
+                <field name="gender" type="enum" dbType="BIT" />
+                <field name="title" type="string" dbType="VARCHAR" />
+            </fields>
+        </model>
+        <model name="course" source="ds" tablePrefix="eschool_">
+            <fields>
+                <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true"
+                    comment="Course ID" />
+                <field name="name" type="string" dbType="VARCHAR" notNull="true" />
+            </fields>
         </model>
     </models>
 
@@ -45,8 +64,10 @@
                 <property name="server.port" value="8080" />
                 <property name="cross-origin.allowed-methods" value="*" />
                 <property name="cross-origin.allowed-headers" value="*" />
-                <property name="vancone.passport.service-account.access-key-id" value="hr7UMw7j6oxwkK4SRhZ8oOwNiYQw45di" />
-                <property name="vancone.passport.service-account.secret-access-key" value="iABrBQZYGgBqErtmUqHWvAvZBu5ryAzJLZUIKMLfg2ISY4wcwQcq9WkQ4MtOz9Ev" />
+                <property name="vancone.passport.service-account.access-key-id"
+                    value="hr7UMw7j6oxwkK4SRhZ8oOwNiYQw45di" />
+                <property name="vancone.passport.service-account.secret-access-key"
+                    value="iABrBQZYGgBqErtmUqHWvAvZBu5ryAzJLZUIKMLfg2ISY4wcwQcq9WkQ4MtOz9Ev" />
             </properties>
         </template>
 
