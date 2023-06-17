@@ -1,7 +1,7 @@
 package ${template.properties.project.groupId}.${template.properties.project.artifactId}.mapper;
 
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.entity.${ModelName};
-import com.vancone.web.common.model.ResponsePage;
+${otherEntityImports}
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,4 +17,5 @@ public interface ${ModelName}Mapper {
     boolean create(${ModelName} ${modelName});
     boolean update(${ModelName} ${modelName});
     boolean delete(String id);
+${otherMethods}
 }

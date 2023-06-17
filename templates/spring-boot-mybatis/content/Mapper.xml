@@ -41,4 +41,6 @@ ${resultMapFields}
     <delete id="delete">
         DELETE FROM ${tableName} WHERE id = #{id}
     </delete>
+
+${otherMethods}
 </mapper>

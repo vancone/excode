@@ -49,4 +49,6 @@ public class ${ModelName}Controller {
         ${modelName}Service.delete(id);
         return Response.success();
     }
+
+${otherMethods}
 }

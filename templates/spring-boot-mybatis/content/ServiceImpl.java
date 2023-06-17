@@ -3,6 +3,7 @@ package ${template.properties.project.groupId}.${template.properties.project.art
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.entity.${ModelName};
+${otherEntityImports}
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.enums.ResponseEnum;
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.mapper.${ModelName}Mapper;
 import ${template.properties.project.groupId}.${template.properties.project.artifactId}.service.${ModelName}Service;
@@ -49,4 +50,6 @@ public class ${ModelName}ServiceImpl implements ${ModelName}Service {
         }
         ${modelName}Mapper.delete(id);
     }
+
+${otherMethods}
 }

@@ -53,6 +53,33 @@ function generateMappers()
         local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, '${ModelName}', ModelName)
         finalSource = string.gsub(finalSource, '${modelName}', modelName)
+        if models[i].Mappings ~= nil then
+            local mappingCodes = ''
+            local otherEntityImportCodes = ''
+            for k = 1, #models[i].Mappings do
+                local mapping = models[i].Mappings[k]
+                if mapping.Type == 'many2many' then
+                    otherEntityImportCodes = 'import ' .. properties['project.groupId'] .. '.' .. properties['project.artifactId'] .. '.entity.' .. mapping.Model:gsub('^%l',string.upper) .. ';'
+
+                    --POST
+                    mappingCodes = mappingCodes .. '    boolean add' .. mapping.Model:gsub('^%l',string.upper) ..
+                        '(String ' .. models[i].name .. 'Id, String ' .. mapping.Model .. 'Id);\n'
+                    
+                    -- GET
+                    mappingCodes = mappingCodes .. '    List<' .. mapping.Model:gsub('^%l',string.upper) .. '> query' .. mapping.Model:gsub('^%l',string.upper) .. 'sBy' .. ModelName .. 'Id' ..
+                        '(String ' .. models[i].name .. 'Id);\n'
+
+                    -- DELETE
+                    mappingCodes = mappingCodes .. '    void remove' .. mapping.Model:gsub('^%l',string.upper) ..
+                        '(String ' .. models[i].name .. 'Id, String ' .. mapping.Model .. 'Id);\n'
+                end
+            end
+            finalSource = string.gsub(finalSource, '${otherMethods}', mappingCodes)
+            finalSource = string.gsub(finalSource, '${otherEntityImports}', otherEntityImportCodes)
+        end
+        
+        finalSource = string.gsub(finalSource, '${otherMethods}', '')
+        finalSource = string.gsub(finalSource, '${otherEntityImports}', '')
         files[ModelName .. 'Mapper.java'] = finalSource
     end
     return files
@@ -126,6 +153,34 @@ function generateMapperXmlFiles()
         end
         finalSource = finalSource.gsub(finalSource, '${updateFields}', updateFieldsCode)
 
+        if models[i].Mappings ~= nil then
+            local mappingCodes = ''
+            for k = 1, #models[i].Mappings do
+                local mapping = models[i].Mappings[k]
+                if mapping.Type == 'many2many' then
+
+                    -- POST
+                    mappingCodes = mappingCodes .. '    <insert id="add' .. mapping.Model:gsub('^%l',string.upper) .. '">\n' ..
+                        '        INSERT INTO ' .. models[i].TablePrefix .. models[i].name .. '_' .. mapping.Model .. ' (`' .. models[i].name .. '_id`, `' .. mapping.Model .. '_id`)\n' ..
+                        '        VALUES (#{'.. models[i].name .. 'Id}, #{' .. mapping.Model .. 'Id});\n' ..
+                        '    </insert>\n\n'
+                    
+                    -- GET
+                    mappingCodes = mappingCodes .. '    <select id="query' .. mapping.Model:gsub('^%l',string.upper) .. 'sBy' .. ModelName .. 'Id" resultType="' .. properties['project.groupId'] .. '.' .. properties['project.artifactId'] .. '.entity.' .. mapping.Model:gsub('^%l',string.upper) .. '">\n' ..
+                        '        SELECT * FROM ' .. models[i].TablePrefix .. mapping.Model .. ' WHERE id IN (SELECT ' .. mapping.Model .. '_id FROM ' .. models[i].TablePrefix .. models[i].name .. '_' .. mapping.Model .. ' WHERE ' .. modelName .. '_id = #{' .. modelName .. 'Id})\n' ..
+                        '    </select>\n\n'
+
+                    -- DELETE
+                    mappingCodes = mappingCodes .. '    <delete id="remove' .. mapping.Model:gsub('^%l',string.upper) .. '">\n' ..
+                        '        DELETE FROM ' .. models[i].TablePrefix .. models[i].name .. '_' .. mapping.Model .. ' WHERE ' .. modelName .. '_id = #{' .. modelName .. 'Id} AND ' .. mapping.Model ..'_id = #{' .. mapping.Model .. 'Id};\n' ..
+                        '    </delete>'
+                
+                end
+            end
+            finalSource = string.gsub(finalSource, '${otherMethods}', mappingCodes)
+        end
+
+        finalSource = string.gsub(finalSource, '${otherMethods}', '')
         files[ModelName .. 'Mapper.xml'] = finalSource
     end
     return files
@@ -138,6 +193,35 @@ function generateServices()
         local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, '${ModelName}', ModelName)
         finalSource = string.gsub(finalSource, '${modelName}', modelName)
+
+        if models[i].Mappings ~= nil then
+            local mappingCodes = ''
+            local otherEntityImportCodes = ''
+            for k = 1, #models[i].Mappings do
+                local mapping = models[i].Mappings[k]
+                if mapping.Type == 'many2many' then
+                    otherEntityImportCodes = 'import ' .. properties['project.groupId'] .. '.' .. properties['project.artifactId'] .. '.entity.' .. mapping.Model:gsub('^%l',string.upper) .. ';'
+
+                    -- POST
+                    mappingCodes = mappingCodes .. '    void add' .. mapping.Model:gsub('^%l',string.upper) ..
+                        '(String ' .. models[i].name .. 'Id, String ' .. mapping.Model .. 'Id);\n'
+
+                    -- GET
+                    mappingCodes = mappingCodes .. '    ResponsePage<' .. mapping.Model:gsub('^%l',string.upper) .. '> query' .. mapping.Model:gsub('^%l',string.upper) .. 'sBy' .. ModelName .. 'Id' ..
+                        '(String ' .. models[i].name .. 'Id, int pageNo, int pageSize);\n'
+
+                    -- DELETE
+                    mappingCodes = mappingCodes .. '    void remove' .. mapping.Model:gsub('^%l',string.upper) ..
+                        '(String ' .. models[i].name .. 'Id, String ' .. mapping.Model .. 'Id);\n'
+                end
+            end
+            
+            finalSource = string.gsub(finalSource, '${otherEntityImports}', otherEntityImportCodes)
+            finalSource = string.gsub(finalSource, '${otherMethods}', mappingCodes)
+        end
+        
+        finalSource = string.gsub(finalSource, '${otherMethods}', '')
+        finalSource = string.gsub(finalSource, '${otherEntityImports}\r\n', '')
         files[ModelName .. 'Service.java'] = finalSource
     end
     return files
@@ -150,6 +234,44 @@ function generateServiceImpls()
         local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, '${ModelName}', ModelName)
         finalSource = string.gsub(finalSource, '${modelName}', modelName)
+        local otherEntityImportCodes = ''
+        if models[i].Mappings ~= nil then
+            local mappingCodes = ''
+            for k = 1, #models[i].Mappings do
+                local mapping = models[i].Mappings[k]
+                if mapping.Type == 'many2many' then
+                    otherEntityImportCodes = 'import ' .. properties['project.groupId'] .. '.' .. properties['project.artifactId'] .. '.entity.' .. mapping.Model:gsub('^%l',string.upper) .. ';'
+
+                    -- POST
+                    mappingCodes = mappingCodes .. '    @Override\n' ..
+                        '    public void add' .. mapping.Model:gsub('^%l',string.upper) ..
+                        '(String ' .. models[i].name .. 'Id, String ' .. mapping.Model .. 'Id) {\n' ..
+                        '        ' .. modelName .. 'Mapper.add' .. mapping.Model:gsub('^%l',string.upper) ..'(' .. models[i].name .. 'Id, ' .. mapping.Model ..'Id);\n' ..
+                        '    }\n'
+                    
+                    -- GET
+                    mappingCodes = mappingCodes .. '    @Override\n' ..
+                        '    public ResponsePage<' .. mapping.Model:gsub('^%l',string.upper) .. '> query' .. mapping.Model:gsub('^%l',string.upper) .. 'sBy' .. ModelName .. 'Id' ..
+                        '(String ' .. models[i].name .. 'Id, int pageNo, int pageSize) {\n' ..
+                        '        PageHelper.startPage(pageNo, pageSize);\n' ..
+                        '        return new ResponsePage<>(new PageInfo<>(' .. modelName .. 'Mapper.query' .. mapping.Model:gsub('^%l',string.upper) ..'sBy' .. ModelName .. 'Id(' .. models[i].name .. 'Id)));\n' ..
+                        '    }\n'
+                    
+                    -- DELETE
+                    mappingCodes = mappingCodes .. '    @Override\n' ..
+                    '    public void remove' .. mapping.Model:gsub('^%l',string.upper) ..
+                    '(String ' .. models[i].name .. 'Id, String ' .. mapping.Model .. 'Id) {\n' ..
+                    '        ' .. modelName .. 'Mapper.remove' .. mapping.Model:gsub('^%l',string.upper) ..'(' .. models[i].name .. 'Id, ' .. mapping.Model ..'Id);\n' ..
+                    '    }\n'
+                    
+                    finalSource = string.gsub(finalSource, '${otherEntityImports}', otherEntityImportCodes)
+                end
+            end
+
+            finalSource = string.gsub(finalSource, '${otherMethods}', mappingCodes)
+        end
+        finalSource = string.gsub(finalSource, '${otherEntityImports}\r\n', '')
+        finalSource = string.gsub(finalSource, '${otherMethods}', '')
         files[ModelName .. 'ServiceImpl.java'] = finalSource
     end
     return files
@@ -162,6 +284,43 @@ function generateControllers()
         local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, '${ModelName}', ModelName)
         finalSource = string.gsub(finalSource, '${modelName}', modelName)
+
+        if models[i].Mappings ~= nil then
+            local mappingCodes = ''
+            for k = 1, #models[i].Mappings do
+                local mapping = models[i].Mappings[k]
+                if mapping.Type == 'many2many' then
+                    -- POST
+                    mappingCodes = mappingCodes .. '    @PostMapping("/api/' .. properties['project.artifactId'] .. '/' .. modelName .. '/{' .. modelName .. 'Id}/' .. mapping.Model .. '/{' .. mapping.Model .. 'Id}")\n' ..
+                        '    public Response add' .. mapping.Model:gsub('^%l',string.upper) ..
+                        '(@PathVariable String ' .. models[i].name .. 'Id, @PathVariable String ' .. mapping.Model .. 'Id) {\n' ..
+                        '        ' .. modelName .. 'Service.add' .. mapping.Model:gsub('^%l',string.upper) ..'(' .. models[i].name .. 'Id, ' .. mapping.Model ..'Id);\n' ..
+                        '        return Response.success();\n' ..
+                        '    }\n\n'
+                    
+                    -- GET
+                    mappingCodes = mappingCodes .. '    @GetMapping("/api/' .. properties['project.artifactId'] .. '/' .. modelName .. '/{' .. modelName .. 'Id}/' .. mapping.Model .. '")\n' ..
+                        '    public Response query' .. mapping.Model:gsub('^%l',string.upper) .. 'sBy' .. ModelName .. 'Id' ..
+                        '(@PathVariable String ' .. models[i].name .. 'Id,\n' ..
+                        '                                             @RequestParam(defaultValue = "1") int pageNo,\n' ..
+                        '                                             @RequestParam(defaultValue = "5") int pageSize) {\n' ..
+                        '        return Response.success(' .. modelName .. 'Service.query' .. mapping.Model:gsub('^%l',string.upper) .. 'sBy' .. ModelName ..'Id(' .. models[i].name .. 'Id, pageNo, pageSize));\n' ..
+                        '    }\n'
+                    
+                    -- DELETE
+                    mappingCodes = mappingCodes .. '    @DeleteMapping("/api/' .. properties['project.artifactId'] .. '/' .. modelName .. '/{' .. modelName .. 'Id}/' .. mapping.Model .. '/{' .. mapping.Model .. 'Id}")\n' ..
+                        '    public Response remove' .. mapping.Model:gsub('^%l',string.upper) ..
+                        '(@PathVariable String ' .. models[i].name .. 'Id, @PathVariable String ' .. mapping.Model .. 'Id) {\n' ..
+                        '        ' .. modelName .. 'Service.remove' .. mapping.Model:gsub('^%l',string.upper) ..'(' .. models[i].name .. 'Id, ' .. mapping.Model ..'Id);\n' ..
+                        '        return Response.success();\n' ..
+                        '    }\n\n'
+                end
+            end
+            finalSource = string.gsub(finalSource, '${otherMethods}', mappingCodes)
+        end
+        
+        finalSource = string.gsub(finalSource, '${otherMethods}', '')
+
         files[ModelName .. 'Controller.java'] = finalSource
     end
     return files
