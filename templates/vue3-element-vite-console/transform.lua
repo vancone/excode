@@ -43,8 +43,19 @@ function generateTableViews()
         finalSource = string.gsub(finalSource, "${ModelName}", ModelName)
         local columns = ''
         for k = 1, #models[i].Fields do
-            if models[i].Fields[k].Primary ~= true then
-                columns = columns .. "    { prop: '" .. models[i].Fields[k].Name .. "' },\n"
+            local field = models[i].Fields[k]
+            if field.Primary ~= true then
+                if string.find(field.Type, 'enum:') == 1 then
+                    local defaultValue = ''
+                    for m = 1, #enums[string.sub(field.Type, 6)].Options do
+                        local option = enums[string.sub(field.Type, 6)].Options[m]
+                        defaultValue = defaultValue .. "{ label: '" .. string.lower(option.Name):gsub("^%l",string.upper) .. "', value: '" .. option.Name .. "' },\n"
+                    end
+                    columns = columns .. "    { prop: '" .. field.Name .. "', type: 'select', defaultValue: [" .. defaultValue .. "] },\n"
+                else
+                    columns = columns .. "    { prop: '" .. field.Name .. "' },\n"
+                end
+                
             end
         end
         finalSource = string.gsub(finalSource, "${columns}", columns)

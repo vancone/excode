@@ -173,6 +173,12 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	}
 	L.SetGlobal("plugins", luar.New(L, plugins))
 
+	enums := map[string]entity.Enum{}
+	for _, item := range project.Enums {
+		enums[item.Name] = item
+	}
+	L.SetGlobal("enums", luar.New(L, enums))
+
 	L.SetGlobal("go_jasypt_encrypt", L.NewFunction(util.JasyptEncrypt))
 	L.SetGlobal("go_read_template_file", L.NewFunction(util.ReadTemplateFile))
 	L.SetGlobal("go_add_indent", L.NewFunction(util.AddIndent))
