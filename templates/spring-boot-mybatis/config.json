@@ -64,6 +64,8 @@
                                             {
                                                 "name": "enums",
                                                 "type": "dir",
+                                                "source": "content/Enum.java",
+                                                "generator": "generateEnums",
                                                 "children": [
                                                     {
                                                         "name": "ResponseEnum.java",

@@ -37,10 +37,29 @@ function generateEntities()
         local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, '${modelName}', ModelName)
         local fieldCode = ''
+        local customImports = ''
+        local stdImports = ''
         for k = 1, #models[i].Fields do
-            fieldCode = fieldCode .. 'private String ' .. models[i].Fields[k].Name .. ';\n'
+            local field = models[i].Fields[k]
+            local type = 'String'
+            if field.Type == 'number' then
+                type = 'Long'
+            elseif field.Type == 'date' then
+                type = 'LocalDate'
+                stdImports = stdImports .. 'import java.time.LocalDate;\n'
+            elseif field.Type == 'datetime' then
+                type = 'LocalDateTime'
+            else
+                if string.find(field.Type, 'enum:') == 1 then
+                    type = string.sub(field.Type, 6):gsub('^%l',string.upper) .. 'Enum'
+                    customImports = customImports .. 'import ' .. properties['project.groupId'] .. '.' .. properties['project.artifactId'] .. '.enums.' .. string.sub(field.Type, 6):gsub('^%l',string.upper) .. 'Enum;\n'
+                end
+            end
+            fieldCode = fieldCode .. 'private ' .. type .. ' ' .. field.Name .. ';\n'
         end
         finalSource = finalSource.gsub(finalSource, '${fields}', go_add_indent(fieldCode, 4))
+        finalSource = finalSource.gsub(finalSource, '${customImports}', customImports)
+        finalSource = finalSource.gsub(finalSource, '${stdImports}', stdImports)
         files[ModelName .. '.java'] = finalSource
     end
     return files
@@ -98,11 +117,14 @@ function generateMapperXmlFiles()
         local resultMapFieldsCode = ''
         for k = 1, #models[i].Fields do
             local field = models[i].Fields[k]
-            if (field.Primary)
-            then
+            if field.Primary then
                 resultMapFieldsCode = resultMapFieldsCode .. '<id column="' .. field.Name .. '" property="' .. field.Name .. '" jdbcType="VARCHAR"/>\n'
             else
-                resultMapFieldsCode = resultMapFieldsCode .. '<result column="' .. field.Name .. '" property="' .. field.Name .. '" jdbcType="VARCHAR"/>\n'
+                if string.find(field.Type, 'enum:') == 1 then
+                    resultMapFieldsCode = resultMapFieldsCode .. '<result column="' .. field.Name .. '" property="' .. field.Name .. '" jdbcType="VARCHAR" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler" />\n'
+                else
+                    resultMapFieldsCode = resultMapFieldsCode .. '<result column="' .. field.Name .. '" property="' .. field.Name .. '" jdbcType="VARCHAR"/>\n'
+                end
             end
         end
         resultMapFieldsCode = resultMapFieldsCode .. '<result column="created_time" property="createdTime" jdbcType="TIMESTAMP"/>\n'
@@ -129,7 +151,12 @@ function generateMapperXmlFiles()
                     mybatisParamsCode = mybatisParamsCode .. ', '
                 end
                 insertParamsCode = insertParamsCode .. '`' .. field.Name .. '`'
-                mybatisParamsCode = mybatisParamsCode .. '#{' .. field.Name .. '}'
+                if string.find(field.Type, 'enum:') == 1 then
+                    mybatisParamsCode = mybatisParamsCode .. '#{' .. field.Name .. ', jdbcType=' .. field.DbType .. ', javaType=' .. properties['project.groupId'] .. '.' .. properties['project.artifactId'] .. '.enums.' .. string.sub(field.Type, 6):gsub('^%l',string.upper) .. 'Enum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}'
+                else
+                    mybatisParamsCode = mybatisParamsCode .. '#{' .. field.Name .. '}'
+                end
+                
             end
         end
         queryParamsCode = queryParamsCode .. ', `created_time`, `updated_time`'
@@ -148,7 +175,11 @@ function generateMapperXmlFiles()
                 else
                     updateFieldsCode = updateFieldsCode .. ', '
                 end
-                updateFieldsCode = updateFieldsCode .. field.Name .. ' = #{' .. field.Name .. '}'
+                if string.find(field.Type, 'enum:') == 1 then
+                    updateFieldsCode = updateFieldsCode .. field.Name .. ' = #{' .. field.Name .. ', jdbcType=' .. field.DbType .. ', javaType=' .. properties['project.groupId'] .. '.' .. properties['project.artifactId'] .. '.enums.' .. string.sub(field.Type, 6):gsub('^%l',string.upper) .. 'Enum, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}'
+                else
+                    updateFieldsCode = updateFieldsCode .. field.Name .. ' = #{' .. field.Name .. '}'
+                end
             end
         end
         finalSource = finalSource.gsub(finalSource, '${updateFields}', updateFieldsCode)
@@ -502,5 +533,23 @@ function generateProperties()
         files['application-' .. env.Profile .. '.properties'] = finalSource
     end
 
+    return files
+end
+
+function generateEnums()
+    local files = {}
+    if project.Enums ~= nil then
+        for i = 1, #project.Enums do
+            local enum = project.Enums[i]
+            local finalSource = source
+            finalSource = string.gsub(finalSource, '${enumName}', enum.Name:gsub('^%l',string.upper))
+            local options = ''
+            for k = 1, #enum.Options do
+                options = options .. enum.Options[k].Name .. ', '
+            end
+            finalSource = string.gsub(finalSource, '${options}', options)
+            files[enum.Name:gsub('^%l',string.upper) .. 'Enum.java'] = finalSource
+        end
+    end
     return files
 end

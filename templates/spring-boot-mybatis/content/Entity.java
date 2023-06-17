@@ -2,9 +2,11 @@ package ${template.properties.project.groupId}.${template.properties.project.art
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+${customImports}
 import lombok.Data;
 
 import java.time.LocalDateTime;
+${stdImports}
 
 /**
  * @author ExCode

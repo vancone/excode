@@ -5,6 +5,7 @@ type Project struct {
 	Version    string     `xml:"version"`
 	Deployment Deployment `xml:"deployment"`
 	Models     []Model    `xml:"models>model"`
+	Enums      []Enum     `xml:"enums>enum"`
 	Templates  []Template `xml:"templates>template"`
 }
 
@@ -45,6 +46,15 @@ type Model struct {
 	TablePrefix string    `xml:"tablePrefix,attr"`
 	Fields      []Field   `xml:"fields>field"`
 	Mappings    []Mapping `xml:"mappings>mapping"`
+}
+
+type Enum struct {
+	Name    string   `xml:"name,attr"`
+	Options []Option `xml:"option"`
+}
+
+type Option struct {
+	Name string `xml:"name,attr"`
 }
 
 type Field struct {

@@ -19,13 +19,20 @@
         </env>
     </deployment>
 
+    <enums>
+        <enum name="gender">
+            <option name="MALE" />
+            <option name="FEMALE" />
+        </enum>
+    </enums>
+
     <models>
         <model name="student" source="mysql_default" tablePrefix="eschool_">
             <fields>
                 <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true"
                     comment="Student ID" />
                 <field name="name" type="string" dbType="VARCHAR" notNull="true" />
-                <field name="gender" type="enum" dbType="BIT" />
+                <field name="gender" type="enum:gender" dbType="TINYINT" />
                 <field name="birthday" type="date" dbType="DATETIME" />
             </fields>
             <mappings>
@@ -37,7 +44,7 @@
                 <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true"
                     comment="Teacher ID" />
                 <field name="name" type="string" dbType="VARCHAR" notNull="true" />
-                <field name="gender" type="enum" dbType="BIT" />
+                <field name="gender" type="enum:gender" dbType="TINYINT" />
                 <field name="title" type="string" dbType="VARCHAR" />
             </fields>
         </model>
