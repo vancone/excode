@@ -70,3 +70,11 @@ func CopyDir(dst string, src string) error {
 	}
 	return nil
 }
+
+func GetExecutableDir() string {
+	exePath, err := os.Executable()
+	if err != nil {
+		return ""
+	}
+	return filepath.Dir(exePath)
+}

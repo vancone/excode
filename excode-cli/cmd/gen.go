@@ -20,10 +20,11 @@ var genCmd = &cobra.Command{
 	Short: "Generate project based on templates",
 	Long:  `Generate project based on templates`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) != 1 {
-			log.Fatalln("Failed to generate project: path argument not exists")
+		projectDir := "./"
+		if len(args) == 1 {
+			projectDir = args[0] + "/"
 		}
-		bytes, err := ioutil.ReadFile(args[0])
+		bytes, err := ioutil.ReadFile(projectDir + "excode.xml")
 		if err != nil {
 			log.Println("failed to read xml file:", err)
 			return
@@ -42,7 +43,7 @@ var genCmd = &cobra.Command{
 				if !template.Enabled {
 					continue
 				}
-				bytes, err = ioutil.ReadFile(fmt.Sprintf("templates/%s/config.json", template.Name))
+				bytes, err = ioutil.ReadFile(fmt.Sprintf("%s/templates/%s/config.json", util.GetExecutableDir(), template.Name))
 				if err != nil {
 					log.Println("failed to read xml file:", err)
 					return
@@ -53,7 +54,7 @@ var genCmd = &cobra.Command{
 				if err != nil {
 					return
 				}
-				generate(templateConfig, project, template)
+				generate(templateConfig, project, template, projectDir)
 			}
 		}
 	},
@@ -63,15 +64,20 @@ func init() {
 	rootCmd.AddCommand(genCmd)
 }
 
-func generate(config entity.TemplateConfig, project entity.Project, template entity.Template) {
+func generate(config entity.TemplateConfig, project entity.Project, template entity.Template, projectDir string) {
 	log.Println("========== Template [ " + template.Name + " ] ==========")
 	log.Printf("%d plugin(s) and %d property(s) found\n", len(template.Plugins), len(template.Properties))
 	startTime := time.Now()
-	baseUrl := "output" // + time.Now().Format("20060102150405")
+	baseUrl := projectDir + "output" // + time.Now().Format("20060102150405")
 	err := util.CreateDir(baseUrl)
 	if err != nil {
 		panic(err)
 	}
+
+	// Add git ignore file
+	gitIgnoreContent := "output/\n"
+	ioutil.WriteFile(projectDir+".gitignore", []byte(gitIgnoreContent), 0666)
+
 	traverseStructure(config.Structure, baseUrl, config.Name, project, template)
 	timeCost := time.Since(startTime)
 	wd, err := os.Getwd()
@@ -98,7 +104,7 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 			})
 		}
 		if len(structure.InitialCopy) > 0 {
-			err := util.CopyDir(baseUrl, "templates/"+templateName+"/"+structure.InitialCopy)
+			err := util.CopyDir(baseUrl, util.GetExecutableDir()+"/templates/"+templateName+"/"+structure.InitialCopy)
 			if err != nil {
 				log.Printf("Failed to copy directory (%s): %s", structure.InitialCopy, err)
 				return
@@ -107,7 +113,7 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 	} else if structure.Type == "file" {
 
 		dstFileName := baseUrl + "/" + structure.Name
-		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, structure.Source)
+		srcFileName := fmt.Sprintf("%s/templates/%s/%s", util.GetExecutableDir(), templateName, structure.Source)
 		if structure.Dynamic {
 			templateFile, err := ioutil.ReadFile(srcFileName)
 			if err != nil {
@@ -152,7 +158,7 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	L := lua.NewState()
 	defer L.Close()
 
-	if err := L.DoFile(fmt.Sprintf("templates/%s/transform.lua", templateName)); err != nil {
+	if err := L.DoFile(fmt.Sprintf("%s/templates/%s/transform.lua", util.GetExecutableDir(), templateName)); err != nil {
 		panic(err)
 	}
 
@@ -185,7 +191,7 @@ func ExecLuaScript(templateName string, funcName string, project entity.Project,
 	L.SetGlobal("go_json_format", L.NewFunction(util.JsonFormat))
 
 	if source != "" {
-		srcFileName := fmt.Sprintf("templates/%s/%s", templateName, source)
+		srcFileName := fmt.Sprintf("%s/templates/%s/%s", util.GetExecutableDir(), templateName, source)
 		sourceBytes, err := ioutil.ReadFile(srcFileName)
 		if err != nil {
 			log.Printf("Failed to read source file before executing Lua script: %s", srcFileName)

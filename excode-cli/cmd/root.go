@@ -11,7 +11,7 @@ var rootCmd = &cobra.Command{
 	Use:   "excode-cli",
 	Short: "A CLI tool for generating low-code project",
 	Long: "ExCode aims at helping programmers liberate from boring CRUD template codes. In a simple XML file, you can define your project information and data structure. With core modules and some other extensions, you can generate a web project just in several seconds.\n\n" +
-		"For example: \nexcode-cli gen examples/e-school.xml",
+		"For example: \nexcode-cli gen examples/eschool",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
