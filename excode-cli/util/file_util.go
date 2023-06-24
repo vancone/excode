@@ -76,5 +76,12 @@ func GetExecutableDir() string {
 	if err != nil {
 		return ""
 	}
+	if strings.Contains(exePath, "GoLand") {
+		wd, err := os.Getwd()
+		if err != nil {
+			return ""
+		}
+		return wd
+	}
 	return filepath.Dir(exePath)
 }

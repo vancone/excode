@@ -8,6 +8,7 @@ import (
 	"log"
 	"reflect"
 	"strings"
+	"time"
 )
 
 func JasyptEncrypt(L *lua.LState) int {
@@ -52,6 +53,7 @@ func ReadTemplateFile(L *lua.LState) int {
 		L.Push(lua.LString(""))
 	} else {
 		content := string(bytes)
+		content = strings.Replace(content, "${date}", time.Now().Format("2006/01/02"), -1)
 		if len(paramMap) > 0 {
 			for k, v := range paramMap {
 				if strings.Contains(content, "${"+k+"}") {

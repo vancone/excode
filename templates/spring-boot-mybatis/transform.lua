@@ -25,6 +25,11 @@ function generatePom()
             go_add_indent(go_read_template_file(template.Name, 'content/pom/vancone-passport-sdk.xml'), 8)
     end
 
+    if plugins['swagger'] == true then
+        otherDependencies = otherDependencies .. '\n\n' ..
+            go_add_indent(go_read_template_file(template.Name, 'content/pom/swagger.xml'), 8)
+    end
+
     finalSource = string.gsub(finalSource, '${otherDependencies}', otherDependencies)
     files['pom.xml'] = finalSource
     return files
@@ -418,6 +423,32 @@ function generateSqlStatements()
     return files
 end
 
+function generateConfig()
+    local files = {}
+    if plugins['swagger'] == true then
+        content = go_read_template_file(template.Name, 'content/config/SwaggerConfig.java')
+        content = string.gsub(content, '${template.properties.project.groupId}', properties['project.groupId'])
+        content = string.gsub(content, '${template.properties.project.artifactId}', properties['project.artifactId'])
+        content = string.gsub(content, '${project.version}', project.Version)
+
+        local title = project.Name
+        if properties['swagger.title'] ~= nil then
+            title = properties['swagger.title']
+        end
+
+        local description = 'Standard API Document Powered by Swagger'
+        if properties['swagger.description'] ~= nil then
+            description = properties['swagger.description']
+        end
+
+        content = string.gsub(content, '${swagger.title}', title)
+        content = string.gsub(content, '${swagger.description}', description)
+
+        files['SwaggerConfig.java'] = content
+    end
+    return files
+end
+
 function generateCrossOriginConfig()
     models = project.Models
     local files = {}
@@ -528,6 +559,12 @@ function generateProperties()
             passportSdkProperties = string.gsub(passportSdkProperties, '${passport.accessKeyId}', go_jasypt_encrypt(properties['vancone.passport.service-account.access-key-id']))
             passportSdkProperties = string.gsub(passportSdkProperties, '${passport.secretAccessKey}', go_jasypt_encrypt(properties['vancone.passport.service-account.secret-access-key']))
             finalSource = finalSource .. passportSdkProperties .. '\n\n'
+        end
+
+        -- Add Passport SDK properties
+        if plugins['swagger'] == true then
+            finalSource = finalSource .. 'spring.mvc.pathmatch.matching-strategy=ant_path_matcher\n'..
+                            'vancone.passport.permitUriPrefix=/swagger-ui,/swagger-resources,/v3/api-docs\n\n'
         end
 
         files['application-' .. env.Profile .. '.properties'] = finalSource
