@@ -116,6 +116,12 @@
                                 "generator": "generatePostmanCollection"
                             },
                             {
+                                "name": "nginx",
+                                "type": "dir",
+                                "source": "content/nginx/location.conf",
+                                "generator": "generateNginxConf"
+                            },
+                            {
                                 "name": "resources",
                                 "type": "dir",
                                 "generator": "generateProperties",

@@ -553,3 +553,13 @@ function generateEnums()
     end
     return files
 end
+
+function generateNginxConf()
+    local files = {}
+    local port = '8080'
+    if properties['server.port'] ~= '' then
+        port = properties['server.port']
+    end
+    files[properties['project.artifactId'] .. '.conf'] = string.gsub(source, '${port}', port)
+    return files
+end
