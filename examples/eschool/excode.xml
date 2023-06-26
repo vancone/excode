@@ -27,7 +27,7 @@
     </enums>
 
     <models>
-        <model name="student" source="mysql_default" tablePrefix="eschool_">
+        <model name="student" source="mysql_default" tablePrefix="eschool_" logicDelete="true">
             <fields>
                 <field name="id" type="number" dbType="BIGINT" primary="true" autoIncrement="true"
                     comment="Student ID" />

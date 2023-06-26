@@ -189,6 +189,16 @@ function generateMapperXmlFiles()
         end
         finalSource = finalSource.gsub(finalSource, '${updateFields}', updateFieldsCode)
 
+        local deleteMethod = '    <delete id="delete">\n' ..
+                            '        DELETE FROM ' .. models[i].Name .. ' WHERE id = #{id}\n' ..
+                            '    </delete>'
+        if models[i].LogicDelete == true then
+            deleteMethod = '    <update id="delete">\n' ..
+                            '        UPDATE ' .. models[i].Name .. ' SET deleted = 1 WHERE id = #{id} AND deleted = 0\n' ..
+                            '    </update>\n'
+        end
+        finalSource = finalSource.gsub(finalSource, '${deleteMethod}', deleteMethod)
+
         if models[i].Mappings ~= nil then
             local mappingCodes = ''
             for k = 1, #models[i].Mappings do
@@ -398,8 +408,11 @@ function generateSqlStatements()
             finalSource = finalSource .. ',\n'
         end
         finalSource = finalSource .. '    `created_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n'
-        finalSource = finalSource .. '    `updated_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n'
-        finalSource = finalSource .. ');\n\n'
+        finalSource = finalSource .. '    `updated_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
+        if models[i].LogicDelete == true then
+            finalSource = finalSource .. ',\n    `deleted` BIT DEFAULT 0'
+        end
+        finalSource = finalSource .. '\n);\n\n'
 
         if models[i].Mappings ~= nil then
             for k = 1, #models[i].Mappings do

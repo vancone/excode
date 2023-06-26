@@ -46,6 +46,7 @@ type Model struct {
 	TablePrefix string    `xml:"tablePrefix,attr"`
 	Fields      []Field   `xml:"fields>field"`
 	Mappings    []Mapping `xml:"mappings>mapping"`
+	LogicDelete bool      `xml:"logicDelete,attr"`
 }
 
 type Enum struct {

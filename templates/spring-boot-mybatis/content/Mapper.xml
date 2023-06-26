@@ -16,7 +16,7 @@ ${resultMapFields}
     <select id="queryPage" resultMap="resultMap">
         SELECT
         <include refid="queryParams" />
-        FROM ${tableName}
+        FROM ${tableName}${whereClause}
     </select>
 
     <insert id="create">
@@ -38,9 +38,6 @@ ${resultMapFields}
         WHERE id = #{id}
     </update>
 
-    <delete id="delete">
-        DELETE FROM ${tableName} WHERE id = #{id}
-    </delete>
-
+${deleteMethod}
 ${otherMethods}
 </mapper>
