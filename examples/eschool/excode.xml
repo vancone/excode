@@ -81,7 +81,7 @@
             </properties>
         </template>
 
-        <template name="vue3-element-vite-console" external="true" enabled="true">
+        <template name="vue3-element-vite-console" external="true" enabled="false">
             <properties>
                 <property name="apiPath" value="/api/eschool"></property>
             </properties>

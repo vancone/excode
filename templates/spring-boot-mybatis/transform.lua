@@ -116,7 +116,6 @@ function generateMapperXmlFiles()
         local modelName, ModelName = getModelName(models[i])
         local finalSource = string.gsub(source, '${ModelName}', ModelName)
         finalSource = string.gsub(finalSource, '${modelName}', modelName)
-        finalSource = string.gsub(finalSource, '${tableName}', models[i].TablePrefix .. modelName)
 
         -- Fill in result map fields
         local resultMapFieldsCode = ''
@@ -169,7 +168,16 @@ function generateMapperXmlFiles()
         finalSource = finalSource.gsub(finalSource, '${insertParams}', insertParamsCode)
         finalSource = finalSource.gsub(finalSource, '${mybatisParams}', mybatisParamsCode)
 
-        -- Fill in update fields
+        -- query
+        local selectSql = '        SELECT\n' ..
+                        '        <include refid="queryParams" />\n' ..
+                        '        FROM ${tableName}'
+        if models[i].LogicDelete == true then
+            selectSql = selectSql .. '\n        WHERE deleted = 0'
+        end
+        finalSource = finalSource.gsub(finalSource, '${selectSql}', selectSql)
+
+        -- update
         local updateFieldsCode = ''
         local isFirstField = true
         for k = 1, #models[i].Fields do
@@ -189,12 +197,13 @@ function generateMapperXmlFiles()
         end
         finalSource = finalSource.gsub(finalSource, '${updateFields}', updateFieldsCode)
 
+        -- delete
         local deleteMethod = '    <delete id="delete">\n' ..
-                            '        DELETE FROM ' .. models[i].Name .. ' WHERE id = #{id}\n' ..
+                            '        DELETE FROM ${tableName} WHERE id = #{id}\n' ..
                             '    </delete>'
         if models[i].LogicDelete == true then
             deleteMethod = '    <update id="delete">\n' ..
-                            '        UPDATE ' .. models[i].Name .. ' SET deleted = 1 WHERE id = #{id} AND deleted = 0\n' ..
+                            '        UPDATE ${tableName} SET deleted = 1 WHERE id = #{id} AND deleted = 0\n' ..
                             '    </update>\n'
         end
         finalSource = finalSource.gsub(finalSource, '${deleteMethod}', deleteMethod)
@@ -226,7 +235,13 @@ function generateMapperXmlFiles()
             finalSource = string.gsub(finalSource, '${otherMethods}', mappingCodes)
         end
 
+        if models[i].LogicDelete == true then
+            finalSource = string.gsub(finalSource, '${logicDelete}', 'AND deleted = 0')
+        else
+            finalSource = string.gsub(finalSource, '${logicDelete}', '')
+        end
         finalSource = string.gsub(finalSource, '${otherMethods}', '')
+        finalSource = string.gsub(finalSource, '${tableName}', models[i].TablePrefix .. modelName)
         files[ModelName .. 'Mapper.xml'] = finalSource
     end
     return files

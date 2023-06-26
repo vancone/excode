@@ -14,9 +14,7 @@ ${resultMapFields}
     </sql>
 
     <select id="queryPage" resultMap="resultMap">
-        SELECT
-        <include refid="queryParams" />
-        FROM ${tableName}${whereClause}
+${selectSql}
     </select>
 
     <insert id="create">
@@ -28,14 +26,14 @@ ${resultMapFields}
         SELECT
         <include refid="queryParams" />
         FROM ${tableName}
-        WHERE id = #{id}
+        WHERE id = #{id} ${logicDelete}
         LIMIT 1
     </select>
 
     <update id="update">
         UPDATE ${tableName} SET
         ${updateFields}
-        WHERE id = #{id}
+        WHERE id = #{id} ${logicDelete}
     </update>
 
 ${deleteMethod}
