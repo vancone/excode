@@ -47,7 +47,7 @@ func ReadTemplateFile(L *lua.LState) int {
 		}
 	}
 
-	bytes, err := ioutil.ReadFile("templates/" + templateName + "/" + filePath)
+	bytes, err := ioutil.ReadFile(GetExecutableDir() + "/templates/" + templateName + "/" + filePath)
 	if err != nil {
 		log.Println(err.Error())
 		L.Push(lua.LString(""))
