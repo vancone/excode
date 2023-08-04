@@ -25,13 +25,13 @@ public class ${ModelName}Controller {
     }
 
     @GetMapping("/{id}")
-    public Response query(@PathVariable String id) {
+    public Response<${ModelName}> query(@PathVariable String id) {
         ${ModelName} ${modelName} = ${modelName}Service.query(id);
         return Response.success(${modelName});
     }
 
     @GetMapping
-    public Response queryPage(
+    public Response<ResponsePage<${ModelName}>> queryPage(
             @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
             @RequestParam(value = "pageSize", defaultValue = "5") int pageSize) {
         ResponsePage<${ModelName}> ${modelName}Page = ${modelName}Service.queryPage(pageNo, pageSize);
