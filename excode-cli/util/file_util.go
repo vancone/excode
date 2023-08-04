@@ -47,6 +47,8 @@ func CopyFile(dst string, src string) error {
 
 func CopyDir(dst string, src string) error {
 	var files []string
+	dst = strings.Replace(dst, "\\", "/", -1)
+	src = strings.Replace(src, "\\", "/", -1)
 
 	err := filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {

@@ -104,7 +104,9 @@ func traverseStructure(structure entity.Structure, baseUrl string, templateName 
 			})
 		}
 		if len(structure.InitialCopy) > 0 {
-			err := util.CopyDir(baseUrl, util.GetExecutableDir()+"/templates/"+templateName+"/"+structure.InitialCopy)
+			src := util.GetExecutableDir() + "/templates/" + templateName + "/" + structure.InitialCopy
+			log.Printf("Initial copy: from %s to %s", src, baseUrl)
+			err := util.CopyDir(baseUrl, src)
 			if err != nil {
 				log.Printf("Failed to copy directory (%s): %s", structure.InitialCopy, err)
 				return
