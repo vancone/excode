@@ -584,8 +584,9 @@ function generateProperties()
             local baseUrl = (env.Profile == 'pro' or env.Profile == 'prod') and 'https://passport.vancone.com' or 'http://passport.beta.vancone.com'
             local passportSdkProperties = go_read_template_file(template.Name, 'content/properties/vancone-passport-sdk.properties')
             passportSdkProperties = string.gsub(passportSdkProperties, '${passport.baseUrl}', baseUrl)
-            passportSdkProperties = string.gsub(passportSdkProperties, '${passport.accessKeyId}', go_jasypt_encrypt(properties['vancone.passport.service-account.access-key-id']))
-            passportSdkProperties = string.gsub(passportSdkProperties, '${passport.secretAccessKey}', go_jasypt_encrypt(properties['vancone.passport.service-account.secret-access-key']))
+            passportSdkProperties = string.gsub(passportSdkProperties, '${passport.accessKeyId}', go_jasypt_encrypt(properties['passport.service-account.access-key-id']))
+            passportSdkProperties = string.gsub(passportSdkProperties, '${passport.secretAccessKey}', go_jasypt_encrypt(properties['passport.service-account.secret-access-key']))
+            passportSdkProperties = string.gsub(passportSdkProperties, '${passport.publicKey}', go_jasypt_encrypt(properties['passport.token.public-key']))
             finalSource = finalSource .. passportSdkProperties .. '\n\n'
         end
 
